@@ -26,8 +26,6 @@ export interface IAwardCrawler {
      *
      *
      * 抓取的开奖数据结果
-     * @param nightmare
-     * @param config
      */
-    getAwardInfo(nightmare: any): Promise<any> ;
+    getAwardInfo(): Promise<any> ;
 }

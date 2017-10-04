@@ -23,7 +23,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
         return 'http://www.caibaxian.com/open.aspx?callback=?';
     }
 
-    getAwardInfo(nightmare: any): Promise<any> {
+    getAwardInfo(): Promise<any> {
         let dataUrl = this.getDataUrl(null);
         return new Promise((resolve, reject) => {
             request(

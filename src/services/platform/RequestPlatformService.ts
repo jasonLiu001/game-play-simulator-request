@@ -1,8 +1,8 @@
-import {Config, SITE_URL} from "../../../config/Config";
-import {TimerService} from "../../timer/TimerService";
-import {PlatformAbstractBase} from "../PlatformAbstractBase";
+import {Config, SITE_URL} from "../../config/Config";
+import {TimerService} from "../timer/TimerService";
+import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
-import {LotteryDbService} from "../../dbservices/DBSerivice";
+import {LotteryDbService} from "../dbservices/DBSerivice";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
     timerService = new TimerService();

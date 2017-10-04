@@ -16,7 +16,7 @@ export class MockInvestService extends AbstractInvestBase {
      *
      * 模拟执行投注入口方法
      */
-    executeAutoInvest(nightmare: any, lotteryDbService: LotteryDbService, config: Config): void {
+    executeAutoInvest(lotteryDbService: LotteryDbService, config: Config): void {
         this.calculateWinMoney(lotteryDbService, config)
             .then(() => {
                 //检查是可以投注

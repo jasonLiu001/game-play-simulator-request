@@ -40,7 +40,7 @@ export class AwardService {
         return timerService.isInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
-                return crawl360Service.getAwardInfo(nightmare);
+                return crawl360Service.getAwardInfo();
             })
             .then((award: AwardInfo) => {
                 return lotteryDbService.getAwardInfo(award.period)

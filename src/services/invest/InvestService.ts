@@ -2,10 +2,9 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
 import {Config} from "../../config/Config";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
-import {NightmarePlatformService} from "../platform/nightmare/NightmarePlatformService";
 import {AbstractInvestBase} from "./AbstractInvestBase";
-import {RequestLoginService} from "../platform/request/RequestLoginService";
-import {RequestPlatformService} from "../platform/request/RequestPlatformService";
+import {RequestLoginService} from "../platform/RequestLoginService";
+import {RequestPlatformService} from "../platform/RequestPlatformService";
 import {NumberService} from "../numbers/NumberService";
 
 
@@ -13,15 +12,14 @@ let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     requestLoginService = new RequestLoginService(),
     requestPlatformService = new RequestPlatformService,
-    numberService = new NumberService(),
-    nightmarePlatformService = new NightmarePlatformService();
+    numberService = new NumberService();
 
 export class InvestService extends AbstractInvestBase {
     /**
      *
      * 模拟执行投注入口方法
      */
-    executeAutoInvest(nightmare: any, request: any, lotteryDbService: LotteryDbService, config: Config): void {
+    executeAutoInvest(request: any, lotteryDbService: LotteryDbService, config: Config): void {
         this.calculateWinMoney(lotteryDbService, config)
             .then(() => {
                 //检查是否满足投注条件
@@ -34,19 +32,14 @@ export class InvestService extends AbstractInvestBase {
                     .then((investNumbers: string) => {
                         //投注前保存 投注号码
                         Config.currentInvestNumbers = investNumbers;
-                        if (nightmare) {
-                            //使用nightmare 正式投注
-                            return nightmarePlatformService.autoInvest(nightmare, config, lotteryDbService, config.autoInvestModel);
-                        } else if (request) {
-                            //使用request投注 需要先登录在投注 每次投注前都需要登录
-                            return requestLoginService.login(request, config)
-                                .then(() => {
-                                    return requestPlatformService.invest(request, config, lotteryDbService);
-                                })
-                                .then((result) => {
-                                    log.info(result);
-                                });
-                        }
+                        //使用request投注 需要先登录在投注 每次投注前都需要登录
+                        return requestLoginService.login(request, config)
+                            .then(() => {
+                                return requestPlatformService.invest(request, config, lotteryDbService);
+                            })
+                            .then((result) => {
+                                log.info(result);
+                            });
                     });
             })
             .then(() => {

@@ -5,8 +5,8 @@ import {MockInvestService} from "./services/invest/MockInvestService";
 import {AwardService} from "./services/award/AwardService";
 import {InvestService} from "./services/invest/InvestService";
 import {ErrorService} from "./services/error/ErrorService";
-import {RequestLoginService} from "./services/platform/request/RequestLoginService";
-import {RequestPlatformService} from "./services/platform/request/RequestPlatformService";
+import {RequestLoginService} from "./services/platform/RequestLoginService";
+import {RequestPlatformService} from "./services/platform/RequestPlatformService";
 import {TimerService} from "./services/timer/TimerService";
 let Request = require('request'), path = require('path');
 
@@ -99,7 +99,7 @@ export class CommandApp {
             })
             .catch((err) => {
                 //启动失败后结束electron进程
-                errorService.appErrorHandler(null, log, err, config);
+                errorService.appErrorHandler(log, err, config);
             });
     }
 }

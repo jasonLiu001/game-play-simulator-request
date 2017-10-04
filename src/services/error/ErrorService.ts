@@ -26,21 +26,13 @@ export class ErrorService {
      *
      * app异常处理
      */
-    public appErrorHandler(nightmare: any, log: any, error: any, config: Config): void {
+    public appErrorHandler(log: any, error: any, config: Config): void {
         if (error && error.message && error.message == config.rejectionMsg.navigationError) log.error(error.message);
 
         if (error) {
             let msg = "程序启动时遇到错误，已退出！";
-            if (nightmare) {
-                nightmare.end(() => {
-                    log.error(msg);
-                    log.error(error);
-                });
-            } else {
-                log.error(msg);
-                log.error(error);
-            }
-
+            log.error(msg);
+            log.error(error);
         }
     }
 }
