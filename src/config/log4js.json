@@ -1,0 +1,20 @@
+{
+  "appenders": {
+    "out": {
+      "type": "stdout"
+    },
+    "app": {
+      "type": "file",
+      "filename": "log.log"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "out",
+        "app"
+      ],
+      "level": "debug"
+    }
+  }
+}

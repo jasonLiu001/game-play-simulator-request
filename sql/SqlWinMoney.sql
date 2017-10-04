@@ -1,0 +1,1 @@
+select sum(winMoney) as total from (select winMoney from lottery limit 41) t;

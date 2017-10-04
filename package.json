@@ -1,0 +1,35 @@
+{
+  "main": "main.js",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "nightmare": "^2.10.0",
+    "request": "^2.81.0"
+  },
+  "scripts": {
+    "grunt": "grunt",
+    "linux:mock": "npm run grunt && cd dist && xvfb-run -a --server-args=\"-screen 0 1024x768x24\" node ./MockApp.js",
+    "linux:start": "npm run grunt && cd dist && xvfb-run -a --server-args=\"-screen 0 1024x768x24\" node ./App.js",
+    "win:mock": "npm run grunt && cd dist && node ./MockApp.js",
+    "win:start": "npm run grunt && cd dist && node ./App.js"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.6",
+    "@types/jasmine": "^2.5.53",
+    "@types/jquery": "^2.0.45",
+    "@types/lodash": "^4.14.68",
+    "@types/node": "^7.0.18",
+    "cheerio": "^1.0.0-rc.2",
+    "colors": "^1.1.2",
+    "commander": "^2.11.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.15",
+    "jasmine": "^2.6.0",
+    "lodash": "^4.17.4",
+    "log4js": "^2.0.0",
+    "progress": "^2.0.0",
+    "sqlite3": "^3.1.8",
+    "typescript": "^2.3.2"
+  }
+}
