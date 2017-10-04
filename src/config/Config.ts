@@ -18,8 +18,6 @@ export const CONFIG_CONST = {
     username: '',
     //登录密码
     password: '',
-    //系统设置 是否显示浏览器窗口
-    isShowBrowser: false,
     //开奖延迟时间，单位为秒
     openTimeDelaySeconds: 60,
     //自动检查定时器 时间间隔 单位为毫秒ms
