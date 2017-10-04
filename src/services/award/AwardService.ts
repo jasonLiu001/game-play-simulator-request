@@ -20,9 +20,9 @@ export class AwardService {
      *
      * 开始获取奖号
      */
-    start(nightmare: any, lotteryDbService: LotteryDbService, config: Config, success?: Function): void {
+    start(lotteryDbService: LotteryDbService, config: Config, success?: Function): void {
         Config.awardTimer = setInterval(() => {
-            this.saveOrUpdateAwardInfo(nightmare, lotteryDbService, config, success)
+            this.saveOrUpdateAwardInfo(lotteryDbService, config, success)
                 .catch((err) => {
                     if (err) {
                         log.error(err);
@@ -36,7 +36,7 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    saveOrUpdateAwardInfo(nightmare: any, lotteryDbService: LotteryDbService, config: Config, success?: Function): Promise<AwardInfo> {
+    saveOrUpdateAwardInfo(lotteryDbService: LotteryDbService, config: Config, success?: Function): Promise<AwardInfo> {
         return timerService.isInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
