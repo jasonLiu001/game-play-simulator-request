@@ -6,14 +6,11 @@ let path = require('path');
 
 /**
  *
- * 网站URL 地址
- */
-export const SITE_URL: string = 'https://123.jn707.com';
-/**
- *
  * 常量
  */
 export const CONFIG_CONST = {
+    //登录网站url
+    siteUrl: 'https://123.jn707.com',
     //登录用户名
     username: '',
     //登录密码

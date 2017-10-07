@@ -1,4 +1,4 @@
-import {Config, SITE_URL} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {ResponseData} from "../../models/ResponseData";
 import {CaptchaDecoderService} from "../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
@@ -24,7 +24,7 @@ export class RequestLoginService extends PlatformAbstractBase {
      * 打开登录页
      */
     public gotoLoginPage(request: any): Promise<any> {
-        return this.httpGet(request, SITE_URL + '/Login');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Login');
     }
 
     /**
@@ -36,7 +36,7 @@ export class RequestLoginService extends PlatformAbstractBase {
         return new Promise((resolve, reject) => {
             request.get(
                 {
-                    url: SITE_URL + '/verifyCode?' + Math.random()
+                    url: CONFIG_CONST.siteUrl + '/verifyCode?' + Math.random()
                 })
                 .on('error', (error) => {
                     log.error(error);
@@ -55,9 +55,9 @@ export class RequestLoginService extends PlatformAbstractBase {
      * 开始模拟登录操作
      */
     public loginMock(request: any, config: Config, capatchaCodeString: string): Promise<any> {
-        return this.httpPost(request, SITE_URL + '/login/safe.mvc?null')
+        return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
             .then(() => {
-                return this.httpPost(request, SITE_URL + '/login/login.mvc', {
+                return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
                     username: config.captchaDecorder.user,
                     validate: capatchaCodeString,
                     password: config.captchaDecorder.pass,

@@ -1,4 +1,4 @@
-import {Config, SITE_URL} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {TimerService} from "../timer/TimerService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
@@ -13,7 +13,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      * 请求成功登录之后的页面
      */
     public gotoLoginSuccessPage(request: any): Promise<any> {
-        return this.httpGet(request, SITE_URL + '/Index');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Index');
     }
 
     /**
@@ -22,7 +22,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      * 获取当前账号余额
      */
     public getBalance(request: any): Promise<any> {
-        return this.httpGet(request, SITE_URL + '/userInfo/getBalance.mvc');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/userInfo/getBalance.mvc');
     }
 
     /**
@@ -30,7 +30,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      * 登录成功后，获取用户信息
      */
     public getLoginUserInfo(request: any): Promise<any> {
-        return this.httpPost(request, SITE_URL + '/userInfo/getUserInfo.mvc', {
+        return this.httpPost(request, CONFIG_CONST.siteUrl + '/userInfo/getUserInfo.mvc', {
             menuName: ''
         });
     }
@@ -44,7 +44,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
         return new Promise((resolve, reject) => {
             request.post(
                 {
-                    url: SITE_URL + '/gameType/initGame.mvc',
+                    url: CONFIG_CONST.siteUrl + '/gameType/initGame.mvc',
                     form: {
                         gameID: 1
                     }
@@ -139,7 +139,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      */
     public multiInvestMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): Promise<any> {
         let investStr = this.getMultiInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
-        return this.httpPost(request, SITE_URL + '/cathectic/cathectic.mvc', {
+        return this.httpPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
     }
@@ -151,7 +151,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      */
     public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any> {
         let investStr = this.getInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu);
-        return this.httpPost(request, SITE_URL + '/cathectic/cathectic.mvc', {
+        return this.httpPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
     }

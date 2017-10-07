@@ -81,4 +81,5 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
 #### 方案四【验证中】遇到特殊形态投注
 1. 杀号：当出现“偶偶奇”形态时，开始投注，杀“奇奇偶”+“偶偶奇”
 2. 杀号：用杀“奇奇偶+偶偶奇+三连+豹子”的结果做大底
+如果上期和下期的投注是连续的，则放弃当前投注
 
