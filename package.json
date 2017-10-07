@@ -6,11 +6,9 @@
     "jasmine": "^2.6.0",
     "lodash": "^4.17.4",
     "log4js": "^2.0.0",
-    "progress": "^2.0.0",
     "sqlite3": "^3.1.8",
     "typescript": "^2.3.2",
     "cheerio": "^1.0.0-rc.2",
-    "colors": "^1.1.2",
     "commander": "^2.11.0"
   },
   "scripts": {

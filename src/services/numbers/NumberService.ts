@@ -16,7 +16,6 @@ import {KillNumberLastThreeOpenNumbers} from "../rules/killnumber/KillNumberLast
 
 let log4js = require('log4js'),
     log = log4js.getLogger('NumberService'),
-    colors = require('colors/safe'),
     jiouType = new JiOuType(),
     road012Type = new Road012Type(),
     killNumbersFollowPlay = new KillNumbersFollowPlay(),
