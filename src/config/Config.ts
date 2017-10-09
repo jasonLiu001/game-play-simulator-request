@@ -23,8 +23,10 @@ export const CONFIG_CONST = {
     awardPrice: 1954,
     //需要获取的历史号码数量
     historyCount: 3,
-    //目标盈利金额 单位为元 该值的设置 必须加上初始的账号余额才行 比如：初始100，盈利20，改值为120
-    maxWinMoney: 115
+    //账户初始余额
+    currentAccoutBalance: 100,
+    //目标盈利金额 单位为元 该值的设置 必须加上初始的账号余额才行 比如：初始余额100，盈利20，改值为120
+    maxWinMoney: 130
 };
 
 /**
@@ -65,7 +67,7 @@ export class Config {
         last_PrizeNumber: null, //上期开奖号码 程序运行时初始化
         nextPeriodInvestTime: null, //下期投注时间 程序运行时初始化
         current_Peroid: null, //当前投注期号 程序运行时初始化
-        currentAccoutBalance: 100//当前账户余额 程序运行时初始化
+        currentAccoutBalance: CONFIG_CONST.currentAccoutBalance//当前账户余额 程序运行时初始化
     };
 
     //玩法类型
