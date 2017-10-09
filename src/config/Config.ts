@@ -1,7 +1,6 @@
 import {CaptchaDecoderInfo} from "../models/CaptchaDecoderInfo";
 import {AwardMode} from "../models/AwardMode";
 import {GlobalVariable} from "../models/GlobalVariable";
-import {PlayMode} from "../models/PlayMode";
 let path = require('path');
 
 /**
