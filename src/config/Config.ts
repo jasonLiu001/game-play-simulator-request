@@ -70,15 +70,6 @@ export class Config {
         currentAccoutBalance: CONFIG_CONST.currentAccoutBalance//当前账户余额 程序运行时初始化
     };
 
-    //玩法类型
-    public playMode: PlayMode = {
-        three: 'three',//三星
-        two: 'two',//二星
-        one: 'one'//一星
-    };
-    //当前玩法类型
-    public currentSelectedPlayMode: string = this.playMode.three;
-
     /**
      *
      * Promise的reject的消息字符

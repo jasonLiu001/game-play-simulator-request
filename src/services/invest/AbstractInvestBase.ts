@@ -3,7 +3,6 @@ import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
-import {Utility} from "../Utility";
 import {TimerService} from "../timer/TimerService";
 
 
@@ -207,8 +206,8 @@ export abstract class AbstractInvestBase {
                         isWin: item.isWin,
                         investTime: item.investTime
                     };
-                    //开奖号码
-                    let prizeNumber = Utility.getPrizeNumber(config, item.openNumber);
+                    //后三开奖号码
+                    let prizeNumber = item.openNumber.substring(2);
                     //兑奖
                     this.UpdatePrize(investInfo, prizeNumber, config);
                     investInfoList.push(investInfo);
