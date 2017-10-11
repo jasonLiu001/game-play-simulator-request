@@ -8,7 +8,6 @@ import Promise = require('bluebird');
 import _ = require('lodash');
 import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
-import {LotteryDbService} from "../dbservices/DBSerivice";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {KillNumberLastOpenNumber} from "../rules/killnumber/KillNumberLastOpenNumber";
 import {KillNumberLastThreeOpenNumbers} from "../rules/killnumber/KillNumberLastThreeOpenNumbers";
