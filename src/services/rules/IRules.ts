@@ -1,6 +1,4 @@
-import {Config} from "../../config/Config";
 import Promise = require('bluebird');
-import {LotteryDbService} from "../dbservices/DBSerivice";
 
 /**
  *

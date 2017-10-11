@@ -1,4 +1,3 @@
-import {Config} from "../../../config/Config";
 import Promise = require('bluebird');
 
 /**

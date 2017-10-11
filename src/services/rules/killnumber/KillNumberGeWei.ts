@@ -1,5 +1,5 @@
 import {IRules} from "../IRules";
-import {Config, CONFIG_CONST} from "../../../config/Config";
+import {CONFIG_CONST} from "../../../config/Config";
 import {AbstractRuleBase} from "../AbstractRuleBase";
 import Promise = require('bluebird');
 import _ = require('lodash');

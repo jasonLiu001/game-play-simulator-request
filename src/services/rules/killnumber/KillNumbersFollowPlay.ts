@@ -5,7 +5,6 @@ import {Analysis360Service} from "../../crawler/analysis/Analysis360Service";
 import Promise = require('bluebird');
 import {EnumKillNumberPosition} from "../../../models/EnumModel";
 import _ = require('lodash');
-import {LotteryDbService} from "../../dbservices/DBSerivice";
 
 let analysis360Service = new Analysis360Service(),
     log4js = require('log4js'),

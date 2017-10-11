@@ -1,5 +1,4 @@
 import _ = require('lodash');
-import {Config} from "../../config/Config";
 
 /**
  *
