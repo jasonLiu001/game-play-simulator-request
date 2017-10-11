@@ -1,5 +1,5 @@
 import {GlobalVariable} from "../models/GlobalVariable";
-import {EnumAwardMode} from "../models/EnumAwardMode";
+import {EnumAwardMode} from "../models/EnumModel";
 let path = require('path');
 
 /**

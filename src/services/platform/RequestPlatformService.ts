@@ -3,7 +3,7 @@ import {TimerService} from "../timer/TimerService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
 import {LotteryDbService} from "../dbservices/DBSerivice";
-import {EnumAwardMode} from "../../models/EnumAwardMode";
+import {EnumAwardMode} from "../../models/EnumModel";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
     timerService = new TimerService();

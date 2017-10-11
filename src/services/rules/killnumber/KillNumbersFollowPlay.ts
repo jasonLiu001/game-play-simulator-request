@@ -3,7 +3,7 @@ import {Config} from "../../../config/Config";
 import {AbstractRuleBase} from "../AbstractRuleBase";
 import {Analysis360Service} from "../../crawler/analysis/Analysis360Service";
 import Promise = require('bluebird');
-import {EnumKillNumberPosition} from "../../../models/EnumKillNumberPosition";
+import {EnumKillNumberPosition} from "../../../models/EnumModel";
 import _ = require('lodash');
 import {LotteryDbService} from "../../dbservices/DBSerivice";
 

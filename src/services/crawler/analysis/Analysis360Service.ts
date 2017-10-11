@@ -2,7 +2,7 @@ import {IAnalysisCrawler} from "./IAnalysisCrawler";
 import {Config} from "../../../config/Config";
 import Promise = require('bluebird');
 import _ = require('lodash');
-import {EnumKillNumberPosition} from "../../../models/EnumKillNumberPosition";
+import {EnumKillNumberPosition} from "../../../models/EnumModel";
 
 
 let log4js = require('log4js'),

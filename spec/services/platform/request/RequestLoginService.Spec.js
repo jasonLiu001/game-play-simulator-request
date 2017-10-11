@@ -1,7 +1,7 @@
 let RequestLoginService = require('../../../../dist/services/platform/request/RequestLoginService').RequestLoginService;
 let RequestPlatformService = require('../../../../dist/services/platform/request/RequestPlatformService').RequestPlatformService;
 let Config = require('../../../../dist/config/Config').Config;
-let EnumAwardMode = require('../../../../dist/models/EnumAwardMode').EnumAwardMode;
+let EnumAwardMode = require('../../../../dist/models/EnumModel').EnumAwardMode;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 
 let Request = require('request');

@@ -12,3 +12,18 @@ export const enum EnumAwardMode{
         //厘模式
     li = 1000
 }
+
+/**
+ *
+ * 杀号位置
+ */
+export const enum EnumKillNumberPosition{
+    //个位
+    geWei,
+
+        //十位
+    shiWei,
+
+        //百位
+    baiWei,
+}

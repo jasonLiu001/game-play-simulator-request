@@ -4,7 +4,7 @@ import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
 import {TimerService} from "../timer/TimerService";
-import {EnumAwardMode} from "../../models/EnumAwardMode";
+import {EnumAwardMode} from "../../models/EnumModel";
 
 
 let log4js = require('log4js'),
