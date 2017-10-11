@@ -12,7 +12,7 @@ describe("JiOuType Test", () => {
     });
 
     it("filterNumbers test", (done) => {
-        jiouType.filterNumbers(config, null)
+        jiouType.filterNumbers(null)
             .then((result) => {
                 expect(result).not.toContain('141');
                 expect(result).toContain('418');

@@ -1,4 +1,3 @@
-import {Config} from './config/Config';
 import {LotteryDbService} from "./services/dbservices/DBSerivice";
 import Promise = require('bluebird');
 import {AwardService} from "./services/award/AwardService";
@@ -13,7 +12,6 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 let log = log4js.getLogger('App'),
     investService = new InvestService(),
     errorService = new ErrorService(),
-    config = new Config(),
     lotteryDbService = new LotteryDbService(),//奖号服务
     awardService = new AwardService(),
     cookie = Request.jar(),
@@ -38,8 +36,8 @@ export class App {
             .then(() => {
                 //TODO:在投注前要手工设置当前的账号余额
                 //启动更新奖号任务 奖号更新成功后执行自动投注
-                awardService.start(lotteryDbService, config, () => {
-                    investService.executeAutoInvest(request, lotteryDbService, config);
+                awardService.start(lotteryDbService, () => {
+                    investService.executeAutoInvest(request, lotteryDbService);
                 });
             })
             .catch((err) => {

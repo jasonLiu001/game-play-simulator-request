@@ -18,7 +18,7 @@ describe("KillNumberGeWei Test", () => {
     });
 
     it("filterNumbers test", (done) => {
-        killNumberGeWei.filterNumbers(config, lotteryDbService)
+        killNumberGeWei.filterNumbers(lotteryDbService)
             .then((result) => {
                 expect(result).toBeDefined();
                 done();

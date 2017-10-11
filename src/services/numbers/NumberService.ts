@@ -26,18 +26,18 @@ let log4js = require('log4js'),
     killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
     brokenGroup = new BrokenGroup();
 export class NumberService extends AbstractRuleBase {
-    public generateInvestNumber(config: Config, lotteryDbService: LotteryDbService): Promise<string> {
+    public generateInvestNumber(lotteryDbService: LotteryDbService): Promise<string> {
         return Promise
             .all([
-                jiouType.filterNumbers(config, lotteryDbService), //杀奇偶
-                killNumbersFollowPlay.filterNumbers(config, lotteryDbService),//根据计划杀号 杀 百位 个位 十位
-                //road012Type.filterNumbers(config, lotteryDbService), //杀012路
-                //killNumbersMaxMiss.filterNumbers(config, lotteryDbService),//根据最大遗漏值 杀 百位 个位 十位
-                //killNumberGeWei.filterNumbers(config, lotteryDbService),//个位出现连号时 杀个位
-                //killNumberLastOpenNumber.filterNumbers(config, lotteryDbService),//上期出现什么号码，杀什么号码
-                //killNumberLastThreeOpenNumbers.filterNumbers(config, lotteryDbService),//上三期出现什么号码，杀每位的上3期号码
-                //brokenGroup.filterNumbers(config, lotteryDbService) //断组
-                //braveNumber.filterNumbers(config, lotteryDbService) //定胆
+                jiouType.filterNumbers(lotteryDbService), //杀奇偶
+                killNumbersFollowPlay.filterNumbers(lotteryDbService),//根据计划杀号 杀 百位 个位 十位
+                //road012Type.filterNumbers(lotteryDbService), //杀012路
+                //killNumbersMaxMiss.filterNumbers(lotteryDbService),//根据最大遗漏值 杀 百位 个位 十位
+                //killNumberGeWei.filterNumbers(lotteryDbService),//个位出现连号时 杀个位
+                //killNumberLastOpenNumber.filterNumbers(lotteryDbService),//上期出现什么号码，杀什么号码
+                //killNumberLastThreeOpenNumbers.filterNumbers(lotteryDbService),//上三期出现什么号码，杀每位的上3期号码
+                //brokenGroup.filterNumbers(lotteryDbService) //断组
+                //braveNumber.filterNumbers(lotteryDbService) //定胆
             ])
             .then((results) => {
                 let resultArray = _.intersection(results[0], results[1]);
@@ -49,7 +49,7 @@ export class NumberService extends AbstractRuleBase {
      *
      * 检查上期开奖号码是否满足投注条件
      */
-    public isLastPrizeNumberValid(config: Config): boolean {
+    public isLastPrizeNumberValid(): boolean {
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
         //开奖号码信息
         let prizeFirst = Number(last_PrizeNumber.charAt(0));

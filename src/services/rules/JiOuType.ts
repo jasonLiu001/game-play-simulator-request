@@ -9,7 +9,7 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
  * 杀奇偶类型
  */
 export class JiOuType extends AbstractRuleBase implements IRules {
-    public filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    public filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;

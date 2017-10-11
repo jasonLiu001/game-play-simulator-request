@@ -17,12 +17,12 @@ let analysis360Service = new Analysis360Service(),
  * 根据计划杀号
  */
 export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
-    public filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    public filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
-        return this.getKillNumberObject(config)
+        return this.getKillNumberObject()
             .then((result) => {
                 //杀号 结果
-                let restArray = this.getRestKillNumberArray(config, originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
+                let restArray = this.getRestKillNumberArray(originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
                 return restArray;
             });
     }
@@ -32,7 +32,7 @@ export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
      *
      * 需要杀掉的号码
      */
-    private getKillNumberObject(config: Config): Promise<KillNumberInfo> {
+    private getKillNumberObject(): Promise<KillNumberInfo> {
         return Promise.all(
             [
                 analysis360Service.getKillNumber(EnumKillNumberPosition.baiWei),//杀百位

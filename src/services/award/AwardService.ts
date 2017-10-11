@@ -21,9 +21,9 @@ export class AwardService {
      *
      * 开始获取奖号
      */
-    start(lotteryDbService: LotteryDbService, config: Config, success?: Function): void {
+    start(lotteryDbService: LotteryDbService, success?: Function): void {
         Config.awardTimer = setInterval(() => {
-            this.saveOrUpdateAwardInfo(lotteryDbService, config, success)
+            this.saveOrUpdateAwardInfo(lotteryDbService, success)
                 .catch((err) => {
                     if (err) {
                         log.error(err);
@@ -37,8 +37,8 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    saveOrUpdateAwardInfo(lotteryDbService: LotteryDbService, config: Config, success?: Function): Promise<AwardInfo> {
-        return timerService.isInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds)
+    saveOrUpdateAwardInfo(lotteryDbService: LotteryDbService, success?: Function): Promise<AwardInfo> {
+        return timerService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
                 return crawl360Service.getAwardInfo();
@@ -54,7 +54,7 @@ export class AwardService {
                     })
                     .then(() => {
                         //更新下期开奖时间
-                        timerService.updateNextPeriodInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds);
+                        timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
                         log.info('正在保存第三方开奖数据...');
                         //更新全局变量
                         Config.globalVariable.last_Period = award.period;

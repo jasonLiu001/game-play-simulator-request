@@ -17,8 +17,6 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
     errorService = new ErrorService(),
-    config = new Config(),
-    lotteryDbService = new LotteryDbService(),//奖号服务
     timerService = new TimerService(),
     cookie = Request.jar(),
     request = Request.defaults(
@@ -55,7 +53,7 @@ export class CommandApp {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //使用request投注 需要先登录在投注 每次投注前都需要登录
-                return requestLoginService.login(request, config);
+                return requestLoginService.login(request);
             })
             .then(() => {
                 //获取当前账号余额

@@ -58,7 +58,7 @@ export abstract class AbstractInvestBase {
     }
 
 
-    private updateCurrentAccountBalace(investInfo: InvestInfo, config: Config) {
+    private updateCurrentAccountBalace(investInfo: InvestInfo) {
         //更新当前账号余额
         if (investInfo.isWin == 1) {
             investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + CONFIG_CONST.awardPrice / investInfo.awardMode).toFixed(2));
@@ -72,9 +72,9 @@ export abstract class AbstractInvestBase {
      *
      * 检查是否可以执行真正的投注操作
      */
-    private checkLastPrizeNumberValidation(config: Config): Promise<boolean> {
+    private checkLastPrizeNumberValidation(): Promise<boolean> {
         //上期的开奖号码是否满足投注条件
-        let isValid = numberService.isLastPrizeNumberValid(config);
+        let isValid = numberService.isLastPrizeNumberValid();
         log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, new Date().toLocaleTimeString());
         log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
         if (!isValid) {
@@ -89,11 +89,11 @@ export abstract class AbstractInvestBase {
      *
      * 检查投注时间 在02:00-10:00点之间不允许投注
      */
-    private checkInvestTime(config: Config): Promise<any> {
+    private checkInvestTime(): Promise<any> {
         //检查在此时间内是否允许投注
         if (timerService.isInStopInvestTime()) {
             //更新开奖时间
-            timerService.updateNextPeriodInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds);
+            timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
             return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00到10:00之间，不符合投注时间")
         }
         return Promise.resolve(true);
@@ -131,7 +131,7 @@ export abstract class AbstractInvestBase {
      *
      * 检查最大盈利金额是否达到设定目标
      */
-    private checkMaxWinMoney(config: Config, isMockTest: boolean): Promise<any> {
+    private checkMaxWinMoney(isMockTest: boolean): Promise<any> {
         if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
             let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
             if (!isMockTest) {//真实投注
@@ -149,16 +149,16 @@ export abstract class AbstractInvestBase {
      * @param config
      * @param isMockTest 是否是模拟测试
      */
-    public doCheck(config: Config, isMockTest: boolean): Promise<boolean> {
+    public doCheck(isMockTest: boolean): Promise<boolean> {
         //检查开奖号码是否已经更新
-        return this.checkLastPrizeNumberValidation(config)
+        return this.checkLastPrizeNumberValidation()
             .then(() => {
                 //检查投注时间 在02:00-10:00点之间不允许投注
-                return this.checkInvestTime(config);
+                return this.checkInvestTime();
             })
             .then(() => {
                 //检查当前的最大盈利金额
-                return this.checkMaxWinMoney(config, isMockTest);
+                return this.checkMaxWinMoney(isMockTest);
             });
 
     }
@@ -168,7 +168,7 @@ export abstract class AbstractInvestBase {
      *
      * 初始化投注信息
      */
-    public initInvestInfo(config: Config): InvestInfo {
+    public initInvestInfo(): InvestInfo {
         let investInfo: InvestInfo = {
             period: Config.globalVariable.current_Peroid,
             investNumbers: Config.currentInvestNumbers,
@@ -188,7 +188,7 @@ export abstract class AbstractInvestBase {
      *
      * 计算上期盈亏
      */
-    public calculateWinMoney(lotteryDbService: LotteryDbService, config: Config): Promise<any> {
+    public calculateWinMoney(): Promise<any> {
         return LotteryDbService.getInvestInfoListByStatus(0)
             .then((resultList) => {
                 if (!resultList) Promise.resolve(true);
@@ -210,7 +210,7 @@ export abstract class AbstractInvestBase {
                     //后三开奖号码
                     let prizeNumber = item.openNumber.substring(2);
                     //兑奖
-                    this.UpdatePrize(investInfo, prizeNumber, config);
+                    this.UpdatePrize(investInfo, prizeNumber);
                     investInfoList.push(investInfo);
                 }
 
@@ -232,7 +232,7 @@ export abstract class AbstractInvestBase {
      * @param config
      * @return {Array|string[]}
      */
-    private UpdatePrize(investInfo: InvestInfo, openNumber: string, config: Config): void {
+    private UpdatePrize(investInfo: InvestInfo, openNumber: string): void {
         //投注号码数组
         let investNumbersArray = (investInfo.investNumbers == "") ? [] : investInfo.investNumbers.split(',');
         //更新中奖状态
@@ -240,7 +240,7 @@ export abstract class AbstractInvestBase {
         //更新当前盈利
         this.updateWinMoney(investNumbersArray, investInfo);
         //更新当前账号余额
-        this.updateCurrentAccountBalace(investInfo, config);
+        this.updateCurrentAccountBalace(investInfo);
         //更新开奖状态
         investInfo.status = 1;//已开奖
     }
@@ -250,7 +250,7 @@ export abstract class AbstractInvestBase {
      *
      * 正式投注成功后台 更新投注后的账户余额
      */
-    public updateCurrentAccountBalance(config: Config, lotteryDbService: LotteryDbService): void {
+    public updateCurrentAccountBalance(): void {
         //投注号码数组
         let investNumbersArray = (Config.currentInvestNumbers == "") ? [] : Config.currentInvestNumbers.split(',');
         //当前投入

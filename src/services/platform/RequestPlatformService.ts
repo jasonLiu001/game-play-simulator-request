@@ -179,11 +179,10 @@ export class RequestPlatformService extends PlatformAbstractBase {
      *
      * 直接投注的入口方法
      * @param request
-     * @param config
      * @param lotteryDbService
      * @param touZhuBeiShu 投注倍数
      */
-    public invest(request: any, config: Config, lotteryDbService: LotteryDbService, touZhuBeiShu: string = '1'): Promise<any> {
+    public invest(request: any, lotteryDbService: LotteryDbService, touZhuBeiShu: string = '1'): Promise<any> {
         return this.investPrepare(request)
             .then((token) => {
                 let currentPeriod = timerService.getCurrentPeriodNumber(new Date());

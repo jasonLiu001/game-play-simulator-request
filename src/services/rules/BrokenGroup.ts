@@ -14,7 +14,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
      *
      * 产生断组号码 格式：019-456-2378
      */
-    private getBrokenNumbers(config: Config): string {
+    private getBrokenNumbers(): string {
         let brokenNumberStr = '';
         let lastPrize = Config.globalVariable.last_PrizeNumber;
         let num1 = lastPrize.substr(3, 1);
@@ -151,10 +151,10 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         return resultArray;
     }
 
-    filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let totalNumberArray = this.getTotalNumberArray();
         //产生断组号码
-        let brokenGroupStr = this.getBrokenNumbers(config);
+        let brokenGroupStr = this.getBrokenNumbers();
         //断组中不包含的号码
         let numberNotInGroup = this.getNumbersNotInGroup(brokenGroupStr);
         //01.首先排除掉 断组中不包含的号码 如'9-456-2378'不包含'01'，所以首先排除掉由'01'组成的所有三位号码

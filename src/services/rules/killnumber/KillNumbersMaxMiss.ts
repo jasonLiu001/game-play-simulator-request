@@ -25,7 +25,7 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules {
      *
      * 获取最大遗漏号码
      */
-    private getMaxMissNumberObject(config: Config): Promise<KillNumberInfo> {
+    private getMaxMissNumberObject(): Promise<KillNumberInfo> {
         return Promise.all(
             [
                 analysis360Service.getMaxMissNumber(EnumKillNumberPosition.baiWei),//杀百位遗漏最大的号码
@@ -42,12 +42,12 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules {
     }
 
 
-    filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
-        return this.getMaxMissNumberObject(config)
+        return this.getMaxMissNumberObject()
             .then((result) => {
                 //杀最大遗漏号码 杀号结果
-                let restArray = this.getRestKillNumberArray(config, originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
+                let restArray = this.getRestKillNumberArray(originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
                 return restArray;
             });
     }

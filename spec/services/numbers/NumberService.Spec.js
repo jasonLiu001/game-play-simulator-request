@@ -37,7 +37,7 @@ describe("Class NumberService Test", () => {
     it("generate invest numbers count Test", (done) => {
         Config.globalVariable.last_PrizeNumber = "96789";
         numberService
-            .generateInvestNumber(config)
+            .generateInvestNumber()
             .then((result) => {
                 let res = result.split(',');
                 expect(res.length).toBeGreaterThan(500);

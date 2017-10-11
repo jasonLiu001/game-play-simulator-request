@@ -54,7 +54,7 @@ export class RequestLoginService extends PlatformAbstractBase {
      *
      * 开始模拟登录操作
      */
-    public loginMock(request: any, config: Config, capatchaCodeString: string): Promise<any> {
+    public loginMock(request: any, capatchaCodeString: string): Promise<any> {
         return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
             .then(() => {
                 return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
@@ -71,7 +71,7 @@ export class RequestLoginService extends PlatformAbstractBase {
      *
      * 对外的调用接口
      */
-    public login(request: any, config: Config): Promise<any> {
+    public login(request: any): Promise<any> {
         return this.gotoLoginPage(request)
             .then((indexContent) => {
                 //请求验证码
@@ -83,7 +83,7 @@ export class RequestLoginService extends PlatformAbstractBase {
             })
             .then((parserRes: ResponseData) => {
                 //开始登录
-                return this.loginMock(request, config, parserRes.pic_str);
+                return this.loginMock(request, parserRes.pic_str);
             });
     }
 }

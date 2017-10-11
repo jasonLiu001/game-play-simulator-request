@@ -32,10 +32,10 @@ describe('RequestLoginService Test', () => {
     });
 
     it('RequestLoginService Test', (done) => {
-        requestLoginService.login(request, config)
+        requestLoginService.login(request)
             .then((body) => {
                 let res = body;
-                return requestPlatformService.invest(request, config, lotteryDbService);
+                return requestPlatformService.invest(request, lotteryDbService);
             })
             .then((body) => {
                 let res = body;

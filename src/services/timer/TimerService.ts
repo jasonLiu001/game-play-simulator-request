@@ -4,11 +4,11 @@ import Promise = require('bluebird');
 import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimerService {
-    public updateNextPeriodInvestTime(config: Config, currentTime: Date, delaySeconds = 0): void {
+    public updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
         Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
     }
 
-    public isInvestTime(config: Config, currentTime: Date, delaySeconds = 0): Promise<boolean> {
+    public isInvestTime(currentTime: Date, delaySeconds = 0): Promise<boolean> {
         if (Config.globalVariable.nextPeriodInvestTime == null) {
             Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);

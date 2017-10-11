@@ -12,7 +12,6 @@ log4js.configure('./config/log4js.json');
 
 let log = log4js.getLogger('MockApp'),
     errorService = new ErrorService(),
-    config = new Config(),
     lotteryDbService = new LotteryDbService(),//奖号服务
     awardService = new AwardService(),
     mockInvestService = new MockInvestService(),
@@ -37,8 +36,8 @@ export class MockApp {
             .then(() => {
                 //TODO:在投注前要手工设置当前的账号余额
                 //启动更新奖号任务 奖号更新成功后执行自动投注
-                awardService.start(lotteryDbService, config, () => {
-                    mockInvestService.executeAutoInvest(lotteryDbService, config);
+                awardService.start(lotteryDbService, () => {
+                    mockInvestService.executeAutoInvest(lotteryDbService);
                 });
             })
             .catch((err) => {

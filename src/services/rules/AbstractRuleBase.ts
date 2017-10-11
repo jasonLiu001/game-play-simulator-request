@@ -58,7 +58,7 @@ export class AbstractRuleBase {
      *
      * 杀号 并返回杀号后的数组
      */
-    protected getRestKillNumberArray(config: Config, originNumberArray: Array<string>, dropBaiWeiNumberArray?: Array<string>, dropShiWeiNumberArray?: Array<string>, dropGeWeiNumberArray?: Array<string>): Array<string> {
+    protected getRestKillNumberArray(originNumberArray: Array<string>, dropBaiWeiNumberArray?: Array<string>, dropShiWeiNumberArray?: Array<string>, dropGeWeiNumberArray?: Array<string>): Array<string> {
         let restNumberArray: Array<string> = [];
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];

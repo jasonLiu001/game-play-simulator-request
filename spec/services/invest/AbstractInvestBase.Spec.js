@@ -23,7 +23,7 @@ describe("AbstractInvestBase Test", () => {
         investInfo.currentAccountBalance = 34.79;
         investInfo.awardMode = EnumAwardMode.feng;
 
-        abstractInvestBase.updateCurrentAccountBalace(investInfo, config);
+        abstractInvestBase.updateCurrentAccountBalace(investInfo);
 
         let result = Config.globalVariable.currentAccoutBalance - 16.34;
 
@@ -37,7 +37,7 @@ describe("AbstractInvestBase Test", () => {
     });
 
     it("calculateWinMoney test", (done) => {
-        abstractInvestBase.calculateWinMoney(lotteryDbService, config)
+        abstractInvestBase.calculateWinMoney()
             .then((result) => {
                 expect(result).toBeDefined();
                 done();
