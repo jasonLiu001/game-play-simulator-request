@@ -1,13 +1,11 @@
 import {Config} from './config/Config';
 import {LotteryDbService} from "./services/dbservices/DBSerivice";
 import Promise = require('bluebird');
-import {MockInvestService} from "./services/invest/MockInvestService";
-import {AwardService} from "./services/award/AwardService";
-import {InvestService} from "./services/invest/InvestService";
 import {ErrorService} from "./services/error/ErrorService";
 import {RequestLoginService} from "./services/platform/RequestLoginService";
 import {RequestPlatformService} from "./services/platform/RequestPlatformService";
 import {TimerService} from "./services/timer/TimerService";
+import {HttpRequestHeaders} from "./models/EnumModel";
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js'),
@@ -18,19 +16,16 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
-    investService = new InvestService(),
     errorService = new ErrorService(),
     config = new Config(),
     lotteryDbService = new LotteryDbService(),//奖号服务
-    awardService = new AwardService(),
-    mockInvestService = new MockInvestService(),
     timerService = new TimerService(),
     cookie = Request.jar(),
     request = Request.defaults(
         {
             jar: cookie,
             timeout: 20000,
-            headers: Config.HttpRequestHeaders
+            headers: HttpRequestHeaders
         });
 
 program

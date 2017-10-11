@@ -46,3 +46,13 @@ export const enum RejectionMsg{
         //开奖号码中的历史数据不够
     historyCountIsNotEnough = 'history-count-in-award-table-is-not-enough'
 }
+
+/**
+ *
+ *
+ * 模拟的http请求头
+ */
+export const HttpRequestHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3103.400 QQBrowser/9.6.11372.400',
+    'Accept': '*/*'
+};

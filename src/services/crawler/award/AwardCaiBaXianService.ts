@@ -1,7 +1,7 @@
 import {IAwardCrawler} from "./IAwardCrawler";
-import {Config} from "../../../config/Config";
 import Promise = require('bluebird');
 import {AwardInfo} from "../../../models/AwardInfo";
+import {HttpRequestHeaders} from "../../../models/EnumModel";
 
 let request = require('request');
 
@@ -29,7 +29,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
             request(
                 {
                     uri: dataUrl,
-                    headers: Config.HttpRequestHeaders,
+                    headers: HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) reject(error);

@@ -1,8 +1,7 @@
 import {IAnalysisCrawler} from "./IAnalysisCrawler";
-import {Config} from "../../../config/Config";
 import Promise = require('bluebird');
 import _ = require('lodash');
-import {EnumKillNumberPosition} from "../../../models/EnumModel";
+import {EnumKillNumberPosition, HttpRequestHeaders} from "../../../models/EnumModel";
 
 
 let log4js = require('log4js'),
@@ -81,7 +80,7 @@ export class Analysis360Service implements IAnalysisCrawler {
             request(
                 {
                     url: this.getKillNumberUrl(killNumberPosition),
-                    headers: Config.HttpRequestHeaders,
+                    headers: HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) {
@@ -156,7 +155,7 @@ export class Analysis360Service implements IAnalysisCrawler {
             request(
                 {
                     url: this.getMaxMissNumberUrl(maxMissNumberPosition),
-                    headers: Config.HttpRequestHeaders,
+                    headers: HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) {

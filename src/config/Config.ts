@@ -56,15 +56,5 @@ export class Config {
         current_Peroid: null, //当前投注期号 程序运行时初始化
         currentAccoutBalance: CONFIG_CONST.currentAccoutBalance//当前账户余额 程序运行时初始化
     };
-
-    /**
-     *
-     *
-     * 模拟的http请求头
-     */
-    public static readonly HttpRequestHeaders = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3103.400 QQBrowser/9.6.11372.400',
-        'Accept': '*/*'
-    };
 }
 

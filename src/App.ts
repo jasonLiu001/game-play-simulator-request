@@ -4,6 +4,7 @@ import Promise = require('bluebird');
 import {AwardService} from "./services/award/AwardService";
 import {InvestService} from "./services/invest/InvestService";
 import {ErrorService} from "./services/error/ErrorService";
+import {HttpRequestHeaders} from "./models/EnumModel";
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js');
@@ -20,7 +21,7 @@ let log = log4js.getLogger('App'),
         {
             jar: cookie,
             timeout: 20000,
-            headers: Config.HttpRequestHeaders
+            headers: HttpRequestHeaders
         });
 
 
@@ -42,7 +43,6 @@ export class App {
                 });
             })
             .catch((err) => {
-                //启动失败后结束electron进程
                 errorService.appErrorHandler(log, err);
             });
     }

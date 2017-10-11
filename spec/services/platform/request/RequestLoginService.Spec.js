@@ -2,6 +2,7 @@ let RequestLoginService = require('../../../../dist/services/platform/request/Re
 let RequestPlatformService = require('../../../../dist/services/platform/request/RequestPlatformService').RequestPlatformService;
 let Config = require('../../../../dist/config/Config').Config;
 let EnumAwardMode = require('../../../../dist/models/EnumModel').EnumAwardMode;
+let HttpRequestHeaders = require('../../../../dist/models/EnumModel').HttpRequestHeaders;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 
 let Request = require('request');
@@ -12,7 +13,7 @@ let request = Request.defaults(
     {
         jar: cookie,
         timeout: 20000,
-        headers: Config.HttpRequestHeaders
+        headers: HttpRequestHeaders
     });
 
 describe('RequestLoginService Test', () => {
