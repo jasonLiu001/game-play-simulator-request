@@ -16,7 +16,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
      */
     private getBrokenNumbers(config: Config): string {
         let brokenNumberStr = '';
-        let lastPrize = config.globalVariable.last_PrizeNumber;
+        let lastPrize = Config.globalVariable.last_PrizeNumber;
         let num1 = lastPrize.substr(3, 1);
         let num2 = lastPrize.substr(4, 1);
         let tailNumber = (Number(num1) + Number(num2)) % 10;

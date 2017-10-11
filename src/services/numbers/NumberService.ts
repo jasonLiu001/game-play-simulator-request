@@ -50,7 +50,7 @@ export class NumberService extends AbstractRuleBase {
      * 检查上期开奖号码是否满足投注条件
      */
     public isLastPrizeNumberValid(config: Config): boolean {
-        let last_PrizeNumber = config.globalVariable.last_PrizeNumber;
+        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
         //开奖号码信息
         let prizeFirst = Number(last_PrizeNumber.charAt(0));
         let prizeSecond = Number(last_PrizeNumber.charAt(1));

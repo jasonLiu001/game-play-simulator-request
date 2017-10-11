@@ -5,18 +5,18 @@ import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimerService {
     public updateNextPeriodInvestTime(config: Config, currentTime: Date, delaySeconds = 0): void {
-        config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
+        Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
     }
 
     public isInvestTime(config: Config, currentTime: Date, delaySeconds = 0): Promise<boolean> {
-        if (config.globalVariable.nextPeriodInvestTime == null) {
-            config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);
+        if (Config.globalVariable.nextPeriodInvestTime == null) {
+            Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);
         }
 
         let nextOpenTime = this.getNextOpenTime(currentTime, delaySeconds);
         //未到开奖时间
-        if (nextOpenTime.getTime() == config.globalVariable.nextPeriodInvestTime.getTime()) {
+        if (nextOpenTime.getTime() == Config.globalVariable.nextPeriodInvestTime.getTime()) {
             return Promise.reject(RejectionMsg.notReachInvestTime);
         } else {
             return Promise.resolve(true);

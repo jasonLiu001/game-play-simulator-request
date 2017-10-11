@@ -63,7 +63,7 @@ export abstract class AbstractInvestBase {
         if (investInfo.isWin == 1) {
             investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + CONFIG_CONST.awardPrice / investInfo.awardMode).toFixed(2));
             //更新全局余额
-            config.globalVariable.currentAccoutBalance = investInfo.currentAccountBalance;
+            Config.globalVariable.currentAccoutBalance = investInfo.currentAccountBalance;
         }
     }
 
@@ -75,10 +75,10 @@ export abstract class AbstractInvestBase {
     private checkLastPrizeNumberValidation(config: Config): Promise<boolean> {
         //上期的开奖号码是否满足投注条件
         let isValid = numberService.isLastPrizeNumberValid(config);
-        log.info('%s期开奖号码:%s，当前时间：%s', config.globalVariable.last_Period, config.globalVariable.last_PrizeNumber, new Date().toLocaleTimeString());
-        log.info('当前%s期，任务执行中...', config.globalVariable.current_Peroid);
+        log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, new Date().toLocaleTimeString());
+        log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
         if (!isValid) {
-            let errorMsg = config.globalVariable.last_Period + '期号码:' + config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
+            let errorMsg = Config.globalVariable.last_Period + '期号码:' + Config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + Config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
             //上期号码不满足条件时，则结束当前Promise调用链并返回
             return Promise.reject(errorMsg);
         }
@@ -132,8 +132,8 @@ export abstract class AbstractInvestBase {
      * 检查最大盈利金额是否达到设定目标
      */
     private checkMaxWinMoney(config: Config, isMockTest: boolean): Promise<any> {
-        if (config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
-            let message = "当前账号余额：" + config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
+        if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
+            let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
             if (!isMockTest) {//真实投注
                 return Promise.reject(message);
             }
@@ -170,9 +170,9 @@ export abstract class AbstractInvestBase {
      */
     public initInvestInfo(config: Config): InvestInfo {
         let investInfo: InvestInfo = {
-            period: config.globalVariable.current_Peroid,
+            period: Config.globalVariable.current_Peroid,
             investNumbers: Config.currentInvestNumbers,
-            currentAccountBalance: config.globalVariable.currentAccoutBalance,
+            currentAccountBalance: Config.globalVariable.currentAccoutBalance,
             investNumberCount: Config.currentInvestNumbers.split(',').length,
             awardMode: Config.currentSelectedAwardMode,
             winMoney: 0,
@@ -256,7 +256,7 @@ export abstract class AbstractInvestBase {
         //当前投入
         let investMoney = investNumbersArray.length * 2;
         //投注前保存 投注后的账号余额
-        config.globalVariable.currentAccoutBalance = Number((config.globalVariable.currentAccoutBalance - (investMoney / Config.currentSelectedAwardMode)).toFixed(2));
+        Config.globalVariable.currentAccoutBalance = Number((Config.globalVariable.currentAccoutBalance - (investMoney / Config.currentSelectedAwardMode)).toFixed(2));
 
     }
 }

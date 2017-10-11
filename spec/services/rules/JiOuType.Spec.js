@@ -7,7 +7,7 @@ describe("JiOuType Test", () => {
     beforeEach((done) => {
         jiouType = new JiOuType();
         config = new Config();
-        config.globalVariable.last_PrizeNumber = "37274";
+        Config.globalVariable.last_PrizeNumber = "37274";
         done();
     });
 

@@ -25,7 +25,7 @@ describe("AbstractInvestBase Test", () => {
 
         abstractInvestBase.updateCurrentAccountBalace(investInfo, config);
 
-        let result = config.globalVariable.currentAccoutBalance - 16.34;
+        let result = Config.globalVariable.currentAccoutBalance - 16.34;
 
         let fixedNumber = result.toFixed(2);
 

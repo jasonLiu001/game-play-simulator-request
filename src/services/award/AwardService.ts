@@ -57,9 +57,9 @@ export class AwardService {
                         timerService.updateNextPeriodInvestTime(config, new Date(), CONFIG_CONST.openTimeDelaySeconds);
                         log.info('正在保存第三方开奖数据...');
                         //更新全局变量
-                        config.globalVariable.last_Period = award.period;
-                        config.globalVariable.last_PrizeNumber = award.openNumber;
-                        config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
+                        Config.globalVariable.last_Period = award.period;
+                        Config.globalVariable.last_PrizeNumber = award.openNumber;
+                        Config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
 
                         return lotteryDbService.saveOrUpdateAwardInfo(award);
                     }).then(() => {

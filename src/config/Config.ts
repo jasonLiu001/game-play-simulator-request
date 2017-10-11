@@ -49,7 +49,7 @@ export class Config {
     //开奖号更新计时器
     public static awardTimer: any = null;
     //全局变量
-    public globalVariable: GlobalVariable = {
+    public static globalVariable: GlobalVariable = {
         last_Period: null, //上期期号 程序运行时初始化
         last_PrizeNumber: null, //上期开奖号码 程序运行时初始化
         nextPeriodInvestTime: null, //下期投注时间 程序运行时初始化

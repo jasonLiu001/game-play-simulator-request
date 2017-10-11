@@ -12,7 +12,7 @@ export class JiOuType extends AbstractRuleBase implements IRules {
     public filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
-        let last_PrizeNumber = config.globalVariable.last_PrizeNumber;
+        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
         //开奖号码信息
         let prizeFirst = Number(last_PrizeNumber.charAt(0));
         let prizeSecond = Number(last_PrizeNumber.charAt(1));

@@ -23,7 +23,7 @@ export class MockInvestService extends AbstractInvestBase {
                 return this.doCheck(config, true);
             })
             .then(() => {
-                log.info('投注前账户余额：%s', config.globalVariable.currentAccoutBalance);
+                log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在执行投注...');
                 return numberService.generateInvestNumber(config, lotteryDbService)
                     .then((currentInvestNumbers) => {
@@ -37,7 +37,7 @@ export class MockInvestService extends AbstractInvestBase {
                 //成功投注后 保存投注信息
                 this.updateCurrentAccountBalance(config, lotteryDbService);
                 //输出当前账户余额
-                log.info('买号后余额：%s', config.globalVariable.currentAccoutBalance);
+                log.info('买号后余额：%s', Config.globalVariable.currentAccoutBalance);
                 //真实投注成功后，记录已经成功投注的期数
                 Config.currentInvestTotalCount++;
                 let investInfo: InvestInfo = this.initInvestInfo(config);

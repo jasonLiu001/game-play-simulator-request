@@ -35,7 +35,7 @@ describe("Class NumberService Test", () => {
     });
 
     it("generate invest numbers count Test", (done) => {
-        config.globalVariable.last_PrizeNumber = "96789";
+        Config.globalVariable.last_PrizeNumber = "96789";
         numberService
             .generateInvestNumber(config)
             .then((result) => {
