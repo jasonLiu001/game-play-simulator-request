@@ -16,7 +16,7 @@ describe("KillNumbersFollowPlay Test", () => {
     });
 
     it("filterNumbers test", (done) => {
-        killNumberService.filterNumbers(null)
+        killNumberService.filterNumbers()
             .then((result) => {
                 expect(result).toBeDefined();
                 done();

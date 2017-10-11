@@ -42,7 +42,7 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules {
     }
 
 
-    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         return this.getMaxMissNumberObject()
             .then((result) => {

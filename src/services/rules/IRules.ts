@@ -13,5 +13,5 @@ export interface IRules {
      * @param last_PrizeNumber 上期的开奖号码
      * @return 杀号后的数组
      */
-    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>>;
+    filterNumbers(): Promise<Array<string>>;
 }

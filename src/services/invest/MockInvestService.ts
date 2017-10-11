@@ -16,7 +16,7 @@ export class MockInvestService extends AbstractInvestBase {
      *
      * 模拟执行投注入口方法
      */
-    executeAutoInvest(lotteryDbService: LotteryDbService): void {
+    executeAutoInvest(request: any): void {
         this.calculateWinMoney()
             .then(() => {
                 //检查是可以投注
@@ -25,7 +25,7 @@ export class MockInvestService extends AbstractInvestBase {
             .then(() => {
                 log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在执行投注...');
-                return numberService.generateInvestNumber(lotteryDbService)
+                return numberService.generateInvestNumber()
                     .then((currentInvestNumbers) => {
                         //投注前保存 投注号码
                         Config.currentInvestNumbers = currentInvestNumbers;

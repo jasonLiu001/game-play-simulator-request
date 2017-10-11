@@ -151,7 +151,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         return resultArray;
     }
 
-    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    filterNumbers(): Promise<Array<string>> {
         let totalNumberArray = this.getTotalNumberArray();
         //产生断组号码
         let brokenGroupStr = this.getBrokenNumbers();

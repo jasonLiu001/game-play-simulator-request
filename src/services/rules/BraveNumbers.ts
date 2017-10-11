@@ -9,7 +9,7 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
  * 定胆
  */
 export class BraveNumbers extends AbstractRuleBase implements IRules {
-    public filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    public filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;

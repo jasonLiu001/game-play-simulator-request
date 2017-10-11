@@ -20,6 +20,6 @@ describe("MockInvestService Test", () => {
 
 
     it("executeAutoInvest test", () => {
-        mockInvestService.executeAutoInvest(null, lotteryDbService, config);
+        mockInvestService.executeAutoInvest(null);
     });
 });

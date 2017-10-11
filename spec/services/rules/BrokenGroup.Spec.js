@@ -42,7 +42,7 @@ describe("BrokenGroup Test", () => {
 
     it("filterNumbers test", () => {
         Config.globalVariable.last_PrizeNumber = '78904';
-        let resultArray = brokenGroupService.filterNumbers(null);
+        let resultArray = brokenGroupService.filterNumbers();
 
         expect(resultArray).not.toContain('831');
         expect(resultArray).not.toContain('947');

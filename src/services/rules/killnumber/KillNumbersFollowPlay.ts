@@ -17,7 +17,7 @@ let analysis360Service = new Analysis360Service(),
  * 根据计划杀号
  */
 export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
-    public filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    public filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         return this.getKillNumberObject()
             .then((result) => {

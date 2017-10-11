@@ -19,7 +19,7 @@ describe("KillNumberLastOpenNumber Test", () => {
 
 
     it("filterNumbers test", (done) => {
-        killNumberLastOpenNumber.filterNumbers(lotteryDbService)
+        killNumberLastOpenNumber.filterNumbers()
             .then((result) => {
                 expect(result).toBeDefined();
                 done();

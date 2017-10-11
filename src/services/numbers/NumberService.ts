@@ -26,18 +26,18 @@ let log4js = require('log4js'),
     killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
     brokenGroup = new BrokenGroup();
 export class NumberService extends AbstractRuleBase {
-    public generateInvestNumber(lotteryDbService: LotteryDbService): Promise<string> {
+    public generateInvestNumber(): Promise<string> {
         return Promise
             .all([
-                jiouType.filterNumbers(lotteryDbService), //杀奇偶
-                killNumbersFollowPlay.filterNumbers(lotteryDbService),//根据计划杀号 杀 百位 个位 十位
-                //road012Type.filterNumbers(lotteryDbService), //杀012路
-                //killNumbersMaxMiss.filterNumbers(lotteryDbService),//根据最大遗漏值 杀 百位 个位 十位
-                //killNumberGeWei.filterNumbers(lotteryDbService),//个位出现连号时 杀个位
-                //killNumberLastOpenNumber.filterNumbers(lotteryDbService),//上期出现什么号码，杀什么号码
-                //killNumberLastThreeOpenNumbers.filterNumbers(lotteryDbService),//上三期出现什么号码，杀每位的上3期号码
-                //brokenGroup.filterNumbers(lotteryDbService) //断组
-                //braveNumber.filterNumbers(lotteryDbService) //定胆
+                jiouType.filterNumbers(), //杀奇偶
+                killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
+                //road012Type.filterNumbers(), //杀012路
+                //killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
+                //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位
+                //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码
+                //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码
+                //brokenGroup.filterNumbers() //断组
+                //braveNumber.filterNumbers() //定胆
             ])
             .then((results) => {
                 let resultArray = _.intersection(results[0], results[1]);

@@ -182,7 +182,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
      * @param lotteryDbService
      * @param touZhuBeiShu 投注倍数
      */
-    public invest(request: any, lotteryDbService: LotteryDbService, touZhuBeiShu: string = '1'): Promise<any> {
+    public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {
         return this.investPrepare(request)
             .then((token) => {
                 let currentPeriod = timerService.getCurrentPeriodNumber(new Date());

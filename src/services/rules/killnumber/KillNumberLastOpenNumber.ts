@@ -15,7 +15,7 @@ let log4js = require('log4js'),
  * 上期开啥 本期杀啥
  */
 export class KillNumberLastOpenNumber extends AbstractRuleBase implements IRules {
-    filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    filterNumbers(): Promise<Array<string>> {
         let historyCount = 1;
         let totalNumberArray = this.getTotalNumberArray();
         return LotteryDbService.getAwardInfoHistory(historyCount)

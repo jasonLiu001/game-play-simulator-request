@@ -12,7 +12,6 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 let log = log4js.getLogger('App'),
     investService = new InvestService(),
     errorService = new ErrorService(),
-    lotteryDbService = new LotteryDbService(),//奖号服务
     awardService = new AwardService(),
     cookie = Request.jar(),
     request = Request.defaults(
@@ -36,8 +35,8 @@ export class App {
             .then(() => {
                 //TODO:在投注前要手工设置当前的账号余额
                 //启动更新奖号任务 奖号更新成功后执行自动投注
-                awardService.start(lotteryDbService, () => {
-                    investService.executeAutoInvest(request, lotteryDbService);
+                awardService.start(() => {
+                    investService.executeAutoInvest(request);
                 });
             })
             .catch((err) => {

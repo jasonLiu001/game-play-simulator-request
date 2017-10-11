@@ -13,7 +13,7 @@ export class Road012Type extends AbstractRuleBase implements IRules {
         return number % 3;
     }
 
-    public filterNumbers(lotteryDbService: LotteryDbService): Promise<Array<string>> {
+    public filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;

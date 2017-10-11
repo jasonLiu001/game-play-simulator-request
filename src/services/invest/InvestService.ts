@@ -19,7 +19,7 @@ export class InvestService extends AbstractInvestBase {
      *
      * 模拟执行投注入口方法
      */
-    executeAutoInvest(request: any, lotteryDbService: LotteryDbService): void {
+    executeAutoInvest(request: any): void {
         this.calculateWinMoney()
             .then(() => {
                 //检查是否满足投注条件
@@ -28,14 +28,14 @@ export class InvestService extends AbstractInvestBase {
             .then(() => {
                 log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在执行投注...');
-                return numberService.generateInvestNumber(lotteryDbService)
+                return numberService.generateInvestNumber()
                     .then((investNumbers: string) => {
                         //投注前保存 投注号码
                         Config.currentInvestNumbers = investNumbers;
                         //使用request投注 需要先登录在投注 每次投注前都需要登录
                         return requestLoginService.login(request)
                             .then(() => {
-                                return requestPlatformService.invest(request, lotteryDbService, CONFIG_CONST.touZhuBeiShu);
+                                return requestPlatformService.invest(request, CONFIG_CONST.touZhuBeiShu);
                             })
                             .then((result) => {
                                 log.info(result);
