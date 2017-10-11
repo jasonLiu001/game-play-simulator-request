@@ -23,8 +23,6 @@ describe('RequestLoginService Test', () => {
         requestPlatformService = new RequestPlatformService();
         config = new Config();
         Config.currentSelectedAwardMode = EnumAwardMode.yuan;
-        config.captchaDecorder.user = '';
-        config.captchaDecorder.pass = '';
         lotteryDbService = new LotteryDbService();
         lotteryDbService.createLotteryTable()
             .then(() => {

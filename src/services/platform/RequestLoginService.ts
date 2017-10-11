@@ -58,9 +58,9 @@ export class RequestLoginService extends PlatformAbstractBase {
         return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
             .then(() => {
                 return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
-                    username: config.captchaDecorder.user,
+                    username: CONFIG_CONST.username,
                     validate: capatchaCodeString,
-                    password: config.captchaDecorder.pass,
+                    password: CONFIG_CONST.password,
                     _BrowserInfo: 'chrome/53.0.2785.104'
                 });
             });
@@ -79,7 +79,7 @@ export class RequestLoginService extends PlatformAbstractBase {
             })
             .then(() => {
                 //破解验证码
-                return captchaService.decoder(config);
+                return captchaService.decoder();
             })
             .then((parserRes: ResponseData) => {
                 //开始登录

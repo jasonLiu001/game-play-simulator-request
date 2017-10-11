@@ -1,4 +1,3 @@
-import {CaptchaDecoderInfo} from "../models/CaptchaDecoderInfo";
 import {GlobalVariable} from "../models/GlobalVariable";
 import {EnumAwardMode} from "../models/EnumAwardMode";
 let path = require('path');
@@ -49,14 +48,6 @@ export class Config {
     public static currentSelectedAwardMode: number = CONFIG_CONST.awardMode;
     //开奖号更新计时器
     public static awardTimer: any = null;
-    //超级鹰验证码解密参数
-    public captchaDecorder: CaptchaDecoderInfo = {
-        user: CONFIG_CONST.username,
-        pass: CONFIG_CONST.password,
-        softid: '893450',
-        codetype: '1902',
-        userfile: Config.captchaImgSavePath
-    };
     //全局变量
     public globalVariable: GlobalVariable = {
         last_Period: null, //上期期号 程序运行时初始化
