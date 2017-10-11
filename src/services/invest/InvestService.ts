@@ -1,5 +1,5 @@
 import {LotteryDbService} from "../dbservices/DBSerivice";
-import {Config} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
 import {AbstractInvestBase} from "./AbstractInvestBase";
@@ -35,7 +35,7 @@ export class InvestService extends AbstractInvestBase {
                         //使用request投注 需要先登录在投注 每次投注前都需要登录
                         return requestLoginService.login(request, config)
                             .then(() => {
-                                return requestPlatformService.invest(request, config, lotteryDbService);
+                                return requestPlatformService.invest(request, config, lotteryDbService, CONFIG_CONST.touZhuBeiShu);
                             })
                             .then((result) => {
                                 log.info(result);

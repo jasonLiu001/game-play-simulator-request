@@ -22,6 +22,8 @@ export const CONFIG_CONST = {
     awardPrice: 1954,
     //需要获取的历史号码数量
     historyCount: 3,
+    //投注倍数
+    touZhuBeiShu: '1',
     //账户初始余额
     currentAccoutBalance: 100,
     //目标盈利金额 单位为元 该值的设置 必须加上初始的账号余额才行 比如：初始余额100，盈利20，改值为120
