@@ -59,23 +59,10 @@ export class Config {
 
     /**
      *
-     * Promise的reject的消息字符
-     */
-    public rejectionMsg = {
-        isExistRecordInAward: 'exist-record-in-award',
-        notReachInvestTime: 'not-reach-invest-time',//未达到下期的投注时间
-        lastPrizeNumberNotUpdated: 'not-update-last-prize-number',//上期开奖号码未更新
-        canExecuteRealInvest: 'not-allow-execute-invest',//不允许投注
-        navigationError: 'navigation error',//打开页面错误
-        historyCountIsNotEnough: 'history-count-in-award-table-is-not-enough'//开奖号码中的历史数据不够
-    };
-
-    /**
-     *
      *
      * 模拟的http请求头
      */
-    public static readonly httpRequestHeaders = {
+    public static readonly HttpRequestHeaders = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3103.400 QQBrowser/9.6.11372.400',
         'Accept': '*/*'
     };

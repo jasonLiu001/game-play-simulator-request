@@ -22,7 +22,7 @@ let log = log4js.getLogger('MockApp'),
         {
             jar: cookie,
             timeout: 20000,
-            headers: Config.httpRequestHeaders
+            headers: Config.HttpRequestHeaders
         });
 
 

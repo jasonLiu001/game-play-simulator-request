@@ -30,7 +30,7 @@ let log = log4js.getLogger('CommandApp'),
         {
             jar: cookie,
             timeout: 20000,
-            headers: Config.httpRequestHeaders
+            headers: Config.HttpRequestHeaders
         });
 
 program
@@ -99,7 +99,7 @@ export class CommandApp {
             })
             .catch((err) => {
                 //启动失败后结束electron进程
-                errorService.appErrorHandler(log, err, config);
+                errorService.appErrorHandler(log, err);
             });
     }
 }

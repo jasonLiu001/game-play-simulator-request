@@ -12,7 +12,7 @@ let request = Request.defaults(
     {
         jar: cookie,
         timeout: 20000,
-        headers: Config.httpRequestHeaders
+        headers: Config.HttpRequestHeaders
     });
 
 describe('RequestLoginService Test', () => {

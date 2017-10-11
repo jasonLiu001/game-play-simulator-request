@@ -20,7 +20,7 @@ let log = log4js.getLogger('App'),
         {
             jar: cookie,
             timeout: 20000,
-            headers: Config.httpRequestHeaders
+            headers: Config.HttpRequestHeaders
         });
 
 
@@ -43,7 +43,7 @@ export class App {
             })
             .catch((err) => {
                 //启动失败后结束electron进程
-                errorService.appErrorHandler(log, err, config);
+                errorService.appErrorHandler(log, err);
             });
     }
 }

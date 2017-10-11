@@ -50,7 +50,7 @@ export class Award360Service implements IAwardCrawler {
             request(
                 {
                     uri: dataUrl,
-                    headers: Config.httpRequestHeaders,
+                    headers: Config.HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) {

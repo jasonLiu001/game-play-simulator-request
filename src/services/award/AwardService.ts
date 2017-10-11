@@ -4,6 +4,7 @@ import {TimerService} from "../timer/TimerService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {Award360Service} from "../crawler/award/Award360Service";
 import {LotteryDbService} from "../dbservices/DBSerivice";
+import {RejectionMsg} from "../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -47,7 +48,7 @@ export class AwardService {
                     .then((dbAwardRecord) => {
                         if (dbAwardRecord) {
                             //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
-                            return Promise.reject(config.rejectionMsg.isExistRecordInAward);
+                            return Promise.reject(RejectionMsg.isExistRecordInAward);
                         }
                         return dbAwardRecord;
                     })

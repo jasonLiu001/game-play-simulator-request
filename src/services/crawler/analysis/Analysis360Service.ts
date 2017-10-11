@@ -81,7 +81,7 @@ export class Analysis360Service implements IAnalysisCrawler {
             request(
                 {
                     url: this.getKillNumberUrl(killNumberPosition),
-                    headers: Config.httpRequestHeaders,
+                    headers: Config.HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) {
@@ -156,7 +156,7 @@ export class Analysis360Service implements IAnalysisCrawler {
             request(
                 {
                     url: this.getMaxMissNumberUrl(maxMissNumberPosition),
-                    headers: Config.httpRequestHeaders,
+                    headers: Config.HttpRequestHeaders,
                     method: 'GET'
                 }, (error, response, body) => {
                     if (error) {

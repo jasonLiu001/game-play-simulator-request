@@ -1,6 +1,7 @@
 import {Config} from "../../config/Config";
 import {PeriodTime} from "../../models/PeriodTime";
 import Promise = require('bluebird');
+import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimerService {
     public updateNextPeriodInvestTime(config: Config, currentTime: Date, delaySeconds = 0): void {
@@ -16,7 +17,7 @@ export class TimerService {
         let nextOpenTime = this.getNextOpenTime(currentTime, delaySeconds);
         //未到开奖时间
         if (nextOpenTime.getTime() == config.globalVariable.nextPeriodInvestTime.getTime()) {
-            return Promise.reject(config.rejectionMsg.notReachInvestTime);
+            return Promise.reject(RejectionMsg.notReachInvestTime);
         } else {
             return Promise.resolve(true);
         }

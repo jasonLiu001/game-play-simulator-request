@@ -5,6 +5,7 @@ import Promise = require('bluebird');
 import _ = require('lodash');
 import {LotteryDbService} from "../../dbservices/DBSerivice";
 import {AwardInfo} from "../../../models/AwardInfo";
+import {RejectionMsg} from "../../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberGeWei');
@@ -19,7 +20,7 @@ export class KillNumberGeWei extends AbstractRuleBase implements IRules {
         let totalNumberArray = this.getTotalNumberArray();
         return lotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
-                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject(config.rejectionMsg.historyCountIsNotEnough);
+                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject(RejectionMsg.historyCountIsNotEnough);
 
                 //最新一期开奖号
                 let last_01 = awardHistoryList[0].openNumber;
