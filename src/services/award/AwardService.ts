@@ -44,7 +44,7 @@ export class AwardService {
                 return crawl360Service.getAwardInfo();
             })
             .then((award: AwardInfo) => {
-                return lotteryDbService.getAwardInfo(award.period)
+                return LotteryDbService.getAwardInfo(award.period)
                     .then((dbAwardRecord) => {
                         if (dbAwardRecord) {
                             //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
@@ -61,7 +61,7 @@ export class AwardService {
                         Config.globalVariable.last_PrizeNumber = award.openNumber;
                         Config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
 
-                        return lotteryDbService.saveOrUpdateAwardInfo(award);
+                        return LotteryDbService.saveOrUpdateAwardInfo(award);
                     }).then(() => {
                         log.info('保存第三方开奖数据完成');
                         if (success) success(award);

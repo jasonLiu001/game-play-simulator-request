@@ -25,7 +25,7 @@ describe('RequestLoginService Test', () => {
         config = new Config();
         Config.currentSelectedAwardMode = EnumAwardMode.yuan;
         lotteryDbService = new LotteryDbService();
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });

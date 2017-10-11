@@ -52,7 +52,7 @@ export class CommandApp {
             return;
         }
 
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 //使用request投注 需要先登录在投注 每次投注前都需要登录
                 return requestLoginService.login(request, config);

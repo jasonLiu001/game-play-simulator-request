@@ -11,7 +11,7 @@ describe("KillNumberLastOpenNumber Test", () => {
         killNumberLastOpenNumber = new KillNumberLastOpenNumber();
         config = new Config();
         lotteryDbService = new LotteryDbService();
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });

@@ -189,7 +189,7 @@ export abstract class AbstractInvestBase {
      * 计算上期盈亏
      */
     public calculateWinMoney(lotteryDbService: LotteryDbService, config: Config): Promise<any> {
-        return lotteryDbService.getInvestInfoListByStatus(0)
+        return LotteryDbService.getInvestInfoListByStatus(0)
             .then((resultList) => {
                 if (!resultList) Promise.resolve(true);
                 let investInfoList = [];
@@ -215,7 +215,7 @@ export abstract class AbstractInvestBase {
                 }
 
                 //首先更新之前未开奖的数据
-                return lotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
+                return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
             })
             .then((results) => {
                 log.info('已更新未开奖数据%s条', results.length);

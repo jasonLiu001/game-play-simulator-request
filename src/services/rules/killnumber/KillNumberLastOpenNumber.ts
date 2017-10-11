@@ -18,7 +18,7 @@ export class KillNumberLastOpenNumber extends AbstractRuleBase implements IRules
     filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let historyCount = 1;
         let totalNumberArray = this.getTotalNumberArray();
-        return lotteryDbService.getAwardInfoHistory(historyCount)
+        return LotteryDbService.getAwardInfoHistory(historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length < 1) return Promise.reject("杀上期的开奖号码条件，数据库中至少有1期历史开奖号码");
 

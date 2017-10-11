@@ -33,7 +33,7 @@ export class MockApp {
      */
     public start(): void {
         log.info('程序已启动，持续监视中...');
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 //TODO:在投注前要手工设置当前的账号余额
                 //启动更新奖号任务 奖号更新成功后执行自动投注

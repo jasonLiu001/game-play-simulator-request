@@ -11,7 +11,7 @@ describe("KillNumberGeWei Test", () => {
         killNumberGeWei = new KillNumberGeWei();
         config = new Config();
         lotteryDbService = new LotteryDbService();
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });

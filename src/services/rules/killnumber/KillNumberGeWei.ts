@@ -18,7 +18,7 @@ let log4js = require('log4js'),
 export class KillNumberGeWei extends AbstractRuleBase implements IRules {
     filterNumbers(config: Config, lotteryDbService: LotteryDbService): Promise<Array<string>> {
         let totalNumberArray = this.getTotalNumberArray();
-        return lotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject(RejectionMsg.historyCountIsNotEnough);
 

@@ -44,7 +44,7 @@ export class MockInvestService extends AbstractInvestBase {
                 log.info('投注记录已保存');
                 log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, new Date().toLocaleTimeString());
                 //保存投注记录
-                return lotteryDbService.saveOrUpdateInvestInfo(investInfo);
+                return LotteryDbService.saveOrUpdateInvestInfo(investInfo);
             })
             .catch((e) => {
                 if (e) {

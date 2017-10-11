@@ -12,7 +12,7 @@ describe("MockInvestService Test", () => {
         investInfo = new InvestInfo();
         config = new Config();
         lotteryDbService = new LotteryDbService();
-        lotteryDbService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });
