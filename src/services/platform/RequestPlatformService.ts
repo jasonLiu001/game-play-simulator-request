@@ -3,6 +3,7 @@ import {TimerService} from "../timer/TimerService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
 import {LotteryDbService} from "../dbservices/DBSerivice";
+import {EnumAwardMode} from "../../models/EnumAwardMode";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
     timerService = new TimerService();
@@ -85,17 +86,17 @@ export class RequestPlatformService extends PlatformAbstractBase {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
         switch (Config.currentSelectedAwardMode) {
-            case Config.awardModel.yuan:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.yuan)).replace('{5}', String(zhuShu));
+            case EnumAwardMode.yuan:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.yuan)).replace('{5}', String(zhuShu));
                 break;
-            case Config.awardModel.jiao:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.jiao)).replace('{5}', String(zhuShu));
+            case EnumAwardMode.jiao:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.jiao)).replace('{5}', String(zhuShu));
                 break;
-            case Config.awardModel.feng:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.feng)).replace('{5}', String(zhuShu));
+            case EnumAwardMode.feng:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.feng)).replace('{5}', String(zhuShu));
                 break;
-            case Config.awardModel.li:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.li)).replace('{5}', String(zhuShu));
+            case EnumAwardMode.li:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.li)).replace('{5}', String(zhuShu));
                 break;
         }
         return tokenStr;
@@ -116,17 +117,17 @@ export class RequestPlatformService extends PlatformAbstractBase {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
         switch (Config.currentSelectedAwardMode) {
-            case Config.awardModel.yuan:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.yuan)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
+            case EnumAwardMode.yuan:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.yuan)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
                 break;
-            case Config.awardModel.jiao:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.jiao)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
+            case EnumAwardMode.jiao:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.jiao)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
                 break;
-            case Config.awardModel.feng:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.feng)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
+            case EnumAwardMode.feng:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.feng)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
                 break;
-            case Config.awardModel.li:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(Config.awardModel.li)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
+            case EnumAwardMode.li:
+                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.li)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
                 break;
         }
         return tokenStr;

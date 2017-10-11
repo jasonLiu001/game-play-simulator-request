@@ -4,6 +4,7 @@ import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
 import {TimerService} from "../timer/TimerService";
+import {EnumAwardMode} from "../../models/EnumAwardMode";
 
 
 let log4js = require('log4js'),
@@ -105,17 +106,17 @@ export abstract class AbstractInvestBase {
     public convertMoneyFormat(money: number): number {
         let result: number;
         switch (Config.currentSelectedAwardMode) {
-            case Config.awardModel.yuan:
+            case EnumAwardMode.yuan:
                 result = money;
                 break;
-            case Config.awardModel.jiao:
-                result = Number((money / Config.awardModel.jiao).toFixed(2));
+            case EnumAwardMode.jiao:
+                result = Number((money / EnumAwardMode.jiao).toFixed(2));
                 break;
-            case Config.awardModel.feng:
-                result = Number((money / Config.awardModel.feng).toFixed(2));
+            case EnumAwardMode.feng:
+                result = Number((money / EnumAwardMode.feng).toFixed(2));
                 break;
-            case Config.awardModel.li:
-                result = Number((money / Config.awardModel.li).toFixed(2));
+            case EnumAwardMode.li:
+                result = Number((money / EnumAwardMode.li).toFixed(2));
                 break;
             default:
                 result = money;

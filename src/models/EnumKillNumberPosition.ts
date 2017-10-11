@@ -1,3 +1,7 @@
+/**
+ *
+ * 杀号位置
+ */
 export const enum EnumKillNumberPosition{
     //个位
     geWei,

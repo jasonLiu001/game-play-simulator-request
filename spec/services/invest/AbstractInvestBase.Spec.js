@@ -2,6 +2,7 @@ let AbstractInvestBase = require('../../../dist/services/invest/AbstractInvestBa
 let LotteryDbService = require('../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 let InvestInfo = require('../../../dist/models/InvestInfo').InvestInfo;
 let Config = require('../../../dist/config/Config').Config;
+let EnumAwardMode = require('../../../dist/models/EnumAwardMode').EnumAwardMode;
 let CONFIG_CONST = require('../../../dist/config/Config').CONFIG_CONST;
 describe("AbstractInvestBase Test", () => {
     let abstractInvestBase, investInfo, config, lotteryDbService;
@@ -20,7 +21,7 @@ describe("AbstractInvestBase Test", () => {
     xit("updateCurrentAccountBalace test", () => {
         investInfo.isWin = 1;
         investInfo.currentAccountBalance = 34.79;
-        investInfo.awardMode = Config.awardModel.feng;
+        investInfo.awardMode = EnumAwardMode.feng;
 
         abstractInvestBase.updateCurrentAccountBalace(investInfo, config);
 

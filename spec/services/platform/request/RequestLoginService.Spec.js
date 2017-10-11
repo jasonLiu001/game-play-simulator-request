@@ -1,6 +1,7 @@
 let RequestLoginService = require('../../../../dist/services/platform/request/RequestLoginService').RequestLoginService;
 let RequestPlatformService = require('../../../../dist/services/platform/request/RequestPlatformService').RequestPlatformService;
 let Config = require('../../../../dist/config/Config').Config;
+let EnumAwardMode = require('../../../../dist/models/EnumAwardMode').EnumAwardMode;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 
 let Request = require('request');
@@ -21,7 +22,7 @@ describe('RequestLoginService Test', () => {
         requestLoginService = new RequestLoginService();
         requestPlatformService = new RequestPlatformService();
         config = new Config();
-        Config.currentSelectedAwardMode = Config.awardModel.yuan;
+        Config.currentSelectedAwardMode = EnumAwardMode.yuan;
         config.captchaDecorder.user = '';
         config.captchaDecorder.pass = '';
         lotteryDbService = new LotteryDbService();

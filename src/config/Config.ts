@@ -1,6 +1,6 @@
 import {CaptchaDecoderInfo} from "../models/CaptchaDecoderInfo";
-import {AwardMode} from "../models/AwardMode";
 import {GlobalVariable} from "../models/GlobalVariable";
+import {EnumAwardMode} from "../models/EnumAwardMode";
 let path = require('path');
 
 /**
@@ -10,24 +10,26 @@ let path = require('path');
 export const CONFIG_CONST = {
     //登录网站url
     siteUrl: 'https://123.jn707.com',
-    //登录用户名
-    username: '',
-    //登录密码
-    password: '',
+    //需要获取的历史号码数量
+    historyCount: 3,
     //开奖延迟时间，单位为秒
     openTimeDelaySeconds: 60,
     //自动检查定时器 时间间隔 单位为毫秒ms
     autoCheckTimerInterval: 20000,
     //三星奖金
     awardPrice: 1954,
-    //需要获取的历史号码数量
-    historyCount: 3,
     //投注倍数
     touZhuBeiShu: '1',
+    //登录用户名
+    username: '',
+    //登录密码
+    password: '',
+    //元、角、分 模式
+    awardMode: EnumAwardMode.feng,//yuan,jiao,feng,li
     //账户初始余额
     currentAccoutBalance: 100,
     //目标盈利金额 单位为元 该值的设置 必须加上初始的账号余额才行 比如：初始余额100，盈利20，改值为120
-    maxWinMoney: 130
+    maxWinMoney: 115
 };
 
 /**
@@ -35,13 +37,6 @@ export const CONFIG_CONST = {
  * @summary 配置文件
  * */
 export class Config {
-    //投注的奖金模式
-    public static awardModel: AwardMode = {
-        yuan: 1,
-        jiao: 10,
-        feng: 100,
-        li: 1000
-    };
     //数据库文件路径
     public static dbPath: string = path.resolve(__dirname, "..", "data.db");
     //保存的验证码图片本地路径
@@ -51,7 +46,7 @@ export class Config {
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
     //当期选择的奖金模式
-    public static currentSelectedAwardMode: number = Config.awardModel.feng;
+    public static currentSelectedAwardMode: number = CONFIG_CONST.awardMode;
     //开奖号更新计时器
     public static awardTimer: any = null;
     //超级鹰验证码解密参数
