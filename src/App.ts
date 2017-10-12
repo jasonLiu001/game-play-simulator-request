@@ -4,6 +4,7 @@ import {AwardService} from "./services/award/AwardService";
 import {InvestService} from "./services/invest/InvestService";
 import {ErrorService} from "./services/error/ErrorService";
 import {HttpRequestHeaders} from "./models/EnumModel";
+import {CONFIG_CONST} from "./config/Config";
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js');
@@ -17,7 +18,7 @@ let log = log4js.getLogger('App'),
     request = Request.defaults(
         {
             jar: cookie,
-            timeout: 20000,
+            timeout: CONFIG_CONST.autoCheckTimerInterval,
             headers: HttpRequestHeaders
         });
 
