@@ -38,35 +38,37 @@ export class AwardService {
      * 获取开奖信息
      */
     saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
+        let savedAwardInfo: AwardInfo = null;
         return timerService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
                 return crawl360Service.getAwardInfo();
             })
             .then((award: AwardInfo) => {
-                return LotteryDbService.getAwardInfo(award.period)
-                    .then((dbAwardRecord) => {
-                        if (dbAwardRecord) {
-                            //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
-                            return Promise.reject(RejectionMsg.isExistRecordInAward);
-                        }
-                        return dbAwardRecord;
-                    })
-                    .then(() => {
-                        //更新下期开奖时间
-                        timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-                        log.info('正在保存第三方开奖数据...');
-                        //更新全局变量
-                        Config.globalVariable.last_Period = award.period;
-                        Config.globalVariable.last_PrizeNumber = award.openNumber;
-                        Config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
+                savedAwardInfo = award;//保存awardinfo信息
+                return LotteryDbService.getAwardInfo(award.period);
+            })
+            .then((dbAwardRecord: any) => {
+                if (dbAwardRecord) {
+                    //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
+                    return Promise.reject(RejectionMsg.isExistRecordInAward);
+                }
+                return dbAwardRecord;
+            })
+            .then(() => {
+                //更新下期开奖时间
+                timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
+                log.info('正在保存第三方开奖数据...');
+                //更新全局变量
+                Config.globalVariable.last_Period = savedAwardInfo.period;
+                Config.globalVariable.last_PrizeNumber = savedAwardInfo.openNumber;
+                Config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
 
-                        return LotteryDbService.saveOrUpdateAwardInfo(award);
-                    }).then(() => {
-                        log.info('保存第三方开奖数据完成');
-                        if (success) success(award);
-                        return award;
-                    });
+                return LotteryDbService.saveOrUpdateAwardInfo(savedAwardInfo);
+            }).then(() => {
+                log.info('保存第三方开奖数据完成');
+                if (success) success(savedAwardInfo);
+                return savedAwardInfo;
             });
     }
 

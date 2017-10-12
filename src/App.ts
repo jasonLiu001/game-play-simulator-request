@@ -34,7 +34,6 @@ export class App {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
-                //TODO:在投注前要手工设置当前的账号余额
                 //启动更新奖号任务 奖号更新成功后执行自动投注
                 awardService.start(() => {
                     investService.executeAutoInvest(request);
