@@ -25,12 +25,12 @@ export class MockInvestService extends AbstractInvestBase {
             .then(() => {
                 log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在执行投注...');
-                return numberService.generateInvestNumber()
-                    .then((currentInvestNumbers) => {
-                        //投注前保存 投注号码
-                        Config.currentInvestNumbers = currentInvestNumbers;
-                        //真实的投注开始执行
-                    });
+                return numberService.generateInvestNumber();
+            })
+            .then((currentInvestNumbers: string) => {
+                //投注前保存 投注号码
+                Config.currentInvestNumbers = currentInvestNumbers;
+                //TODO:真实的投注开始执行
             })
             .then(() => {
                 log.info('投注成功，保存投注记录中...');
