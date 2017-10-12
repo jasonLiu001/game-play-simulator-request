@@ -1,2 +1,7 @@
-# game-play-simulator-request
-a tool used with request.
+文档说明
+========
+## TODO
+
+1. 详细列出每个计划的对错详情
+2. 用图表的形式展现每天的盈利状态，并保存每天的盈利截图
+
