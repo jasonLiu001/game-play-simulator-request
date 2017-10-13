@@ -21,9 +21,9 @@ export class AwardService {
      *
      * 开始获取奖号
      */
-    start(success?: Function): void {
+    public static start(success?: Function): void {
         Config.awardTimer = setInterval(() => {
-            this.saveOrUpdateAwardInfo(success)
+            AwardService.saveOrUpdateAwardInfo(success)
                 .catch((err) => {
                     if (err) {
                         log.error(err);
@@ -37,7 +37,7 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
+    public static saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
         let savedAwardInfo: AwardInfo = null;
         return timerService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
@@ -70,14 +70,5 @@ export class AwardService {
                 if (success) success(savedAwardInfo);
                 return savedAwardInfo;
             });
-    }
-
-    /**
-     *
-     *
-     * 停止获取奖号
-     */
-    stop(): void {
-        clearInterval(Config.awardTimer);
     }
 }

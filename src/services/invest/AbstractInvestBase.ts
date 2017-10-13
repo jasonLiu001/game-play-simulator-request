@@ -5,6 +5,7 @@ import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
 import {TimerService} from "../timer/TimerService";
 import {EnumAwardMode} from "../../models/EnumModel";
+import {AppServices} from "../AppServices";
 
 
 let log4js = require('log4js'),
@@ -135,6 +136,8 @@ export abstract class AbstractInvestBase {
         if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
             let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
             if (!isMockTest) {//真实投注
+                AppServices.stop();//停止真实投注程序
+                AppServices.mockStart();//启动模拟投注程序
                 return Promise.reject(message);
             }
         }
