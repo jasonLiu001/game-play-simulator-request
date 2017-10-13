@@ -42,9 +42,9 @@ export class AppServices {
                 //启动更新奖号任务 奖号更新成功后执行自动投注
                 AwardService.start(() => {
                     if (isRealInvest) {
-                        investService.executeAutoInvest(request);
+                        investService.executeAutoInvest(request);//真实投注
                     } else {
-                        mockInvestService.executeAutoInvest(null);
+                        mockInvestService.executeAutoInvest(null);//模拟投注
                     }
                 });
             })
