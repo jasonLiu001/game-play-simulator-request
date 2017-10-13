@@ -21,7 +21,7 @@ export class AwardService {
      *
      * 开始获取奖号
      */
-    public static start(success?: Function): void {
+    public static startGetAwardInfoTask(success?: Function): void {
         Config.awardTimer = setInterval(() => {
             AwardService.saveOrUpdateAwardInfo(success)
                 .catch((err) => {
