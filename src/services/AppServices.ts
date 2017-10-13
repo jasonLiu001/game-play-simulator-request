@@ -9,7 +9,7 @@ import {MockInvestService} from "./invest/MockInvestService";
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js');
-log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
+log4js.configure(path.resolve(__dirname, '..', 'config/log4js.json'));
 
 let log = log4js.getLogger('AppServices'),
     investService = new InvestService(),
