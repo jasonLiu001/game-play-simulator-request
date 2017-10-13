@@ -33,40 +33,25 @@ export class AppServices {
      *
      *
      * 启动程序，自动获取开奖号码并投注
+     * @param {Boolean} isRealInvest 是否是真实投注，false:模拟投注 true:真实投注
      */
-    public static start(): void {
+    public static start(isRealInvest: boolean = true): void {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //启动更新奖号任务 奖号更新成功后执行自动投注
                 AwardService.start(() => {
-                    investService.executeAutoInvest(request);
+                    if (isRealInvest) {
+                        investService.executeAutoInvest(request);
+                    } else {
+                        mockInvestService.executeAutoInvest(null);
+                    }
                 });
             })
             .catch((err) => {
                 errorService.appErrorHandler(log, err);
             });
     }
-
-    /**
-     *
-     *
-     * 启动模拟投注程序，自动获取开奖号码并模拟投注
-     */
-    public static mockStart(): void {
-        log.info('程序已启动，持续监视中...');
-        LotteryDbService.createLotteryTable()
-            .then(() => {
-                //启动更新奖号任务 奖号更新成功后执行自动投注
-                AwardService.start(() => {
-                    mockInvestService.executeAutoInvest(null);
-                });
-            })
-            .catch((err) => {
-                errorService.appErrorHandler(log, err);
-            });
-    }
-
 
     /**
      *

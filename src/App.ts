@@ -1,2 +1,2 @@
 import {AppServices} from "./services/AppServices";
-AppServices.start();
+AppServices.start(true);
