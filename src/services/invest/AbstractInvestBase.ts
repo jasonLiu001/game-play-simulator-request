@@ -88,14 +88,13 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * 检查投注时间 在02:00-10:00点之间不允许投注
+     * 检查投注时间 在02:00-10:00点之间不允许投注，22点之后不允许投注
      */
     private checkInvestTime(isMockTest: boolean): Promise<any> {
         //检查在此时间内是否允许投注
         if (!isMockTest && timeService.isInStopInvestTime()) {//真实投注并且到了不可投注的时间段时
             //更新开奖时间
             timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-            AppServices.startMockTask();//结束正式投注，启动模拟投注
             return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间或22:00以后，不符合投注时间")
         }
         return Promise.resolve(true);
@@ -156,7 +155,7 @@ export abstract class AbstractInvestBase {
         //检查开奖号码是否已经更新
         return this.checkLastPrizeNumberValidation()
             .then(() => {
-                //检查投注时间 在02:00-10:00点之间不允许投注
+                //检查投注时间 在02:00-10:00点之间不允许投注，22点之后不允许投注
                 return this.checkInvestTime(isMockTest);
             })
             .then(() => {
