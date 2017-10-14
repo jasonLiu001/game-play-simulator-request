@@ -1,6 +1,6 @@
 import Promise = require('bluebird');
 import {InvestService} from "./invest/InvestService";
-import {ErrorService} from "./error/ErrorService";
+import {ErrorService} from "./ErrorService";
 import {CONFIG_CONST, Config} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/DBSerivice";

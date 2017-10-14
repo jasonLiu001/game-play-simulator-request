@@ -1,4 +1,4 @@
-import {RejectionMsg} from "../../models/EnumModel";
+import {RejectionMsg} from "../models/EnumModel";
 /**
  *
  *
