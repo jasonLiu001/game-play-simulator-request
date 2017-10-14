@@ -11,7 +11,7 @@ import {AppServices} from "../AppServices";
 let log4js = require('log4js'),
     log = log4js.getLogger('AbstractInvestBase'),
     numberService = new NumberService(),
-    timerService = new TimeService();
+    timeService = new TimeService();
 
 /**
  *
@@ -92,9 +92,9 @@ export abstract class AbstractInvestBase {
      */
     private checkInvestTime(): Promise<any> {
         //检查在此时间内是否允许投注
-        if (timerService.isInStopInvestTime()) {
+        if (timeService.isInStopInvestTime()) {
             //更新开奖时间
-            timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
+            timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
             return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00到10:00之间，不符合投注时间")
         }
         return Promise.resolve(true);

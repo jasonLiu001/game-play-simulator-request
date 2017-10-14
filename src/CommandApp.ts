@@ -16,7 +16,7 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
-    timerService = new TimeService(),
+    timeService = new TimeService(),
     cookie = Request.jar(),
     request = Request.defaults(
         {
@@ -74,7 +74,7 @@ export class CommandApp {
 
                 }
 
-                let currentPeriod = timerService.getCurrentPeriodNumber(new Date());
+                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
                 if (program.currentperiodstring != currentPeriod) {
                     log.info("期号不一致 参数传递期号:%s，当前期号：%s", program.currentperiodstring, currentPeriod);
                     return Promise.resolve(true);

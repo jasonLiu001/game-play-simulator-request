@@ -8,7 +8,7 @@ import {RejectionMsg} from "../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
-    timerService = new TimeService(),
+    timeService = new TimeService(),
     crawl360Service = new Award360Service();
 /**
  *
@@ -39,7 +39,7 @@ export class AwardService {
      */
     public static saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
         let savedAwardInfo: AwardInfo = null;
-        return timerService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
+        return timeService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
                 return crawl360Service.getAwardInfo();
@@ -57,12 +57,12 @@ export class AwardService {
             })
             .then(() => {
                 //更新下期开奖时间
-                timerService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
+                timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
                 log.info('正在保存第三方开奖数据...');
                 //更新全局变量
                 Config.globalVariable.last_Period = savedAwardInfo.period;
                 Config.globalVariable.last_PrizeNumber = savedAwardInfo.openNumber;
-                Config.globalVariable.current_Peroid = timerService.getCurrentPeriodNumber(new Date());
+                Config.globalVariable.current_Peroid = timeService.getCurrentPeriodNumber(new Date());
 
                 return LotteryDbService.saveOrUpdateAwardInfo(savedAwardInfo);
             }).then(() => {

@@ -5,7 +5,7 @@ import Promise = require('bluebird');
 import {EnumAwardMode} from "../../models/EnumModel";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
-    timerService = new TimeService();
+    timeService = new TimeService();
 
 export class RequestPlatformService extends PlatformAbstractBase {
     /**
@@ -184,7 +184,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
     public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = timerService.getCurrentPeriodNumber(new Date());
+                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
 
                 return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
             });
@@ -200,8 +200,8 @@ export class RequestPlatformService extends PlatformAbstractBase {
     public multiInvest(request: any, touZhuBeiShu: string = '1') {
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = timerService.getCurrentPeriodNumber(new Date());
-                let currentNextPeriod = timerService.getCurrentNextPeriodNumber(new Date());
+                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
+                let currentNextPeriod = timeService.getCurrentNextPeriodNumber(new Date());
 
                 return this.multiInvestMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length, currentNextPeriod);
             });
