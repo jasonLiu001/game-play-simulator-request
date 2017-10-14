@@ -28,7 +28,7 @@ export class NumberService extends AbstractRuleBase {
     public generateInvestNumber(): Promise<string> {
         return Promise
             .all([
-                jiouType.filterNumbers(), //杀奇偶
+                jiouType.filterNumbers(), //杀特定形态的奇偶
                 killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
                 //road012Type.filterNumbers(), //杀012路
                 //killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
