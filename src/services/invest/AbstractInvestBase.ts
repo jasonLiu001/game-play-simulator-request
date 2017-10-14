@@ -90,12 +90,13 @@ export abstract class AbstractInvestBase {
      *
      * 检查投注时间 在02:00-10:00点之间不允许投注
      */
-    private checkInvestTime(): Promise<any> {
+    private checkInvestTime(isMockTest: boolean): Promise<any> {
         //检查在此时间内是否允许投注
-        if (timeService.isInStopInvestTime()) {
+        if (!isMockTest && timeService.isInStopInvestTime()) {//真实投注并且到了不可投注的时间段时
             //更新开奖时间
             timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00到10:00之间，不符合投注时间")
+            AppServices.startMockTask();//结束正式投注，启动模拟投注
+            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间或22:00以后，不符合投注时间")
         }
         return Promise.resolve(true);
     }
@@ -136,8 +137,7 @@ export abstract class AbstractInvestBase {
         if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
             let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
             if (!isMockTest) {//真实投注
-                AppServices.stop();//停止真实投注程序
-                AppServices.start(isMockTest);//启动模拟投注程序
+                AppServices.startMockTask();//结束正式投注，启动模拟投注
                 return Promise.reject(message);
             }
         }
@@ -157,7 +157,7 @@ export abstract class AbstractInvestBase {
         return this.checkLastPrizeNumberValidation()
             .then(() => {
                 //检查投注时间 在02:00-10:00点之间不允许投注
-                return this.checkInvestTime();
+                return this.checkInvestTime(isMockTest);
             })
             .then(() => {
                 //检查当前的最大盈利金额

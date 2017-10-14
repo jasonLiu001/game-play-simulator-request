@@ -60,4 +60,15 @@ export class AppServices {
     public static stop(): void {
         clearInterval(Config.awardTimer);
     }
+
+    /**
+     *
+     * 执行模拟投注
+     */
+    public static startMockTask(): void {
+        log.info('切换正式投注到模拟投注...');
+        AppServices.stop();//停止真实投注程序
+        AppServices.start(false);//启动模拟投注程序
+        log.info('模拟投注切换完成！');
+    }
 }
