@@ -19,13 +19,14 @@ export class InvestService extends AbstractInvestBase {
      *
      * 模拟执行投注入口方法
      */
-    executeAutoInvest(request: any): void {
+    executeAutoInvest(request: any, isRealInvest: boolean = true): void {
         this.calculateWinMoney()
             .then(() => {
                 //检查是否满足投注条件
                 return this.doCheck(false);
             })
             .then(() => {
+                log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));
                 log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在产生投注号码...');
                 return numberService.generateInvestNumber();
@@ -34,17 +35,23 @@ export class InvestService extends AbstractInvestBase {
                 log.info('投注号码已生成！');
                 //投注前保存 投注号码
                 Config.currentInvestNumbers = investNumbers;
-                log.info('正在执行登录...');
-                //使用request投注 需要先登录在投注 每次投注前都需要登录
-                return requestLoginService.login(request);
+                //真实投注执行登录操作
+                if (isRealInvest) {
+                    log.info('正在执行登录...');
+                    //使用request投注 需要先登录在投注 每次投注前都需要登录
+                    return requestLoginService.login(request);
+                }
             })
             .then(() => {
-                log.info('登录成功！');
-                log.info('正在执行投注...');
-                return requestPlatformService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                //真实投注
+                if (isRealInvest) {
+                    log.info('登录成功！');
+                    log.info('正在执行投注...');
+                    return requestPlatformService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                }
             })
             .then((result) => {
-                log.info(result);
+                if (result) log.info(result);
                 log.info('投注成功，保存投注记录中...');
                 //成功投注后 保存投注信息
                 this.updateCurrentAccountBalance();
