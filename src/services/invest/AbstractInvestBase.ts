@@ -3,7 +3,7 @@ import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/InvestInfo";
 import Promise = require('bluebird');
-import {TimerService} from "../timer/TimerService";
+import {TimeService} from "../time/TimeService";
 import {EnumAwardMode} from "../../models/EnumModel";
 import {AppServices} from "../AppServices";
 
@@ -11,7 +11,7 @@ import {AppServices} from "../AppServices";
 let log4js = require('log4js'),
     log = log4js.getLogger('AbstractInvestBase'),
     numberService = new NumberService(),
-    timerService = new TimerService();
+    timerService = new TimeService();
 
 /**
  *

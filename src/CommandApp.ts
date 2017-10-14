@@ -4,7 +4,7 @@ import Promise = require('bluebird');
 import {ErrorService} from "./services/error/ErrorService";
 import {RequestLoginService} from "./services/platform/RequestLoginService";
 import {RequestPlatformService} from "./services/platform/RequestPlatformService";
-import {TimerService} from "./services/timer/TimerService";
+import {TimeService} from "./services/time/TimeService";
 import {HttpRequestHeaders} from "./models/EnumModel";
 let Request = require('request'), path = require('path');
 
@@ -17,7 +17,7 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
     errorService = new ErrorService(),
-    timerService = new TimerService(),
+    timerService = new TimeService(),
     cookie = Request.jar(),
     request = Request.defaults(
         {

@@ -1,11 +1,11 @@
 import {Config, CONFIG_CONST} from "../../config/Config";
-import {TimerService} from "../timer/TimerService";
+import {TimeService} from "../time/TimeService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
 import {EnumAwardMode} from "../../models/EnumModel";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
-    timerService = new TimerService();
+    timerService = new TimeService();
 
 export class RequestPlatformService extends PlatformAbstractBase {
     /**

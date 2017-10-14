@@ -1,4 +1,4 @@
-import {TimerService} from "../../timer/TimerService";
+import {TimeService} from "../../time/TimeService";
 import Promise = require('bluebird');
 import {AwardInfo} from "../../../models/AwardInfo";
 import {IAwardCrawler} from "./IAwardCrawler";
@@ -6,7 +6,7 @@ import {HttpRequestHeaders} from "../../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Award360Service'),
-    timerService = new TimerService(),
+    timerService = new TimeService(),
     request = require('request');
 
 /**

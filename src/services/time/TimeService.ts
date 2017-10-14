@@ -3,7 +3,7 @@ import {PeriodTime} from "../../models/PeriodTime";
 import Promise = require('bluebird');
 import {RejectionMsg} from "../../models/EnumModel";
 
-export class TimerService {
+export class TimeService {
     public updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
         Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
     }

@@ -1,5 +1,5 @@
-let TimerService = require('../../../dist/services/timer/TimerService').TimerService;
-describe("TimerService Test", () => {
+let TimerService = require('../../../dist/services/time/TimeService').TimerService;
+describe("TimeService Test", () => {
     let timerService;
 
     beforeEach(() => {

@@ -1,6 +1,6 @@
 import {AwardInfo} from "../../models/AwardInfo";
 import Promise = require('bluebird');
-import {TimerService} from "../timer/TimerService";
+import {TimeService} from "../time/TimeService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {Award360Service} from "../crawler/award/Award360Service";
 import {LotteryDbService} from "../dbservices/DBSerivice";
@@ -8,7 +8,7 @@ import {RejectionMsg} from "../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
-    timerService = new TimerService(),
+    timerService = new TimeService(),
     crawl360Service = new Award360Service();
 /**
  *
