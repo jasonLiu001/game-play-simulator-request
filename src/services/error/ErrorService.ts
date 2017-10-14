@@ -9,7 +9,7 @@ export class ErrorService {
      *
      * 执行投注时的错误过滤并输出，过滤不需要输出的错误信息
      */
-    public executeInvestErrorHandler(log: any, error: any): void {
+    public static executeInvestErrorHandler(log: any, error: any): void {
         //跳过特定的错误输出信息，不需要输出到控制台
         if (error && error == RejectionMsg.notReachInvestTime) return;
         if (error && error == RejectionMsg.lastPrizeNumberNotUpdated) return;
@@ -26,7 +26,7 @@ export class ErrorService {
      *
      * app异常处理
      */
-    public appErrorHandler(log: any, error: any): void {
+    public static appErrorHandler(log: any, error: any): void {
         if (error && error.message && error.message == RejectionMsg.navigationError) log.error(error.message);
 
         if (error) {

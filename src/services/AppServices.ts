@@ -14,7 +14,6 @@ log4js.configure(path.resolve(__dirname, '..', 'config/log4js.json'));
 let log = log4js.getLogger('AppServices'),
     investService = new InvestService(),
     mockInvestService = new MockInvestService(),
-    errorService = new ErrorService(),
     cookie = Request.jar(),
     request = Request.defaults(
         {
@@ -49,7 +48,7 @@ export class AppServices {
                 });
             })
             .catch((err) => {
-                errorService.appErrorHandler(log, err);
+                ErrorService.appErrorHandler(log, err);
             });
     }
 

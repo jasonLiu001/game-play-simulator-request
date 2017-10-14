@@ -16,7 +16,6 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
-    errorService = new ErrorService(),
     timerService = new TimeService(),
     cookie = Request.jar(),
     request = Request.defaults(
@@ -92,7 +91,7 @@ export class CommandApp {
             })
             .catch((err) => {
                 //启动失败后结束electron进程
-                errorService.appErrorHandler(log, err);
+                ErrorService.appErrorHandler(log, err);
             });
     }
 }
