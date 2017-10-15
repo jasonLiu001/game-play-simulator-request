@@ -1,19 +1,16 @@
-import {EnumPlanTableBase} from "./EnumPlanTableBase";
-
-export enum EnumPlanTable{
-
-    /**
-     *
-     *
-     * 数据表名称
-     * @type {string}
-     */
-    tableName = "plan"
-}
+import {PlanTableBase} from "./PlanTableBase";
 
 /**
  *
  *
  * 计划投注号码表
  */
-export const CONST_PLAN_TABLE = EnumPlanTable as typeof EnumPlanTable & EnumPlanTableBase;
+export class CONST_PLAN_TABLE extends PlanTableBase {
+    /**
+     *
+     *
+     * 数据表名称
+     * @type {string}
+     */
+    public static tableName: string = "plan"
+}
