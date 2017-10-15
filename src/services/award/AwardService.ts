@@ -1,4 +1,4 @@
-import {AwardInfo} from "../../models/AwardInfo";
+import {AwardInfo} from "../../models/db/AwardInfo";
 import Promise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {Config, CONFIG_CONST} from "../../config/Config";

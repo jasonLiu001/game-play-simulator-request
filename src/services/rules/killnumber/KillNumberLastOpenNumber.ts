@@ -3,7 +3,7 @@ import {AbstractRuleBase} from "../AbstractRuleBase";
 import Promise = require('bluebird');
 import _ = require('lodash');
 import {LotteryDbService} from "../../dbservices/DBSerivice";
-import {AwardInfo} from "../../../models/AwardInfo";
+import {AwardInfo} from "../../../models/db/AwardInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberLastOpenNumber');

@@ -1,8 +1,8 @@
 import {SqliteService} from "./SqliteService";
 import {Config} from "../../config/Config";
 import Promise = require('bluebird');
-import {AwardInfo} from "../../models/AwardInfo";
-import {InvestInfo} from "../../models/InvestInfo";
+import {AwardInfo} from "../../models/db/AwardInfo";
+import {InvestInfo} from "../../models/db/InvestInfo";
 import {EnumAwardTable} from "../../models/db/EnumAwardTable";
 import {EnumInvestTable} from "../../models/db/EnumInvestTable";
 

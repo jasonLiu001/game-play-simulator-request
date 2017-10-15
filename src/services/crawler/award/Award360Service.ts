@@ -1,6 +1,6 @@
 import {TimeService} from "../../time/TimeService";
 import Promise = require('bluebird');
-import {AwardInfo} from "../../../models/AwardInfo";
+import {AwardInfo} from "../../../models/db/AwardInfo";
 import {IAwardCrawler} from "./IAwardCrawler";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
 

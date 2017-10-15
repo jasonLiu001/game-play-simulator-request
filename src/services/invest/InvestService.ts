@@ -1,6 +1,6 @@
 import {LotteryDbService} from "../dbservices/DBSerivice";
 import {Config, CONFIG_CONST} from "../../config/Config";
-import {InvestInfo} from "../../models/InvestInfo";
+import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');
 import {AbstractInvestBase} from "./AbstractInvestBase";
 import {RequestLoginService} from "../platform/RequestLoginService";

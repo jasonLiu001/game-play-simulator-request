@@ -1,6 +1,6 @@
 import {IAwardCrawler} from "./IAwardCrawler";
 import Promise = require('bluebird');
-import {AwardInfo} from "../../../models/AwardInfo";
+import {AwardInfo} from "../../../models/db/AwardInfo";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
 
 let request = require('request');
