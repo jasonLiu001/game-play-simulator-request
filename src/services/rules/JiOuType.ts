@@ -28,6 +28,7 @@ export class JiOuType extends AbstractRuleBase implements IRules {
         let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
         let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
 
+        log.info('排除奇偶类型：%s,%s', lastPrizeNumberJiOuType, ((lastPrizeNumberJiOuType.substr(0, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(1, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(2, 1) == '1' ? 0 : 1)));
         //杀奇偶
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];

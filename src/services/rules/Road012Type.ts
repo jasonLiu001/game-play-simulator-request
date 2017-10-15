@@ -32,6 +32,11 @@ export class Road012Type extends AbstractRuleBase implements IRules {
         let geWei012Type = this.getNumber012Type(prizeFifth);//个位012路类型
         let lastPrizeNumber012Type = baiWei012Type + '' + shiWei012Type + '' + geWei012Type;
 
+        //需要杀掉的类型1
+        let cur012Type_1 = geWei012Type + '' + baiWei012Type + '' + shiWei012Type;
+        //需要杀掉的类型2
+        let cur012Type_2 = shiWei012Type + '' + geWei012Type + '' + baiWei012Type;
+        log.info('排除012类型：%s,%s', cur012Type_1, cur012Type_2);
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
             //杀012路类型
@@ -39,10 +44,7 @@ export class Road012Type extends AbstractRuleBase implements IRules {
             let second012Type = this.getNumber012Type(Number(item.charAt(1)));
             let third012Type = this.getNumber012Type(Number(item.charAt(2)));
             let cur012Type = first012Type + '' + second012Type + '' + third012Type;
-            //需要杀掉的类型1
-            let cur012Type_1 = geWei012Type + '' + baiWei012Type + '' + shiWei012Type;
-            //需要杀掉的类型2
-            let cur012Type_2 = shiWei012Type + '' + geWei012Type + '' + baiWei012Type;
+
             if (cur012Type == cur012Type_1 || cur012Type == cur012Type_2)continue;
 
             restNumberArray.push(item);

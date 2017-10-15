@@ -89,9 +89,9 @@ export class Analysis360Service implements IAnalysisCrawler {
                     }
 
                     try {
-                        log.info('正在获取%s位杀号计划..', killNumberPosition);
                         //获取图表中被杀的号码
                         let killedNumber = this.getKilledNumber(body);
+                        log.info('排除%s位杀号计划号码：%s', killNumberPosition, killedNumber.toString());
                         resolve([killedNumber]);
                     } catch (e) {
                         log.error(e);
@@ -137,7 +137,7 @@ export class Analysis360Service implements IAnalysisCrawler {
 
         //保存杀号索引
         Analysis360Service.killNumberIndex = maxIndex;
-        log.info('最大正确次数：%s 所在图表索引列：%s 应杀号码：%s', maxCount, maxIndex, killNumberArray[maxIndex]);
+        log.info('杀号正确最大次数：%s 所在图表索引列：%s 应杀号码：%s', maxCount, maxIndex, killNumberArray[maxIndex]);
         let killedNumber = String(killNumberArray[maxIndex]);
         return killedNumber;
     }
@@ -168,6 +168,7 @@ export class Analysis360Service implements IAnalysisCrawler {
                         let arr = this.getMissCountArray(body);
                         //获取指定遗漏值的号码 如果没有指定遗漏值 说明获取的是最大遗漏值的号码
                         let numberArray = this.getNumberArray(arr, 17);
+                        log.info('%s位排除遗漏值最大号码：%s', maxMissNumberPosition, numberArray.toString());
                         resolve(numberArray);
                     } catch (e) {
                         log.error(e);

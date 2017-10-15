@@ -157,6 +157,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         let totalNumberArray = this.getTotalNumberArray();
         //产生断组号码
         let brokenGroupStr = this.getBrokenNumbers();
+        log.info('断组号码：%s', brokenGroupStr);
         //断组中不包含的号码
         let numberNotInGroup = this.getNumbersNotInGroup(brokenGroupStr);
         //01.首先排除掉 断组中不包含的号码 如'9-456-2378'不包含'01'，所以首先排除掉由'01'组成的所有三位号码

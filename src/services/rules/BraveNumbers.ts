@@ -22,6 +22,8 @@ export class BraveNumbers extends AbstractRuleBase implements IRules {
         let prizeForth = last_PrizeNumber.charAt(3);
         let prizeFifth = last_PrizeNumber.charAt(4);
 
+        log.info('胆码：%s', last_PrizeNumber);
+
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
             if (item.indexOf(prizeFirst) > -1 || item.indexOf(prizeSecond) > -1 || item.indexOf(prizeThird) > -1 || item.indexOf(prizeForth) > -1 || item.indexOf(prizeFifth) > -1) {

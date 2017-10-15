@@ -39,6 +39,7 @@ export class KillNumberGeWei extends AbstractRuleBase implements IRules {
                 }
                 let dropGeWeiNumberArray: Array<string> = [];
                 dropGeWeiNumberArray.push(killNumber);
+                log.info('杀个位号码：%s', dropGeWeiNumberArray.toString());
 
                 let restArray = this.getRestKillNumberArray(totalNumberArray, null, null, dropGeWeiNumberArray);
                 return restArray;

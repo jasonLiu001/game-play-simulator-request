@@ -29,10 +29,13 @@ export class KillNumberLastThreeOpenNumbers extends AbstractRuleBase implements 
                 let last_03 = awardHistoryList[2].openNumber;
                 //杀百位
                 let dropBaiWeiNumberArray = [last_01.substr(2, 1), last_02.substr(2, 1), last_03.substr(2, 1)];
+                log.info('杀百位号码：%s', dropBaiWeiNumberArray.toString());
                 //杀十位
                 let dropShiWeiNumberArray = [last_01.substr(3, 1), last_02.substr(3, 1), last_03.substr(3, 1)];
+                log.info('杀十位号码：%s', dropShiWeiNumberArray.toString());
                 //杀个位
                 let dropGeWeiNumberArray = [last_01.substr(4, 1), last_02.substr(4, 1), last_03.substr(4, 1)];
+                log.info('杀个位号码：%s', dropGeWeiNumberArray.toString());
 
                 let restArray = this.getRestKillNumberArray(totalNumberArray, dropBaiWeiNumberArray, dropShiWeiNumberArray, dropGeWeiNumberArray);
                 return restArray;

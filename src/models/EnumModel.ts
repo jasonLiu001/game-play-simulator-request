@@ -19,13 +19,13 @@ export const enum EnumAwardMode{
  */
 export const enum EnumKillNumberPosition{
     //个位
-    geWei,
+    geWei = "个",
 
         //十位
-    shiWei,
+    shiWei = "十",
 
         //百位
-    baiWei,
+    baiWei = "百",
 }
 
 /**
