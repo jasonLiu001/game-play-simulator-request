@@ -3,6 +3,8 @@ import {Config} from "../../config/Config";
 import Promise = require('bluebird');
 import {AwardInfo} from "../../models/AwardInfo";
 import {InvestInfo} from "../../models/InvestInfo";
+import {EnumAwardTable} from "../../models/db/EnumAwardTable";
+import {EnumInvestTable} from "../../models/db/EnumInvestTable";
 
 
 let path = require('path');
@@ -11,10 +13,14 @@ export class LotteryDbService {
     public static sqliteService: SqliteService = new SqliteService(Config.dbPath);
 
     public static createLotteryTable(): Promise<any> {
+        //开奖信息表
+        let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + EnumAwardTable.tableName + " (" + EnumAwardTable.period + " TEXT primary key, " + EnumAwardTable.openNumber + " TEXT, " + EnumAwardTable.openTime + " TEXT)";
+        //投注记录表
+        let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + EnumInvestTable.tableName + " (" + EnumInvestTable.period + " TEXT primary key, " + EnumInvestTable.investNumbers + " TEXT, " + EnumInvestTable.investNumberCount + " INTEGER, " + EnumInvestTable.currentAccountBalance + " decimal(10,3), " + EnumInvestTable.awardMode + " INTEGER, " + EnumInvestTable.winMoney + " DECIMAL(10,3), " + EnumInvestTable.status + " INTEGER, " + EnumInvestTable.isWin + " INTEGER, " + EnumInvestTable.investTime + " TEXT)";
         return Promise.all(
             [
-                LotteryDbService.sqliteService.run("CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)"),
-                LotteryDbService.sqliteService.run("CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)")
+                LotteryDbService.sqliteService.run(sqlCreateAwardTable),
+                LotteryDbService.sqliteService.run(sqlCreateInvestTable)
             ]);
     }
 
@@ -26,7 +32,8 @@ export class LotteryDbService {
      * @return {Promise<any>}
      */
     public static getAwardInfo(period: string): Promise<AwardInfo> {
-        return LotteryDbService.sqliteService.get("SELECT rowid AS id, * FROM award where period='" + period + "'");
+        let sql = "SELECT rowid AS id, * FROM " + EnumAwardTable.tableName + " where " + EnumAwardTable.period + "='" + period + "'";
+        return LotteryDbService.sqliteService.get(sql);
     }
 
 
@@ -37,7 +44,8 @@ export class LotteryDbService {
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
-        return LotteryDbService.sqliteService.prepare("INSERT OR REPLACE INTO award VALUES ($period,$openNumber,$openTime)", {
+        let sql = "INSERT OR REPLACE INTO " + EnumAwardTable.tableName + " VALUES ($period,$openNumber,$openTime)";
+        return LotteryDbService.sqliteService.prepare(sql, {
             $period: award.period,
             $openNumber: award.openNumber,
             $openTime: award.openTime
@@ -51,7 +59,8 @@ export class LotteryDbService {
      * @param period
      */
     public static getInvestInfo(period: string): Promise<InvestInfo> {
-        return LotteryDbService.sqliteService.get("SELECT rowid AS id, * FROM invest where period='" + period + "'");
+        let sql = "SELECT rowid AS id, * FROM " + EnumInvestTable.tableName + " where " + EnumInvestTable.period + "='" + period + "'";
+        return LotteryDbService.sqliteService.get(sql);
     }
 
     /**
@@ -60,7 +69,8 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<any> {
-        return LotteryDbService.sqliteService.prepare("INSERT OR REPLACE INTO invest VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)", {
+        let sql = "INSERT OR REPLACE INTO " + EnumInvestTable.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
+        return LotteryDbService.sqliteService.prepare(sql, {
             $period: investInfo.period,
             $investNumbers: investInfo.investNumbers,
             $investNumberCount: investInfo.investNumberCount,
@@ -88,7 +98,8 @@ export class LotteryDbService {
     }
 
     public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
-        return LotteryDbService.sqliteService.all("SELECT rowid AS id, * FROM invest limit " + historyCount);
+        let sql = "SELECT rowid AS id, * FROM " + EnumInvestTable.tableName + " limit " + historyCount;
+        return LotteryDbService.sqliteService.all(sql);
     }
 
     public static closeDb(): Promise<any> {
@@ -101,7 +112,8 @@ export class LotteryDbService {
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
-        return LotteryDbService.sqliteService.all("SELECT i.*, a.openNumber FROM invest AS i INNER JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " order by a.period asc");
+        let sql = "SELECT i.*, a." + EnumAwardTable.openNumber + " FROM " + EnumInvestTable.tableName + " AS i INNER JOIN " + EnumAwardTable.tableName + " AS a ON i." + EnumInvestTable.period + " = a." + EnumAwardTable.period + " WHERE i." + EnumInvestTable.status + " = " + status + " order by a." + EnumAwardTable.period + " asc";
+        return LotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -111,6 +123,7 @@ export class LotteryDbService {
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
     public static getAwardInfoHistory(historyCount: number) {
-        return LotteryDbService.sqliteService.all("SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT " + historyCount);
+        let sql = "SELECT rowid AS id, * FROM " + EnumAwardTable.tableName + " ORDER BY " + EnumAwardTable.period + " DESC LIMIT " + historyCount;
+        return LotteryDbService.sqliteService.all(sql);
     }
 }
