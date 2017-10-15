@@ -4,19 +4,27 @@
  * 计划详情枚举基类表
  */
 export class PlanTableBase {
+
+    /**
+     *
+     * 期号
+     * @type {string}
+     */
+    public static period: string = "period";
+
     /**
      *
      * 杀奇偶类型
      * @type {string}
      */
-    public static JiOuType: string = "jiou_type";
+    public static jiOuType: string = "jiou_type";
 
     /**
      *
      * 杀百位
      * @type {string}
      */
-    public static BaiWei: string = "bai_wei";
+    public static baiWei: string = "bai_wei";
 
     /**
      *
@@ -24,7 +32,7 @@ export class PlanTableBase {
      * 杀十位
      * @type {string}
      */
-    public static ShiWei: string = "shi_wei";
+    public static shiWei: string = "shi_wei";
 
     /**
      *
@@ -32,5 +40,5 @@ export class PlanTableBase {
      * 杀个位
      * @type {string}
      */
-    public static GeWei: string = "ge_wei"
+    public static geWei: string = "ge_wei"
 }

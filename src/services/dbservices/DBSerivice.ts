@@ -5,6 +5,9 @@ import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
+import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
+import {CONST_PLAN_TABLE} from "../../models/db/CONST_PLAN_TABLE";
+import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 
 
 let path = require('path');
@@ -16,6 +19,9 @@ export class LotteryDbService {
      * 初始化数据库
      * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
      * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
+     * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
+     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
+     * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
      * @return {Bluebird<[any,any]>}
      */
     public static createLotteryTable(): Promise<any> {
@@ -23,10 +29,19 @@ export class LotteryDbService {
         let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + CONST_AWARD_TABLE.tableName + " (" + CONST_AWARD_TABLE.period + " TEXT primary key, " + CONST_AWARD_TABLE.openNumber + " TEXT, " + CONST_AWARD_TABLE.openTime + " TEXT)";
         //投注记录表
         let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + CONST_INVEST_TABLE.tableName + " (" + CONST_INVEST_TABLE.period + " TEXT primary key, " + CONST_INVEST_TABLE.investNumbers + " TEXT, " + CONST_INVEST_TABLE.investNumberCount + " INTEGER, " + CONST_INVEST_TABLE.currentAccountBalance + " decimal(10,3), " + CONST_INVEST_TABLE.awardMode + " INTEGER, " + CONST_INVEST_TABLE.winMoney + " DECIMAL(10,3), " + CONST_INVEST_TABLE.status + " INTEGER, " + CONST_INVEST_TABLE.isWin + " INTEGER, " + CONST_INVEST_TABLE.investTime + " TEXT)";
+        //计划杀号记录表
+        let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName + " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.baiWei + " TEXT," + CONST_PLAN_TABLE.shiWei + " TEXT," + CONST_PLAN_TABLE.geWei + " TEXT)";
+        //计划杀号结果表
+        let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " TEXT, " + CONST_PLAN_RESULT_TABLE.baiWei + " TEXT," + CONST_PLAN_RESULT_TABLE.shiWei + " TEXT," + CONST_PLAN_RESULT_TABLE.geWei + " TEXT)";
+        //计划投注号码表
+        let sqlCreatePlanInvestNumbersTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " (" + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " TEXT primary key, " + CONST_PLAN_INVEST_NUMBERS_TABLE.jiOuType + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.baiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.shiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.geWei + " TEXT)";
         return Promise.all(
             [
                 LotteryDbService.sqliteService.run(sqlCreateAwardTable),
-                LotteryDbService.sqliteService.run(sqlCreateInvestTable)
+                LotteryDbService.sqliteService.run(sqlCreateInvestTable),
+                LotteryDbService.sqliteService.run(sqlCreatePlanTable),
+                LotteryDbService.sqliteService.run(sqlCreatePlanResultTable),
+                LotteryDbService.sqliteService.run(sqlCreatePlanInvestNumbersTable)
             ]);
     }
 
