@@ -8,6 +8,9 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
 import {CONST_PLAN_TABLE} from "../../models/db/CONST_PLAN_TABLE";
 import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
+import {PlanInfo} from "../../models/db/PlanInfo";
+import {PlanResultInfo} from "../../models/db/PlanResultInfo";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 
 let path = require('path');
@@ -20,7 +23,7 @@ export class LotteryDbService {
      * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
      * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
      * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
-     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
+     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiOuType INTEGER, baiWei INTEGER,shiWei INTEGER,geWei INTEGER)
      * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiOuType TEXT, baiWei TEXT,shiWei TEXT,geWei TEXT)
      * @return {Bluebird<[any,any]>}
      */
@@ -32,7 +35,7 @@ export class LotteryDbService {
         //计划杀号记录表
         let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName + " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.baiWei + " TEXT," + CONST_PLAN_TABLE.shiWei + " TEXT," + CONST_PLAN_TABLE.geWei + " TEXT)";
         //计划杀号结果表
-        let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " TEXT, " + CONST_PLAN_RESULT_TABLE.baiWei + " TEXT," + CONST_PLAN_RESULT_TABLE.shiWei + " TEXT," + CONST_PLAN_RESULT_TABLE.geWei + " TEXT)";
+        let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " INTEGER, " + CONST_PLAN_RESULT_TABLE.baiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.shiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.geWei + " INTEGER)";
         //计划投注号码表
         let sqlCreatePlanInvestNumbersTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " (" + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " TEXT primary key, " + CONST_PLAN_INVEST_NUMBERS_TABLE.jiOuType + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.baiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.shiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.geWei + " TEXT)";
         return Promise.all(
@@ -105,7 +108,7 @@ export class LotteryDbService {
 
     /**
      *
-     * 保存或者更新投注信息
+     * 批量保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<any>> {
         let promiseArray: Array<Promise<any>> = [];
@@ -129,6 +132,11 @@ export class LotteryDbService {
         return LotteryDbService.sqliteService.all(sql);
     }
 
+    /**
+     *
+     * 关闭数据库连接
+     * @return {Promise<any>}
+     */
     public static closeDb(): Promise<any> {
         return LotteryDbService.sqliteService.closeDb();
     }
@@ -153,5 +161,88 @@ export class LotteryDbService {
     public static getAwardInfoHistory(historyCount: number) {
         let sql = "SELECT rowid AS id, * FROM " + CONST_AWARD_TABLE.tableName + " ORDER BY " + CONST_AWARD_TABLE.period + " DESC LIMIT " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
+    }
+
+    /**
+     *
+     * 获取杀号计划实体
+     * SELECT rowid AS id, * FROM plan where period=''
+     * @param period
+     */
+    public static getPlanInfo(period: string): Promise<PlanInfo> {
+        let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_TABLE.tableName + " where period='" + period + "'";
+        return LotteryDbService.sqliteService.get(sql);
+    }
+
+    /**
+     *
+     *
+     * 保存或更新计划记录表
+     * INSERT OR REPLACE INTO plan VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
+     */
+    public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<any> {
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
+        return LotteryDbService.sqliteService.prepare(sql, {
+            $period: planInfo.period,
+            $jiOuType: planInfo.jiOuType,
+            $baiWei: planInfo.baiWei,
+            $shiWei: planInfo.shiWei,
+            $geWei: planInfo.geWei
+        });
+    }
+
+    /**
+     *
+     * 获取杀号计划对错结果
+     * SELECT rowid AS id, * FROM plan_result where period=''
+     * @param period
+     */
+    public static getPlanResultInfo(period: string): Promise<PlanResultInfo> {
+        let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_RESULT_TABLE.tableName + " where period='" + period + "'";
+        return LotteryDbService.sqliteService.get(sql);
+    }
+
+    /**
+     *
+     *
+     * 保存或更新计划记录投注结果表
+     * INSERT OR REPLACE INTO plan_result VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
+     */
+    public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<any> {
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
+        return LotteryDbService.sqliteService.prepare(sql, {
+            $period: planResultInfo.period,
+            $jiOuType: planResultInfo.jiOuType,
+            $baiWei: planResultInfo.baiWei,
+            $shiWei: planResultInfo.shiWei,
+            $geWei: planResultInfo.geWei
+        });
+    }
+
+    /**
+     *
+     * 获取杀号计划产生投注号码号码
+     * SELECT rowid AS id, * FROM plan_result where period=''
+     * @param period
+     */
+    public static getPlanInvestNumberesInfo(period: string): Promise<PlanInvestNumbersInfo> {
+        let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " where period='" + period + "'";
+        return LotteryDbService.sqliteService.get(sql);
+    }
+
+    /**
+     *
+     * 保存或更新计划投注号码表
+     * INSERT OR REPLACE INTO plan_invest_numbers VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
+     */
+    public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<any> {
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
+        return LotteryDbService.sqliteService.prepare(sql, {
+            $period: planInvestNumbers.period,
+            $jiOuType: planInvestNumbers.jiOuType,
+            $baiWei: planInvestNumbers.baiWei,
+            $shiWei: planInvestNumbers.shiWei,
+            $geWei: planInvestNumbers.geWei
+        });
     }
 }

@@ -1,30 +1,28 @@
 /**
  *
- *
- * 计划详情枚举基类表
+ * 投注计划基类
  */
-export class PlanTableBase {
-
+export class PlanInfoBase<T> {
     /**
      *
      * 期号
      * @type {string}
      */
-    public static period: string = "period";
+    public period: T;
 
     /**
      *
      * 杀奇偶类型
      * @type {string}
      */
-    public static jiOuType: string = "jiou_type";
+    public jiOuType: T;
 
     /**
      *
      * 杀百位
      * @type {string}
      */
-    public static baiWei: string = "bai_wei";
+    public baiWei: T;
 
     /**
      *
@@ -32,7 +30,7 @@ export class PlanTableBase {
      * 杀十位
      * @type {string}
      */
-    public static shiWei: string = "shi_wei";
+    public shiWei: T;
 
     /**
      *
@@ -40,5 +38,5 @@ export class PlanTableBase {
      * 杀个位
      * @type {string}
      */
-    public static geWei: string = "ge_wei";
+    public geWei: T;
 }
