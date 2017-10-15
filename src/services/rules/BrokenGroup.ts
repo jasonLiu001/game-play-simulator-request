@@ -4,6 +4,9 @@ import {Config} from "../../config/Config";
 import _ = require('lodash');
 import Promise = require('bluebird');
 
+let log4js = require('log4js'),
+    log = log4js.getLogger('BrokenGroup');
+
 /**
  *
  * 断组

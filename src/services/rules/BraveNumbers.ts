@@ -3,6 +3,9 @@ import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
 
+let log4js = require('log4js'),
+    log = log4js.getLogger('BraveNumbers');
+
 /**
  *
  * 定胆
