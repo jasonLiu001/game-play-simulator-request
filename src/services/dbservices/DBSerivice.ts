@@ -3,8 +3,8 @@ import {Config} from "../../config/Config";
 import Promise = require('bluebird');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import {EnumAwardTable} from "../../models/db/EnumAwardTable";
-import {EnumInvestTable} from "../../models/db/EnumInvestTable";
+import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
+import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 
 
 let path = require('path');
@@ -14,9 +14,9 @@ export class LotteryDbService {
 
     public static createLotteryTable(): Promise<any> {
         //开奖信息表
-        let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + EnumAwardTable.tableName + " (" + EnumAwardTable.period + " TEXT primary key, " + EnumAwardTable.openNumber + " TEXT, " + EnumAwardTable.openTime + " TEXT)";
+        let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + CONST_AWARD_TABLE.tableName + " (" + CONST_AWARD_TABLE.period + " TEXT primary key, " + CONST_AWARD_TABLE.openNumber + " TEXT, " + CONST_AWARD_TABLE.openTime + " TEXT)";
         //投注记录表
-        let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + EnumInvestTable.tableName + " (" + EnumInvestTable.period + " TEXT primary key, " + EnumInvestTable.investNumbers + " TEXT, " + EnumInvestTable.investNumberCount + " INTEGER, " + EnumInvestTable.currentAccountBalance + " decimal(10,3), " + EnumInvestTable.awardMode + " INTEGER, " + EnumInvestTable.winMoney + " DECIMAL(10,3), " + EnumInvestTable.status + " INTEGER, " + EnumInvestTable.isWin + " INTEGER, " + EnumInvestTable.investTime + " TEXT)";
+        let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + CONST_INVEST_TABLE.tableName + " (" + CONST_INVEST_TABLE.period + " TEXT primary key, " + CONST_INVEST_TABLE.investNumbers + " TEXT, " + CONST_INVEST_TABLE.investNumberCount + " INTEGER, " + CONST_INVEST_TABLE.currentAccountBalance + " decimal(10,3), " + CONST_INVEST_TABLE.awardMode + " INTEGER, " + CONST_INVEST_TABLE.winMoney + " DECIMAL(10,3), " + CONST_INVEST_TABLE.status + " INTEGER, " + CONST_INVEST_TABLE.isWin + " INTEGER, " + CONST_INVEST_TABLE.investTime + " TEXT)";
         return Promise.all(
             [
                 LotteryDbService.sqliteService.run(sqlCreateAwardTable),
@@ -32,7 +32,7 @@ export class LotteryDbService {
      * @return {Promise<any>}
      */
     public static getAwardInfo(period: string): Promise<AwardInfo> {
-        let sql = "SELECT rowid AS id, * FROM " + EnumAwardTable.tableName + " where " + EnumAwardTable.period + "='" + period + "'";
+        let sql = "SELECT rowid AS id, * FROM " + CONST_AWARD_TABLE.tableName + " where " + CONST_AWARD_TABLE.period + "='" + period + "'";
         return LotteryDbService.sqliteService.get(sql);
     }
 
@@ -44,7 +44,7 @@ export class LotteryDbService {
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
-        let sql = "INSERT OR REPLACE INTO " + EnumAwardTable.tableName + " VALUES ($period,$openNumber,$openTime)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_AWARD_TABLE.tableName + " VALUES ($period,$openNumber,$openTime)";
         return LotteryDbService.sqliteService.prepare(sql, {
             $period: award.period,
             $openNumber: award.openNumber,
@@ -59,7 +59,7 @@ export class LotteryDbService {
      * @param period
      */
     public static getInvestInfo(period: string): Promise<InvestInfo> {
-        let sql = "SELECT rowid AS id, * FROM " + EnumInvestTable.tableName + " where " + EnumInvestTable.period + "='" + period + "'";
+        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " where " + CONST_INVEST_TABLE.period + "='" + period + "'";
         return LotteryDbService.sqliteService.get(sql);
     }
 
@@ -69,7 +69,7 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<any> {
-        let sql = "INSERT OR REPLACE INTO " + EnumInvestTable.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
         return LotteryDbService.sqliteService.prepare(sql, {
             $period: investInfo.period,
             $investNumbers: investInfo.investNumbers,
@@ -98,7 +98,7 @@ export class LotteryDbService {
     }
 
     public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
-        let sql = "SELECT rowid AS id, * FROM " + EnumInvestTable.tableName + " limit " + historyCount;
+        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " limit " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
     }
 
@@ -112,7 +112,7 @@ export class LotteryDbService {
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a." + EnumAwardTable.openNumber + " FROM " + EnumInvestTable.tableName + " AS i INNER JOIN " + EnumAwardTable.tableName + " AS a ON i." + EnumInvestTable.period + " = a." + EnumAwardTable.period + " WHERE i." + EnumInvestTable.status + " = " + status + " order by a." + EnumAwardTable.period + " asc";
+        let sql = "SELECT i.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_INVEST_TABLE.tableName + " AS i INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON i." + CONST_INVEST_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE i." + CONST_INVEST_TABLE.status + " = " + status + " order by a." + CONST_AWARD_TABLE.period + " asc";
         return LotteryDbService.sqliteService.all(sql);
     }
 
@@ -123,7 +123,7 @@ export class LotteryDbService {
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
     public static getAwardInfoHistory(historyCount: number) {
-        let sql = "SELECT rowid AS id, * FROM " + EnumAwardTable.tableName + " ORDER BY " + EnumAwardTable.period + " DESC LIMIT " + historyCount;
+        let sql = "SELECT rowid AS id, * FROM " + CONST_AWARD_TABLE.tableName + " ORDER BY " + CONST_AWARD_TABLE.period + " DESC LIMIT " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
     }
 }

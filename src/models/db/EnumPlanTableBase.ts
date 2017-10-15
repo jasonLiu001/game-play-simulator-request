@@ -1,37 +1,36 @@
 /**
  *
  *
- * 开奖信息表
+ * 计划详情枚举基类表
  */
-export const enum EnumAwardTable {
+export enum EnumPlanTableBase{
     /**
      *
-     *
-     * 数据表名称
+     * 杀奇偶类型
      * @type {string}
      */
-    tableName = "award",
+    JiOuType = "jiou_type",
 
         /**
          *
-         * 开奖期号
+         * 杀百位
          * @type {string}
          */
-    period = "period",
-
-        /**
-         *
-         *
-         * 开奖号码
-         * @type {string}
-         */
-    openNumber = "openNumber",
+    BaiWei = "bai_wei",
 
         /**
          *
          *
-         * 开奖时间
+         * 杀十位
          * @type {string}
          */
-    openTime = "openTime"
+    ShiWei = "shi_wei",
+
+        /**
+         *
+         *
+         * 杀个位
+         * @type {string}
+         */
+    GeWei = "ge_wei"
 }
