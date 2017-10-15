@@ -12,6 +12,12 @@ let path = require('path');
 export class LotteryDbService {
     public static sqliteService: SqliteService = new SqliteService(Config.dbPath);
 
+    /**
+     * 初始化数据库
+     * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
+     * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
+     * @return {Bluebird<[any,any]>}
+     */
     public static createLotteryTable(): Promise<any> {
         //开奖信息表
         let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + CONST_AWARD_TABLE.tableName + " (" + CONST_AWARD_TABLE.period + " TEXT primary key, " + CONST_AWARD_TABLE.openNumber + " TEXT, " + CONST_AWARD_TABLE.openTime + " TEXT)";
@@ -26,8 +32,8 @@ export class LotteryDbService {
 
     /**
      *
-     *
      * 获取开奖信息
+     * SELECT rowid AS id, * FROM award where period=''
      * @param period
      * @return {Promise<any>}
      */
@@ -38,9 +44,8 @@ export class LotteryDbService {
 
 
     /**
-     *
-     *
      * 保存或更新开奖数据
+     *INSERT OR REPLACE INTO award VALUES ($period,$openNumber,$openTime)
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
@@ -54,8 +59,8 @@ export class LotteryDbService {
 
     /**
      *
-     *
      * 获取投注信息
+     * SELECT rowid AS id, * FROM invest where period=''
      * @param period
      */
     public static getInvestInfo(period: string): Promise<InvestInfo> {
@@ -65,8 +70,8 @@ export class LotteryDbService {
 
     /**
      *
-     *
      * 保存或者更新投注信息
+     * INSERT OR REPLACE INTO invest VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<any> {
         let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
@@ -97,6 +102,13 @@ export class LotteryDbService {
         });
     }
 
+    /**
+     *
+     * 获取特定数量的投注记录
+     * SELECT rowid AS id, * FROM invest limit 4
+     * @param historyCount
+     * @return {Promise<any>}
+     */
     public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " limit " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
@@ -109,6 +121,7 @@ export class LotteryDbService {
     /**
      *
      * 根据状态获取投注信息
+     * SELECT i.*, a.openNumber FROM invest AS i INNER JOIN award AS a ON i.period = a.period WHERE i.status =1  order by a.period asc
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
@@ -118,8 +131,8 @@ export class LotteryDbService {
 
     /**
      *
-     *
      * 获取特定数量的开奖数据
+     * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
     public static getAwardInfoHistory(historyCount: number) {
