@@ -52,9 +52,9 @@ export abstract class AbstractInvestBase {
         if (investInfo.isWin == 1) {
             //当期盈利
             let winMoney = CONFIG_CONST.awardPrice - investMoney;
-            investInfo.winMoney = winMoney / investInfo.awardMode;
+            investInfo.winMoney = (winMoney / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu);
         } else {
-            investInfo.winMoney = (investMoney == 0) ? 0 : -(investMoney / investInfo.awardMode);
+            investInfo.winMoney = (investMoney == 0) ? 0 : -((investMoney / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu));
         }
     }
 
@@ -62,7 +62,7 @@ export abstract class AbstractInvestBase {
     private updateCurrentAccountBalace(investInfo: InvestInfo) {
         //更新当前账号余额
         if (investInfo.isWin == 1) {
-            investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + CONFIG_CONST.awardPrice / investInfo.awardMode).toFixed(2));
+            investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + (CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
             //更新全局余额
             Config.globalVariable.currentAccoutBalance = investInfo.currentAccountBalance;
         }
@@ -211,7 +211,7 @@ export abstract class AbstractInvestBase {
                     };
                     //后三开奖号码
                     let prizeNumber = item.openNumber.substring(2);
-                    //兑奖
+                    //兑奖 更新开奖状态 更新盈利 更新账户余额
                     this.UpdatePrize(investInfo, prizeNumber);
                     investInfoList.push(investInfo);
                 }
@@ -258,7 +258,7 @@ export abstract class AbstractInvestBase {
         //当前投入
         let investMoney = investNumbersArray.length * 2;
         //投注前保存 投注后的账号余额
-        Config.globalVariable.currentAccoutBalance = Number((Config.globalVariable.currentAccoutBalance - (investMoney / Config.currentSelectedAwardMode)).toFixed(2));
+        Config.globalVariable.currentAccoutBalance = Number((Config.globalVariable.currentAccoutBalance - ((investMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
 
     }
 }
