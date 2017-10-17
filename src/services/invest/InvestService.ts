@@ -69,7 +69,7 @@ export class InvestService extends AbstractInvestBase {
             })
             .catch((e) => {
                 if (e) {
-                    log.error('%s，原因如下：', (isRealInvest ? '正式投注已自动结束，切换到模拟投注模式' : '模拟投注已自动结束'));
+                    log.error('投注已自动结束，原因如下：');
                     log.error(e);
                 }
             });
