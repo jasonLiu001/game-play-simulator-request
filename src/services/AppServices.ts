@@ -33,7 +33,7 @@ export class AppServices {
      * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     public static start(isRealInvest: boolean): void {
-        log.info('程序已启动，持续监视中...');
+        log.info('%s程序已启动，持续监视中...', (isRealInvest ? '' : '模拟'));
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //是否有模拟投注，有则先结束模拟投注
@@ -65,6 +65,5 @@ export class AppServices {
         log.info('模拟投注启动中...');
         AppServices.clearAwardTimer();//停止真实投注程序
         AppServices.start(false);//启动模拟投注程序
-        log.info('模拟投注模式 启动完成，持续监视中...');
     }
 }
