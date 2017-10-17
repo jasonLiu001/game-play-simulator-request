@@ -15,15 +15,17 @@ let log4js = require('log4js'),
     numberService = new NumberService();
 
 export class InvestService extends AbstractInvestBase {
+
     /**
-     *
      * 模拟执行投注入口方法
+     * @param request request对象实例
+     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    executeAutoInvest(request: any, isRealInvest: boolean = true): void {
+    executeAutoInvest(request: any, isRealInvest: boolean): void {
         this.calculateWinMoney()
             .then(() => {
                 //检查是否满足投注条件
-                return this.doCheck(false);
+                return this.doCheck(isRealInvest);
             })
             .then(() => {
                 log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));

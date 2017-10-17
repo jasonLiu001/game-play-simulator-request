@@ -129,13 +129,13 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     *
+     * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      * 检查最大盈利金额是否达到设定目标
      */
-    private checkMaxWinMoney(isMockTest: boolean): Promise<any> {
+    private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
         if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
             let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
-            if (!isMockTest) {//真实投注
+            if (isRealInvest) {//真实投注
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
                 return Promise.reject(message);
             }
@@ -148,10 +148,9 @@ export abstract class AbstractInvestBase {
      *
      *
      * 是否可投注检查
-     * @param config
-     * @param isMockTest 是否是模拟测试
+     * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    public doCheck(isMockTest: boolean): Promise<boolean> {
+    public doCheck(isRealInvest: boolean): Promise<boolean> {
         //检查开奖号码是否已经更新
         return this.checkLastPrizeNumberValidation()
             .then(() => {
@@ -160,7 +159,7 @@ export abstract class AbstractInvestBase {
             })
             .then(() => {
                 //检查当前的最大盈利金额
-                return this.checkMaxWinMoney(isMockTest);
+                return this.checkMaxWinMoney(isRealInvest);
             });
 
     }
@@ -231,7 +230,6 @@ export abstract class AbstractInvestBase {
      * 兑奖
      * @param investInfo
      * @param openNumber
-     * @param config
      * @return {Array|string[]}
      */
     private UpdatePrize(investInfo: InvestInfo, openNumber: string): void {
@@ -259,6 +257,5 @@ export abstract class AbstractInvestBase {
         let investMoney = investNumbersArray.length * 2;
         //投注前保存 投注后的账号余额
         Config.globalVariable.currentAccoutBalance = Number((Config.globalVariable.currentAccoutBalance - ((investMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
-
     }
 }

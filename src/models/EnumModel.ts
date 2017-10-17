@@ -33,16 +33,10 @@ export const enum EnumKillNumberPosition{
  * Promise的reject的消息字符
  */
 export const enum RejectionMsg{
-    //数据库已存在相关记录
-    isExistRecordInAward = 'exist-record-in-award',
+    //数据库已存在相关记录 上期开奖号码未更新
+    isExistRecordInAward = 'exist-record-in-award. wating for new prize number come out.',
         //未达到下期的投注时间
     notReachInvestTime = 'not-reach-invest-time',
-        //上期开奖号码未更新
-    lastPrizeNumberNotUpdated = 'not-update-last-prize-number',
-        //不允许投注
-    canExecuteRealInvest = 'not-allow-execute-invest',
-        //打开页面错误
-    navigationError = 'navigation error',
         //开奖号码中的历史数据不够
     historyCountIsNotEnough = 'history-count-in-award-table-is-not-enough'
 }
