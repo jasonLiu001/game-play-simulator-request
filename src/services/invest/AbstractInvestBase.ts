@@ -103,10 +103,10 @@ export abstract class AbstractInvestBase {
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
         let day = currentTime.getDate();
-        //当天的22:00
-        let thirdTime = new Date(year, month, day, 22, 0, 0);
+        //当天的21:59
+        let thirdTime = new Date(year, month, day, 21, 59, 0);
         //当天22:00以后自动切换到模拟投注
-        if (isRealInvest && currentTime >= thirdTime) {
+        if (isRealInvest && currentTime > thirdTime) {
             AppServices.startMockTask();//结束正式投注，启动模拟投注
             return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，当天22:00以后，自动结束真实投注");
         }
