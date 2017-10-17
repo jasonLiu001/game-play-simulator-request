@@ -88,15 +88,29 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * 检查投注时间 在02:00-10:00点之间不允许投注
+     * 检查投注时间 在02:00-10:00点之间不允许投注  当天22:00以后自动切换到模拟投注
+     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    private checkInvestTime(): Promise<any> {
+    private checkInvestTime(isRealInvest: boolean): Promise<any> {
         //检查在此时间内是否允许投注
         if (timeService.isInStopInvestTime()) {//真实投注并且到了不可投注的时间段时
             //更新开奖时间
             timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间或22:00以后，不符合投注时间")
+            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间，不符合投注时间")
         }
+
+        let currentTime = new Date();
+        let year = currentTime.getFullYear();
+        let month = currentTime.getMonth();//month取值 0-11
+        let day = currentTime.getDate();
+        //当天的22:00
+        let thirdTime = new Date(year, month, day, 22, 0, 0);
+        //当天22:00以后自动切换到模拟投注
+        if (isRealInvest && currentTime >= thirdTime) {
+            AppServices.startMockTask();//结束正式投注，启动模拟投注
+            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，当天22:00以后，自动结束真实投注");
+        }
+
         return Promise.resolve(true);
     }
 
@@ -129,8 +143,8 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      * 检查最大盈利金额是否达到设定目标
+     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
         if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
@@ -154,8 +168,8 @@ export abstract class AbstractInvestBase {
         //检查开奖号码是否已经更新
         return this.checkLastPrizeNumberValidation()
             .then(() => {
-                //检查投注时间 在02:00-10:00点之间不允许投注
-                return this.checkInvestTime();
+                //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
+                return this.checkInvestTime(isRealInvest);
             })
             .then(() => {
                 //检查当前的最大盈利金额
