@@ -214,15 +214,11 @@ export class TimeService {
         let twoClock = new Date(year, month, day, 2, 0, 0);
         //当天10:00
         let tenClock = new Date(year, month, day, 10, 0, 0);
-        //当天22:00
-        let nightTenClock = new Date(year, month, day, 22, 0, 0);
 
         if (currentTime > twoClock && currentTime < tenClock) {
             return true;
-        } else if (currentTime >= nightTenClock) {
-            return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
