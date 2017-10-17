@@ -108,7 +108,7 @@ export abstract class AbstractInvestBase {
         //当天22:00以后自动切换到模拟投注
         if (isRealInvest && currentTime > thirdTime) {
             AppServices.startMockTask();//结束正式投注，启动模拟投注
-            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，当天22:00以后，自动结束真实投注");
+            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，当天22:00以后，自动启动模拟投注");
         }
 
         return Promise.resolve(true);
