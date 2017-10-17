@@ -62,9 +62,9 @@ export class AppServices {
      * 执行模拟投注
      */
     public static startMockTask(): void {
-        log.info('切换正式投注到模拟投注...');
+        log.info('模拟投注启动中...');
         AppServices.clearAwardTimer();//停止真实投注程序
         AppServices.start(false);//启动模拟投注程序
-        log.info('模拟投注切换完成！');
+        log.info('模拟投注模式 启动完成，持续监视中...');
     }
 }
