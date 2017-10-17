@@ -93,7 +93,7 @@ export abstract class AbstractInvestBase {
      */
     private checkInvestTime(isRealInvest: boolean): Promise<any> {
         //检查在此时间内是否允许投注
-        if (timeService.isInStopInvestTime()) {//真实投注并且到了不可投注的时间段时
+        if (timeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
             timeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
             return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间，不符合投注时间")
