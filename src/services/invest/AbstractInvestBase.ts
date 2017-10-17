@@ -165,11 +165,11 @@ export abstract class AbstractInvestBase {
      * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     public doCheck(isRealInvest: boolean): Promise<boolean> {
-        //检查开奖号码是否已经更新
-        return this.checkLastPrizeNumberValidation()
+        //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
+        return this.checkInvestTime(isRealInvest)
             .then(() => {
-                //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
-                return this.checkInvestTime(isRealInvest);
+                //检查开奖号码是否已经更新
+                return this.checkLastPrizeNumberValidation();
             })
             .then(() => {
                 //检查当前的最大盈利金额
