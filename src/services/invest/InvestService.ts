@@ -6,6 +6,7 @@ import {AbstractInvestBase} from "./AbstractInvestBase";
 import {RequestLoginService} from "../platform/RequestLoginService";
 import {RequestPlatformService} from "../platform/RequestPlatformService";
 import {NumberService} from "../numbers/NumberService";
+import {ErrorService} from "../ErrorService";
 
 
 let log4js = require('log4js'),
@@ -68,10 +69,7 @@ export class InvestService extends AbstractInvestBase {
                 return LotteryDbService.saveOrUpdateInvestInfo(investInfo);
             })
             .catch((e) => {
-                if (e) {
-                    log.error('投注已自动结束，原因如下：');
-                    log.error(e);
-                }
+                ErrorService.appInvestErrorHandler(log, e);
             });
     }
 }

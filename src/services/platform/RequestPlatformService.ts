@@ -3,6 +3,7 @@ import {TimeService} from "../time/TimeService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
 import {EnumAwardMode} from "../../models/EnumModel";
+import {ErrorService} from "../ErrorService";
 let log4js = require('log4js'),
     log = log4js.getLogger('RequestLoginService'),
     timeService = new TimeService();
@@ -187,6 +188,9 @@ export class RequestPlatformService extends PlatformAbstractBase {
                 let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
 
                 return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
+            })
+            .catch((e) => {
+                ErrorService.appInvestErrorHandler(log, e);
             });
     }
 

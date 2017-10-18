@@ -3,6 +3,7 @@ import {ResponseData} from "../../models/ResponseData";
 import {CaptchaDecoderService} from "../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase} from "./PlatformAbstractBase";
 import Promise = require('bluebird');
+import {ErrorService} from "../ErrorService";
 
 let path = require('path'),
     fs = require('fs'),
@@ -84,6 +85,8 @@ export class RequestLoginService extends PlatformAbstractBase {
             .then((parserRes: ResponseData) => {
                 //开始登录
                 return this.loginMock(request, parserRes.pic_str);
+            }).catch((e) => {
+                ErrorService.appInvestErrorHandler(log, e);
             });
     }
 }

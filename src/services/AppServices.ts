@@ -44,7 +44,7 @@ export class AppServices {
                 });
             })
             .catch((err) => {
-                ErrorService.appErrorHandler(log, err);
+                ErrorService.appStartErrorHandler(log, err);
             });
     }
 

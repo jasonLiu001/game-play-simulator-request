@@ -8,12 +8,22 @@ export class ErrorService {
     /**
      *
      *
-     * app异常处理
+     * app启动异常处理
      */
-    public static appErrorHandler(log: any, error: any): void {
+    public static appStartErrorHandler(log: any, error: any): void {
         if (error) {
-            let msg = "程序启动时遇到错误，已退出！";
-            log.error(msg);
+            log.error("程序启动时遇到错误，已退出！");
+            log.error(error);
+        }
+    }
+
+    /**
+     *
+     * app投注异常处理
+     */
+    public static appInvestErrorHandler(log: any, error: any): void {
+        if (error) {
+            log.error('投注已自动结束，原因如下：');
             log.error(error);
         }
     }

@@ -91,7 +91,7 @@ export class CommandApp {
             })
             .catch((err) => {
                 //启动失败后结束electron进程
-                ErrorService.appErrorHandler(log, err);
+                ErrorService.appStartErrorHandler(log, err);
             });
     }
 }
