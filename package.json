@@ -2,14 +2,15 @@
   "main": "App.js",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "request": "^2.81.0",
+    "cheerio": "^1.0.0-rc.2",
+    "commander": "^2.11.0",
     "jasmine": "^2.6.0",
     "lodash": "^4.17.4",
     "log4js": "^2.0.0",
+    "net-ping": "^1.2.1",
+    "request": "^2.81.0",
     "sqlite3": "^3.1.8",
-    "typescript": "^2.3.2",
-    "cheerio": "^1.0.0-rc.2",
-    "commander": "^2.11.0"
+    "typescript": "^2.3.2"
   },
   "scripts": {
     "grunt": "grunt",

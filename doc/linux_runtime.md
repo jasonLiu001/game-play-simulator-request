@@ -1,6 +1,7 @@
-# Linux 下运行环境配置
+Linux 下运行环境配置
+=============
 
-#### CentOS 7
+## CentOS 7
 
 1. 安装`node`  参考文档：<https://nodejs.org/en/download/package-manager/>
 
