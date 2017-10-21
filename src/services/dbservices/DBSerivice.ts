@@ -66,13 +66,17 @@ export class LotteryDbService {
      *INSERT OR REPLACE INTO award VALUES ($period,$openNumber,$openTime)
      * @param award
      */
-    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
+    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_AWARD_TABLE.tableName + " VALUES ($period,$openNumber,$openTime)";
-        return LotteryDbService.sqliteService.prepare(sql, {
-            $period: award.period,
-            $openNumber: award.openNumber,
-            $openTime: award.openTime
-        });
+        return LotteryDbService.sqliteService.prepare(sql,
+            {
+                $period: award.period,
+                $openNumber: award.openNumber,
+                $openTime: award.openTime
+            })
+            .then(() => {
+                return award;
+            });
     }
 
     /**
@@ -91,31 +95,35 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      * INSERT OR REPLACE INTO invest VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)
      */
-    public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<any> {
+    public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
-        return LotteryDbService.sqliteService.prepare(sql, {
-            $period: investInfo.period,
-            $investNumbers: investInfo.investNumbers,
-            $investNumberCount: investInfo.investNumberCount,
-            $currentAccountBalance: investInfo.currentAccountBalance,
-            $awardMode: investInfo.awardMode,
-            $winMoney: investInfo.winMoney,
-            $isWin: investInfo.isWin,
-            $status: investInfo.status,
-            $investTime: investInfo.investTime
-        });
+        return LotteryDbService.sqliteService.prepare(sql,
+            {
+                $period: investInfo.period,
+                $investNumbers: investInfo.investNumbers,
+                $investNumberCount: investInfo.investNumberCount,
+                $currentAccountBalance: investInfo.currentAccountBalance,
+                $awardMode: investInfo.awardMode,
+                $winMoney: investInfo.winMoney,
+                $isWin: investInfo.isWin,
+                $status: investInfo.status,
+                $investTime: investInfo.investTime
+            })
+            .then(() => {
+                return investInfo;
+            });
     }
 
     /**
      *
      * 批量保存或者更新投注信息
      */
-    public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<any>> {
+    public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in investInfoList) {
             promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
         }
-        return Promise.all(promiseArray).then((results) => {
+        return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
             return results;
         });
     }
@@ -180,15 +188,19 @@ export class LotteryDbService {
      * 保存或更新计划记录表
      * INSERT OR REPLACE INTO plan VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
      */
-    public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<any> {
+    public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
-        return LotteryDbService.sqliteService.prepare(sql, {
-            $period: planInfo.period,
-            $jiOuType: planInfo.jiOuType,
-            $baiWei: planInfo.baiWei,
-            $shiWei: planInfo.shiWei,
-            $geWei: planInfo.geWei
-        });
+        return LotteryDbService.sqliteService.prepare(sql,
+            {
+                $period: planInfo.period,
+                $jiOuType: planInfo.jiOuType,
+                $baiWei: planInfo.baiWei,
+                $shiWei: planInfo.shiWei,
+                $geWei: planInfo.geWei
+            })
+            .then(() => {
+                return planInfo;
+            });
     }
 
     /**
@@ -208,15 +220,19 @@ export class LotteryDbService {
      * 保存或更新计划记录投注结果表
      * INSERT OR REPLACE INTO plan_result VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
      */
-    public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<any> {
+    public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
-        return LotteryDbService.sqliteService.prepare(sql, {
-            $period: planResultInfo.period,
-            $jiOuType: planResultInfo.jiOuType,
-            $baiWei: planResultInfo.baiWei,
-            $shiWei: planResultInfo.shiWei,
-            $geWei: planResultInfo.geWei
-        });
+        return LotteryDbService.sqliteService.prepare(sql,
+            {
+                $period: planResultInfo.period,
+                $jiOuType: planResultInfo.jiOuType,
+                $baiWei: planResultInfo.baiWei,
+                $shiWei: planResultInfo.shiWei,
+                $geWei: planResultInfo.geWei
+            })
+            .then(() => {
+                return planResultInfo;
+            });
     }
 
     /**
@@ -235,14 +251,18 @@ export class LotteryDbService {
      * 保存或更新计划投注号码表
      * INSERT OR REPLACE INTO plan_invest_numbers VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)
      */
-    public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<any> {
+    public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiOuType,$baiWei,$shiWei,$geWei)";
-        return LotteryDbService.sqliteService.prepare(sql, {
-            $period: planInvestNumbers.period,
-            $jiOuType: planInvestNumbers.jiOuType,
-            $baiWei: planInvestNumbers.baiWei,
-            $shiWei: planInvestNumbers.shiWei,
-            $geWei: planInvestNumbers.geWei
-        });
+        return LotteryDbService.sqliteService.prepare(sql,
+            {
+                $period: planInvestNumbers.period,
+                $jiOuType: planInvestNumbers.jiOuType,
+                $baiWei: planInvestNumbers.baiWei,
+                $shiWei: planInvestNumbers.shiWei,
+                $geWei: planInvestNumbers.geWei
+            })
+            .then(() => {
+                return planInvestNumbers;
+            });
     }
 }
