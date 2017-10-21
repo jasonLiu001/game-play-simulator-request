@@ -8,7 +8,7 @@ let path = require('path');
  */
 export const CONFIG_CONST = {
     //登录网站url
-    siteUrl: 'https://123.jn707.com',
+    siteUrl: 'http://123.jn878.cc',
     //需要获取的历史号码数量
     historyCount: 3,
     //开奖延迟时间，单位为秒
