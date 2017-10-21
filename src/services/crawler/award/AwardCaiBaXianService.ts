@@ -3,7 +3,9 @@ import Promise = require('bluebird');
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
 
-let request = require('request');
+let request = require('request'),
+    log4js = require('log4js'),
+    log = log4js.getLogger('Award360Service');
 
 /**
  *
@@ -38,21 +40,27 @@ export class AwardCaiBaXianService implements IAwardCrawler {
                     try {
                         lotteryData = JSON.parse(data)
                     } catch (e) {
+                        log.error(e);
                         reject(e);
                     }
 
-                    let periodString = lotteryData.currexpect;
-                    let num = periodString.substring(6);
-                    let monthFragment = periodString.substr(2, 2);
-                    let dayFragment = periodString.substr(4, 2);
-                    let year = String(new Date().getFullYear());
+                    try {
+                        let periodString = lotteryData.currexpect;
+                        let num = periodString.substring(6);
+                        let monthFragment = periodString.substr(2, 2);
+                        let dayFragment = periodString.substr(4, 2);
+                        let year = String(new Date().getFullYear());
 
-                    let awardInfo: AwardInfo = {
-                        period: year + '' + monthFragment + '' + dayFragment + '-' + num,
-                        openNumber: lotteryData.opencode,
-                        openTime: lotteryData.timeStop
-                    };
-                    resolve(awardInfo);
+                        let awardInfo: AwardInfo = {
+                            period: year + '' + monthFragment + '' + dayFragment + '-' + num,
+                            openNumber: lotteryData.opencode,
+                            openTime: lotteryData.timeStop
+                        };
+                        resolve(awardInfo);
+                    } catch (e) {
+                        log.error(e);
+                        reject(e);
+                    }
                 });
         });
     }

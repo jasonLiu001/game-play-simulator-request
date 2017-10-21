@@ -77,8 +77,6 @@ export class Award360Service implements IAwardCrawler {
                         log.error(e);
                         reject(e);
                     }
-
-
                 });
         });
     }
