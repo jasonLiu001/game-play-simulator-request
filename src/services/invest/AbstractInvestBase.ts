@@ -147,11 +147,15 @@ export abstract class AbstractInvestBase {
      * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
-        if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxWinMoney) {
-            let message = "当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxWinMoney;
+        if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxAccountBalance) {
             if (isRealInvest) {//真实投注
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
-                return Promise.reject(message);
+                return Promise.reject("当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance);
+            }
+        } else if (Config.globalVariable.currentAccoutBalance <= CONFIG_CONST.minAccountBalance) {
+            if (isRealInvest) {//真实投注
+                AppServices.startMockTask();//结束正式投注，启动模拟投注
+                return Promise.reject("当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance);
             }
         }
         return Promise.resolve(true);
