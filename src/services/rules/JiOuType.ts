@@ -2,6 +2,10 @@ import {IRules} from "./IRules";
 import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
+import {LotteryDbService} from "../dbservices/DBSerivice";
+import {TimeService} from "../time/TimeService";
+import {PlanInfo} from "../../models/db/PlanInfo";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiOuType');
@@ -28,7 +32,6 @@ export class JiOuType extends AbstractRuleBase implements IRules {
         let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
         let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
 
-        log.info('排除奇偶类型：%s,%s', lastPrizeNumberJiOuType, ((lastPrizeNumberJiOuType.substr(0, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(1, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(2, 1) == '1' ? 0 : 1)));
         //杀奇偶
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
@@ -101,6 +104,26 @@ export class JiOuType extends AbstractRuleBase implements IRules {
             restNumberArray.push(item);
         }
 
-        return Promise.resolve(restNumberArray);
+        //日志记录杀号类型
+        let killJiouType_01 = lastPrizeNumberJiOuType;
+        let killJiouType_02 = ((lastPrizeNumberJiOuType.substr(0, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(1, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(2, 1) == '1' ? 0 : 1));
+        log.info('排除奇偶类型：%s,%s', killJiouType_01, killJiouType_02);
+
+        //保存排除的类型
+        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
+            .then((planInfo: PlanInfo) => {
+                planInfo.jiOuType = killJiouType_01 + '|' + killJiouType_02;
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.jiOuType = restNumberArray.join(',');
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then(() => {
+                return restNumberArray;
+            });
     }
 }

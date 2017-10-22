@@ -5,6 +5,10 @@ import {Analysis360Service} from "../../crawler/analysis/Analysis360Service";
 import Promise = require('bluebird');
 import {EnumKillNumberPosition} from "../../../models/EnumModel";
 import _ = require('lodash');
+import {LotteryDbService} from "../../dbservices/DBSerivice";
+import {TimeService} from "../../time/TimeService";
+import {PlanInfo} from "../../../models/db/PlanInfo";
+import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
 
 let analysis360Service = new Analysis360Service(),
     log4js = require('log4js'),
@@ -18,10 +22,32 @@ let analysis360Service = new Analysis360Service(),
 export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
     public filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
+
+        let killNumberInfo: KillNumberInfo = null;
+        //保存杀号结果到数据库
         return this.getKillNumberObject()
-            .then((result) => {
-                //杀号 结果
-                let restArray = this.getRestKillNumberArray(originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
+            .then((result: KillNumberInfo) => {
+                killNumberInfo = result;
+                return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
+            })
+            .then((planInfo: PlanInfo) => {
+                planInfo.baiWei = killNumberInfo.dropBaiWeiNumberArray == null ? '' : killNumberInfo.dropBaiWeiNumberArray.join(',');
+                planInfo.shiWei = killNumberInfo.dropShiWeiNumberArray == null ? '' : killNumberInfo.dropShiWeiNumberArray.join(',');
+                planInfo.geWei = killNumberInfo.dropGeWeiNumberArray == null ? '' : killNumberInfo.dropGeWeiNumberArray.join(',');
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.baiWei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray).join(',');
+                planInvestNumbersInfo.shiWei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray).join(',');
+                planInvestNumbersInfo.geWei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                //最终杀号 结果
+                let restArray = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray, killNumberInfo.dropShiWeiNumberArray, killNumberInfo.dropGeWeiNumberArray);
                 return restArray;
             });
     }
