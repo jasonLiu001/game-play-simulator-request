@@ -15,14 +15,14 @@ export class PlanInfoBase<T> {
      * 杀奇偶类型
      * @type {string}
      */
-    public jiOuType: T;
+    public jiou_type: T;
 
     /**
      *
      * 杀百位
      * @type {string}
      */
-    public baiWei: T;
+    public bai_wei: T;
 
     /**
      *
@@ -30,7 +30,7 @@ export class PlanInfoBase<T> {
      * 杀十位
      * @type {string}
      */
-    public shiWei: T;
+    public shi_wei: T;
 
     /**
      *
@@ -38,5 +38,5 @@ export class PlanInfoBase<T> {
      * 杀个位
      * @type {string}
      */
-    public geWei: T;
+    public ge_wei: T;
 }

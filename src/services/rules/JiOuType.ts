@@ -112,14 +112,14 @@ export class JiOuType extends AbstractRuleBase implements IRules {
         //保存排除的类型
         return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
             .then((planInfo: PlanInfo) => {
-                planInfo.jiOuType = killJiouType_01 + '|' + killJiouType_02;
+                planInfo.jiou_type = killJiouType_01 + '|' + killJiouType_02;
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
                 return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.jiOuType = restNumberArray.join(',');
+                planInvestNumbersInfo.jiou_type = restNumberArray.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {

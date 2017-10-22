@@ -41,18 +41,18 @@ export class NumberService extends AbstractRuleBase {
         let period = TimeService.getCurrentPeriodNumber(new Date());
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
-            jiOuType: '',
-            baiWei: '',
-            shiWei: '',
-            geWei: ''
+            jiou_type: '',
+            bai_wei: '',
+            shi_wei: '',
+            ge_wei: ''
         };
 
         let planInfoResultNumber: PlanResultInfo = {
             period: period,
-            jiOuType: 0,
-            baiWei: 0,
-            shiWei: 0,
-            geWei: 0
+            jiou_type: 0,
+            bai_wei: 0,
+            shi_wei: 0,
+            ge_wei: 0
         };
 
         return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
