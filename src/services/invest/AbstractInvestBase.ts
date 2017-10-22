@@ -258,18 +258,18 @@ export abstract class AbstractInvestBase {
                     let planInvestNumbersInfo: PlanInvestNumbersInfo = {
                         period: item.period,
                         jiou_type: item.jiou_type,
-                        bai_wei: item.bai_wei,
-                        shi_wei: item.shi_wei,
-                        ge_wei: item.ge_wei,
+                        killplan_bai_wei: item.killplan_bai_wei,
+                        killplan_shi_wei: item.killplan_shi_wei,
+                        killplan_ge_wei: item.killplan_ge_wei,
                         status: 1//状态更新置为已更新状态
                     };
                     //计划中奖结果表初始化
                     let planResultInfo: PlanResultInfo = {
                         period: item.period,
                         jiou_type: 0,
-                        bai_wei: 0,
-                        shi_wei: 0,
-                        ge_wei: 0,
+                        killplan_bai_wei: 0,
+                        killplan_shi_wei: 0,
+                        killplan_ge_wei: 0,
                         status: 1//状态更新置为已更新状态
                     };
                     //首先更新各计划开奖结果
@@ -308,31 +308,31 @@ export abstract class AbstractInvestBase {
         }
 
         //百位
-        let baiWeiArray = planInvestNumbersInfo.bai_wei == null ? [] : planInvestNumbersInfo.bai_wei.split(',');
+        let baiWeiArray = planInvestNumbersInfo.killplan_bai_wei == null ? [] : planInvestNumbersInfo.killplan_bai_wei.split(',');
         for (let j = 0; j < baiWeiArray.length; j++) {
             let item = baiWeiArray[j];
             if (prizeNumber == item) {
-                planResultInfo.bai_wei = 1;
+                planResultInfo.killplan_bai_wei = 1;
                 break;
             }
         }
 
         //十位
-        let shiWeiArray = planInvestNumbersInfo.shi_wei == null ? [] : planInvestNumbersInfo.shi_wei.split(',');
+        let shiWeiArray = planInvestNumbersInfo.killplan_shi_wei == null ? [] : planInvestNumbersInfo.killplan_shi_wei.split(',');
         for (let j = 0; j < shiWeiArray.length; j++) {
             let item = shiWeiArray[j];
             if (prizeNumber == item) {
-                planResultInfo.shi_wei = 1;
+                planResultInfo.killplan_shi_wei = 1;
                 break;
             }
         }
 
         //个位
-        let geWeiArray = planInvestNumbersInfo.ge_wei == null ? [] : planInvestNumbersInfo.ge_wei.split(',');
+        let geWeiArray = planInvestNumbersInfo.killplan_ge_wei == null ? [] : planInvestNumbersInfo.killplan_ge_wei.split(',');
         for (let j = 0; j < geWeiArray.length; j++) {
             let item = geWeiArray[j];
             if (prizeNumber == item) {
-                planResultInfo.ge_wei = 1;
+                planResultInfo.killplan_ge_wei = 1;
                 break;
             }
         }

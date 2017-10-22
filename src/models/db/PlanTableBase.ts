@@ -24,7 +24,7 @@ export class PlanTableBase {
      * 杀百位
      * @type {string}
      */
-    public static baiWei: string = "bai_wei";
+    public static baiWei: string = "killplan_bai_wei";
 
     /**
      *
@@ -32,7 +32,7 @@ export class PlanTableBase {
      * 杀十位
      * @type {string}
      */
-    public static shiWei: string = "shi_wei";
+    public static shiWei: string = "killplan_shi_wei";
 
     /**
      *
@@ -40,7 +40,7 @@ export class PlanTableBase {
      * 杀个位
      * @type {string}
      */
-    public static geWei: string = "ge_wei";
+    public static geWei: string = "killplan_ge_wei";
 
     /**
      *

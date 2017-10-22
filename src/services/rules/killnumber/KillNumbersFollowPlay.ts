@@ -31,18 +31,18 @@ export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
                 return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
             })
             .then((planInfo: PlanInfo) => {
-                planInfo.bai_wei = killNumberInfo.dropBaiWeiNumberArray == null ? '' : killNumberInfo.dropBaiWeiNumberArray.join(',');
-                planInfo.shi_wei = killNumberInfo.dropShiWeiNumberArray == null ? '' : killNumberInfo.dropShiWeiNumberArray.join(',');
-                planInfo.ge_wei = killNumberInfo.dropGeWeiNumberArray == null ? '' : killNumberInfo.dropGeWeiNumberArray.join(',');
+                planInfo.killplan_bai_wei = killNumberInfo.dropBaiWeiNumberArray == null ? '' : killNumberInfo.dropBaiWeiNumberArray.join(',');
+                planInfo.killplan_shi_wei = killNumberInfo.dropShiWeiNumberArray == null ? '' : killNumberInfo.dropShiWeiNumberArray.join(',');
+                planInfo.killplan_ge_wei = killNumberInfo.dropGeWeiNumberArray == null ? '' : killNumberInfo.dropGeWeiNumberArray.join(',');
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);
             })
             .then((planInfo: PlanInfo) => {
                 return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray, null, null).join(',');
-                planInvestNumbersInfo.shi_wei = this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray, null).join(',');
-                planInvestNumbersInfo.ge_wei = this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
+                planInvestNumbersInfo.killplan_bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray, null, null).join(',');
+                planInvestNumbersInfo.killplan_shi_wei = this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray, null).join(',');
+                planInvestNumbersInfo.killplan_ge_wei = this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {

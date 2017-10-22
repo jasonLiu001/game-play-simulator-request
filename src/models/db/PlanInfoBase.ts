@@ -22,7 +22,7 @@ export class PlanInfoBase<T> {
      * 杀百位
      * @type {string}
      */
-    public bai_wei: T;
+    public killplan_bai_wei: T;
 
     /**
      *
@@ -30,7 +30,7 @@ export class PlanInfoBase<T> {
      * 杀十位
      * @type {string}
      */
-    public shi_wei: T;
+    public killplan_shi_wei: T;
 
     /**
      *
@@ -38,7 +38,7 @@ export class PlanInfoBase<T> {
      * 杀个位
      * @type {string}
      */
-    public ge_wei: T;
+    public killplan_ge_wei: T;
 
     /**
      *

@@ -42,9 +42,9 @@ export class NumberService extends AbstractRuleBase {
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
             jiou_type: '',
-            bai_wei: '',
-            shi_wei: '',
-            ge_wei: '',
+            killplan_bai_wei: '',
+            killplan_shi_wei: '',
+            killplan_ge_wei: '',
             status: 0
         };
 
@@ -64,11 +64,11 @@ export class NumberService extends AbstractRuleBase {
                     jiouType.filterNumbers(), //杀特定形态的奇偶
                     killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
                     //road012Type.filterNumbers(), //杀012路
-                    //killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
+                    killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
                     //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位 这个里面有reject方法
                     //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码  这个里面有reject方法
                     //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码 这个里面有reject方法
-                    //brokenGroup.filterNumbers() //断组
+                    brokenGroup.filterNumbers() //断组
                     //braveNumber.filterNumbers() //定胆
                 ]);
             })
