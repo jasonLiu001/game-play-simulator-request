@@ -4,17 +4,17 @@ import Promise = require('bluebird');
 import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimeService {
-    public updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
-        Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
+    public static updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
+        Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
     }
 
     public isInvestTime(currentTime: Date, delaySeconds = 0): Promise<boolean> {
         if (Config.globalVariable.nextPeriodInvestTime == null) {
-            Config.globalVariable.nextPeriodInvestTime = this.getNextOpenTime(currentTime, delaySeconds);
+            Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);
         }
 
-        let nextOpenTime = this.getNextOpenTime(currentTime, delaySeconds);
+        let nextOpenTime = TimeService.getNextOpenTime(currentTime, delaySeconds);
         //未到开奖时间
         if (nextOpenTime.getTime() == Config.globalVariable.nextPeriodInvestTime.getTime()) {
             return Promise.reject(RejectionMsg.notReachInvestTime);
@@ -23,7 +23,7 @@ export class TimeService {
         }
     }
 
-    private getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
+    private static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
         //当天的01:55到10:00
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
@@ -66,8 +66,8 @@ export class TimeService {
      *
      * 获取下期的可投注时间
      */
-    public getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
-        let openTimeList = this.getOpenTimeList(currentTime, delaySeconds);
+    public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
+        let openTimeList = TimeService.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
         for (let i = 0; i < openTimeList.length; i++) {
