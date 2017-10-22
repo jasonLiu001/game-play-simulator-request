@@ -6,7 +6,6 @@ import {HttpRequestHeaders} from "../../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Award360Service'),
-    timeService = new TimeService(),
     request = require('request');
 
 /**

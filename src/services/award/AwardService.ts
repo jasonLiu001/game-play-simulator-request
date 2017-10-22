@@ -9,7 +9,6 @@ import {AwardCaiBaXianService} from "../crawler/award/AwardCaiBaXianService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
-    timeService = new TimeService(),
     awardCaiBaXianService = new AwardCaiBaXianService(),
     crawl360Service = new Award360Service();
 /**

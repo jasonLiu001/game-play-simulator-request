@@ -16,7 +16,6 @@ log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 
 let log = log4js.getLogger('CommandApp'),
     program = require('commander'),
-    timeService = new TimeService(),
     cookie = Request.jar(),
     request = Request.defaults(
         {

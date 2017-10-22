@@ -10,8 +10,7 @@ import {AppServices} from "../AppServices";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AbstractInvestBase'),
-    numberService = new NumberService(),
-    timeService = new TimeService();
+    numberService = new NumberService();
 
 /**
  *

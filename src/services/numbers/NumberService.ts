@@ -21,7 +21,6 @@ import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('NumberService'),
-    timeService = new TimeService(),
     jiouType = new JiOuType(),
     road012Type = new Road012Type(),
     killNumbersFollowPlay = new KillNumbersFollowPlay(),

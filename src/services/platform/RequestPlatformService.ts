@@ -5,8 +5,7 @@ import Promise = require('bluebird');
 import {EnumAwardMode} from "../../models/EnumModel";
 import {ErrorService} from "../ErrorService";
 let log4js = require('log4js'),
-    log = log4js.getLogger('RequestLoginService'),
-    timeService = new TimeService();
+    log = log4js.getLogger('RequestLoginService');
 
 export class RequestPlatformService extends PlatformAbstractBase {
     /**
