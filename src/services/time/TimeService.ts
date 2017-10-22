@@ -4,11 +4,24 @@ import Promise = require('bluebird');
 import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimeService {
+    /**
+     *
+     * 更新下期可投注时间
+     * @param currentTime
+     * @param delaySeconds
+     */
     public static updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
         Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
     }
 
-    public isInvestTime(currentTime: Date, delaySeconds = 0): Promise<boolean> {
+    /**
+     *
+     * 是否到达投注时间
+     * @param currentTime
+     * @param delaySeconds
+     * @return {any}
+     */
+    public static isInvestTime(currentTime: Date, delaySeconds = 0): Promise<boolean> {
         if (Config.globalVariable.nextPeriodInvestTime == null) {
             Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);
@@ -89,7 +102,7 @@ export class TimeService {
      *
      * period的格式为：20170625-080
      */
-    private getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
+    private static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
         let periodList = [];
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
@@ -159,7 +172,7 @@ export class TimeService {
      *
      * 获取当前投注的期号 格式为：20170625-080
      */
-    public getCurrentPeriodNumber(currentTime: Date): string {
+    public static getCurrentPeriodNumber(currentTime: Date): string {
         let periodList: Array<PeriodTime> = this.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -182,8 +195,8 @@ export class TimeService {
      * 获取当前期号的下期 期号 格式为：20170625-080
      * @param currentTime
      */
-    public getCurrentNextPeriodNumber(currentTime: Date): string {
-        let periodList: Array<PeriodTime> = this.getPeriodList(currentTime, 0);
+    public static getCurrentNextPeriodNumber(currentTime: Date): string {
+        let periodList: Array<PeriodTime> = TimeService.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
         for (let i = 0; i < periodList.length; i++) {
@@ -204,7 +217,7 @@ export class TimeService {
      *
      * 是否是停止买卖时间  02:00-10:00 停止购买
      */
-    public isInStopInvestTime(): boolean {
+    public static isInStopInvestTime(): boolean {
         let currentTime = new Date();
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();

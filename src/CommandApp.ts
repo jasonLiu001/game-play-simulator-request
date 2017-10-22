@@ -74,7 +74,7 @@ export class CommandApp {
 
                 }
 
-                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
+                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
                 if (program.currentperiodstring != currentPeriod) {
                     log.info("期号不一致 参数传递期号:%s，当前期号：%s", program.currentperiodstring, currentPeriod);
                     return Promise.resolve(true);

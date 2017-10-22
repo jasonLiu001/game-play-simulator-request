@@ -41,7 +41,7 @@ export class AwardService {
      */
     public static saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
         let savedAwardInfo: AwardInfo = null;
-        return timeService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
+        return TimeService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
                 log.info('获取第三方开奖数据');
                 return crawl360Service.getAwardInfo();
@@ -64,7 +64,7 @@ export class AwardService {
                 //更新全局变量
                 Config.globalVariable.last_Period = savedAwardInfo.period;
                 Config.globalVariable.last_PrizeNumber = savedAwardInfo.openNumber;
-                Config.globalVariable.current_Peroid = timeService.getCurrentPeriodNumber(new Date());
+                Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
 
                 return LotteryDbService.saveOrUpdateAwardInfo(savedAwardInfo);
             }).then(() => {

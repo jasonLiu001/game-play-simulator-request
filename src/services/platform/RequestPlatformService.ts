@@ -185,7 +185,7 @@ export class RequestPlatformService extends PlatformAbstractBase {
     public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
+                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
 
                 return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
             })
@@ -204,8 +204,8 @@ export class RequestPlatformService extends PlatformAbstractBase {
     public multiInvest(request: any, touZhuBeiShu: string = '1') {
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
-                let currentNextPeriod = timeService.getCurrentNextPeriodNumber(new Date());
+                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+                let currentNextPeriod = TimeService.getCurrentNextPeriodNumber(new Date());
 
                 return this.multiInvestMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length, currentNextPeriod);
             });

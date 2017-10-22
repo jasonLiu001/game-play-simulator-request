@@ -39,7 +39,7 @@ export class NumberService extends AbstractRuleBase {
      */
     private initAllRelatedPlanInfoTables(): Promise<any> {
         //当前期号
-        let period = timeService.getCurrentPeriodNumber(new Date());
+        let period = TimeService.getCurrentPeriodNumber(new Date());
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
             jiOuType: '',

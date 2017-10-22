@@ -44,7 +44,7 @@ export class Award360Service implements IAwardCrawler {
      * 获取奖号信息
      */
     getAwardInfo(): Promise<any> {
-        let currentPeriod = timeService.getCurrentPeriodNumber(new Date());
+        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
         let dataUrl = this.getDataUrl(currentPeriod);
         return new Promise((resolve, reject) => {
             request(
