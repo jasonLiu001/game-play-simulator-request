@@ -48,8 +48,10 @@ export class NumberService extends AbstractRuleBase {
             status: 0
         };
 
+        planInfoBaseString.status = 1;//计划状态默认是：1
         return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
             .then(() => {
+                planInfoBaseString.status = 0;
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString)
             });
     }
