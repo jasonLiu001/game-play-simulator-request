@@ -40,9 +40,9 @@ export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
                 return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray).join(',');
-                planInvestNumbersInfo.shi_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray).join(',');
-                planInvestNumbersInfo.ge_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
+                planInvestNumbersInfo.bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray, null, null).join(',');
+                planInvestNumbersInfo.shi_wei = this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray, null).join(',');
+                planInvestNumbersInfo.ge_wei = this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
@@ -63,28 +63,6 @@ export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
                 analysis360Service.getKillNumber(EnumKillNumberPosition.baiWei),//杀百位
                 analysis360Service.getKillNumber(EnumKillNumberPosition.shiWei),//杀十位
                 analysis360Service.getKillNumber(EnumKillNumberPosition.geWei)//杀个位
-            ])
-            .then((results) => {
-                let killObj = new KillNumberInfo();
-                killObj.dropBaiWeiNumberArray = results[0];
-                killObj.dropShiWeiNumberArray = results[1];
-                killObj.dropGeWeiNumberArray = results[2];
-                return killObj
-            });
-    }
-
-    /**
-     *
-     *
-     *
-     * 获取最大遗漏号码
-     */
-    private getMaxMissNumberObject(config: Config): Promise<KillNumberInfo> {
-        return Promise.all(
-            [
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.baiWei),//杀百位遗漏最大的号码
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.shiWei),//杀十位遗漏最大的号码
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.geWei),//杀个位遗漏最大的号码
             ])
             .then((results) => {
                 let killObj = new KillNumberInfo();

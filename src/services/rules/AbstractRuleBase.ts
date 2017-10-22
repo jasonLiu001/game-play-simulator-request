@@ -54,10 +54,10 @@ export class AbstractRuleBase {
 
     /**
      *
-     *
+     *  使用该方法时，一定要注意百，十，个参数的顺序问题，没有就传null
      * 杀号 并返回杀号后的数组
      */
-    protected getRestKillNumberArray(originNumberArray: Array<string>, dropBaiWeiNumberArray?: Array<string>, dropShiWeiNumberArray?: Array<string>, dropGeWeiNumberArray?: Array<string>): Array<string> {
+    protected getRestKillNumberArray(originNumberArray: Array<string>, dropBaiWeiNumberArray: Array<string>, dropShiWeiNumberArray: Array<string>, dropGeWeiNumberArray: Array<string>): Array<string> {
         let restNumberArray: Array<string> = [];
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
