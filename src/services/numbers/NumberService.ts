@@ -11,10 +11,17 @@ import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {KillNumberLastOpenNumber} from "../rules/killnumber/KillNumberLastOpenNumber";
 import {KillNumberLastThreeOpenNumbers} from "../rules/killnumber/KillNumberLastThreeOpenNumbers";
+import {LotteryDbService} from "../dbservices/DBSerivice";
+import {PlanInfo} from "../../models/db/PlanInfo";
+import {TimeService} from "../time/TimeService";
+import {PlanTableBase} from "../../models/db/PlanTableBase";
+import {PlanResultInfo} from "../../models/db/PlanResultInfo";
+import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 
 
 let log4js = require('log4js'),
     log = log4js.getLogger('NumberService'),
+    timeService = new TimeService(),
     jiouType = new JiOuType(),
     road012Type = new Road012Type(),
     killNumbersFollowPlay = new KillNumbersFollowPlay(),
@@ -25,19 +32,55 @@ let log4js = require('log4js'),
     killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
     brokenGroup = new BrokenGroup();
 export class NumberService extends AbstractRuleBase {
+    /**
+     *
+     * 初始化杀号计划相关表
+     * @return {PlanInfo}
+     */
+    private initAllRelatedPlanInfoTables(): Promise<any> {
+        //当前期号
+        let period = timeService.getCurrentPeriodNumber(new Date());
+        let planInfoBaseString: PlanInfoBase<string> = {
+            period: period,
+            jiOuType: '',
+            baiWei: '',
+            shiWei: '',
+            geWei: ''
+        };
+
+        let planInfoResultNumber: PlanResultInfo = {
+            period: period,
+            jiOuType: 0,
+            baiWei: 0,
+            shiWei: 0,
+            geWei: 0
+        };
+
+        return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
+            .then(() => {
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString)
+            })
+            .then(() => {
+                return LotteryDbService.saveOrUpdatePlanResultInfo(planInfoResultNumber);
+            });
+    }
+
     public generateInvestNumber(): Promise<string> {
-        return Promise
-            .all([
-                jiouType.filterNumbers(), //杀特定形态的奇偶
-                killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
-                //road012Type.filterNumbers(), //杀012路
-                //killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
-                //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位
-                //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码
-                //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码
-                //brokenGroup.filterNumbers() //断组
-                //braveNumber.filterNumbers() //定胆
-            ])
+        //首先初始化计划相关表
+        return this.initAllRelatedPlanInfoTables()
+            .then(() => {
+                return Promise.all([
+                    jiouType.filterNumbers(), //杀特定形态的奇偶
+                    killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
+                    //road012Type.filterNumbers(), //杀012路
+                    //killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
+                    //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位
+                    //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码
+                    //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码
+                    //brokenGroup.filterNumbers() //断组
+                    //braveNumber.filterNumbers() //定胆
+                ]);
+            })
             .then((results) => {
                 let resultArray = _.intersection(results[0], results[1]);
                 return resultArray.join(',');

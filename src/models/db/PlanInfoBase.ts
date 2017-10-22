@@ -8,7 +8,7 @@ export class PlanInfoBase<T> {
      * 期号
      * @type {string}
      */
-    public period: T;
+    public period: string;
 
     /**
      *
