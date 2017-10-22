@@ -6,6 +6,8 @@ import Promise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {EnumAwardMode} from "../../models/EnumModel";
 import {AppServices} from "../AppServices";
+import {PlanResultInfo} from "../../models/db/PlanResultInfo";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 
 let log4js = require('log4js'),
@@ -208,9 +210,9 @@ export abstract class AbstractInvestBase {
      */
     public calculateWinMoney(): Promise<any> {
         return LotteryDbService.getInvestInfoListByStatus(0)
-            .then((resultList) => {
+            .then((resultList: Array<any>) => {
                 if (!resultList) Promise.resolve(true);
-                let investInfoList = [];
+                let investInfoList: Array<InvestInfo> = [];
                 log.info('查询到未开奖数据%s条', resultList.length);
                 for (let i = 0; i < resultList.length; i++) {
                     let item = resultList[i];
@@ -235,10 +237,105 @@ export abstract class AbstractInvestBase {
                 //首先更新之前未开奖的数据
                 return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
             })
+            .then(() => {
+                //获取上期各计划投注号码
+                return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
+            })
+            .then((list: Array<any>) => {
+                //各个计划产生号码结果
+                let planInvestNumbersInfoList: Array<PlanInvestNumbersInfo> = [];
+                //各个计划开奖结果
+                let planResultInfoList: Array<PlanResultInfo> = [];
+
+                for (let i = 0; i < list.length; i++) {
+                    let item = list[i];
+                    //后三开奖号码
+                    let prizeNumber = item.openNumber.substring(2);
+                    //兑奖
+                    if (prizeNumber.length != 3 || prizeNumber == '') throw new Error('目前只支持后三开奖号码兑奖');
+
+                    //各个计划投注号码
+                    let planInvestNumbersInfo: PlanInvestNumbersInfo = {
+                        period: item.period,
+                        jiou_type: item.jiou_type,
+                        bai_wei: item.bai_wei,
+                        shi_wei: item.shi_wei,
+                        ge_wei: item.ge_wei,
+                        status: 1//状态更新置为已更新状态
+                    };
+                    //计划中奖结果表初始化
+                    let planResultInfo: PlanResultInfo = {
+                        period: item.period,
+                        jiou_type: 0,
+                        bai_wei: 0,
+                        shi_wei: 0,
+                        ge_wei: 0,
+                        status: 1//状态更新置为已更新状态
+                    };
+                    //首先更新各计划开奖结果
+                    this.updatePlanResult(planInvestNumbersInfo, prizeNumber, planResultInfo);
+
+                    planInvestNumbersInfoList.push(planInvestNumbersInfo);
+                    planResultInfoList.push(planResultInfo);
+                }
+
+                //保存各计划中奖状态 及 计划更新状态
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList)
+                    .then(() => {
+                        return LotteryDbService.saveOrUpdatePlanResultInfoList(planResultInfoList);
+                    });
+            })
             .then((results) => {
                 log.info('已更新未开奖数据%s条', results.length);
                 return Promise.resolve(true);
             });
+    }
+
+    /**
+     *
+     * 更新各计划投注结果
+     * @constructor
+     */
+    private updatePlanResult(planInvestNumbersInfo: PlanInvestNumbersInfo, prizeNumber: string, planResultInfo: PlanResultInfo): void {
+        //奇偶类型
+        let jiOuTypeArray = planInvestNumbersInfo.jiou_type == null ? [] : planInvestNumbersInfo.jiou_type.split(',');
+        for (let j = 0; j < jiOuTypeArray.length; j++) {
+            let item = jiOuTypeArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.jiou_type = 1;
+                break;
+            }
+        }
+
+        //百位
+        let baiWeiArray = planInvestNumbersInfo.bai_wei == null ? [] : planInvestNumbersInfo.bai_wei.split(',');
+        for (let j = 0; j < baiWeiArray.length; j++) {
+            let item = baiWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.bai_wei = 1;
+                break;
+            }
+        }
+
+        //十位
+        let shiWeiArray = planInvestNumbersInfo.shi_wei == null ? [] : planInvestNumbersInfo.shi_wei.split(',');
+        for (let j = 0; j < shiWeiArray.length; j++) {
+            let item = shiWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.shi_wei = 1;
+                break;
+            }
+        }
+
+        //个位
+        let geWeiArray = planInvestNumbersInfo.ge_wei == null ? [] : planInvestNumbersInfo.ge_wei.split(',');
+        for (let j = 0; j < geWeiArray.length; j++) {
+            let item = geWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.ge_wei = 1;
+                break;
+            }
+        }
     }
 
     /**

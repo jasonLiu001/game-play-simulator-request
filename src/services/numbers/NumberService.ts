@@ -48,21 +48,9 @@ export class NumberService extends AbstractRuleBase {
             status: 0
         };
 
-        let planInfoResultNumber: PlanResultInfo = {
-            period: period,
-            jiou_type: 0,
-            bai_wei: 0,
-            shi_wei: 0,
-            ge_wei: 0,
-            status: 0
-        };
-
         return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
             .then(() => {
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString)
-            })
-            .then(() => {
-                return LotteryDbService.saveOrUpdatePlanResultInfo(planInfoResultNumber);
             });
     }
 

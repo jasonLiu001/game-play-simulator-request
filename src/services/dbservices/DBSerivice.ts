@@ -22,9 +22,9 @@ export class LotteryDbService {
      * 初始化数据库
      * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
      * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
-     * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiou_type TEXT, bai_wei TEXT,shi_wei TEXT,ge_wei TEXT)
-     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiou_type INTEGER, bai_wei INTEGER,shi_wei INTEGER,ge_wei INTEGER)
-     * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiou_type TEXT, bai_wei TEXT,shi_wei TEXT,ge_wei TEXT)
+     * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiou_type TEXT, bai_wei TEXT,shi_wei TEXT,ge_wei TEXT,status INTERGER)
+     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiou_type INTEGER, bai_wei INTEGER,shi_wei INTEGER,ge_wei INTEGER,status INTERGER)
+     * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiou_type TEXT, bai_wei TEXT,shi_wei TEXT,ge_wei TEXT,status INTERGER)
      * @return {Bluebird<[any,any]>}
      */
     public static createLotteryTable(): Promise<any> {
@@ -33,11 +33,11 @@ export class LotteryDbService {
         //投注记录表
         let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + CONST_INVEST_TABLE.tableName + " (" + CONST_INVEST_TABLE.period + " TEXT primary key, " + CONST_INVEST_TABLE.investNumbers + " TEXT, " + CONST_INVEST_TABLE.investNumberCount + " INTEGER, " + CONST_INVEST_TABLE.currentAccountBalance + " decimal(10,3), " + CONST_INVEST_TABLE.awardMode + " INTEGER, " + CONST_INVEST_TABLE.winMoney + " DECIMAL(10,3), " + CONST_INVEST_TABLE.status + " INTEGER, " + CONST_INVEST_TABLE.isWin + " INTEGER, " + CONST_INVEST_TABLE.investTime + " TEXT)";
         //计划杀号记录表
-        let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName + " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.baiWei + " TEXT," + CONST_PLAN_TABLE.shiWei + " TEXT," + CONST_PLAN_TABLE.geWei + " TEXT)";
+        let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName + " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.baiWei + " TEXT," + CONST_PLAN_TABLE.shiWei + " TEXT," + CONST_PLAN_TABLE.geWei + " TEXT, " + CONST_PLAN_TABLE.status + " INTERGER)";
         //计划杀号结果表
-        let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " INTEGER, " + CONST_PLAN_RESULT_TABLE.baiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.shiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.geWei + " INTEGER)";
+        let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " INTEGER, " + CONST_PLAN_RESULT_TABLE.baiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.shiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.geWei + " INTEGER, " + CONST_PLAN_RESULT_TABLE.status + " INTERGER)";
         //计划投注号码表
-        let sqlCreatePlanInvestNumbersTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " (" + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " TEXT primary key, " + CONST_PLAN_INVEST_NUMBERS_TABLE.jiOuType + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.baiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.shiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.geWei + " TEXT)";
+        let sqlCreatePlanInvestNumbersTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " (" + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " TEXT primary key, " + CONST_PLAN_INVEST_NUMBERS_TABLE.jiOuType + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.baiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.shiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.geWei + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " INTERGER)";
         return Promise.all(
             [
                 LotteryDbService.sqliteService.run(sqlCreateAwardTable),
@@ -215,6 +215,32 @@ export class LotteryDbService {
         return LotteryDbService.sqliteService.get(sql);
     }
 
+
+    /**
+     *
+     * 根据状态获取投注计划结果
+     * SELECT r.*, a.openNumber FROM plan_result AS r INNER JOIN award AS a ON r.period = a.period WHERE r.status =1  order by a.period asc
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getPlanResultInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_RESULT_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_RESULT_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_RESULT_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
+        return LotteryDbService.sqliteService.all(sql);
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdatePlanResultInfoList(planResultInfoList: Array<PlanResultInfo>): Promise<Array<PlanResultInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in planResultInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
+        }
+        return Promise.all(promiseArray).then((results: Array<PlanResultInfo>) => {
+            return results;
+        });
+    }
+
     /**
      *
      *
@@ -267,5 +293,30 @@ export class LotteryDbService {
             .then(() => {
                 return planInvestNumbers;
             });
+    }
+
+    /**
+     *
+     * 根据状态获取投注号码
+     * SELECT r.*, a.openNumber FROM plan_invest_numbers AS r INNER JOIN award AS a ON r.period = a.period WHERE r.status =1  order by a.period asc
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getPlanInvestNumbersInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
+        return LotteryDbService.sqliteService.all(sql);
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in planInvestNumbersInfo) {
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
+        }
+        return Promise.all(promiseArray).then((results: Array<PlanInvestNumbersInfo>) => {
+            return results;
+        });
     }
 }
