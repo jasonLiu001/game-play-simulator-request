@@ -41,4 +41,11 @@ export class PlanTableBase {
      * @type {string}
      */
     public static geWei: string = "ge_wei";
+
+    /**
+     *
+     * 是否已经更新
+     * @type {string}
+     */
+    public static status: string = "status";
 }

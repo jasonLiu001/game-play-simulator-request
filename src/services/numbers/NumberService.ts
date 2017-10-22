@@ -44,7 +44,8 @@ export class NumberService extends AbstractRuleBase {
             jiou_type: '',
             bai_wei: '',
             shi_wei: '',
-            ge_wei: ''
+            ge_wei: '',
+            status: 0
         };
 
         let planInfoResultNumber: PlanResultInfo = {
@@ -52,7 +53,8 @@ export class NumberService extends AbstractRuleBase {
             jiou_type: 0,
             bai_wei: 0,
             shi_wei: 0,
-            ge_wei: 0
+            ge_wei: 0,
+            status: 0
         };
 
         return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)

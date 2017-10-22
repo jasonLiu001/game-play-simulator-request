@@ -39,4 +39,10 @@ export class PlanInfoBase<T> {
      * @type {string}
      */
     public ge_wei: T;
+
+    /**
+     *
+     * 当前数据是否已经更新
+     */
+    public status: number;
 }
