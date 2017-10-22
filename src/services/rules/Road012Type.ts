@@ -2,6 +2,10 @@ import {IRules} from "./IRules";
 import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
+import {LotteryDbService} from "../dbservices/DBSerivice";
+import {TimeService} from "../time/TimeService";
+import {PlanInfo} from "../../models/db/PlanInfo";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Road012Type');
@@ -36,7 +40,7 @@ export class Road012Type extends AbstractRuleBase implements IRules {
         let cur012Type_1 = geWei012Type + '' + baiWei012Type + '' + shiWei012Type;
         //需要杀掉的类型2
         let cur012Type_2 = shiWei012Type + '' + geWei012Type + '' + baiWei012Type;
-        log.info('排除012类型：%s,%s', cur012Type_1, cur012Type_2);
+
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
             //杀012路类型
@@ -49,7 +53,22 @@ export class Road012Type extends AbstractRuleBase implements IRules {
 
             restNumberArray.push(item);
         }
-
-        return Promise.resolve(restNumberArray);
+        log.info('排除012类型：%s,%s', cur012Type_1, cur012Type_2);
+        //保存排除的类型
+        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
+            .then((planInfo: PlanInfo) => {
+                planInfo.road012_01 = cur012Type_1 + '|' + cur012Type_2;
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的012类型
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.road012_01 = restNumberArray.join(',');
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then(() => {
+                return restNumberArray;
+            });
     }
 }

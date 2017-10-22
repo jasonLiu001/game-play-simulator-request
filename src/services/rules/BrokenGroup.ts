@@ -3,6 +3,10 @@ import {IRules} from "./IRules";
 import {Config} from "../../config/Config";
 import _ = require('lodash');
 import Promise = require('bluebird');
+import {LotteryDbService} from "../dbservices/DBSerivice";
+import {TimeService} from "../time/TimeService";
+import {PlanInfo} from "../../models/db/PlanInfo";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('BrokenGroup');
@@ -157,7 +161,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         let totalNumberArray = this.getTotalNumberArray();
         //产生断组号码
         let brokenGroupStr = this.getBrokenNumbers();
-        log.info('断组号码：%s', brokenGroupStr);
+
         //断组中不包含的号码
         let numberNotInGroup = this.getNumbersNotInGroup(brokenGroupStr);
         //01.首先排除掉 断组中不包含的号码 如'9-456-2378'不包含'01'，所以首先排除掉由'01'组成的所有三位号码
@@ -168,6 +172,23 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         //02.排除掉3断都同时有的情况 如'9-456-2378'，3断同时有即类似，942,943,952等这样的号码要被干掉
         let filterNumbers = this.getBrokenGroupNumberArray(brokenGroupStr, 3);
         let resultNumbers = this.getAvailableNumbers(restNumbers, filterNumbers);
-        return Promise.resolve(resultNumbers);
+
+        log.info('断组号码：%s', brokenGroupStr);
+        //保存排除的类型
+        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
+            .then((planInfo: PlanInfo) => {
+                planInfo.brokengroup_01_334 = brokenGroupStr;
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.brokengroup_01_334 = resultNumbers.join(',');
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then(() => {
+                return resultNumbers;
+            });
     }
 }

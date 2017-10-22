@@ -19,7 +19,7 @@ export class PlanInfoBase<T> {
 
     /**
      *
-     * 杀百位
+     *杀号计划 杀百位
      * @type {string}
      */
     public killplan_bai_wei: T;
@@ -27,7 +27,7 @@ export class PlanInfoBase<T> {
     /**
      *
      *
-     * 杀十位
+     *杀号计划 杀十位
      * @type {string}
      */
     public killplan_shi_wei: T;
@@ -35,10 +35,40 @@ export class PlanInfoBase<T> {
     /**
      *
      *
-     * 杀个位
+     *杀号计划 杀个位
      * @type {string}
      */
     public killplan_ge_wei: T;
+
+    /**
+     *
+     * 遗漏计划 杀百位
+     */
+    public missplan_bai_wei: T;
+
+    /**
+     *
+     * 遗漏计划 杀十位
+     */
+    public missplan_shi_wei: T;
+
+    /**
+     *
+     * 遗漏计划 杀个位
+     */
+    public missplan_ge_wei: T;
+
+    /**
+     *
+     * 断组 3-3-4
+     */
+    public brokengroup_01_334: T;
+
+    /**
+     *
+     * 杀012路类型
+     */
+    public road012_01: T;
 
     /**
      *

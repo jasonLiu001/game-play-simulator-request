@@ -5,6 +5,10 @@ import Promise = require('bluebird');
 import {EnumKillNumberPosition} from "../../../models/EnumModel";
 import _ = require('lodash');
 import {KillNumberInfo} from "./KillNumbersFollowPlay";
+import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
+import {LotteryDbService} from "../../dbservices/DBSerivice";
+import {TimeService} from "../../time/TimeService";
+import {PlanInfo} from "../../../models/db/PlanInfo";
 
 let analysis360Service = new Analysis360Service(),
     log4js = require('log4js'),
@@ -42,10 +46,31 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules {
 
     filterNumbers(): Promise<Array<string>> {
         let originNumberArray = this.getTotalNumberArray();
+        let killNumberInfo: KillNumberInfo = null;
+        //保存杀号结果
         return this.getMaxMissNumberObject()
-            .then((result) => {
+            .then((result: KillNumberInfo) => {
+                killNumberInfo = result;
+                return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
+            })
+            .then((planInfo: PlanInfo) => {
+                planInfo.missplan_bai_wei = killNumberInfo.dropBaiWeiNumberArray == null ? '' : killNumberInfo.dropBaiWeiNumberArray.join(',');
+                planInfo.missplan_shi_wei = killNumberInfo.dropShiWeiNumberArray == null ? '' : killNumberInfo.dropShiWeiNumberArray.join(',');
+                planInfo.missplan_ge_wei = killNumberInfo.dropGeWeiNumberArray == null ? '' : killNumberInfo.dropGeWeiNumberArray.join(',');
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.missplan_bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray, null, null).join(',');
+                planInvestNumbersInfo.missplan_shi_wei = this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray, null).join(',');
+                planInvestNumbersInfo.missplan_ge_wei = this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
                 //杀最大遗漏号码 杀号结果
-                let restArray = this.getRestKillNumberArray(originNumberArray, result.dropBaiWeiNumberArray, result.dropShiWeiNumberArray, result.dropGeWeiNumberArray);
+                let restArray = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray, killNumberInfo.dropShiWeiNumberArray, killNumberInfo.dropGeWeiNumberArray);
                 return restArray;
             });
     }

@@ -21,7 +21,7 @@ export class PlanTableBase {
 
     /**
      *
-     * 杀百位
+     * 杀号计划 杀百位
      * @type {string}
      */
     public static killplanBaiWei: string = "killplan_bai_wei";
@@ -29,7 +29,7 @@ export class PlanTableBase {
     /**
      *
      *
-     * 杀十位
+     *杀号计划 杀十位
      * @type {string}
      */
     public static killplanShiWei: string = "killplan_shi_wei";
@@ -37,10 +37,51 @@ export class PlanTableBase {
     /**
      *
      *
-     * 杀个位
+     *杀号计划 杀个位
      * @type {string}
      */
     public static killplanGeWei: string = "killplan_ge_wei";
+
+    /**
+     *
+     *
+     * 遗漏计划 杀百位
+     * @type {string}
+     */
+    public static missplanBaiWei: string = "missplan_bai_wei";
+
+    /**
+     *
+     *
+     * 遗漏计划 杀十位
+     * @type {string}
+     */
+    public static missplanShiWei: string = "missplan_shi_wei";
+
+    /**
+     *
+     *
+     * 遗漏计划 杀个位
+     * @type {string}
+     */
+    public static missplanGeWei: string = "missplan_ge_wei";
+
+
+    /**
+     *
+     *
+     * 断组 3-3-4 断组
+     * @type {string}
+     */
+    public static brokenGroup_01_334: string = "brokengroup_01_334";
+
+    /**
+     *
+     *
+     * 012路
+     * @type {string}
+     */
+    public static road012_01: string = "road012_01";
 
     /**
      *

@@ -261,6 +261,11 @@ export abstract class AbstractInvestBase {
                         killplan_bai_wei: item.killplan_bai_wei,
                         killplan_shi_wei: item.killplan_shi_wei,
                         killplan_ge_wei: item.killplan_ge_wei,
+                        missplan_bai_wei: item.missplan_bai_wei,
+                        missplan_shi_wei: item.missplan_shi_wei,
+                        missplan_ge_wei: item.missplan_ge_wei,
+                        brokengroup_01_334: item.brokengroup_01_334,
+                        road012_01: item.road012_01,
                         status: 1//状态更新置为已更新状态
                     };
                     //计划中奖结果表初始化
@@ -270,6 +275,11 @@ export abstract class AbstractInvestBase {
                         killplan_bai_wei: 0,
                         killplan_shi_wei: 0,
                         killplan_ge_wei: 0,
+                        missplan_bai_wei: 0,
+                        missplan_shi_wei: 0,
+                        missplan_ge_wei: 0,
+                        brokengroup_01_334: 0,
+                        road012_01: 0,
                         status: 1//状态更新置为已更新状态
                     };
                     //首先更新各计划开奖结果
@@ -307,32 +317,82 @@ export abstract class AbstractInvestBase {
             }
         }
 
-        //百位
-        let baiWeiArray = planInvestNumbersInfo.killplan_bai_wei == null ? [] : planInvestNumbersInfo.killplan_bai_wei.split(',');
-        for (let j = 0; j < baiWeiArray.length; j++) {
-            let item = baiWeiArray[j];
+        //杀号计划 百位
+        let killplanBaiWeiArray = planInvestNumbersInfo.killplan_bai_wei == null ? [] : planInvestNumbersInfo.killplan_bai_wei.split(',');
+        for (let j = 0; j < killplanBaiWeiArray.length; j++) {
+            let item = killplanBaiWeiArray[j];
             if (prizeNumber == item) {
                 planResultInfo.killplan_bai_wei = 1;
                 break;
             }
         }
 
-        //十位
-        let shiWeiArray = planInvestNumbersInfo.killplan_shi_wei == null ? [] : planInvestNumbersInfo.killplan_shi_wei.split(',');
-        for (let j = 0; j < shiWeiArray.length; j++) {
-            let item = shiWeiArray[j];
+        //杀号计划 十位
+        let killplanShiWeiArray = planInvestNumbersInfo.killplan_shi_wei == null ? [] : planInvestNumbersInfo.killplan_shi_wei.split(',');
+        for (let j = 0; j < killplanShiWeiArray.length; j++) {
+            let item = killplanShiWeiArray[j];
             if (prizeNumber == item) {
                 planResultInfo.killplan_shi_wei = 1;
                 break;
             }
         }
 
-        //个位
-        let geWeiArray = planInvestNumbersInfo.killplan_ge_wei == null ? [] : planInvestNumbersInfo.killplan_ge_wei.split(',');
-        for (let j = 0; j < geWeiArray.length; j++) {
-            let item = geWeiArray[j];
+        //杀号计划 个位
+        let killplanGeWeiArray = planInvestNumbersInfo.killplan_ge_wei == null ? [] : planInvestNumbersInfo.killplan_ge_wei.split(',');
+        for (let j = 0; j < killplanGeWeiArray.length; j++) {
+            let item = killplanGeWeiArray[j];
             if (prizeNumber == item) {
                 planResultInfo.killplan_ge_wei = 1;
+                break;
+            }
+        }
+
+        //最大遗漏 百位
+        let missplanBaiWeiArray = planInvestNumbersInfo.missplan_bai_wei == null ? [] : planInvestNumbersInfo.missplan_bai_wei.split(',');
+        for (let j = 0; j < missplanBaiWeiArray.length; j++) {
+            let item = missplanBaiWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.missplan_bai_wei = 1;
+                break;
+            }
+        }
+
+        //最大遗漏 十位
+        let missplanShiWeiArray = planInvestNumbersInfo.missplan_shi_wei == null ? [] : planInvestNumbersInfo.missplan_shi_wei.split(',');
+        for (let j = 0; j < missplanShiWeiArray.length; j++) {
+            let item = missplanShiWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.missplan_shi_wei = 1;
+                break;
+            }
+        }
+
+        //最大遗漏 个位
+        let missplanGeWeiArray = planInvestNumbersInfo.missplan_ge_wei == null ? [] : planInvestNumbersInfo.missplan_ge_wei.split(',');
+        for (let j = 0; j < missplanGeWeiArray.length; j++) {
+            let item = missplanGeWeiArray[j];
+            if (prizeNumber == item) {
+                planResultInfo.missplan_ge_wei = 1;
+                break;
+            }
+        }
+
+        //3-3-4断组
+        let brokengroup_01_334Array = planInvestNumbersInfo.brokengroup_01_334 == null ? [] : planInvestNumbersInfo.brokengroup_01_334.split(',');
+        for (let j = 0; j < brokengroup_01_334Array.length; j++) {
+            let item = brokengroup_01_334Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.brokengroup_01_334 = 1;
+                break;
+            }
+        }
+
+        //012路类型
+        let road012_01_Array = planInvestNumbersInfo.road012_01 == null ? [] : planInvestNumbersInfo.road012_01.split(',');
+        for (let j = 0; j < road012_01_Array.length; j++) {
+            let item = road012_01_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.road012_01 = 1;
                 break;
             }
         }
