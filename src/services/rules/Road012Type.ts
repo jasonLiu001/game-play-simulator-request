@@ -6,6 +6,7 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
 import {TimeService} from "../time/TimeService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Road012Type');
@@ -14,12 +15,12 @@ let log4js = require('log4js'),
  *
  * 杀012路
  */
-export class Road012Type extends AbstractRuleBase implements IRules {
+export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     private getNumber012Type(number: number): number {
         return number % 3;
     }
 
-    public filterNumbers(): Promise<Array<string>> {
+    public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
@@ -54,21 +55,12 @@ export class Road012Type extends AbstractRuleBase implements IRules {
             restNumberArray.push(item);
         }
         log.info('排除012类型：%s,%s', cur012Type_1, cur012Type_2);
-        //保存排除的类型
-        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
-            .then((planInfo: PlanInfo) => {
-                planInfo.road012_01 = cur012Type_1 + '|' + cur012Type_2;
-                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的012类型
-            })
-            .then((planInfo: PlanInfo) => {
-                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
-            })
-            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.road012_01 = restNumberArray.join(',');
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
-            })
-            .then(() => {
-                return restNumberArray;
-            });
+
+        let ruleResult: CommonKillNumberResult = {
+            killNumber: cur012Type_1 + '|' + cur012Type_2,
+            killNumberResult: restNumberArray
+        };
+
+        return Promise.resolve(ruleResult);
     }
 }

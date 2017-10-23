@@ -17,6 +17,7 @@ import {TimeService} from "../time/TimeService";
 import {PlanTableBase} from "../../models/db/PlanTableBase";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
+import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 
 let log4js = require('log4js'),
@@ -62,6 +63,7 @@ export class NumberService extends AbstractRuleBase {
     }
 
     public generateInvestNumber(): Promise<string> {
+        let promiseAllResult: any = null;
         //首先初始化计划相关表
         return this.initAllRelatedPlanInfoTables()
             .then(() => {
@@ -79,7 +81,40 @@ export class NumberService extends AbstractRuleBase {
                     ]);
             })
             .then((results) => {
-                let resultArray = _.intersection(results[0], results[1]);
+                promiseAllResult = results;
+                return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
+            })
+            .then((planInfo: PlanInfo) => {
+                planInfo.jiou_type = promiseAllResult[0].killNumber;
+                planInfo.killplan_bai_wei = promiseAllResult[1].baiWei.killNumber;
+                planInfo.killplan_shi_wei = promiseAllResult[1].shiWei.killNumber;
+                planInfo.killplan_ge_wei = promiseAllResult[1].geWei.killNumber;
+                planInfo.road012_01 = promiseAllResult[2].killNumber;
+                planInfo.missplan_bai_wei = promiseAllResult[3].baiWei.killNumber;
+                planInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumber;
+                planInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumber;
+                planInfo.brokengroup_01_334 = promiseAllResult[4].killNumber;
+                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
+            })
+            .then((planInfo: PlanInfo) => {
+                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+            })
+            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+                planInvestNumbersInfo.jiou_type = promiseAllResult[0].killNumberResult;
+                planInvestNumbersInfo.killplan_bai_wei = promiseAllResult[1].baiWei.killNumberResult;
+                planInvestNumbersInfo.killplan_shi_wei = promiseAllResult[1].shiWei.killNumberResult;
+                planInvestNumbersInfo.killplan_ge_wei = promiseAllResult[1].geWei.killNumberResult;
+                planInvestNumbersInfo.road012_01 = promiseAllResult[2].killNumberResult;
+                planInvestNumbersInfo.missplan_bai_wei = promiseAllResult[3].baiWei.killNumberResult;
+                planInvestNumbersInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumberResult;
+                planInvestNumbersInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumberResult;
+                planInvestNumbersInfo.brokengroup_01_334 = promiseAllResult[4].killNumberResult;
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+            })
+            .then(() => {
+                //计划杀号条件：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位
+                let killResult = [promiseAllResult[0].finalResult.killNumberResult, promiseAllResult[1].finalResult.killNumberResult];
+                let resultArray = _.intersection(killResult);
                 return resultArray.join(',');
             });
     }

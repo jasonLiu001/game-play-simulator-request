@@ -7,6 +7,7 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
 import {TimeService} from "../time/TimeService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('BrokenGroup');
@@ -15,7 +16,7 @@ let log4js = require('log4js'),
  *
  * 断组
  */
-export class BrokenGroup extends AbstractRuleBase implements IRules {
+export class BrokenGroup extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     /**
      *
      * 产生断组号码 格式：019-456-2378
@@ -157,7 +158,7 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         return resultArray;
     }
 
-    filterNumbers(): Promise<Array<string>> {
+    filterNumbers(): Promise<CommonKillNumberResult> {
         let totalNumberArray = this.getTotalNumberArray();
         //产生断组号码
         let brokenGroupStr = this.getBrokenNumbers();
@@ -174,21 +175,12 @@ export class BrokenGroup extends AbstractRuleBase implements IRules {
         let resultNumbers = this.getAvailableNumbers(restNumbers, filterNumbers);
 
         log.info('断组号码：%s', brokenGroupStr);
-        //保存排除的类型
-        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
-            .then((planInfo: PlanInfo) => {
-                planInfo.brokengroup_01_334 = brokenGroupStr;
-                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
-            })
-            .then((planInfo: PlanInfo) => {
-                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
-            })
-            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.brokengroup_01_334 = resultNumbers.join(',');
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
-            })
-            .then(() => {
-                return resultNumbers;
-            });
+
+        let ruleResult: CommonKillNumberResult = {
+            killNumber: brokenGroupStr,
+            killNumberResult: resultNumbers
+        };
+
+        return Promise.resolve(ruleResult);
     }
 }

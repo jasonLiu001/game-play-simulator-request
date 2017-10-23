@@ -6,6 +6,7 @@ import {LotteryDbService} from "../dbservices/DBSerivice";
 import {TimeService} from "../time/TimeService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiOuType');
@@ -14,8 +15,8 @@ let log4js = require('log4js'),
  *
  * 杀奇偶类型
  */
-export class JiOuType extends AbstractRuleBase implements IRules {
-    public filterNumbers(): Promise<Array<string>> {
+export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
+    public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
@@ -109,21 +110,11 @@ export class JiOuType extends AbstractRuleBase implements IRules {
         let killJiouType_02 = ((lastPrizeNumberJiOuType.substr(0, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(1, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(2, 1) == '1' ? 0 : 1));
         log.info('排除奇偶类型：%s,%s', killJiouType_01, killJiouType_02);
 
-        //保存排除的类型
-        return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()))
-            .then((planInfo: PlanInfo) => {
-                planInfo.jiou_type = killJiouType_01 + '|' + killJiouType_02;
-                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
-            })
-            .then((planInfo: PlanInfo) => {
-                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
-            })
-            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.jiou_type = restNumberArray.join(',');
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
-            })
-            .then(() => {
-                return restNumberArray;
-            });
+        let ruleResult: CommonKillNumberResult = {
+            killNumber: killJiouType_01 + '|' + killJiouType_02,
+            killNumberResult: restNumberArray
+        };
+
+        return Promise.resolve(ruleResult);
     }
 }

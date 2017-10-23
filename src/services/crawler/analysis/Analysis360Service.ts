@@ -92,7 +92,9 @@ export class Analysis360Service implements IAnalysisCrawler {
                         //获取图表中被杀的号码
                         let killedNumber = this.getKilledNumber(body);
                         log.info('排除%s位杀号计划号码：%s', killNumberPosition, killedNumber.toString());
-                        resolve([killedNumber]);
+                        let resultNumberArr = [];
+                        resultNumberArr.push(killedNumber);
+                        resolve(resultNumberArr);
                     } catch (e) {
                         log.error(e);
                         reject(e);

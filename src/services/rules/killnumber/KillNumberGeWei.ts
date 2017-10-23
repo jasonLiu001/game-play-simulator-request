@@ -6,6 +6,7 @@ import _ = require('lodash');
 import {LotteryDbService} from "../../dbservices/DBSerivice";
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {RejectionMsg} from "../../../models/EnumModel";
+import {FixedPositionKillNumberResult} from "../../../models/RuleResult";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberGeWei');
@@ -15,8 +16,8 @@ let log4js = require('log4js'),
  *
  * 个位杀号
  */
-export class KillNumberGeWei extends AbstractRuleBase implements IRules {
-    filterNumbers(): Promise<Array<string>> {
+export class KillNumberGeWei extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
+    filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let totalNumberArray = this.getTotalNumberArray();
         return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
@@ -39,10 +40,23 @@ export class KillNumberGeWei extends AbstractRuleBase implements IRules {
                 }
                 let dropGeWeiNumberArray: Array<string> = [];
                 dropGeWeiNumberArray.push(killNumber);
-                log.info('杀个位号码：%s', dropGeWeiNumberArray.toString());
-
                 let restArray = this.getRestKillNumberArray(totalNumberArray, null, null, dropGeWeiNumberArray);
-                return restArray;
+
+                log.info('杀个位号码：%s', dropGeWeiNumberArray.toString());
+                let fixedPositionKillNumberResult: FixedPositionKillNumberResult = {
+                    baiWei: null,
+                    shiWei: null,
+                    geWei: {
+                        killNumber: dropGeWeiNumberArray.join(','),
+                        killNumberResult: restArray
+                    },
+                    finalResult: {
+                        killNumber: dropGeWeiNumberArray.join(','),
+                        killNumberResult: restArray
+                    }
+                };
+
+                return Promise.resolve(fixedPositionKillNumberResult);
             });
     }
 }

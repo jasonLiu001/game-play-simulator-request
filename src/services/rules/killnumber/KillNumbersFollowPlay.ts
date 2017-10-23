@@ -9,6 +9,7 @@ import {LotteryDbService} from "../../dbservices/DBSerivice";
 import {TimeService} from "../../time/TimeService";
 import {PlanInfo} from "../../../models/db/PlanInfo";
 import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
+import {FixedPositionKillNumberResult} from "../../../models/RuleResult";
 
 let analysis360Service = new Analysis360Service(),
     log4js = require('log4js'),
@@ -19,36 +20,36 @@ let analysis360Service = new Analysis360Service(),
  *
  * 根据计划杀号
  */
-export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules {
-    public filterNumbers(): Promise<Array<string>> {
+export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
+    public filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
 
-        let killNumberInfo: KillNumberInfo = null;
+
         //保存杀号结果到数据库
         return this.getKillNumberObject()
-            .then((result: KillNumberInfo) => {
-                killNumberInfo = result;
-                return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
-            })
-            .then((planInfo: PlanInfo) => {
-                planInfo.killplan_bai_wei = killNumberInfo.dropBaiWeiNumberArray == null ? '' : killNumberInfo.dropBaiWeiNumberArray.join(',');
-                planInfo.killplan_shi_wei = killNumberInfo.dropShiWeiNumberArray == null ? '' : killNumberInfo.dropShiWeiNumberArray.join(',');
-                planInfo.killplan_ge_wei = killNumberInfo.dropGeWeiNumberArray == null ? '' : killNumberInfo.dropGeWeiNumberArray.join(',');
-                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);
-            })
-            .then((planInfo: PlanInfo) => {
-                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
-            })
-            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.killplan_bai_wei = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray == null ? [] : killNumberInfo.dropBaiWeiNumberArray, null, null).join(',');
-                planInvestNumbersInfo.killplan_shi_wei = this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray == null ? [] : killNumberInfo.dropShiWeiNumberArray, null).join(',');
-                planInvestNumbersInfo.killplan_ge_wei = this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray == null ? [] : killNumberInfo.dropGeWeiNumberArray).join(',');
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
-            })
-            .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
+            .then((killNumberInfo: KillNumberInfo) => {
                 //最终杀号 结果
                 let restArray = this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray, killNumberInfo.dropShiWeiNumberArray, killNumberInfo.dropGeWeiNumberArray);
-                return restArray;
+
+                let fixedPositionKillNumberResult: FixedPositionKillNumberResult = {
+                    baiWei: {
+                        killNumber: killNumberInfo.dropBaiWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(originNumberArray, killNumberInfo.dropBaiWeiNumberArray, null, null)
+                    },
+                    shiWei: {
+                        killNumber: killNumberInfo.dropShiWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(originNumberArray, null, killNumberInfo.dropShiWeiNumberArray, null)
+                    },
+                    geWei: {
+                        killNumber: killNumberInfo.dropGeWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(originNumberArray, null, null, killNumberInfo.dropGeWeiNumberArray)
+                    },
+                    finalResult: {
+                        killNumber: _.union(killNumberInfo.dropBaiWeiNumberArray, killNumberInfo.dropShiWeiNumberArray, killNumberInfo.dropGeWeiNumberArray).join(','),
+                        killNumberResult: restArray
+                    }
+                };
+                return fixedPositionKillNumberResult;
             });
     }
 

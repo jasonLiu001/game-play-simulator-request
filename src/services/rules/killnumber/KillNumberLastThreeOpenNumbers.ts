@@ -5,6 +5,7 @@ import Promise = require('bluebird');
 import _ = require('lodash');
 import {LotteryDbService} from "../../dbservices/DBSerivice";
 import {AwardInfo} from "../../../models/db/AwardInfo";
+import {FixedPositionKillNumberResult} from "../../../models/RuleResult";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberLastThreeOpenNumbers');
@@ -14,8 +15,8 @@ let log4js = require('log4js'),
  *
  * 上期开啥 本期杀啥
  */
-export class KillNumberLastThreeOpenNumbers extends AbstractRuleBase implements IRules {
-    filterNumbers(): Promise<Array<string>> {
+export class KillNumberLastThreeOpenNumbers extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
+    filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let totalNumberArray = this.getTotalNumberArray();
         return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
@@ -38,7 +39,27 @@ export class KillNumberLastThreeOpenNumbers extends AbstractRuleBase implements 
                 log.info('杀个位号码：%s', dropGeWeiNumberArray.toString());
 
                 let restArray = this.getRestKillNumberArray(totalNumberArray, dropBaiWeiNumberArray, dropShiWeiNumberArray, dropGeWeiNumberArray);
-                return restArray;
+
+                let fixedPositionKillNumberResult: FixedPositionKillNumberResult = {
+                    baiWei: {
+                        killNumber: dropBaiWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(totalNumberArray, dropBaiWeiNumberArray, null, null)
+                    },
+                    shiWei: {
+                        killNumber: dropShiWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(totalNumberArray, null, dropShiWeiNumberArray, null)
+                    },
+                    geWei: {
+                        killNumber: dropGeWeiNumberArray.join(','),
+                        killNumberResult: this.getRestKillNumberArray(totalNumberArray, null, null, dropGeWeiNumberArray)
+                    },
+                    finalResult: {
+                        killNumber: _.union(dropBaiWeiNumberArray, dropShiWeiNumberArray, dropGeWeiNumberArray).join(','),
+                        killNumberResult: restArray
+                    }
+                };
+
+                return Promise.resolve(fixedPositionKillNumberResult);
             });
     }
 }
