@@ -100,15 +100,15 @@ export class NumberService extends AbstractRuleBase {
                 return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
-                planInvestNumbersInfo.jiou_type = promiseAllResult[0].killNumberResult;
-                planInvestNumbersInfo.killplan_bai_wei = promiseAllResult[1].baiWei.killNumberResult;
-                planInvestNumbersInfo.killplan_shi_wei = promiseAllResult[1].shiWei.killNumberResult;
-                planInvestNumbersInfo.killplan_ge_wei = promiseAllResult[1].geWei.killNumberResult;
-                planInvestNumbersInfo.road012_01 = promiseAllResult[2].killNumberResult;
-                planInvestNumbersInfo.missplan_bai_wei = promiseAllResult[3].baiWei.killNumberResult;
-                planInvestNumbersInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumberResult;
-                planInvestNumbersInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumberResult;
-                planInvestNumbersInfo.brokengroup_01_334 = promiseAllResult[4].killNumberResult;
+                planInvestNumbersInfo.jiou_type = promiseAllResult[0].killNumberResult.join(',');
+                planInvestNumbersInfo.killplan_bai_wei = promiseAllResult[1].baiWei.killNumberResult.join(',');
+                planInvestNumbersInfo.killplan_shi_wei = promiseAllResult[1].shiWei.killNumberResult.join(',');
+                planInvestNumbersInfo.killplan_ge_wei = promiseAllResult[1].geWei.killNumberResult.join(',');
+                planInvestNumbersInfo.road012_01 = promiseAllResult[2].killNumberResult.join(',');
+                planInvestNumbersInfo.missplan_bai_wei = promiseAllResult[3].baiWei.killNumberResult.join(',');
+                planInvestNumbersInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumberResult.join(',');
+                planInvestNumbersInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumberResult.join(',');
+                planInvestNumbersInfo.brokengroup_01_334 = promiseAllResult[4].killNumberResult.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {
