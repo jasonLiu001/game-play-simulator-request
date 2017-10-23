@@ -113,7 +113,7 @@ export class NumberService extends AbstractRuleBase {
             })
             .then(() => {
                 //计划杀号条件：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位
-                let killResult = [promiseAllResult[0].finalResult.killNumberResult, promiseAllResult[1].finalResult.killNumberResult];
+                let killResult = [promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult];
                 let resultArray = _.intersection(killResult);
                 return resultArray.join(',');
             });
