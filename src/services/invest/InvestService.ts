@@ -25,12 +25,6 @@ export class InvestService extends AbstractInvestBase {
     executeAutoInvest(request: any, isRealInvest: boolean): void {
         this.calculateWinMoney()
             .then(() => {
-                //检查是否满足投注条件
-                return this.doCheck(isRealInvest);
-            })
-            .then(() => {
-                log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));
-                log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 log.info('正在产生投注号码...');
                 return numberService.generateInvestNumber();
             })
@@ -38,6 +32,10 @@ export class InvestService extends AbstractInvestBase {
                 log.info('投注号码已生成！');
                 //投注前保存 投注号码
                 Config.currentInvestNumbers = investNumbers;
+                //检查是否满足投注条件
+                return this.doCheck(isRealInvest);
+            })
+            .then(() => {
                 //真实投注执行登录操作
                 if (isRealInvest) {
                     log.info('正在执行登录...');
@@ -46,6 +44,8 @@ export class InvestService extends AbstractInvestBase {
                 }
             })
             .then(() => {
+                log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));
+                log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
                 //真实投注
                 if (isRealInvest) {
                     log.info('登录成功！');
