@@ -32,7 +32,7 @@ export class InvestService extends AbstractInvestBase {
                 log.info('投注号码已生成！');
                 //投注前保存 投注号码
                 Config.currentInvestNumbers = investNumbers;
-                log.info('是否可投注..条件检查中...');
+                log.info('是否可投注..条件检查结果如下：');
                 //检查是否满足投注条件
                 return this.doCheck(isRealInvest);
             })
