@@ -1,6 +1,8 @@
 import {Config} from "../../config/Config";
 import {PeriodTime} from "../../models/PeriodTime";
 import Promise = require('bluebird');
+import _ = require('lodash');
+import moment  = require('moment');
 import {RejectionMsg} from "../../models/EnumModel";
 
 export class TimeService {
@@ -113,14 +115,14 @@ export class TimeService {
         let fourthTime = new Date(year, month, day + 1, 10, 0, 0);
         let openTimeList = [];
         openTimeList.push(new Date(firstTime.getTime() + delaySeconds * 1000));
-        //当天最后一期
+        //前一天最后一期开奖时间是当天00:00:00
         let yearFragment = String(year);
         let monthFragment = (String(month + 1).length == 1 ? ('0' + String(month + 1)) : String(month + 1));
         let dayFragment = String(day).length == 1 ? ('0' + String(day)) : String(day);
         //timeFragment的格式为20170508-
         let timeFragement = yearFragment + monthFragment + dayFragment + '-';
 
-        let lastPeriod = String(Number(yearFragment + monthFragment + dayFragment) - 1) + '-' + '120';
+        let lastPeriod = String(moment(currentTime).subtract('1', 'd').format('YYYYMMDD')) + '-120';
         periodList.push({
             openTime: new Date(firstTime.getTime() + delaySeconds * 1000),
             period: lastPeriod
@@ -163,6 +165,12 @@ export class TimeService {
                 period: period
             });
         }
+
+        //当天最后一期 开奖时间是在下一天的00:00:00
+        periodList.push({
+            openTime: new Date(moment(firstTime).add('1', 'd').toDate().getTime() + delaySeconds * 1000),
+            period: String(moment(currentTime).format("YYYYMMDD") + '-120')
+        });
 
         return periodList;
     }

@@ -7,9 +7,9 @@ describe("TimeService Test", () => {
     });
 
     it("getCurrentPeriodNumber TEST", () => {
-        let date = new Date(2017, 7, 2, 11, 50, 1);
+        let date = new Date(2017, 10, 25, 23, 58, 0);
         //调用这个方法不能传延迟参数
-        let currentPeriod = TimeService.getCurrentPeriodNumber(date);
+        let currentPeriod = TimeService.getCurrentPeriodNumber(date,60000);
 
         expect(currentPeriod).toEqual('20170802-036');
     });

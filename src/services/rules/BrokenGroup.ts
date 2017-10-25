@@ -3,10 +3,6 @@ import {IRules} from "./IRules";
 import {Config} from "../../config/Config";
 import _ = require('lodash');
 import Promise = require('bluebird');
-import {LotteryDbService} from "../dbservices/DBSerivice";
-import {TimeService} from "../time/TimeService";
-import {PlanInfo} from "../../models/db/PlanInfo";
-import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),

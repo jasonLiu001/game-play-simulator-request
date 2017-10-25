@@ -5,10 +5,6 @@ import Promise = require('bluebird');
 import {EnumKillNumberPosition} from "../../../models/EnumModel";
 import _ = require('lodash');
 import {KillNumberInfo} from "./KillNumbersFollowPlay";
-import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
-import {LotteryDbService} from "../../dbservices/DBSerivice";
-import {TimeService} from "../../time/TimeService";
-import {PlanInfo} from "../../../models/db/PlanInfo";
 import {FixedPositionKillNumberResult} from "../../../models/RuleResult";
 
 let analysis360Service = new Analysis360Service(),
