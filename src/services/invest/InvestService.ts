@@ -26,6 +26,7 @@ export class InvestService extends AbstractInvestBase {
         this.calculateWinMoney()
             .then(() => {
                 log.info('正在产生投注号码...');
+                //产生当期的投注号码
                 return numberService.generateInvestNumber();
             })
             .then((investNumbers: string) => {

@@ -138,13 +138,13 @@ export class LotteryDbService {
 
     /**
      *
-     * 获取特定数量的投注记录
-     * SELECT rowid AS id, * FROM invest limit 4
+     * 获取特定数量的最新投注记录
+     * SELECT rowid AS id, * FROM invest ORDER BY period DESC limit 4
      * @param historyCount
      * @return {Promise<any>}
      */
     public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
-        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " limit " + historyCount;
+        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " ORDER BY period DESC limit " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
     }
 
@@ -170,7 +170,7 @@ export class LotteryDbService {
 
     /**
      *
-     * 获取特定数量的开奖数据
+     * 获取特定数量的最新开奖数据
      * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
@@ -230,7 +230,6 @@ export class LotteryDbService {
         return LotteryDbService.sqliteService.get(sql);
     }
 
-
     /**
      *
      * 根据状态获取投注计划结果
@@ -239,6 +238,18 @@ export class LotteryDbService {
      */
     public static getPlanResultInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_RESULT_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_RESULT_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_RESULT_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
+        return LotteryDbService.sqliteService.all(sql);
+    }
+
+    /**
+     *
+     * 获取特定数量的最新投注计划结果
+     * SELECT rowid AS id, * FROM plan_result where status=1 ORDER BY period DESC limit 4
+     * @param historyCount
+     * @return {Promise<any>}
+     */
+    public static getPlanResultInfoHistory(historyCount: number): Promise<Array<any>> {
+        let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_RESULT_TABLE.tableName + " where status=1 ORDER BY period DESC limit " + historyCount;
         return LotteryDbService.sqliteService.all(sql);
     }
 

@@ -42,56 +42,56 @@ export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumbe
             switch (lastPrizeNumberJiOuType) {
                 case '000'://偶偶偶 杀奇奇奇
                 {
-                    if (JiOuType == '111' || JiOuType == '000') {
+                    if (JiOuType == '111') {
                         continue;
                     }
                 }
                     break;
                 case '111':// 杀奇奇奇
                 {
-                    if (JiOuType == '000' || JiOuType == '111') {
+                    if (JiOuType == '000') {
                         continue;
                     }
                 }
                     break;
                 case '110'://奇奇偶 杀偶偶奇
                 {
-                    if (JiOuType == '001' || JiOuType == '110') {
+                    if (JiOuType == '001') {
                         continue;
                     }
                 }
                     break;
                 case '001'://偶偶奇 杀奇奇偶
                 {
-                    if (JiOuType == '110' || JiOuType == '001') {
+                    if (JiOuType == '110') {
                         continue;
                     }
                 }
                     break;
                 case '101'://奇偶奇 杀偶奇偶
                 {
-                    if (JiOuType == '010' || JiOuType == '101') {
+                    if (JiOuType == '010') {
                         continue;
                     }
                 }
                     break;
                 case '010'://偶奇偶 杀奇偶奇
                 {
-                    if (JiOuType == '101' || JiOuType == '010') {
+                    if (JiOuType == '101') {
                         continue;
                     }
                 }
                     break;
                 case '100'://奇偶偶 杀偶奇奇
                 {
-                    if (JiOuType == '011' || JiOuType == '100') {
+                    if (JiOuType == '011') {
                         continue;
                     }
                 }
                     break;
                 case '011'://偶奇奇 杀奇偶偶
                 {
-                    if (JiOuType == '100' || JiOuType == '011') {
+                    if (JiOuType == '100') {
                         continue;
                     }
                 }
@@ -102,12 +102,12 @@ export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumbe
         }
 
         //日志记录杀号类型
-        let killJiouType_01 = lastPrizeNumberJiOuType;
+        //let killJiouType_01 = lastPrizeNumberJiOuType;
         let killJiouType_02 = ((lastPrizeNumberJiOuType.substr(0, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(1, 1) == '1' ? 0 : 1) + '' + (lastPrizeNumberJiOuType.substr(2, 1) == '1' ? 0 : 1));
-        log.info('排除奇偶类型：%s,%s', killJiouType_01, killJiouType_02);
+        log.info('排除奇偶类型：%s', killJiouType_02);
 
         let ruleResult: CommonKillNumberResult = {
-            killNumber: killJiouType_01 + '|' + killJiouType_02,
+            killNumber: killJiouType_02,
             killNumberResult: restNumberArray
         };
 

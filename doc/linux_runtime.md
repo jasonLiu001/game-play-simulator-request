@@ -35,7 +35,15 @@ Linux 下运行环境配置
                       GConf2-devel nss-devel
    ```
 
-3.  下载源代码，并安装`cnpm`，如果通过`npm`安装的话，`electron`在安装的时候可能安装不完成，会导致运行出错
+3.  下载源代码前安装`git`
+
+   ```shell
+   $ sudo yum install git
+   ```
+
+   ​
+
+4.  安装`cnpm`，如果通过`npm`安装的话，`electron`在安装的时候可能安装不完成，会导致运行出错
 
    ```shell
     npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -43,7 +51,7 @@ Linux 下运行环境配置
 
    参考文档：<https://github.com/electron/electron/blob/master/docs/development/build-instructions-linux.md>
 
-4.  调试模式，运行代码，得到下面的输出
+5.  调试模式，运行代码，得到下面的输出
 
    ```shell
    [root@worker1 game-play-simulator]# DEBUG=nightmare*,electron* node ./dist/App.js
@@ -99,7 +107,7 @@ Linux 下运行环境配置
 
    提示缺少`xvfb`，好的，到这里就基本成功了，执行下面安装`X-server`和`Xvfb`的命令
 
-5.  install `X-server` and `Xvfb` to the instance. `Xvfb`时一个X虚拟框架，这个仿真框架使用虚拟内存能让X-Server运行在没有显示设备的机器上。这样，浏览器就可以运行了，`Xvfb`可以用来运行无界面的浏览器`headless browser`
+6.  install `X-server` and `Xvfb` to the instance. `Xvfb`时一个X虚拟框架，这个仿真框架使用虚拟内存能让X-Server运行在没有显示设备的机器上。这样，浏览器就可以运行了，`Xvfb`可以用来运行无界面的浏览器`headless browser`
 
    ```shell
     sudo yum -y install xorg-x11-server-Xorg xterm   # x-server
@@ -107,7 +115,7 @@ Linux 下运行环境配置
     sudo yum -y install Xvfb   
    ```
 
-6. `xvfb`安装完成后，启动调试模式，通过`xvfb`来运行程序，输出信息如下：
+7. `xvfb`安装完成后，启动调试模式，通过`xvfb`来运行程序，输出信息如下：
 
    ```shell
    [root@worker1 game-play-simulator]# DEBUG=nightmare*,electron* xvfb-run -a --server-args="-screen 0 1024x768x24" node ./dist/App.js  nightmare queuing process start +0ms
@@ -150,14 +158,14 @@ Linux 下运行环境配置
 
    参考文档：<https://gist.github.com/dimkir/f4afde77366ff041b66d2252b45a13db>
 
-7. 安装缺省字体
+8. 安装缺省字体
 
    ```shell
    yum -y install  liberation-mono-fonts  liberation-narrow-fonts liberation-sans-fonts  liberation-serif-fonts
    ```
    参考文档：<https://www.centos.org/forums/viewtopic.php?t=60908&start=10>
 
-8. 继续通过`vxfb`来运行程序
+9. 继续通过`vxfb`来运行程序
 
    ```shell
     DEBUG=nightmare*,electron* xvfb-run -a --server-args="-screen 0 1024x768x24" node ./dist/App.js

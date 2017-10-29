@@ -4,7 +4,7 @@ import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');
 import {TimeService} from "../time/TimeService";
-import {EnumAwardMode} from "../../models/EnumModel";
+import {EnumAwardMode, RejectionMsg} from "../../models/EnumModel";
 import {AppServices} from "../AppServices";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
@@ -162,6 +162,41 @@ export abstract class AbstractInvestBase {
         return Promise.resolve(true);
     }
 
+    /**
+     *
+     * 检查开奖计划的结果是否满足投注条件
+     * @param planResults 投注计划结果
+     */
+    private checkPlanResultHistory(): Promise<boolean> {
+        //检查各个计划之前的中奖结果，根据结果过滤
+        return LotteryDbService.getPlanResultInfoHistory(CONFIG_CONST.historyCount)
+            .then((planResults: Array<PlanResultInfo>) => {
+                if (!planResults || planResults.length == 0 || planResults.length < CONFIG_CONST.historyCount) return Promise.reject(RejectionMsg.historyCountIsNotEnough);
+
+                let history01 = planResults[0];
+                let history02 = planResults[1];
+                let history03 = planResults[2];
+
+                //排除 对错对 这种情况
+                //对
+                let condition01 = history01.killplan_bai_wei == 1 && history01.killplan_shi_wei == 1 && history01.killplan_ge_wei == 1
+                    && history01.missplan_bai_wei == 1 && history01.missplan_shi_wei == 1 && history01.missplan_ge_wei == 1;
+                //错
+                let condition02 = history02.killplan_bai_wei == 0 || history02.killplan_shi_wei == 0 || history02.killplan_ge_wei == 0
+                    || history02.missplan_bai_wei == 0 || history02.missplan_shi_wei == 0 || history02.missplan_ge_wei == 0;
+                //对
+                let condition3 = history03.killplan_bai_wei == 1 && history03.killplan_shi_wei == 1 && history03.killplan_ge_wei == 1
+                    && history03.missplan_bai_wei == 1 && history03.missplan_shi_wei == 1 && history03.missplan_ge_wei == 1;
+
+                if (condition01 && condition02 && condition3) {
+                    return Promise.reject("前三期中奖情况为：【中错中】，不满足投注条件，放弃本次投注")
+                } else if (condition01) {
+                    log.info("最新一期中奖情况：【中】，满足投注条件");
+                    return Promise.resolve(true);
+                }
+                return Promise.resolve(true);
+            });
+    }
 
     /**
      *
@@ -173,14 +208,17 @@ export abstract class AbstractInvestBase {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime(isRealInvest)
             .then(() => {
-                //检查开奖号码是否已经更新
+                //检查开奖号码是否满足投注条件
                 return this.checkLastPrizeNumberValidation();
             })
             .then(() => {
                 //检查当前的最大盈利金额
                 return this.checkMaxWinMoney(isRealInvest);
+            })
+            .then((planResults: Array<PlanResultInfo>) => {
+                //检查开奖计划的结果是否满足投注条件
+                return this.checkPlanResultHistory();
             });
-
     }
 
     /**
