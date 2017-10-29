@@ -265,6 +265,8 @@ export abstract class AbstractInvestBase {
                         missplan_shi_wei: item.missplan_shi_wei,
                         missplan_ge_wei: item.missplan_ge_wei,
                         brokengroup_01_334: item.brokengroup_01_334,
+                        brokengroup_01_224: item.brokengroup_01_224,
+                        brokengroup_01_125: item.brokengroup_01_125,
                         road012_01: item.road012_01,
                         status: 1//状态更新置为已更新状态
                     };
@@ -279,6 +281,8 @@ export abstract class AbstractInvestBase {
                         missplan_shi_wei: 0,
                         missplan_ge_wei: 0,
                         brokengroup_01_334: 0,
+                        brokengroup_01_224: 0,
+                        brokengroup_01_125: 0,
                         road012_01: 0,
                         status: 1//状态更新置为已更新状态
                     };
@@ -383,6 +387,26 @@ export abstract class AbstractInvestBase {
             let item = brokengroup_01_334Array[j];
             if (prizeNumber == item) {
                 planResultInfo.brokengroup_01_334 = 1;
+                break;
+            }
+        }
+
+        //2-2-4断组
+        let brokengroup_01_224Array = planInvestNumbersInfo.brokengroup_01_224 == null ? [] : planInvestNumbersInfo.brokengroup_01_224.split(',');
+        for (let j = 0; j < brokengroup_01_224Array.length; j++) {
+            let item = brokengroup_01_224Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.brokengroup_01_224 = 1;
+                break;
+            }
+        }
+
+        //3-3-4断组
+        let brokengroup_01_125Array = planInvestNumbersInfo.brokengroup_01_125 == null ? [] : planInvestNumbersInfo.brokengroup_01_125.split(',');
+        for (let j = 0; j < brokengroup_01_125Array.length; j++) {
+            let item = brokengroup_01_125Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.brokengroup_01_125 = 1;
                 break;
             }
         }

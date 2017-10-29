@@ -22,9 +22,9 @@ export class LotteryDbService {
      * 初始化数据库
      * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
      * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
-     * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,road012_01 TEXT,status INTERGER)
-     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiou_type INTEGER, killplan_bai_wei INTEGER,killplan_shi_wei INTEGER,killplan_ge_wei INTEGER,missplan_bai_wei INTEGER,missplan_shi_wei INTEGER,missplan_ge_wei INTEGER,brokengroup_01_334 INTEGER,road012_01 INTEGER,status INTERGER)
-     * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,road012_01 TEXT,status INTERGER)
+     * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,brokengroup_01_224 TEXT,brokengroup_01_125 TEXT,road012_01 TEXT,status INTERGER)
+     * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiou_type INTEGER, killplan_bai_wei INTEGER,killplan_shi_wei INTEGER,killplan_ge_wei INTEGER,missplan_bai_wei INTEGER,missplan_shi_wei INTEGER,missplan_ge_wei INTEGER,brokengroup_01_334 INTEGER,brokengroup_01_224 INTEGER,brokengroup_01_125 INTEGER,road012_01 INTEGER,status INTERGER)
+     * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,brokengroup_01_224 TEXT,brokengroup_01_125 TEXT,road012_01 TEXT,status INTERGER)
      * @return {Bluebird<[any,any]>}
      */
     public static createLotteryTable(): Promise<any> {
@@ -37,15 +37,15 @@ export class LotteryDbService {
         //计划杀号记录表
         let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName +
             " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.killplanBaiWei + " TEXT," + CONST_PLAN_TABLE.killplanShiWei + " TEXT," + CONST_PLAN_TABLE.killplanGeWei + " TEXT, "
-            + CONST_PLAN_TABLE.missplanBaiWei + " TEXT," + CONST_PLAN_TABLE.missplanShiWei + " TEXT," + CONST_PLAN_TABLE.missplanGeWei + " TEXT," + CONST_PLAN_TABLE.brokenGroup_01_334 + " TEXT," + CONST_PLAN_TABLE.road012_01 + " TEXT, " + CONST_PLAN_TABLE.status + " INTERGER)";
+            + CONST_PLAN_TABLE.missplanBaiWei + " TEXT," + CONST_PLAN_TABLE.missplanShiWei + " TEXT," + CONST_PLAN_TABLE.missplanGeWei + " TEXT," + CONST_PLAN_TABLE.brokenGroup_01_334 + " TEXT, " + CONST_PLAN_TABLE.brokenGroup_01_224 + " TEXT," + CONST_PLAN_TABLE.brokenGroup_01_125 + " TEXT," + CONST_PLAN_TABLE.road012_01 + " TEXT, " + CONST_PLAN_TABLE.status + " INTERGER)";
         //计划杀号结果表
         let sqlCreatePlanResultTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_RESULT_TABLE.tableName
             + " (" + CONST_PLAN_RESULT_TABLE.period + " TEXT primary key, " + CONST_PLAN_RESULT_TABLE.jiOuType + " INTEGER, " + CONST_PLAN_RESULT_TABLE.killplanBaiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.killplanShiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.killplanGeWei + " INTEGER, "
-            + CONST_PLAN_RESULT_TABLE.missplanBaiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.missplanShiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.missplanGeWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.brokenGroup_01_334 + " INTEGER," + CONST_PLAN_RESULT_TABLE.road012_01 + " INTEGER, " + CONST_PLAN_RESULT_TABLE.status + " INTERGER)";
+            + CONST_PLAN_RESULT_TABLE.missplanBaiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.missplanShiWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.missplanGeWei + " INTEGER," + CONST_PLAN_RESULT_TABLE.brokenGroup_01_334 + " INTEGER, " + CONST_PLAN_RESULT_TABLE.brokenGroup_01_224 + " INTEGER," + CONST_PLAN_RESULT_TABLE.brokenGroup_01_125 + " INTEGER," + CONST_PLAN_RESULT_TABLE.road012_01 + " INTEGER, " + CONST_PLAN_RESULT_TABLE.status + " INTERGER)";
         //计划投注号码表
         let sqlCreatePlanInvestNumbersTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName
             + " (" + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " TEXT primary key, " + CONST_PLAN_INVEST_NUMBERS_TABLE.jiOuType + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.killplanBaiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.killplanShiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.killplanGeWei + " TEXT, "
-            + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanBaiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanShiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanGeWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.brokenGroup_01_334 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.road012_01 + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " INTERGER)";
+            + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanBaiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanShiWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.missplanGeWei + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.brokenGroup_01_334 + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.brokenGroup_01_224 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.brokenGroup_01_125 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.road012_01 + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " INTERGER)";
         return Promise.all(
             [
                 LotteryDbService.sqliteService.run(sqlCreateAwardTable),
@@ -194,10 +194,10 @@ export class LotteryDbService {
      *
      *
      * 保存或更新计划记录表
-     * INSERT OR REPLACE INTO plan VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)
+     * INSERT OR REPLACE INTO plan VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInfo.period,
@@ -209,6 +209,8 @@ export class LotteryDbService {
                 $missplan_shi_wei: planInfo.missplan_shi_wei,
                 $missplan_ge_wei: planInfo.missplan_ge_wei,
                 $brokengroup_01_334: planInfo.brokengroup_01_334,
+                $brokengroup_01_224: planInfo.brokengroup_01_224,
+                $brokengroup_01_125: planInfo.brokengroup_01_125,
                 $road012_01: planInfo.road012_01,
                 $status: planInfo.status
             })
@@ -258,10 +260,10 @@ export class LotteryDbService {
      *
      *
      * 保存或更新计划记录投注结果表
-     * INSERT OR REPLACE INTO plan_result VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)
+     * INSERT OR REPLACE INTO plan_result VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planResultInfo.period,
@@ -273,6 +275,8 @@ export class LotteryDbService {
                 $missplan_shi_wei: planResultInfo.missplan_shi_wei,
                 $missplan_ge_wei: planResultInfo.missplan_ge_wei,
                 $brokengroup_01_334: planResultInfo.brokengroup_01_334,
+                $brokengroup_01_224: planResultInfo.brokengroup_01_224,
+                $brokengroup_01_125: planResultInfo.brokengroup_01_125,
                 $road012_01: planResultInfo.road012_01,
                 $status: planResultInfo.status
             })
@@ -295,10 +299,10 @@ export class LotteryDbService {
     /**
      *
      * 保存或更新计划投注号码表
-     * INSERT OR REPLACE INTO plan_invest_numbers VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)
+     * INSERT OR REPLACE INTO plan_invest_numbers VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInvestNumbers.period,
@@ -310,6 +314,8 @@ export class LotteryDbService {
                 $missplan_shi_wei: planInvestNumbers.missplan_shi_wei,
                 $missplan_ge_wei: planInvestNumbers.missplan_ge_wei,
                 $brokengroup_01_334: planInvestNumbers.brokengroup_01_334,
+                $brokengroup_01_224: planInvestNumbers.brokengroup_01_224,
+                $brokengroup_01_125: planInvestNumbers.brokengroup_01_125,
                 $road012_01: planInvestNumbers.road012_01,
                 $status: planInvestNumbers.status
             })

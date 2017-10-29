@@ -18,6 +18,8 @@ import {PlanTableBase} from "../../models/db/PlanTableBase";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import {BrokenGroup224} from "../rules/BrokenGroup224";
+import {BrokenGroup125} from "../rules/BrokenGroup125";
 
 
 let log4js = require('log4js'),
@@ -30,7 +32,9 @@ let log4js = require('log4js'),
     killNumberGeWei = new KillNumberGeWei(),
     killNumberLastOpenNumber = new KillNumberLastOpenNumber(),
     killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
-    brokenGroup = new BrokenGroup();
+    brokenGroup = new BrokenGroup(),
+    brokenGroup224 = new BrokenGroup224(),
+    brokenGroup125 = new BrokenGroup125();
 export class NumberService extends AbstractRuleBase {
     /**
      *
@@ -50,6 +54,8 @@ export class NumberService extends AbstractRuleBase {
             missplan_shi_wei: '',
             missplan_ge_wei: '',
             brokengroup_01_334: '',
+            brokengroup_01_224: '',
+            brokengroup_01_125: '',
             road012_01: '',
             status: 0
         };
@@ -76,7 +82,9 @@ export class NumberService extends AbstractRuleBase {
                         //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位 这个里面有reject方法
                         //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码  这个里面有reject方法
                         //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码 这个里面有reject方法
-                        brokenGroup.filterNumbers() //断组
+                        brokenGroup.filterNumbers(), //3-3-4断组
+                        brokenGroup224.filterNumbers(), //2-2-4断组
+                        brokenGroup125.filterNumbers(), //1-2-5断组
                         //braveNumber.filterNumbers() //定胆
                     ]);
             })
@@ -94,6 +102,8 @@ export class NumberService extends AbstractRuleBase {
                 planInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumber;
                 planInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumber;
                 planInfo.brokengroup_01_334 = promiseAllResult[4].killNumber;
+                planInfo.brokengroup_01_224 = promiseAllResult[5].killNumber;
+                planInfo.brokengroup_01_125 = promiseAllResult[6].killNumber;
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
@@ -109,6 +119,8 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.missplan_shi_wei = promiseAllResult[3].shiWei.killNumberResult.join(',');
                 planInvestNumbersInfo.missplan_ge_wei = promiseAllResult[3].geWei.killNumberResult.join(',');
                 planInvestNumbersInfo.brokengroup_01_334 = promiseAllResult[4].killNumberResult.join(',');
+                planInvestNumbersInfo.brokengroup_01_224 = promiseAllResult[5].killNumberResult.join(',');
+                planInvestNumbersInfo.brokengroup_01_125 = promiseAllResult[6].killNumberResult.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {

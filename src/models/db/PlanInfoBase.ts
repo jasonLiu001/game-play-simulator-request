@@ -66,6 +66,20 @@ export class PlanInfoBase<T> {
 
     /**
      *
+     *
+     * 断组 2-2-4 断组
+     */
+    public brokengroup_01_224: T;
+
+    /**
+     *
+     *
+     * 断组 1-2-5 断组
+     */
+    public brokengroup_01_125: T;
+
+    /**
+     *
      * 杀012路类型
      */
     public road012_01: T;

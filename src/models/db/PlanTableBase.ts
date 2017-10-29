@@ -78,6 +78,23 @@ export class PlanTableBase {
     /**
      *
      *
+     * 断组 2-2-4 断组
+     * @type {string}
+     */
+    public static brokenGroup_01_224: string = "brokengroup_01_224";
+
+    /**
+     *
+     *
+     * 断组 1-2-5 断组
+     * @type {string}
+     */
+    public static brokenGroup_01_125: string = "brokengroup_01_125";
+
+
+    /**
+     *
+     *
      * 012路
      * @type {string}
      */
