@@ -60,11 +60,30 @@ export class NumberService extends AbstractRuleBase {
             status: 0
         };
 
+        let planResultInfo: PlanInfoBase<number> = {
+            period: period,
+            jiou_type: 0,
+            killplan_bai_wei: 0,
+            killplan_shi_wei: 0,
+            killplan_ge_wei: 0,
+            missplan_bai_wei: 0,
+            missplan_shi_wei: 0,
+            missplan_ge_wei: 0,
+            brokengroup_01_334: 0,
+            brokengroup_01_224: 0,
+            brokengroup_01_125: 0,
+            road012_01: 0,
+            status: 0
+        };
+
         planInfoBaseString.status = 1;//计划状态默认是：1
         return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
             .then(() => {
                 planInfoBaseString.status = 0;
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString)
+                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString);
+            })
+            .then(() => {
+                return LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfo);
             });
     }
 
@@ -84,7 +103,7 @@ export class NumberService extends AbstractRuleBase {
                         //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码 这个里面有reject方法
                         brokenGroup.filterNumbers(), //3-3-4断组
                         brokenGroup224.filterNumbers(), //2-2-4断组
-                        brokenGroup125.filterNumbers(), //1-2-5断组
+                        brokenGroup125.filterNumbers() //1-2-5断组
                         //braveNumber.filterNumbers() //定胆
                     ]);
             })
