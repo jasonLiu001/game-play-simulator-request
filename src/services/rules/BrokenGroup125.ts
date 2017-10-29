@@ -6,53 +6,32 @@ import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('BrokenGroup');
+    log = log4js.getLogger('BrokenGroup125');
+
 
 /**
  *
- * 断组
+ *
+ * 断组 1-2-5
  */
-export class BrokenGroup extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
+export class BrokenGroup125 extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     /**
      *
-     * 产生断组号码 格式：019-456-2378
+     * 产生断组号码 格式：5-78-91206
      */
     private getBrokenNumbers(): string {
         let brokenNumberStr = '';
         let lastPrize = Config.globalVariable.last_PrizeNumber;
-        let num1 = lastPrize.substr(3, 1);
-        let num2 = lastPrize.substr(4, 1);
-        let tailNumber = (Number(num1) + Number(num2)) % 10;
-        switch (tailNumber) {
-            case 0:
-            case 5:
-                brokenNumberStr = '019-456-2378';
-                break;
-            case 1:
-            case 6:
-                brokenNumberStr = '012-567-3489';
-                break;
-            case 2:
-            case 7:
-                brokenNumberStr = '123-678-0459';
-                break;
-            case 3:
-            case 8:
-                brokenNumberStr = '234-789-0156';
-                break;
-            case 4:
-            case 9:
-                brokenNumberStr = '089-345-1267';
-        }
-
-
+        let num = Number(lastPrize.substr(3, 1));
+        let baseNumber = (num + 6) % 10 + '' + (num + 5) % 10 + '' + (num + 1) % 10 + '' + (num + 2) % 10 + '' + (num + 7) % 10 + '' + num + '' + (num + 3) % 10 + '' + (num + 9) % 10 + '' + (num + 8) % 10 + '' + (num + 4) % 10;
+        brokenNumberStr = baseNumber.substr(0, 1) + '-' + baseNumber.substr(2, 2) + '-' + baseNumber.substr(5, 5);
         return brokenNumberStr;
     }
 
     /**
      *
      *
-     * @param {String} brokenGroupStr 产生的断组字符串  如：9-456-2378
+     * @param {String} brokenGroupStr 产生的断组字符串  如：5-78-91206
      * @return 返回数组 比如：[0,1]
      */
     private getNumbersNotInGroup(brokenGroupStr: string): Array<string> {
@@ -86,8 +65,8 @@ export class BrokenGroup extends AbstractRuleBase implements IRules<CommonKillNu
     /**
      *
      *
-     * @param {String} brokenGroupStr 产生的断组字符串  如：9-456-2378
-     * @param {Number} count 断组个数，如：count=1，则结果为9-456-2378=1中选择的号码
+     * @param {String} brokenGroupStr 产生的断组字符串  如：5-78-91206
+     * @param {Number} count 断组个数，如：count=1，则结果为5-78-91206=1中选择的号码
      */
     private getBrokenGroupNumberArray(brokenGroupStr: string, count: number): Array<string> {
         let resultArray = [];
@@ -161,16 +140,16 @@ export class BrokenGroup extends AbstractRuleBase implements IRules<CommonKillNu
 
         //断组中不包含的号码
         let numberNotInGroup = this.getNumbersNotInGroup(brokenGroupStr);
-        //01.首先排除掉 断组中不包含的号码 如'9-456-2378'不包含'01'，所以首先排除掉由'01'组成的所有三位号码
+        //01.首先排除掉 断组中不包含的号码 如'5-78-91206'不包含'3'，所以首先排除掉由'3'组成的所有三位号码
         let arrayNotBuy = this.getArray(numberNotInGroup);
         //剩余的号码
         let restNumbers = this.getAvailableNumbers(totalNumberArray, arrayNotBuy);
 
-        //02.排除掉3断都同时有的情况 如'9-456-2378'，3断同时有即类似，942,943,952等这样的号码要被干掉
+        //02.排除掉3断都同时有的情况 如'5-78-91206'，3断同时有即类似，579,715,589等这样的号码要被干掉
         let filterNumbers = this.getBrokenGroupNumberArray(brokenGroupStr, 3);
         let resultNumbers = this.getAvailableNumbers(restNumbers, filterNumbers);
 
-        log.info('断组3-3-4号码：%s', brokenGroupStr);
+        log.info('断组号码1-2-5：%s', brokenGroupStr);
 
         let ruleResult: CommonKillNumberResult = {
             killNumber: brokenGroupStr,

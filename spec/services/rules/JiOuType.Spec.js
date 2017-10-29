@@ -14,8 +14,8 @@ describe("JiOuType Test", () => {
     it("filterNumbers test", (done) => {
         jiouType.filterNumbers()
             .then((result) => {
-                expect(result).not.toContain('141');
-                expect(result).toContain('418');
+                expect(result.killNumberResult).not.toContain('141');
+                expect(result.killNumberResult).toContain('003');
                 done();
             });
     });

@@ -4,8 +4,9 @@ let Config = require('../../../dist/config/Config').Config;
 describe("BrokenGroup Test", () => {
     let brokenGroupService;
 
-    beforeEach(() => {
-        brokenGroupService = new BrokenGroupService()
+    beforeEach((done) => {
+        brokenGroupService = new BrokenGroupService();
+        done();
     });
 
     it("getNumbersNotInGroup test", () => {
@@ -40,11 +41,13 @@ describe("BrokenGroup Test", () => {
         expect(brokenArray).toContain('869');
     });
 
-    it("filterNumbers test", () => {
+    it("filterNumbers test", (done) => {
         Config.globalVariable.last_PrizeNumber = '78904';
-        let resultArray = brokenGroupService.filterNumbers();
-
-        expect(resultArray).not.toContain('831');
-        expect(resultArray).not.toContain('947');
+        brokenGroupService.filterNumbers()
+            .then((resultArray) => {
+                expect(resultArray.killNumberResult).not.toContain('831');
+                expect(resultArray.killNumberResult).not.toContain('947');
+                done();
+            });
     });
 });
