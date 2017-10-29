@@ -169,7 +169,7 @@ export class Analysis360Service implements IAnalysisCrawler {
                         //获取每个号码的当前遗漏值
                         let arr = this.getMissCountArray(body);
                         //获取指定遗漏值的号码 如果没有指定遗漏值 说明获取的是最大遗漏值的号码
-                        let numberArray = this.getNumberArray(arr, 17);
+                        let numberArray = this.getNumberArray(arr);
                         log.info('%s位排除遗漏值最大号码：%s', maxMissNumberPosition, numberArray.toString());
                         resolve(numberArray);
                     } catch (e) {
