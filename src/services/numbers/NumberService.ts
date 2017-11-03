@@ -129,8 +129,8 @@ export class NumberService extends AbstractRuleBase {
                 //计划杀号条件：根据计划杀百、十、个，百、十、个的最大遗漏号码，杀奇偶，杀断组125
                 let resultArray02: Array<string> = _.intersection(promiseAllResult[1].finalResult.killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[0].killNumberResult, promiseAllResult[6].killNumberResult);
                 //取反
-                let leftArray = this.getAvailableNumbers(this.getTotalNumberArray(), resultArray02);
-                return leftArray.join(',');
+                //let leftArray = this.getAvailableNumbers(this.getTotalNumberArray(), resultArray02);
+                return resultArray02.join(',');
             });
     }
 
