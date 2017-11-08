@@ -7,7 +7,8 @@
 以`CentOS`为例
 1. 安装ntpdate，执行以下命令
 ```shell
-# yum install ntpdate -y
+# yum install ntpdate -y  ##CentOS安装
+# sudo apt-get install ntp  ##Ubuntu安装
 ```
 2. 使用crontab计划任务定时更新网络时间
 ```shell
@@ -15,7 +16,8 @@
 ```
 在打开文件的末尾添加定时任务，每天早上6点执行时间同步，如下所示：
 ```shell
-0  6  *  *  * root ntpdate ntp1.aliyun.com
+0  6  *  *  * root ntpdate ntp1.aliyun.com   ##CentOS
+0  6  *  *  * root ntpd ntp1.aliyun.com   ##Ubuntu
 ```
  其中`ntp1.aliyun.com`是阿里的时间同步服务器，也可以根据自己的需要选择其他的
 #### 必备条件2

@@ -41,8 +41,6 @@ Linux 下运行环境配置
    $ sudo yum install git
    ```
 
-   ​
-
 4.  安装`cnpm`，如果通过`npm`安装的话，`electron`在安装的时候可能安装不完成，会导致运行出错
 
    ```shell
@@ -173,3 +171,49 @@ Linux 下运行环境配置
 
    成功！程序启动成功！
 
+
+`Ubuntu`
+
+1. 安装`node.js`
+
+   ```shell
+   sudo apt-get install nodejs
+   ```
+
+2. 安装`cnpm`，如果通过`npm`安装的话，`electron`在安装的时候可能安装不完成，会导致运行出错
+
+   ```shell
+    npm install -g cnpm --registry=https://registry.npm.taobao.org
+   ```
+
+   参考文档：<https://github.com/electron/electron/blob/master/docs/development/build-instructions-linux.md>
+
+3. 安装`git`
+
+   ```shell
+   sudo apt-get install git
+   ```
+
+4. 安装`python`
+
+   ```shell
+   sudo apt-get install python2.7 
+   ```
+
+5. 安装`electron`的`ubuntu`依赖
+
+   ```shell
+   sudo apt-get install build-essential clang libdbus-1-dev libgtk2.0-dev \
+                          libnotify-dev libgnome-keyring-dev libgconf2-dev \
+                          libasound2-dev libcap-dev libcups2-dev libxtst-dev \
+                          libxss1 libnss3-dev gcc-multilib g++-multilib curl \
+                          gperf bison
+   ```
+
+6. 安装`ntp`保持时间同步
+
+   ```shell
+   sudo apt-get install ntp
+   ```
+
+   ​
