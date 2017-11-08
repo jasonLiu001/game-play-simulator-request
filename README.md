@@ -34,8 +34,22 @@
 #### 安装`sz/rz`下载/上传
 如果当前`Linux`版本上已经支持`sz/rz`命令，则不需要重复安装，在`CentOS`下安装`sz/rz`命令
 ```shell
-yum install lrzsz
+yum install lrzsz  ##CentOS
+sudo apt-get install lrzsz  ##Ubuntu
 ```
+####下载文件
+
+```shell
+sz 文件名
+```
+
+#### 上传文件
+
+```shell
+rz -ary --o-sync
+```
+
+
 > **补充说明**   
 > sz：将选定的文件发送（send）到本地机器,即下载  
 > rz：运行该命令会弹出一个文件选择窗口，从本地选择文件上传到服务器(receive),即上传
