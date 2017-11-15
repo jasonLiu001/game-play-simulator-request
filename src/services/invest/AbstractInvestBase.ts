@@ -180,13 +180,13 @@ export abstract class AbstractInvestBase {
                 //排除 对错对 这种情况
                 //对
                 let condition01 = history01.killplan_bai_wei == 1 && history01.killplan_shi_wei == 1 && history01.killplan_ge_wei == 1
-                    && history01.missplan_bai_wei == 1 && history01.missplan_shi_wei == 1 && history01.missplan_ge_wei == 1;
+                    && history01.jiou_type == 1;
                 //错
                 let condition02 = history02.killplan_bai_wei == 0 || history02.killplan_shi_wei == 0 || history02.killplan_ge_wei == 0
-                    || history02.missplan_bai_wei == 0 || history02.missplan_shi_wei == 0 || history02.missplan_ge_wei == 0;
+                    || history02.jiou_type == 0;
                 //对
                 let condition3 = history03.killplan_bai_wei == 1 && history03.killplan_shi_wei == 1 && history03.killplan_ge_wei == 1
-                    && history03.missplan_bai_wei == 1 && history03.missplan_shi_wei == 1 && history03.missplan_ge_wei == 1;
+                    && history03.jiou_type == 1;
 
                 if (condition01 && condition02 && condition3) {
                     return Promise.reject("前三期中奖情况为：【中错中】，不满足投注条件，放弃本次投注")

@@ -126,7 +126,7 @@ export class NumberService extends AbstractRuleBase {
             .then(() => {
                 //计划杀号条件：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
                 let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
-                //计划杀号条件：根据计划杀百、十、个，百、十、个的最大遗漏号码，杀奇偶，杀断组125
+                //【不可取】计划杀号条件：根据计划杀百、十、个，百、十、个的最大遗漏号码，杀奇偶，杀断组125
                 //let resultArray02: Array<string> = _.intersection(promiseAllResult[1].finalResult.killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[0].killNumberResult, promiseAllResult[6].killNumberResult);
                 //取反
                 //let leftArray = this.getAvailableNumbers(this.getTotalNumberArray(), resultArray02);

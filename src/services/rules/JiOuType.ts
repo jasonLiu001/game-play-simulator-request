@@ -61,9 +61,9 @@ export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumbe
                     }
                 }
                     break;
-                case '001'://偶偶奇 杀奇奇偶
+                case '001'://偶偶奇 杀奇奇偶 杀奇奇奇 杀偶偶偶
                 {
-                    if (JiOuType == '110' || JiOuType == '001') {
+                    if (JiOuType == '110' || JiOuType == '001' || JiOuType == '111' || JiOuType == '000') {
                         continue;
                     }
                 }
