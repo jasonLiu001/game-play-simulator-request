@@ -147,19 +147,19 @@ export class NumberService extends AbstractRuleBase {
         let prizeForth = Number(last_PrizeNumber.charAt(3));//5
         let prizeFifth = Number(last_PrizeNumber.charAt(4));
 
-        // //上期开奖号码后三奇偶 倒杀
-        // let baiWeiJiOuType = this.getJiEouType(prizeThird);//百位奇偶类型
-        // let shiWeiJiOuType = this.getJiEouType(prizeForth);//十位奇偶类型
-        // let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
-        // //上期号码的奇偶类型
-        // let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
-        // if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
-        //     log.info('当前开奖号码【%s】，满足【偶偶奇】', last_PrizeNumber);
-        //     return true;
-        // }
-        // log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', last_PrizeNumber);
-        // return false;
+        //上期开奖号码后三奇偶 倒杀
+        let baiWeiJiOuType = this.getJiEouType(prizeThird);//百位奇偶类型
+        let shiWeiJiOuType = this.getJiEouType(prizeForth);//十位奇偶类型
+        let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
+        //上期号码的奇偶类型
+        let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
+        if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
+            log.info('当前开奖号码【%s】，满足【偶偶奇】', last_PrizeNumber);
+            return true;
+        }
+        log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', last_PrizeNumber);
+        return false;
 
-        return true;
+        //return true;
     }
 }
