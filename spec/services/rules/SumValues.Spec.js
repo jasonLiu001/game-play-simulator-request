@@ -1,19 +1,18 @@
-let JiOuType = require('../../../dist/services/rules/JiOuType').JiOuType;
+let SumValues = require('../../../dist/services/rules/SumValues').SumValues;
 let Config = require('../../../dist/config/Config').Config;
 
-describe("JiOuType Test", () => {
-    let jiouType;
+describe("SumValues Test", () => {
+    let sumValues;
     Config.globalVariable.last_PrizeNumber = "37274";
-
     beforeEach((done) => {
-        jiouType = new JiOuType();
+        sumValues = new SumValues();
         done();
     });
 
     it("filterNumbers test", (done) => {
-        jiouType.filterNumbers()
+        sumValues.filterNumbers()
             .then((result) => {
-                expect(result.killNumberResult).not.toContain('141');
+                expect(result.killNumberResult).not.toContain('247');
                 expect(result.killNumberResult).toContain('003');
                 done();
             });
