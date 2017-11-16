@@ -5,7 +5,7 @@ import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('ThreeNumberTogether');
+    log = log4js.getLogger('NumbersDistance');
 
 /**
  *
