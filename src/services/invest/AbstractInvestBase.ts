@@ -218,7 +218,8 @@ export abstract class AbstractInvestBase {
             })
             .then((planResults: Array<PlanResultInfo>) => {
                 //检查开奖计划的结果是否满足投注条件
-                return this.checkPlanResultHistory();
+                //return this.checkPlanResultHistory();
+                return Promise.resolve(true);
             });
     }
 

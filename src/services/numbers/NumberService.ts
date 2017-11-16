@@ -159,7 +159,5 @@ export class NumberService extends AbstractRuleBase {
         }
         log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', last_PrizeNumber);
         return false;
-
-        //return true;
     }
 }
