@@ -1,9 +1,9 @@
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import {IRules} from "./IRules";
-import {Config} from "../../config/Config";
 import _ = require('lodash');
 import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
+import {OpenNumber} from "../../models/OpenNumber";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('BrokenGroup125');
@@ -21,8 +21,9 @@ export class BrokenGroup125 extends AbstractRuleBase implements IRules<CommonKil
      */
     private getBrokenNumbers(): string {
         let brokenNumberStr = '';
-        let lastPrize = Config.globalVariable.last_PrizeNumber;
-        let num = Number(lastPrize.substr(3, 1));
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+        let num = prizeNumber.shi;
         let baseNumber = (num + 6) % 10 + '' + (num + 5) % 10 + '' + (num + 1) % 10 + '' + (num + 2) % 10 + '' + (num + 7) % 10 + '' + num + '' + (num + 3) % 10 + '' + (num + 9) % 10 + '' + (num + 8) % 10 + '' + (num + 4) % 10;
         brokenNumberStr = baseNumber.substr(0, 1) + '-' + baseNumber.substr(2, 2) + '-' + baseNumber.substr(5, 5);
         return brokenNumberStr;

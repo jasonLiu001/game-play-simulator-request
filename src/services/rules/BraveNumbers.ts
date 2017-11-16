@@ -1,8 +1,8 @@
 import {IRules} from "./IRules";
-import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
+import {OpenNumber} from "../../models/OpenNumber";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('BraveNumbers');
@@ -15,13 +15,14 @@ export class BraveNumbers extends AbstractRuleBase implements IRules<CommonKillN
     public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
-        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
         //开奖号码信息
-        let prizeFirst = last_PrizeNumber.charAt(0);
-        let prizeSecond = last_PrizeNumber.charAt(1);
-        let prizeThird = last_PrizeNumber.charAt(2);
-        let prizeForth = last_PrizeNumber.charAt(3);
-        let prizeFifth = last_PrizeNumber.charAt(4);
+        let prizeFirst = String(prizeNumber.wan);
+        let prizeSecond = String(prizeNumber.qian);
+        let prizeThird = String(prizeNumber.bai);
+        let prizeForth = String(prizeNumber.shi);
+        let prizeFifth = String(prizeNumber.ge);
 
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
@@ -30,9 +31,9 @@ export class BraveNumbers extends AbstractRuleBase implements IRules<CommonKillN
             }
         }
 
-        log.info('胆码：%s', last_PrizeNumber);
+        log.info('胆码：%s', prizeNumber.prizeString);
         let ruleResult: CommonKillNumberResult = {
-            killNumber: last_PrizeNumber,
+            killNumber: prizeNumber.prizeString,
             killNumberResult: restNumberArray
         };
 

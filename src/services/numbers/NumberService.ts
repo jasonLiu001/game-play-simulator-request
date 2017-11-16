@@ -20,6 +20,7 @@ import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
 import {BrokenGroup125} from "../rules/BrokenGroup125";
+import {OpenNumber} from "../../models/OpenNumber";
 
 
 let log4js = require('log4js'),
@@ -139,25 +140,20 @@ export class NumberService extends AbstractRuleBase {
      * 检查上期开奖号码是否满足投注条件
      */
     public isLastPrizeNumberValid(): boolean {
-        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
-        //开奖号码信息
-        let prizeFirst = Number(last_PrizeNumber.charAt(0));
-        let prizeSecond = Number(last_PrizeNumber.charAt(1));
-        let prizeThird = Number(last_PrizeNumber.charAt(2));
-        let prizeForth = Number(last_PrizeNumber.charAt(3));//5
-        let prizeFifth = Number(last_PrizeNumber.charAt(4));
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
 
         //上期开奖号码后三奇偶 倒杀
-        let baiWeiJiOuType = this.getJiEouType(prizeThird);//百位奇偶类型
-        let shiWeiJiOuType = this.getJiEouType(prizeForth);//十位奇偶类型
-        let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
+        let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
+        let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
+        let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
         //上期号码的奇偶类型
         let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
         if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
-            log.info('当前开奖号码【%s】，满足【偶偶奇】', last_PrizeNumber);
+            log.info('当前开奖号码【%s】，满足【偶偶奇】', prizeNumber.prizeString);
             return true;
         }
-        log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', last_PrizeNumber);
+        log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
         return false;
     }
 }

@@ -1,4 +1,6 @@
 import _ = require('lodash');
+import {OpenNumber} from "../../models/OpenNumber";
+import {Config} from "../../config/Config";
 
 /**
  *
@@ -27,11 +29,30 @@ export class AbstractRuleBase {
 
     /**
      *
+     *
+     * 获取开奖号码对象
+     */
+    protected getPrizeNumberObj(): OpenNumber {
+        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
+        //开奖号码信息
+        let openNumber: OpenNumber = {
+            wan: Number(last_PrizeNumber.charAt(0)),
+            qian: Number(last_PrizeNumber.charAt(1)),
+            bai: Number(last_PrizeNumber.charAt(2)),
+            shi: Number(last_PrizeNumber.charAt(3)),
+            ge: Number(last_PrizeNumber.charAt(4)),
+            prizeString: last_PrizeNumber
+        };
+        return openNumber;
+    }
+
+    /**
+     *
      * 判断当前数的奇偶类型
      * @param number
      * @return {number}
      */
-    public getJiEouType(number: number): number {
+    protected getJiEouType(number: number): number {
         return number % 2;
     }
 

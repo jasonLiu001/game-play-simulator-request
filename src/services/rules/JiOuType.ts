@@ -1,8 +1,8 @@
 import {IRules} from "./IRules";
-import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
+import {OpenNumber} from "../../models/OpenNumber";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiOuType');
@@ -15,18 +15,13 @@ export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumbe
     public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
-        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
-        //开奖号码信息
-        let prizeFirst = Number(last_PrizeNumber.charAt(0));
-        let prizeSecond = Number(last_PrizeNumber.charAt(1));
-        let prizeThird = Number(last_PrizeNumber.charAt(2));
-        let prizeForth = Number(last_PrizeNumber.charAt(3));//5
-        let prizeFifth = Number(last_PrizeNumber.charAt(4));
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
 
         //上期开奖号码后三奇偶 倒杀
-        let baiWeiJiOuType = this.getJiEouType(prizeThird);//百位奇偶类型
-        let shiWeiJiOuType = this.getJiEouType(prizeForth);//十位奇偶类型
-        let geWeiJiOuType = this.getJiEouType(prizeFifth);//个位奇偶类型
+        let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
+        let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
+        let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
         let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
 
         //杀奇偶

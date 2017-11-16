@@ -1,8 +1,8 @@
 import {IRules} from "./IRules";
-import {Config} from "../../config/Config";
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
+import {OpenNumber} from "../../models/OpenNumber";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Road012Type');
@@ -19,18 +19,12 @@ export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNu
     public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
-        let last_PrizeNumber = Config.globalVariable.last_PrizeNumber;
-        //开奖号码信息
-        let prizeFirst = Number(last_PrizeNumber.charAt(0));
-        let prizeSecond = Number(last_PrizeNumber.charAt(1));
-        let prizeThird = Number(last_PrizeNumber.charAt(2));
-        let prizeForth = Number(last_PrizeNumber.charAt(3));//5
-        let prizeFifth = Number(last_PrizeNumber.charAt(4));
-
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
         //上期开奖号码后三012路
-        let baiWei012Type = this.getNumber012Type(prizeThird);//百位012路类型
-        let shiWei012Type = this.getNumber012Type(prizeForth);//十位012路类型
-        let geWei012Type = this.getNumber012Type(prizeFifth);//个位012路类型
+        let baiWei012Type = this.getNumber012Type(prizeNumber.bai);//百位012路类型
+        let shiWei012Type = this.getNumber012Type(prizeNumber.shi);//十位012路类型
+        let geWei012Type = this.getNumber012Type(prizeNumber.ge);//个位012路类型
         let lastPrizeNumber012Type = baiWei012Type + '' + shiWei012Type + '' + geWei012Type;
 
         //需要杀掉的类型1
