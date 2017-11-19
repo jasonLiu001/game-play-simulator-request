@@ -14,7 +14,7 @@ let log4js = require('log4js'),
 /**
  *
  * 杀012路
- * 杀倒数第一期012路--倒数第3期012路--倒数第4期012路
+ * 杀倒数第一期012路--倒数第2期012路--倒数第3期012路
  */
 export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     private getNumber012Type(number: number): number {

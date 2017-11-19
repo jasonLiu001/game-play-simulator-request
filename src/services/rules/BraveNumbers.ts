@@ -25,7 +25,7 @@ export class BraveNumbers extends AbstractRuleBase implements IRules<CommonKillN
         let prizeThird = String((prizeNumber.wan + 9) % 10);
         let prizeForth = String((prizeNumber.wan + 3) % 10);
         let prizeFifth = String((prizeNumber.wan + 8) % 10);
-        let prizeSixth = String((prizeNumber.wan + 4)) % 10;
+        let prizeSixth = String((prizeNumber.wan + 4) % 10);
 
         for (let i = 0; i < originNumberArray.length; i++) {
             let item = originNumberArray[i];
