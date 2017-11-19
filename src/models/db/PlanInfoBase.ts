@@ -126,6 +126,12 @@ export class PlanInfoBase<T> {
 
     /**
      *
+     * 6胆
+     */
+    public bravenumber_6_01: T;
+
+    /**
+     *
      * 当前数据是否已经更新
      */
     public status: number;

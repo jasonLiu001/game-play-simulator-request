@@ -314,6 +314,7 @@ export abstract class AbstractInvestBase {
                         killbaiwei_01: item.killbaiwei_01,
                         killshiwei_01: item.killshiwei_01,
                         killgewei_01: item.killgewei_01,
+                        bravenumber_6_01: item.bravenumber_6_01,
                         status: 1//状态更新置为已更新状态
                     };
                     //计划中奖结果表初始化
@@ -336,6 +337,7 @@ export abstract class AbstractInvestBase {
                         killbaiwei_01: 0,
                         killshiwei_01: 0,
                         killgewei_01: 0,
+                        bravenumber_6_01: 0,
                         status: 1//状态更新置为已更新状态
                     };
                     //首先更新各计划开奖结果
@@ -529,6 +531,16 @@ export abstract class AbstractInvestBase {
             let item = killgewei_01_Array[j];
             if (prizeNumber == item) {
                 planResultInfo.killgewei_01 = 1;
+                break;
+            }
+        }
+
+        //定6胆
+        let bravenumber_6_01_Array = planInvestNumbersInfo.bravenumber_6_01 == null ? [] : planInvestNumbersInfo.bravenumber_6_01.split(',');
+        for (let j = 0; j < bravenumber_6_01_Array.length; j++) {
+            let item = bravenumber_6_01_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.bravenumber_6_01 = 1;
                 break;
             }
         }

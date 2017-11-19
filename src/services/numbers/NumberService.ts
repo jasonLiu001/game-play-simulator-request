@@ -68,6 +68,7 @@ export class NumberService extends AbstractRuleBase {
             killbaiwei_01: '',
             killshiwei_01: '',
             killgewei_01: '',
+            bravenumber_6_01: '',
             status: 0
         };
 
@@ -97,8 +98,8 @@ export class NumberService extends AbstractRuleBase {
                         sumValues.filterNumbers(),//杀和值
                         threeNumberTogether.filterNumbers(),//杀特殊形态：三连
                         killNumberBaiWei.filterNumbers(),//杀百位 这个方法里面有reject方法
-                        killNumberGeWei.filterNumbers()//杀个位 这个里面有reject方法
-                        //braveNumber.filterNumbers() //定胆 这个里面有reject方法
+                        killNumberGeWei.filterNumbers(),//杀个位 这个里面有reject方法
+                        braveNumber.filterNumbers() //定胆 这个里面有reject方法
                     ]);
             })
             .then((results) => {
@@ -122,6 +123,7 @@ export class NumberService extends AbstractRuleBase {
                 planInfo.three_number_together = promiseAllResult[9].killNumber;
                 planInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumber;
                 planInfo.killgewei_01 = promiseAllResult[11].geWei.killNumber;
+                planInfo.bravenumber_6_01 = promiseAllResult[12].killNumber;
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
@@ -144,6 +146,7 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.three_number_together = promiseAllResult[9].killNumberResult.join(',');
                 planInvestNumbersInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumberResult.join(',');
                 planInvestNumbersInfo.killgewei_01 = promiseAllResult[11].geWei.killNumberResult.join(',');
+                planInvestNumbersInfo.bravenumber_6_01 = promiseAllResult[12].killNumberResult.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {

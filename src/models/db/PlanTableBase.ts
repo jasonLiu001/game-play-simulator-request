@@ -142,6 +142,13 @@ export class PlanTableBase {
 
     /**
      *
+     * 6胆
+     * @type {string}
+     */
+    public static braveNumber_6_01: string = "bravenumber_6_01";
+
+    /**
+     *
      * 是否已经更新
      * @type {string}
      */
