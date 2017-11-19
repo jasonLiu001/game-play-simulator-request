@@ -1,11 +1,11 @@
-let KillNumberGeWei = require('../../../../dist/services/rules/killnumber/KillNumberGeWei').KillNumberGeWei;
+let KillNumberBaiWei = require('../../../../dist/services/rules/killnumber/KillNumberBaiWei').KillNumberBaiWei;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 
 describe("KillNumberGeWei Test", () => {
-    let killNumberGeWei;
+    let killNumberBaiWei;
 
     beforeEach((done) => {
-        killNumberGeWei = new KillNumberGeWei();
+        killNumberBaiWei = new KillNumberBaiWei();
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -13,10 +13,10 @@ describe("KillNumberGeWei Test", () => {
     });
 
     it("filterNumbers test", (done) => {
-        killNumberGeWei.filterNumbers()
+        killNumberBaiWei.filterNumbers()
             .then((result) => {
                 expect(result).toBeDefined();
-                expect(result.geWei.killNumberResult).not.toContain('015');
+                expect(result.baiWei.killNumberResult).not.toContain('015');
                 done();
             })
             .catch((err) => {

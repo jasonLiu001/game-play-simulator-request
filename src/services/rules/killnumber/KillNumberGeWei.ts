@@ -21,23 +21,18 @@ export class KillNumberGeWei extends AbstractRuleBase implements IRules<FixedPos
         let totalNumberArray = this.getTotalNumberArray();
         return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
-                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject(RejectionMsg.historyCountIsNotEnough);
+                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀个位提示：" + RejectionMsg.historyCountIsNotEnough);
 
                 //最新一期开奖号
                 let last_01 = awardHistoryList[0].openNumber;
-                //上上期开奖号码
-                let last_02 = awardHistoryList[1].openNumber;
-                let diff = Number(last_01.substring(4)) - Number(last_02.substring(4));
-                if (!(diff == -1 || diff == 1)) {
-                    return Promise.reject("历史开奖号码不满足个位杀号条件");
-                }
-                let killNumber;
-                if (diff == 1) {
-                    //个位杀号
-                    killNumber = (Number(last_01.substring(4)) + 1) % 10;
-                } else {
-                    killNumber = Number(last_01.substring(4)) - 1;
-                }
+
+                let bai = Number(last_01.substr(2, 1));//百
+                let shi = Number(last_01.substr(3, 1));//十
+                let ge = Number(last_01.substr(4, 1));//个
+
+                //杀掉的个位号码
+                let killNumber = String(Math.abs(Math.max(bai, shi, ge) - Math.min(bai, shi, ge)));
+
                 let dropGeWeiNumberArray: Array<string> = [];
                 dropGeWeiNumberArray.push(killNumber);
                 let restArray = this.getRestKillNumberArray(totalNumberArray, null, null, dropGeWeiNumberArray);
