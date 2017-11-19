@@ -200,7 +200,7 @@ export class LotteryDbService {
      * INSERT OR REPLACE INTO plan VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInfo.period,
@@ -280,7 +280,7 @@ export class LotteryDbService {
      * INSERT OR REPLACE INTO plan_result VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planResultInfo.period,
@@ -322,7 +322,7 @@ export class LotteryDbService {
      * INSERT OR REPLACE INTO plan_invest_numbers VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$status)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$status)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInvestNumbers.period,
