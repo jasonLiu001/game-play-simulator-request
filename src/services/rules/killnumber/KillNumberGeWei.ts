@@ -15,6 +15,7 @@ let log4js = require('log4js'),
  *
  *
  * 个位杀号
+ * 取倒数第一期后三中最大数减倒数第一期后三中最小数的差
  */
 export class KillNumberGeWei extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
     filterNumbers(): Promise<FixedPositionKillNumberResult> {

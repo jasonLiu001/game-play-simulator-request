@@ -88,7 +88,7 @@ export class NumberService extends AbstractRuleBase {
                     [
                         jiouType.filterNumbers(), //杀特定形态的奇偶
                         killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
-                        road012Type.filterNumbers(), //杀012路
+                        road012Type.filterNumbers(), //杀012路 这个里面有reject方法
                         killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
                         brokenGroup.filterNumbers(), //3-3-4断组
                         brokenGroup224.filterNumbers(), //2-2-4断组
@@ -98,7 +98,7 @@ export class NumberService extends AbstractRuleBase {
                         threeNumberTogether.filterNumbers(),//杀特殊形态：三连
                         killNumberBaiWei.filterNumbers(),//杀百位 这个方法里面有reject方法
                         killNumberGeWei.filterNumbers()//杀个位 这个里面有reject方法
-                        //braveNumber.filterNumbers() //定胆
+                        //braveNumber.filterNumbers() //定胆 这个里面有reject方法
                     ]);
             })
             .then((results) => {

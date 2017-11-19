@@ -14,7 +14,7 @@ let log4js = require('log4js'),
 
 /**
  *
- * 杀跨度
+ * 杀跨度 倒数第二期后三号码*133得结果，取结果的第1位
  */
 export class NumbersDistance extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     filterNumbers(): Promise<CommonKillNumberResult> {

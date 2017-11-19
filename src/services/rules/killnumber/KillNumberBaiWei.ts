@@ -15,6 +15,7 @@ let log4js = require('log4js'),
 /**
  *
  * 杀百位
+ * 取倒数第三期的十位
  */
 export class KillNumberBaiWei extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
     filterNumbers(): Promise<FixedPositionKillNumberResult> {

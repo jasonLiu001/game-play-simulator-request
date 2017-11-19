@@ -13,6 +13,8 @@ let log4js = require('log4js'),
  *
  *
  * 断组 1-2-5
+ * 断组的依据号码产生：倒数第一期十位分别加6,5,1,2,7,3,9,8,4,0后的各自结果取和尾组成10位数
+ * 断组号码：取10位数第一位（1断）--10位数后8位的前2位（2断）--10位数的后5位（3断）
  */
 export class BrokenGroup125 extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     /**
