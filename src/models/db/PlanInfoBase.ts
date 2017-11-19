@@ -1,6 +1,6 @@
 /**
  *
- * 投注计划基类
+ * 投注计划基类 Model实体属性
  */
 export class PlanInfoBase<T> {
     /**
@@ -101,6 +101,28 @@ export class PlanInfoBase<T> {
      * 特殊号：三连
      */
     public three_number_together: T;
+
+    /**
+     *
+     * 杀百位
+     * @type {string}
+     */
+    public killbaiwei_01: T;
+
+    /**
+     *
+     * 杀十位
+     * @type {string}
+     */
+    public killshiwei_01: T;
+
+    /**
+     *
+     *
+     * 杀个位
+     * @type {string}
+     */
+    public killgewei_01: T;
 
     /**
      *

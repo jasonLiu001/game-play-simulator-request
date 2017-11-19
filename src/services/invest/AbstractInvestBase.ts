@@ -311,6 +311,9 @@ export abstract class AbstractInvestBase {
                         number_distance: item.number_distance,
                         sum_values: item.sum_values,
                         three_number_together: item.three_number_together,
+                        killbaiwei_01: item.killbaiwei_01,
+                        killshiwei_01: item.killshiwei_01,
+                        killgewei_01: item.killgewei_01,
                         status: 1//状态更新置为已更新状态
                     };
                     //计划中奖结果表初始化
@@ -330,6 +333,9 @@ export abstract class AbstractInvestBase {
                         number_distance: 0,
                         sum_values: 0,
                         three_number_together: 0,
+                        killbaiwei_01: 0,
+                        killshiwei_01: 0,
+                        killgewei_01: 0,
                         status: 1//状态更新置为已更新状态
                     };
                     //首先更新各计划开奖结果
@@ -493,6 +499,36 @@ export abstract class AbstractInvestBase {
             let item = three_number_together_Array[j];
             if (prizeNumber == item) {
                 planResultInfo.three_number_together = 1;
+                break;
+            }
+        }
+
+        //杀百位
+        let killbaiwei_01_Array = planInvestNumbersInfo.killbaiwei_01 == null ? [] : planInvestNumbersInfo.killbaiwei_01.split(',');
+        for (let j = 0; j < killbaiwei_01_Array.length; j++) {
+            let item = killbaiwei_01_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.killbaiwei_01 = 1;
+                break;
+            }
+        }
+
+        //杀十位
+        let killshiwei_01_Array = planInvestNumbersInfo.killshiwei_01 == null ? [] : planInvestNumbersInfo.killshiwei_01.split(',');
+        for (let j = 0; j < killshiwei_01_Array.length; j++) {
+            let item = killshiwei_01_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.killshiwei_01 = 1;
+                break;
+            }
+        }
+
+        //杀个位
+        let killgewei_01_Array = planInvestNumbersInfo.killgewei_01 == null ? [] : planInvestNumbersInfo.killgewei_01.split(',');
+        for (let j = 0; j < killgewei_01_Array.length; j++) {
+            let item = killgewei_01_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.killgewei_01 = 1;
                 break;
             }
         }

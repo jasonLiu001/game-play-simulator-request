@@ -22,6 +22,7 @@ import {OpenNumber} from "../../models/OpenNumber";
 import {NumbersDistance} from "../rules/NumbersDistance";
 import {SumValues} from "../rules/SumValues";
 import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
+import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
 
 
 let log4js = require('log4js'),
@@ -32,6 +33,7 @@ let log4js = require('log4js'),
     killNumbersMaxMiss = new KillNumbersMaxMiss(),
     braveNumber = new BraveNumbers(),
     killNumberGeWei = new KillNumberGeWei(),
+    killNumberBaiWei = new KillNumberBaiWei(),
     brokenGroup = new BrokenGroup(),
     brokenGroup224 = new BrokenGroup224(),
     brokenGroup125 = new BrokenGroup125(),
@@ -63,6 +65,9 @@ export class NumberService extends AbstractRuleBase {
             number_distance: '',
             sum_values: '',
             three_number_together: '',
+            killbaiwei_01: '',
+            killshiwei_01: '',
+            killgewei_01: '',
             status: 0
         };
 
@@ -85,16 +90,15 @@ export class NumberService extends AbstractRuleBase {
                         killNumbersFollowPlay.filterNumbers(),//根据计划杀号 杀 百位 个位 十位
                         road012Type.filterNumbers(), //杀012路
                         killNumbersMaxMiss.filterNumbers(),//根据最大遗漏值 杀 百位 个位 十位
-                        //killNumberGeWei.filterNumbers(),//个位出现连号时 杀个位 这个里面有reject方法
-                        //killNumberLastOpenNumber.filterNumbers(),//上期出现什么号码，杀什么号码  这个里面有reject方法
-                        //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码 这个里面有reject方法
                         brokenGroup.filterNumbers(), //3-3-4断组
                         brokenGroup224.filterNumbers(), //2-2-4断组
                         brokenGroup125.filterNumbers(), //1-2-5断组
-                        //braveNumber.filterNumbers(), //定胆
-                        numbersDistance.filterNumbers(),//杀跨度
+                        numbersDistance.filterNumbers(),//杀跨度 这个里面有reject方法
                         sumValues.filterNumbers(),//杀和值
-                        threeNumberTogether.filterNumbers()//杀特殊形态：三连
+                        threeNumberTogether.filterNumbers(),//杀特殊形态：三连
+                        killNumberBaiWei.filterNumbers(),//杀百位 这个方法里面有reject方法
+                        killNumberGeWei.filterNumbers()//杀个位 这个里面有reject方法
+                        //braveNumber.filterNumbers() //定胆
                     ]);
             })
             .then((results) => {
@@ -116,6 +120,8 @@ export class NumberService extends AbstractRuleBase {
                 planInfo.number_distance = promiseAllResult[7].killNumber;
                 planInfo.sum_values = promiseAllResult[8].killNumber;
                 planInfo.three_number_together = promiseAllResult[9].killNumber;
+                planInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumber;
+                planInfo.killgewei_01 = promiseAllResult[11].geWei.killNumber;
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
@@ -136,6 +142,8 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.number_distance = promiseAllResult[7].killNumberResult.join(',');
                 planInvestNumbersInfo.sum_values = promiseAllResult[8].killNumberResult.join(',');
                 planInvestNumbersInfo.three_number_together = promiseAllResult[9].killNumberResult.join(',');
+                planInvestNumbersInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumberResult.join(',');
+                planInvestNumbersInfo.killgewei_01 = promiseAllResult[11].geWei.killNumberResult.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {

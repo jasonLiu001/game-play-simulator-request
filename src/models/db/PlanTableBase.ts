@@ -120,6 +120,28 @@ export class PlanTableBase {
 
     /**
      *
+     * 杀百位
+     * @type {string}
+     */
+    public static killBaiWei_01: string = "killbaiwei_01";
+
+    /**
+     *
+     * 杀十位
+     * @type {string}
+     */
+    public static killShiWei_01: string = "killshiwei_01";
+
+    /**
+     *
+     *
+     * 杀个位
+     * @type {string}
+     */
+    public static killGeWei_01: string = "killgewei_01";
+
+    /**
+     *
      * 是否已经更新
      * @type {string}
      */
