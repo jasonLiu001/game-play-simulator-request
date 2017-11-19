@@ -9,8 +9,6 @@ import _ = require('lodash');
 import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
-import {KillNumberLastOpenNumber} from "../rules/killnumber/KillNumberLastOpenNumber";
-import {KillNumberLastThreeOpenNumbers} from "../rules/killnumber/KillNumberLastThreeOpenNumbers";
 import {LotteryDbService} from "../dbservices/DBSerivice";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {TimeService} from "../time/TimeService";
@@ -34,8 +32,6 @@ let log4js = require('log4js'),
     killNumbersMaxMiss = new KillNumbersMaxMiss(),
     braveNumber = new BraveNumbers(),
     killNumberGeWei = new KillNumberGeWei(),
-    killNumberLastOpenNumber = new KillNumberLastOpenNumber(),
-    killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
     brokenGroup = new BrokenGroup(),
     brokenGroup224 = new BrokenGroup224(),
     brokenGroup125 = new BrokenGroup125(),
