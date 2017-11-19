@@ -37,7 +37,7 @@ export class ThreeNumberTogether extends AbstractRuleBase implements IRules<Comm
         }
         log.info('排除三连号码后剩余：%s 个', restNumberArray.length);
         let ruleResult: CommonKillNumberResult = {
-            killNumber: restNumberArray.join(','),
+            killNumber: '杀三连',
             killNumberResult: restNumberArray
         };
         return Promise.resolve(ruleResult);
