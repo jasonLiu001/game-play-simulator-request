@@ -102,6 +102,24 @@ export class PlanTableBase {
 
     /**
      *
+     * 杀跨度
+     */
+    public static numberDistance: string = "number_distance";
+
+    /**
+     *
+     * 杀和值
+     */
+    public static sumValues: string = "sum_values";
+
+    /**
+     *
+     * 特殊号：三连
+     */
+    public static threeNumberTogether: string = "three_number_together";
+
+    /**
+     *
      * 是否已经更新
      * @type {string}
      */

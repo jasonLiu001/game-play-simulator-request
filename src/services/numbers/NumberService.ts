@@ -21,6 +21,9 @@ import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
 import {BrokenGroup125} from "../rules/BrokenGroup125";
 import {OpenNumber} from "../../models/OpenNumber";
+import {NumbersDistance} from "../rules/NumbersDistance";
+import {SumValues} from "../rules/SumValues";
+import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 
 
 let log4js = require('log4js'),
@@ -35,7 +38,10 @@ let log4js = require('log4js'),
     killNumberLastThreeOpenNumbers = new KillNumberLastThreeOpenNumbers(),
     brokenGroup = new BrokenGroup(),
     brokenGroup224 = new BrokenGroup224(),
-    brokenGroup125 = new BrokenGroup125();
+    brokenGroup125 = new BrokenGroup125(),
+    numbersDistance = new NumbersDistance(),
+    sumValues = new SumValues(),
+    threeNumberTogether = new ThreeNumberTogether();
 export class NumberService extends AbstractRuleBase {
     /**
      *
@@ -58,6 +64,9 @@ export class NumberService extends AbstractRuleBase {
             brokengroup_01_224: '',
             brokengroup_01_125: '',
             road012_01: '',
+            number_distance: '',
+            sum_values: '',
+            three_number_together: '',
             status: 0
         };
 
@@ -85,8 +94,11 @@ export class NumberService extends AbstractRuleBase {
                         //killNumberLastThreeOpenNumbers.filterNumbers(),//上三期出现什么号码，杀每位的上3期号码 这个里面有reject方法
                         brokenGroup.filterNumbers(), //3-3-4断组
                         brokenGroup224.filterNumbers(), //2-2-4断组
-                        brokenGroup125.filterNumbers() //1-2-5断组
-                        //braveNumber.filterNumbers() //定胆
+                        brokenGroup125.filterNumbers(), //1-2-5断组
+                        //braveNumber.filterNumbers(), //定胆
+                        numbersDistance.filterNumbers(),//杀跨度
+                        sumValues.filterNumbers(),//杀和值
+                        threeNumberTogether.filterNumbers()//杀特殊形态：三连
                     ]);
             })
             .then((results) => {
@@ -105,6 +117,9 @@ export class NumberService extends AbstractRuleBase {
                 planInfo.brokengroup_01_334 = promiseAllResult[4].killNumber;
                 planInfo.brokengroup_01_224 = promiseAllResult[5].killNumber;
                 planInfo.brokengroup_01_125 = promiseAllResult[6].killNumber;
+                planInfo.number_distance = promiseAllResult[7].killNumber;
+                planInfo.sum_values = promiseAllResult[8].killNumber;
+                planInfo.three_number_together = promiseAllResult[9].killNumber;
                 return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
@@ -122,6 +137,9 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.brokengroup_01_334 = promiseAllResult[4].killNumberResult.join(',');
                 planInvestNumbersInfo.brokengroup_01_224 = promiseAllResult[5].killNumberResult.join(',');
                 planInvestNumbersInfo.brokengroup_01_125 = promiseAllResult[6].killNumberResult.join(',');
+                planInvestNumbersInfo.number_distance = promiseAllResult[7].killNumberResult.join(',');
+                planInvestNumbersInfo.sum_values = promiseAllResult[8].killNumberResult.join(',');
+                planInvestNumbersInfo.three_number_together = promiseAllResult[9].killNumberResult.join(',');
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {

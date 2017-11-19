@@ -308,6 +308,9 @@ export abstract class AbstractInvestBase {
                         brokengroup_01_224: item.brokengroup_01_224,
                         brokengroup_01_125: item.brokengroup_01_125,
                         road012_01: item.road012_01,
+                        number_distance: item.number_distance,
+                        sum_values: item.sum_values,
+                        three_number_together: item.three_number_together,
                         status: 1//状态更新置为已更新状态
                     };
                     //计划中奖结果表初始化
@@ -324,6 +327,9 @@ export abstract class AbstractInvestBase {
                         brokengroup_01_224: 0,
                         brokengroup_01_125: 0,
                         road012_01: 0,
+                        number_distance: 0,
+                        sum_values: 0,
+                        three_number_together: 0,
                         status: 1//状态更新置为已更新状态
                     };
                     //首先更新各计划开奖结果
@@ -457,6 +463,36 @@ export abstract class AbstractInvestBase {
             let item = road012_01_Array[j];
             if (prizeNumber == item) {
                 planResultInfo.road012_01 = 1;
+                break;
+            }
+        }
+
+        //杀跨度
+        let number_distance_Array = planInvestNumbersInfo.number_distance == null ? [] : planInvestNumbersInfo.number_distance.split(',');
+        for (let j = 0; j < number_distance_Array.length; j++) {
+            let item = number_distance_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.number_distance = 1;
+                break;
+            }
+        }
+
+        //杀和值
+        let sum_values_Array = planInvestNumbersInfo.sum_values == null ? [] : planInvestNumbersInfo.sum_values.split(',');
+        for (let j = 0; j < sum_values_Array.length; j++) {
+            let item = sum_values_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.sum_values = 1;
+                break;
+            }
+        }
+
+        //杀特殊号：三连
+        let three_number_together_Array = planInvestNumbersInfo.three_number_together == null ? [] : planInvestNumbersInfo.three_number_together.split(',');
+        for (let j = 0; j < three_number_together_Array.length; j++) {
+            let item = three_number_together_Array[j];
+            if (prizeNumber == item) {
+                planResultInfo.three_number_together = 1;
                 break;
             }
         }

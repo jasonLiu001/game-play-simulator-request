@@ -86,6 +86,24 @@ export class PlanInfoBase<T> {
 
     /**
      *
+     * 杀跨度
+     */
+    public number_distance: T;
+
+    /**
+     *
+     * 杀和值
+     */
+    public sum_values: T;
+
+    /**
+     *
+     * 特殊号：三连
+     */
+    public three_number_together: T;
+
+    /**
+     *
      * 当前数据是否已经更新
      */
     public status: number;
