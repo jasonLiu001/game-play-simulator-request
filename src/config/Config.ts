@@ -8,13 +8,13 @@ let path = require('path');
  */
 export const CONFIG_CONST = {
     //登录网站url
-    siteUrl: 'http://123.jn878.cc',
+    siteUrl: 'https://123.jn707.com',
     //需要获取的历史号码数量
     historyCount: 3,
     //开奖延迟时间，单位为秒
     openTimeDelaySeconds: 60,
     //自动检查定时器 时间间隔 单位为毫秒ms
-    autoCheckTimerInterval: 20000,
+    autoCheckTimerInterval: 35000,
     //三星奖金
     awardPrice: 1954,
     //投注倍数
