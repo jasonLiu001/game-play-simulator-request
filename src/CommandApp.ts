@@ -2,15 +2,15 @@ import {Config} from './config/Config';
 import {LotteryDbService} from "./services/dbservices/DBSerivice";
 import Promise = require('bluebird');
 import {ErrorService} from "./services/ErrorService";
-import {RequestLoginService} from "./services/platform/RequestLoginService";
-import {RequestPlatformService} from "./services/platform/RequestPlatformService";
+import {JiangNanLoginService} from "./services/platform/jiangnan/JiangNanLoginService";
+import {JiangNanLotteryService} from "./services/platform/jiangnan/JiangNanLotteryService";
 import {TimeService} from "./services/time/TimeService";
 import {HttpRequestHeaders} from "./models/EnumModel";
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js'),
-    requestPlatformService = new RequestPlatformService,
-    requestLoginService = new RequestLoginService();
+    requestPlatformService = new JiangNanLotteryService,
+    requestLoginService = new JiangNanLoginService();
 
 log4js.configure(path.resolve(__dirname, 'config/log4js.json'));
 

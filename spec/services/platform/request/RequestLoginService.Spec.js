@@ -1,5 +1,5 @@
-let RequestLoginService = require('../../../../dist/services/platform/request/RequestLoginService').RequestLoginService;
-let RequestPlatformService = require('../../../../dist/services/platform/request/RequestPlatformService').RequestPlatformService;
+let JiangNanLoginService = require('../../../../dist/services/platform/request/JiangNanLoginService').JiangNanLoginService;
+let JiangNanLotteryService = require('../../../../dist/services/platform/request/JiangNanLotteryService').JiangNanLotteryService;
 let Config = require('../../../../dist/config/Config').Config;
 let EnumAwardMode = require('../../../../dist/models/EnumModel').EnumAwardMode;
 let HttpRequestHeaders = require('../../../../dist/models/EnumModel').HttpRequestHeaders;
@@ -16,12 +16,12 @@ let request = Request.defaults(
         headers: HttpRequestHeaders
     });
 
-describe('RequestLoginService Test', () => {
+describe('JiangNanLoginService Test', () => {
     let requestLoginService, config, requestPlatformService, lotteryDbService;
 
     beforeEach((done) => {
-        requestLoginService = new RequestLoginService();
-        requestPlatformService = new RequestPlatformService();
+        requestLoginService = new JiangNanLoginService();
+        requestPlatformService = new JiangNanLotteryService();
         config = new Config();
         Config.currentSelectedAwardMode = EnumAwardMode.yuan;
         lotteryDbService = new LotteryDbService();
@@ -31,7 +31,7 @@ describe('RequestLoginService Test', () => {
             });
     });
 
-    it('RequestLoginService Test', (done) => {
+    it('JiangNanLoginService Test', (done) => {
         requestLoginService.login(request)
             .then((body) => {
                 let res = body;

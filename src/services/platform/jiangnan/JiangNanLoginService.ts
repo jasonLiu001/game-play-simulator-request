@@ -1,14 +1,14 @@
-import {Config, CONFIG_CONST} from "../../config/Config";
-import {ResponseData} from "../../models/ResponseData";
-import {CaptchaDecoderService} from "../captcha/CaptchaDecoderService";
-import {PlatformAbstractBase} from "./PlatformAbstractBase";
+import {Config, CONFIG_CONST} from "../../../config/Config";
+import {ResponseData} from "../../../models/ResponseData";
+import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
+import {PlatformAbstractBase} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
-import {ErrorService} from "../ErrorService";
+import {ErrorService} from "../../ErrorService";
 
 let path = require('path'),
     fs = require('fs'),
     log4js = require('log4js'),
-    log = log4js.getLogger('RequestLoginService'),
+    log = log4js.getLogger('JiangNanLoginService'),
     cheerio = require('cheerio'),
     captchaService = new CaptchaDecoderService();
 
@@ -17,7 +17,7 @@ let path = require('path'),
  *
  * 平台登录服务 使用request模拟登陆请求
  */
-export class RequestLoginService extends PlatformAbstractBase {
+export class JiangNanLoginService extends PlatformAbstractBase {
 
     /**
      *

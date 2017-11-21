@@ -1,13 +1,13 @@
-import {Config, CONFIG_CONST} from "../../config/Config";
-import {TimeService} from "../time/TimeService";
-import {PlatformAbstractBase} from "./PlatformAbstractBase";
+import {Config, CONFIG_CONST} from "../../../config/Config";
+import {TimeService} from "../../time/TimeService";
+import {PlatformAbstractBase} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
-import {EnumAwardMode} from "../../models/EnumModel";
-import {ErrorService} from "../ErrorService";
+import {EnumAwardMode} from "../../../models/EnumModel";
+import {ErrorService} from "../../ErrorService";
 let log4js = require('log4js'),
-    log = log4js.getLogger('RequestLoginService');
+    log = log4js.getLogger('JiangNanLotteryService');
 
-export class RequestPlatformService extends PlatformAbstractBase {
+export class JiangNanLotteryService extends PlatformAbstractBase {
     /**
      *
      * 请求成功登录之后的页面

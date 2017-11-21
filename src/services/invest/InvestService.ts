@@ -3,16 +3,16 @@ import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');
 import {AbstractInvestBase} from "./AbstractInvestBase";
-import {RequestLoginService} from "../platform/RequestLoginService";
-import {RequestPlatformService} from "../platform/RequestPlatformService";
+import {JiangNanLoginService} from "../platform/jiangnan/JiangNanLoginService";
+import {JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryService";
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
 
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
-    requestLoginService = new RequestLoginService(),
-    requestPlatformService = new RequestPlatformService,
+    jiangNanLoginService = new JiangNanLoginService(),
+    jiangNanLotteryService = new JiangNanLotteryService,
     numberService = new NumberService();
 
 export class InvestService extends AbstractInvestBase {
@@ -42,7 +42,7 @@ export class InvestService extends AbstractInvestBase {
                 if (isRealInvest) {
                     log.info('正在执行登录...');
                     //使用request投注 需要先登录在投注 每次投注前都需要登录
-                    return requestLoginService.login(request);
+                    return jiangNanLoginService.login(request);
                 }
             })
             .then(() => {
@@ -52,7 +52,7 @@ export class InvestService extends AbstractInvestBase {
                 if (isRealInvest) {
                     log.info('登录成功！');
                     log.info('正在执行投注...');
-                    return requestPlatformService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                    return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu);
                 }
             })
             .then((result) => {
