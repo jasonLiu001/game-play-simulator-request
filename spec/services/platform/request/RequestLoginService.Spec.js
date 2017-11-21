@@ -1,7 +1,6 @@
-let JiangNanLoginService = require('../../../../dist/services/platform/request/JiangNanLoginService').JiangNanLoginService;
-let JiangNanLotteryService = require('../../../../dist/services/platform/request/JiangNanLotteryService').JiangNanLotteryService;
+let JiangNanLoginService = require('../../../../dist/services/platform/jiangnan/JiangNanLoginService').JiangNanLoginService;
+let JiangNanLotteryService = require('../../../../dist/services/platform/jiangnan/JiangNanLotteryService').JiangNanLotteryService;
 let Config = require('../../../../dist/config/Config').Config;
-let EnumAwardMode = require('../../../../dist/models/EnumModel').EnumAwardMode;
 let HttpRequestHeaders = require('../../../../dist/models/EnumModel').HttpRequestHeaders;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
 
@@ -17,14 +16,14 @@ let request = Request.defaults(
     });
 
 describe('JiangNanLoginService Test', () => {
-    let requestLoginService, config, requestPlatformService, lotteryDbService;
+    let requestLoginService, requestPlatformService, lotteryDbService;
 
     beforeEach((done) => {
         requestLoginService = new JiangNanLoginService();
         requestPlatformService = new JiangNanLotteryService();
-        config = new Config();
-        Config.currentSelectedAwardMode = EnumAwardMode.yuan;
         lotteryDbService = new LotteryDbService();
+        //投注号码
+        Config.currentInvestNumbers = "123,345";
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -35,10 +34,11 @@ describe('JiangNanLoginService Test', () => {
         requestLoginService.login(request)
             .then((body) => {
                 let res = body;
-                return requestPlatformService.invest(request, lotteryDbService);
+                return requestPlatformService.invest(request,1000);
             })
             .then((body) => {
                 let res = body;
+                console.log(res);
                 done();
             })
             .catch((error) => {
