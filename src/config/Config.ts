@@ -24,9 +24,9 @@ export const CONFIG_CONST = {
     //登录密码
     password: '',
     //元、角、分 模式
-    awardMode: EnumAwardMode.feng,//yuan,jiao,feng,li
+    awardMode: EnumAwardMode.jiao,//yuan,jiao,feng,li
     //账户初始余额
-    currentAccoutBalance: 100,
+    currentAccoutBalance: 1000,
     //账号最大值 盈利金额设置 单位为元  其中：0.12代表在当前账号余额基础上允许盈利：12%
     maxAccountBalance: this.currentAccoutBalance * (1 + 0.12),
     //账号最小值 亏损金额设置 单位为元  其中：0.45代表在当前账号余额基础上允许亏损：45%
