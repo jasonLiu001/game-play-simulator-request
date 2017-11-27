@@ -1,23 +1,24 @@
-let AbstractInvestBase = require('../../../dist/services/invest/AbstractInvestBase').AbstractInvestBase;
+let InvestService = require('../../../dist/services/invest/InvestService').InvestService;
 let LotteryDbService = require('../../../dist/services/dbservices/DBSerivice').LotteryDbService;
-let InvestInfo = require('../../../dist/models/InvestInfo').InvestInfo;
+let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 let Config = require('../../../dist/config/Config').Config;
 let EnumAwardMode = require('../../../dist/models/EnumModel').EnumAwardMode;
-let CONFIG_CONST = require('../../../dist/config/Config').CONFIG_CONST;
 describe("AbstractInvestBase Test", () => {
-    let abstractInvestBase, investInfo, config, lotteryDbService;
+    let abstractInvestBase, investInfo;
 
     beforeEach((done) => {
-        abstractInvestBase = new AbstractInvestBase();
+        abstractInvestBase = new InvestService();
         investInfo = new InvestInfo();
-        config = new Config();
-        lotteryDbService = new LotteryDbService();
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });
     });
 
+    /**
+     *
+     * 更新当前账户余额
+     */
     xit("updateCurrentAccountBalace test", () => {
         investInfo.isWin = 1;
         investInfo.currentAccountBalance = 34.79;
@@ -32,11 +33,7 @@ describe("AbstractInvestBase Test", () => {
         expect(fixedNumber).toBe(Number(investInfo.currentAccountBalance.toFixed(2)));
     });
 
-    xit("saveCurrentAccountBalance test", () => {
-
-    });
-
-    it("calculateWinMoney test", (done) => {
+    xit("calculateWinMoney test", (done) => {
         abstractInvestBase.calculateWinMoney()
             .then((result) => {
                 expect(result).toBeDefined();
@@ -46,4 +43,21 @@ describe("AbstractInvestBase Test", () => {
                 done();
             });
     }, 20000);
+
+    /**
+     *
+     * 检查最大盈利金额是否达到设定目标
+     */
+    it("checkMaxWinMoney test", () => {
+        //设置当前账号余额
+        Config.globalVariable.currentAccoutBalance = 743.2;
+        abstractInvestBase.checkMaxWinMoney()
+            .then((result) => {
+                expect(result).toBe(false);
+                done();
+            })
+            .catch((e) => {
+                done();
+            });
+    }, 20000000);
 });

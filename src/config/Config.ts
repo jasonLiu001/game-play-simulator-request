@@ -27,10 +27,10 @@ export const CONFIG_CONST = {
     awardMode: EnumAwardMode.jiao,//yuan,jiao,feng,li
     //账户初始余额
     currentAccoutBalance: 500,
-    //账号最大值 盈利金额设置 单位为元  比如：0.12代表在当前账号余额基础上允许盈利：12%
-    maxAccountBalance: this.currentAccoutBalance * (1 + 0.24),
-    //账号最小值 亏损金额设置 单位为元  比如：0.45代表在当前账号余额基础上允许亏损：45%
-    minAccountBalance: this.currentAccoutBalance * (1 - 1)
+    //账号最大值 盈利金额设置 单位为元  比如：需要盈利120，则设置成620，这里不能设置
+    maxAccountBalance: 620,
+    //账号最小值 亏损金额设置 单位为元  比如：账户当前最低余额
+    minAccountBalance: 0
 };
 
 /**
