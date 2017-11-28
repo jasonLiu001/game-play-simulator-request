@@ -24,9 +24,9 @@
 在`Linux`下设置好时间同步后，还要设置程序的自动运行时间，周一到周五运行正式程序，周六、周日两天运行模拟程序
 ```shell
 0 2 * * 1-5 killall node
-56 9 * * 1-5 pkill -9 node && sh ~/start.sh
+56 9 * * 1-5 sh ~/start.sh
 0 2 * * 6,0 killall node
-56 9 * * 6,0 pkill -9 node && sh ~/mock.sh
+56 9 * * 6,0 sh ~/mock.sh
 ```
 `CentOS`下设置定时任务可通过`crontab -e`命令来设置，设置好后会自动生效，通过`crontab -l`查看当前用户所有的定时任务
 
@@ -37,7 +37,7 @@
 yum install lrzsz  ##CentOS
 sudo apt-get install lrzsz  ##Ubuntu
 ```
-####下载文件
+#### 下载文件
 
 ```shell
 sz 文件名
