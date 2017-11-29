@@ -7,7 +7,7 @@ import {JiangNanLoginService} from "../platform/jiangnan/JiangNanLoginService";
 import {JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryService";
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
-
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -66,7 +66,7 @@ export class InvestService extends AbstractInvestBase {
                 Config.currentInvestTotalCount++;
                 let investInfo: InvestInfo = this.initInvestInfo();
                 log.info('投注记录已保存');
-                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, new Date().toLocaleTimeString());
+                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                 //保存投注记录
                 return LotteryDbService.saveOrUpdateInvestInfo(investInfo);
             })

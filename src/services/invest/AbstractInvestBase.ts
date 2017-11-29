@@ -78,7 +78,7 @@ export abstract class AbstractInvestBase {
     private checkLastPrizeNumberValidation(): Promise<boolean> {
         //上期的开奖号码是否满足投注条件
         let isValid = numberService.isLastPrizeNumberValid();
-        log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, new Date().toLocaleTimeString());
+        log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, moment().format('YYYY-MM-DD HH:mm:ss'));
         log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
         if (!isValid) {
             let errorMsg = Config.globalVariable.last_Period + '期号码:' + Config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + Config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
@@ -98,7 +98,7 @@ export abstract class AbstractInvestBase {
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
             TimeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-            return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，在02:00~10:00之间，不符合投注时间")
+            return Promise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
         }
 
         let currentTime = new Date();
@@ -110,7 +110,7 @@ export abstract class AbstractInvestBase {
         //当天22:00以后自动切换到模拟投注
         if (isRealInvest && currentTime > thirdTime) {
             //AppServices.startMockTask();//结束正式投注，启动模拟投注
-            //return Promise.reject("当前时间：" + new Date().toLocaleDateString() + "，当天22:00以后，自动启动模拟投注");
+            //return Promise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注");
         }
 
         return Promise.resolve(true);
