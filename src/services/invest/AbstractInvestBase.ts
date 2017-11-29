@@ -8,6 +8,7 @@ import {EnumAwardMode, RejectionMsg} from "../../models/EnumModel";
 import {AppServices} from "../AppServices";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import moment  = require('moment');
 
 
 let log4js = require('log4js'),
@@ -236,7 +237,7 @@ export abstract class AbstractInvestBase {
             winMoney: 0,
             status: 0,
             isWin: 0,
-            investTime: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+            investTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
         return investInfo;
     }
