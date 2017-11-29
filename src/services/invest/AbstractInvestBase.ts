@@ -207,14 +207,14 @@ export abstract class AbstractInvestBase {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime(isRealInvest)
             .then(() => {
+                //检查当前的最大盈利金额
+                return this.checkMaxWinMoney(isRealInvest);
+            })
+            .then(() => {
                 //检查开奖号码是否满足投注条件
                 return this.checkLastPrizeNumberValidation();
             })
             .then(() => {
-                //检查当前的最大盈利金额
-                return this.checkMaxWinMoney(isRealInvest);
-            })
-            .then((planResults: Array<PlanResultInfo>) => {
                 //检查开奖计划的结果是否满足投注条件
                 //return this.checkPlanResultHistory();
                 return Promise.resolve(true);
