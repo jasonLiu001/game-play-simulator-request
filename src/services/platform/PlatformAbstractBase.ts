@@ -129,9 +129,9 @@ export interface IPlatformLotteryService {
 
     /**
      *
-     * 执行投注操作
+     * 执行执行 后三 投注操作 目前只支持后三投注
      * @param request
-     * @param token
+     * @param token 没有则传null值
      * @param currentPeriod  投注期号
      * @param touZhuHaoMa  投注号码  逗号分隔  1,2,3,4
      * @param touZhuBeiShu 投注倍数

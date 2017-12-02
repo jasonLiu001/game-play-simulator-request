@@ -118,20 +118,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     private getMultiInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
-        switch (Config.currentSelectedAwardMode) {
-            case EnumAwardMode.yuan:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.yuan)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
-                break;
-            case EnumAwardMode.jiao:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.jiao)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
-                break;
-            case EnumAwardMode.feng:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.feng)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
-                break;
-            case EnumAwardMode.li:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.li)).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
-                break;
-        }
+        let mode: string = this.getInvestMode();
+        tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
         return tokenStr;
     }
 

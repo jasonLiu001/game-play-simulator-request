@@ -35,7 +35,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
     /**
      *
      *
-     * 执行投注操作
+     * 执行后三投注操作
      */
     public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any> {
         let json = {
