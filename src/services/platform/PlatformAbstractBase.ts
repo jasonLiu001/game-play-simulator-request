@@ -123,6 +123,12 @@ export interface IPlatformLoginService {
 export interface IPlatformLotteryService {
     /**
      *
+     * 产生平台投注模式 元，角，分，厘
+     */
+    getInvestMode(): any;
+
+    /**
+     *
      * 执行投注操作
      * @param request
      * @param token

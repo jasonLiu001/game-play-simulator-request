@@ -10,6 +10,30 @@ let log4js = require('log4js'),
 export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatformLotteryService {
     /**
      *
+     * 产生V博平台投注模式 元，角，分，厘
+     */
+    public getInvestMode(): any {
+        let mode = 'FEN';//默认为分
+        log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
+        switch (Config.currentSelectedAwardMode) {
+            case EnumAwardMode.yuan:
+                mode = 'YUAN';
+                break;
+            case EnumAwardMode.jiao:
+                mode = 'JIAO';
+                break;
+            case EnumAwardMode.feng:
+                mode = 'FEN';
+                break;
+            case EnumAwardMode.li:
+                mode = 'LI';
+                break;
+        }
+        return mode;
+    }
+
+    /**
+     *
      *
      * 执行投注操作
      */
@@ -19,9 +43,9 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
             datas: [
                 {
                     betRebatePoint: 0,
-                    content: '123',
-                    mode: 'FEN',
-                    multiple: 1,
+                    content: touZhuHaoMa,
+                    mode: this.getInvestMode(),
+                    multiple: Number(touZhuBeiShu),
                     playKindId: 29,
                     playTypeId: 31,
                     position: ''

@@ -10,6 +10,29 @@ let log4js = require('log4js'),
 export class JiangNanLotteryService extends PlatformAbstractBase implements IPlatformLotteryService {
     /**
      *
+     * 产生平台投注模式 元，角，分，厘
+     */
+    public getInvestMode(): any {
+        let mode = String(EnumAwardMode.feng);//默认为分模式
+        switch (Config.currentSelectedAwardMode) {
+            case EnumAwardMode.yuan:
+                mode = String(EnumAwardMode.yuan);
+                break;
+            case EnumAwardMode.jiao:
+                mode = String(EnumAwardMode.jiao);
+                break;
+            case EnumAwardMode.feng:
+                mode = String(EnumAwardMode.feng);
+                break;
+            case EnumAwardMode.li:
+                mode = String(EnumAwardMode.li);
+                break;
+        }
+        return mode;
+    }
+
+    /**
+     *
      *
      * 获取当前账号余额
      */
@@ -76,20 +99,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     private getInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
-        switch (Config.currentSelectedAwardMode) {
-            case EnumAwardMode.yuan:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.yuan)).replace('{5}', String(zhuShu));
-                break;
-            case EnumAwardMode.jiao:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.jiao)).replace('{5}', String(zhuShu));
-                break;
-            case EnumAwardMode.feng:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.feng)).replace('{5}', String(zhuShu));
-                break;
-            case EnumAwardMode.li:
-                tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', String(EnumAwardMode.li)).replace('{5}', String(zhuShu));
-                break;
-        }
+        let mode: string = this.getInvestMode();
+        tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu));
         return tokenStr;
     }
 
