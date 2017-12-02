@@ -8,6 +8,23 @@ let path = require('path'),
 
 
 export class PlatformAbstractBase {
+    /**
+     *
+     *
+     * 打开登录页
+     */
+    public gotoLoginPage(request: any, loginUrl: string): Promise<any> {
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/login');
+    }
+
+    /**
+     *
+     * 请求成功登录之后的页面
+     */
+    public gotoLoginSuccessPage(request: any, loginSuccessUrl: string): Promise<any> {
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Index');
+    }
+
 
     /**
      *
@@ -83,13 +100,6 @@ export class PlatformAbstractBase {
 export interface IPlatformLoginService {
     /**
      *
-     * 打开登录页
-     * @param request
-     */
-    gotoLoginPage(request: any): Promise<any>;
-
-    /**
-     *
      * 开始模拟登录操作
      * @param request
      * @param capatchaCodeString
@@ -109,13 +119,6 @@ export interface IPlatformLoginService {
  * 平台投注接口类
  */
 export interface IPlatformLotteryService {
-    /**
-     *
-     * 请求成功登录之后的页面
-     * @param request
-     */
-    gotoLoginSuccessPage(request: any): Promise<any>;
-
     /**
      *
      * 执行投注操作

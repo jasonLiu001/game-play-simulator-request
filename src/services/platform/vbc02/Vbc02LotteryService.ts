@@ -10,14 +10,6 @@ let log4js = require('log4js'),
 export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatformLotteryService {
     /**
      *
-     * 请求成功登录之后的页面
-     */
-    public gotoLoginSuccessPage(request: any): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/');
-    }
-
-    /**
-     *
      *
      * 执行投注操作
      */
@@ -66,7 +58,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      * @param touZhuBeiShu 投注倍数
      */
     public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {
-        return this.gotoLoginSuccessPage(request)
+        return this.gotoLoginSuccessPage(request, '/')
             .then((body) => {
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
                 return this.investMock(request, null, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);

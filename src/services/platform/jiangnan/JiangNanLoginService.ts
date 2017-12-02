@@ -1,7 +1,7 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
-import {PlatformAbstractBase} from "../PlatformAbstractBase";
+import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {ErrorService} from "../../ErrorService";
 
@@ -17,17 +17,7 @@ let path = require('path'),
  * 江南娱乐平台
  * 平台登录服务 使用request模拟登陆请求
  */
-export class JiangNanLoginService extends PlatformAbstractBase {
-
-    /**
-     *
-     *
-     * 打开登录页
-     */
-    public gotoLoginPage(request: any): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Login');
-    }
-
+export class JiangNanLoginService extends PlatformAbstractBase implements IPlatformLoginService {
     /**
      *
      *
@@ -51,7 +41,7 @@ export class JiangNanLoginService extends PlatformAbstractBase {
      * 对外的调用接口
      */
     public login(request: any): Promise<any> {
-        return this.gotoLoginPage(request)
+        return this.gotoLoginPage(request, '/login')
             .then((indexContent) => {
                 //请求验证码
                 return this.saveCaptchaCodeImage(request, '/verifyCode?');

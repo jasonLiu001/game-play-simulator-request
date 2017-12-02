@@ -18,16 +18,6 @@ let path = require('path'),
  * V博平台
  */
 export class Vbc02LoginService extends PlatformAbstractBase implements IPlatformLoginService {
-
-    /**
-     *
-     *
-     * 打开登录页
-     */
-    public gotoLoginPage(request: any): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/login');
-    }
-
     /**
      *
      *
@@ -50,7 +40,7 @@ export class Vbc02LoginService extends PlatformAbstractBase implements IPlatform
      * 对外的调用接口
      */
     public login(request: any): Promise<any> {
-        return this.gotoLoginPage(request)
+        return this.gotoLoginPage(request,'/login')
             .then((indexContent) => {
                 //请求验证码
                 return this.saveCaptchaCodeImage(request, '/resources/captcha.jpg?');
