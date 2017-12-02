@@ -8,16 +8,16 @@ import {ErrorService} from "../../ErrorService";
 let path = require('path'),
     fs = require('fs'),
     log4js = require('log4js'),
-    log = log4js.getLogger('JiangNanLoginService'),
+    log = log4js.getLogger('Vbc02LoginService'),
     cheerio = require('cheerio'),
     captchaService = new CaptchaDecoderService();
 
 /**
  *
- * 江南娱乐平台
- * 平台登录服务 使用request模拟登陆请求
+ *
+ * V博平台
  */
-export class JiangNanLoginService extends PlatformAbstractBase {
+export class Vbc02LoginService extends PlatformAbstractBase {
 
     /**
      *
@@ -25,7 +25,7 @@ export class JiangNanLoginService extends PlatformAbstractBase {
      * 打开登录页
      */
     public gotoLoginPage(request: any): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Login');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + '/login');
     }
 
     /**
@@ -37,7 +37,7 @@ export class JiangNanLoginService extends PlatformAbstractBase {
         return new Promise((resolve, reject) => {
             request.get(
                 {
-                    url: CONFIG_CONST.siteUrl + '/verifyCode?' + Math.random()
+                    url: CONFIG_CONST.siteUrl + '/resources/captcha.jpg?' + Math.random()
                 })
                 .on('error', (error) => {
                     log.error(error);
@@ -56,15 +56,12 @@ export class JiangNanLoginService extends PlatformAbstractBase {
      * 开始模拟登录操作
      */
     public loginMock(request: any, capatchaCodeString: string): Promise<any> {
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
-            .then(() => {
-                return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
-                    username: CONFIG_CONST.username,
-                    validate: capatchaCodeString,
-                    password: CONFIG_CONST.password,
-                    _BrowserInfo: 'chrome/53.0.2785.104'
-                });
-            });
+        return this.httpPost(request, CONFIG_CONST.siteUrl + '/login', {
+            format: 'json',
+            username: CONFIG_CONST.username,
+            captcha: capatchaCodeString,
+            password: CONFIG_CONST.password
+        });
     }
 
     /**

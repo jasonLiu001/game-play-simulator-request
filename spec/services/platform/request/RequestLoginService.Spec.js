@@ -1,5 +1,5 @@
-let JiangNanLoginService = require('../../../../dist/services/platform/jiangnan/JiangNanLoginService').JiangNanLoginService;
-let JiangNanLotteryService = require('../../../../dist/services/platform/jiangnan/JiangNanLotteryService').JiangNanLotteryService;
+let Vbc02LoginService = require('../../../../dist/services/platform/vbc02/Vbc02LoginService').Vbc02LoginService;
+let Vbc02LotteryService = require('../../../../dist/services/platform/vbc02/Vbc02LotteryService').Vbc02LotteryService;
 let Config = require('../../../../dist/config/Config').Config;
 let HttpRequestHeaders = require('../../../../dist/models/EnumModel').HttpRequestHeaders;
 let LotteryDbService = require('../../../../dist/services/dbservices/DBSerivice').LotteryDbService;
@@ -15,12 +15,12 @@ let request = Request.defaults(
         headers: HttpRequestHeaders
     });
 
-describe('JiangNanLoginService Test', () => {
-    let requestLoginService, requestPlatformService, lotteryDbService;
+describe('Vbc02LoginService Test', () => {
+    let vbc02LoginService, vbc02LotteryService, lotteryDbService;
 
     beforeEach((done) => {
-        requestLoginService = new JiangNanLoginService();
-        requestPlatformService = new JiangNanLotteryService();
+        vbc02LoginService = new Vbc02LoginService();
+        vbc02LotteryService = new Vbc02LotteryService();
         lotteryDbService = new LotteryDbService();
         //投注号码
         Config.currentInvestNumbers = "123,345";
@@ -30,11 +30,12 @@ describe('JiangNanLoginService Test', () => {
             });
     });
 
-    it('JiangNanLoginService Test', (done) => {
-        requestLoginService.login(request)
+    it('Vbc02LoginService Test', (done) => {
+        vbc02LoginService.login(request)
             .then((body) => {
                 let res = body;
-                return requestPlatformService.invest(request,1000);
+                return res;
+                //return vbc02LotteryService.invest(request, 1000);
             })
             .then((body) => {
                 let res = body;
