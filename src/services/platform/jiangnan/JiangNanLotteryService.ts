@@ -22,7 +22,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * 登录成功后，获取用户信息
      */
     public getLoginUserInfo(request: any): Promise<any> {
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/userInfo/getUserInfo.mvc', {
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/userInfo/getUserInfo.mvc', {
             menuName: ''
         });
     }
@@ -131,7 +131,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      */
     public multiInvestMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): Promise<any> {
         let investStr = this.getMultiInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
     }
@@ -143,7 +143,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      */
     public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any> {
         let investStr = this.getInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu);
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
     }

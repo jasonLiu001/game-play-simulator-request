@@ -26,7 +26,7 @@ export class Vbc02LoginService extends PlatformAbstractBase implements IPlatform
     public loginMock(request: any, capatchaCodeString: string): Promise<any> {
         //输出request调试信息
         //require('request').debug = true;
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/login', {
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login', {
             format: 'json',
             username: CONFIG_CONST.username,
             captcha: capatchaCodeString,

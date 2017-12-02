@@ -24,9 +24,9 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      * 开始模拟登录操作
      */
     public loginMock(request: any, capatchaCodeString: string): Promise<any> {
-        return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
             .then(() => {
-                return this.httpPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
+                return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
                     username: CONFIG_CONST.username,
                     validate: capatchaCodeString,
                     password: CONFIG_CONST.password,

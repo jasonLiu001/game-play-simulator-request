@@ -73,9 +73,11 @@ export class PlatformAbstractBase {
     /**
      *
      *
-     * Http的Post请求
+     *  该方法只支持Content-Type:application/x-www-form-urlencoded 的表单提交，
+     *  新的Content-Type类型，如：Content-Type:application/json 需要单独写实现方法，直接调用request原生方法来实现即可
+     *  参照地址：https://github.com/request/request#requestoptions-callback
      */
-    public httpPost(request: any, url: string, form: any = {}): Promise<any> {
+    public httpFormPost(request: any, url: string, form: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             request.post(
                 {
