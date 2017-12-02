@@ -178,7 +178,6 @@ export class JiangNanLotteryService extends PlatformAbstractBase {
      *
      * 直接投注的入口方法
      * @param request
-     * @param lotteryDbService
      * @param touZhuBeiShu 投注倍数
      */
     public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {

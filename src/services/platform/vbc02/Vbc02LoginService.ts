@@ -1,7 +1,7 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
-import {PlatformAbstractBase} from "../PlatformAbstractBase";
+import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {ErrorService} from "../../ErrorService";
 
@@ -17,7 +17,7 @@ let path = require('path'),
  *
  * V博平台
  */
-export class Vbc02LoginService extends PlatformAbstractBase {
+export class Vbc02LoginService extends PlatformAbstractBase implements IPlatformLoginService {
 
     /**
      *
@@ -26,28 +26,6 @@ export class Vbc02LoginService extends PlatformAbstractBase {
      */
     public gotoLoginPage(request: any): Promise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + '/login');
-    }
-
-    /**
-     *
-     *
-     * 保存验证码图片
-     */
-    public saveCaptchaCodeImage(request: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            request.get(
-                {
-                    url: CONFIG_CONST.siteUrl + '/resources/captcha.jpg?' + Math.random()
-                })
-                .on('error', (error) => {
-                    log.error(error);
-                    reject(error);
-                })
-                .pipe(fs.createWriteStream(Config.captchaImgSavePath)
-                    .on('close', () => {
-                        resolve(true);
-                    }));
-        });
     }
 
     /**
@@ -75,7 +53,7 @@ export class Vbc02LoginService extends PlatformAbstractBase {
         return this.gotoLoginPage(request)
             .then((indexContent) => {
                 //请求验证码
-                return this.saveCaptchaCodeImage(request);
+                return this.saveCaptchaCodeImage(request, '/resources/captcha.jpg?');
             })
             .then(() => {
                 //破解验证码

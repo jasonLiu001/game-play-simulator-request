@@ -1,13 +1,13 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
-import {PlatformAbstractBase} from "../PlatformAbstractBase";
+import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 let log4js = require('log4js'),
     log = log4js.getLogger('Vbc02LotteryService');
 
-export class Vbc02LotteryService extends PlatformAbstractBase {
+export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatformLotteryService {
     /**
      *
      * 请求成功登录之后的页面
@@ -63,7 +63,6 @@ export class Vbc02LotteryService extends PlatformAbstractBase {
      *
      * 直接投注的入口方法
      * @param request
-     * @param lotteryDbService
      * @param touZhuBeiShu 投注倍数
      */
     public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {

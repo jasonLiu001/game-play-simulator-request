@@ -31,28 +31,6 @@ export class JiangNanLoginService extends PlatformAbstractBase {
     /**
      *
      *
-     * 保存验证码图片
-     */
-    public saveCaptchaCodeImage(request: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            request.get(
-                {
-                    url: CONFIG_CONST.siteUrl + '/verifyCode?' + Math.random()
-                })
-                .on('error', (error) => {
-                    log.error(error);
-                    reject(error);
-                })
-                .pipe(fs.createWriteStream(Config.captchaImgSavePath)
-                    .on('close', () => {
-                        resolve(true);
-                    }));
-        });
-    }
-
-    /**
-     *
-     *
      * 开始模拟登录操作
      */
     public loginMock(request: any, capatchaCodeString: string): Promise<any> {
@@ -76,7 +54,7 @@ export class JiangNanLoginService extends PlatformAbstractBase {
         return this.gotoLoginPage(request)
             .then((indexContent) => {
                 //请求验证码
-                return this.saveCaptchaCodeImage(request);
+                return this.saveCaptchaCodeImage(request, '/verifyCode?');
             })
             .then(() => {
                 //破解验证码
