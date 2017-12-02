@@ -56,6 +56,8 @@ export class Vbc02LoginService extends PlatformAbstractBase {
      * 开始模拟登录操作
      */
     public loginMock(request: any, capatchaCodeString: string): Promise<any> {
+        //输出request调试信息
+        //require('request').debug = true;
         return this.httpPost(request, CONFIG_CONST.siteUrl + '/login', {
             format: 'json',
             username: CONFIG_CONST.username,

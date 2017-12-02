@@ -34,8 +34,7 @@ describe('Vbc02LoginService Test', () => {
         vbc02LoginService.login(request)
             .then((body) => {
                 let res = body;
-                return res;
-                //return vbc02LotteryService.invest(request, 1000);
+                return vbc02LotteryService.invest(request, 1000);
             })
             .then((body) => {
                 let res = body;
