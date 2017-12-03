@@ -108,6 +108,9 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
 
 1. 保存多个投注方案
 
+## 投注本金及盈利设置技巧
+当本金全部收回以后，采取两天提现一次的策略，用昨天的盈利继续作为今天的本金来使用，提高投注倍数和最大盈利值
+
 ## 亏损及盈利计算规则
 1. 投入本金计算
     + 每局投注金额*5期，比如每局投注74
