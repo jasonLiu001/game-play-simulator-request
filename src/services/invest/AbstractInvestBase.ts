@@ -230,6 +230,7 @@ export abstract class AbstractInvestBase {
     public initInvestInfo(): InvestInfo {
         let investInfo: InvestInfo = {
             period: Config.globalVariable.current_Peroid,
+            planType: 1,
             investNumbers: Config.currentInvestNumbers,
             currentAccountBalance: Config.globalVariable.currentAccoutBalance,
             investNumberCount: Config.currentInvestNumbers.split(',').length,
@@ -257,6 +258,7 @@ export abstract class AbstractInvestBase {
                     let item = resultList[i];
                     let investInfo: InvestInfo = {
                         period: item.period,
+                        planType: item.planType,
                         investNumbers: item.investNumbers,
                         currentAccountBalance: item.currentAccountBalance,
                         investNumberCount: item.investNumberCount,

@@ -21,7 +21,7 @@ export class LotteryDbService {
     /**
      * 初始化数据库
      * CREATE TABLE IF NOT EXISTS award (period TEXT primary key, openNumber TEXT, openTime TEXT)
-     * CREATE TABLE IF NOT EXISTS invest (period TEXT primary key, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT)
+     * CREATE TABLE IF NOT EXISTS invest (period TEXT, planType INTEGER, investNumbers TEXT, investNumberCount INTEGER, currentAccountBalance decimal(10,3), awardMode INTEGER, winMoney DECIMAL(10,3), status INTEGER, isWin INTEGER, investTime TEXT,PRIMARY KEY(period,planType))
      * CREATE TABLE IF NOT EXISTS plan (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,brokengroup_01_224 TEXT,brokengroup_01_125 TEXT,road012_01 TEXT,number_distance TEXT,sum_values TEXT,three_number_together TEXT,killbaiwei_01 TEXT,killshiwei_01 TEXT,killgewei_01 TEXT,bravenumber_6_01 TEXT,status INTERGER)
      * CREATE TABLE IF NOT EXISTS plan_result (period TEXT primary key, jiou_type INTEGER, killplan_bai_wei INTEGER,killplan_shi_wei INTEGER,killplan_ge_wei INTEGER,missplan_bai_wei INTEGER,missplan_shi_wei INTEGER,missplan_ge_wei INTEGER,brokengroup_01_334 INTEGER,brokengroup_01_224 INTEGER,brokengroup_01_125 INTEGER,road012_01 INTEGER,number_distance INTEGER,sum_values INTEGER,three_number_together INTEGER,killbaiwei_01 INTEGER,killshiwei_01 INTEGER,killgewei_01 INTEGER,bravenumber_6_01 INTEGER,status INTERGER)
      * CREATE TABLE IF NOT EXISTS plan_invest_numbers (period TEXT primary key, jiou_type TEXT, killplan_bai_wei TEXT,killplan_shi_wei TEXT,killplan_ge_wei TEXT,missplan_bai_wei TEXT,missplan_shi_wei TEXT,missplan_ge_wei TEXT,brokengroup_01_334 TEXT,brokengroup_01_224 TEXT,brokengroup_01_125 TEXT,road012_01 TEXT,number_distance TEXT,sum_values TEXT,three_number_together TEXT,killbaiwei_01 TEXT,killshiwei_01 TEXT,killgewei_01 TEXT,bravenumber_6_01 TEXT,status INTERGER)
@@ -32,8 +32,8 @@ export class LotteryDbService {
         let sqlCreateAwardTable = "CREATE TABLE IF NOT EXISTS " + CONST_AWARD_TABLE.tableName + " (" + CONST_AWARD_TABLE.period + " TEXT primary key, " + CONST_AWARD_TABLE.openNumber + " TEXT, " + CONST_AWARD_TABLE.openTime + " TEXT)";
         //投注记录表
         let sqlCreateInvestTable = "CREATE TABLE IF NOT EXISTS " + CONST_INVEST_TABLE.tableName
-            + " (" + CONST_INVEST_TABLE.period + " TEXT primary key, " + CONST_INVEST_TABLE.investNumbers + " TEXT, " + CONST_INVEST_TABLE.investNumberCount + " INTEGER, " + CONST_INVEST_TABLE.currentAccountBalance + " decimal(10,3), " + CONST_INVEST_TABLE.awardMode + " INTEGER, "
-            + CONST_INVEST_TABLE.winMoney + " DECIMAL(10,3), " + CONST_INVEST_TABLE.status + " INTEGER, " + CONST_INVEST_TABLE.isWin + " INTEGER, " + CONST_INVEST_TABLE.investTime + " TEXT)";
+            + " (" + CONST_INVEST_TABLE.period + " TEXT ," + CONST_INVEST_TABLE.planType + " INTEGER," + CONST_INVEST_TABLE.investNumbers + " TEXT, " + CONST_INVEST_TABLE.investNumberCount + " INTEGER, " + CONST_INVEST_TABLE.currentAccountBalance + " decimal(10,3), " + CONST_INVEST_TABLE.awardMode + " INTEGER, "
+            + CONST_INVEST_TABLE.winMoney + " DECIMAL(10,3), " + CONST_INVEST_TABLE.status + " INTEGER, " + CONST_INVEST_TABLE.isWin + " INTEGER, " + CONST_INVEST_TABLE.investTime + " TEXT,PRIMARY KEY(period,planType))";
         //计划杀号记录表
         let sqlCreatePlanTable = "CREATE TABLE IF NOT EXISTS " + CONST_PLAN_TABLE.tableName +
             " (" + CONST_PLAN_TABLE.period + " TEXT primary key, " + CONST_PLAN_TABLE.jiOuType + " TEXT, " + CONST_PLAN_TABLE.killplanBaiWei + " TEXT," + CONST_PLAN_TABLE.killplanShiWei + " TEXT," + CONST_PLAN_TABLE.killplanGeWei + " TEXT, "
@@ -93,24 +93,24 @@ export class LotteryDbService {
     /**
      *
      * 获取投注信息
-     * SELECT rowid AS id, * FROM invest where period=''
-     * @param period
+     * SELECT rowid AS id, * FROM invest where period='' and planType=
      */
-    public static getInvestInfo(period: string): Promise<InvestInfo> {
-        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " where " + CONST_INVEST_TABLE.period + "='" + period + "'";
+    public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
+        let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " where " + CONST_INVEST_TABLE.period + "='" + period + "' and planType=" + planType;
         return LotteryDbService.sqliteService.get(sql);
     }
 
     /**
      *
      * 保存或者更新投注信息
-     * INSERT OR REPLACE INTO invest VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)
+     * INSERT OR REPLACE INTO invest VALUES ($period,$planType,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
-        let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
+        let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$planType,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
         return LotteryDbService.sqliteService.prepare(sql,
             {
                 $period: investInfo.period,
+                $planType:investInfo.planType,
                 $investNumbers: investInfo.investNumbers,
                 $investNumberCount: investInfo.investNumberCount,
                 $currentAccountBalance: investInfo.currentAccountBalance,

@@ -13,6 +13,12 @@ export class InvestInfo {
 
     /**
      *
+     * 方案类型
+     */
+    planType: number;
+
+    /**
+     *
      *
      * 投注号码
      */

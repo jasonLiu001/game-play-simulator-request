@@ -22,6 +22,12 @@ export const CONST_INVEST_TABLE = {
 
     /**
      *
+     * 方案类型
+     */
+    planType: "planType",
+
+    /**
+     *
      *
      * 投注号码
      * @type {string}
