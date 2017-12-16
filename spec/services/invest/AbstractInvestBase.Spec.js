@@ -26,7 +26,7 @@ describe("AbstractInvestBase Test", () => {
 
         abstractInvestBase.updateCurrentAccountBalace(investInfo);
 
-        let result = Config.globalVariable.currentAccoutBalance - 16.34;
+        let result = Config.currentAccountBalance - 16.34;
 
         let fixedNumber = result.toFixed(2);
 
@@ -50,7 +50,7 @@ describe("AbstractInvestBase Test", () => {
      */
     it("checkMaxWinMoney test", () => {
         //设置当前账号余额
-        Config.globalVariable.currentAccoutBalance = 743.2;
+        Config.currentAccountBalance = 743.2;
         abstractInvestBase.checkMaxWinMoney()
             .then((result) => {
                 expect(result).toBe(false);

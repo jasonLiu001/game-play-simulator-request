@@ -66,7 +66,7 @@ export abstract class AbstractInvestBase {
         if (investInfo.isWin == 1) {
             investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + (CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
             //更新全局余额
-            Config.globalVariable.currentAccoutBalance = investInfo.currentAccountBalance;
+            Config.currentAccountBalance = investInfo.currentAccountBalance;
         }
     }
 
@@ -150,12 +150,12 @@ export abstract class AbstractInvestBase {
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
         if (isRealInvest) {//真实投注需要判断盈利和亏损金额设置
-            if (Config.globalVariable.currentAccoutBalance >= CONFIG_CONST.maxAccountBalance) {
+            if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
-                return Promise.reject("当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance);
-            } else if (Config.globalVariable.currentAccoutBalance <= CONFIG_CONST.minAccountBalance) {
+                return Promise.reject("当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance);
+            } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
-                return Promise.reject("当前账号余额：" + Config.globalVariable.currentAccoutBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance);
+                return Promise.reject("当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance);
             }
         }
         return Promise.resolve(true);
@@ -232,7 +232,7 @@ export abstract class AbstractInvestBase {
             period: Config.globalVariable.current_Peroid,
             planType: 1,
             investNumbers: Config.currentInvestNumbers,
-            currentAccountBalance: Config.globalVariable.currentAccoutBalance,
+            currentAccountBalance: Config.currentAccountBalance,
             investNumberCount: Config.currentInvestNumbers.split(',').length,
             awardMode: Config.currentSelectedAwardMode,
             winMoney: 0,
@@ -579,6 +579,6 @@ export abstract class AbstractInvestBase {
         //当前投入
         let investMoney = investNumbersArray.length * 2;
         //投注前保存 投注后的账号余额
-        Config.globalVariable.currentAccoutBalance = Number((Config.globalVariable.currentAccoutBalance - ((investMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
+        Config.currentAccountBalance = Number((Config.currentAccountBalance - ((investMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
     }
 }

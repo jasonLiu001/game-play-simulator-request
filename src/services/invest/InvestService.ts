@@ -47,7 +47,7 @@ export class InvestService extends AbstractInvestBase {
             })
             .then(() => {
                 log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));
-                log.info('投注前账户余额：%s', Config.globalVariable.currentAccoutBalance);
+                log.info('投注前账户余额：%s', Config.currentAccountBalance);
                 //真实投注
                 if (isRealInvest) {
                     log.info('登录成功！');
@@ -61,7 +61,7 @@ export class InvestService extends AbstractInvestBase {
                 //成功投注后 保存投注信息
                 this.updateCurrentAccountBalance();
                 //输出当前账户余额
-                log.info('买号后余额：%s', Config.globalVariable.currentAccoutBalance);
+                log.info('买号后余额：%s', Config.currentAccountBalance);
                 //真实投注成功后，记录已经成功投注的期数
                 Config.currentInvestTotalCount++;
                 let investInfo: InvestInfo = this.initInvestInfo();
