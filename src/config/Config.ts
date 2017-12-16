@@ -16,6 +16,8 @@ export const CONFIG_CONST = {
     autoCheckTimerInterval: 35000,
     //三星奖金
     awardPrice: 1954,
+    //当前选择的投注方案类型
+    currentSelectedInvestPlanType: 1,
     //投注倍数
     touZhuBeiShu: '1',
     //登录用户名
@@ -62,11 +64,11 @@ export class Config {
     public static investPlan: any = {
         one: {
             investNumbers: '',
-            accountBalance: 0
+            accountBalance: CONFIG_CONST.originAccoutBalance
         },
         two: {
             investNumbers: '',
-            accountBalance: 0
+            accountBalance: CONFIG_CONST.originAccoutBalance
         }
     };
 }

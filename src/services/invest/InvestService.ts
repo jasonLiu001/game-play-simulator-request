@@ -58,17 +58,17 @@ export class InvestService extends AbstractInvestBase {
             .then((result) => {
                 if (result) log.info(result);
                 log.info('投注成功，保存投注记录中...');
-                //成功投注后 保存投注信息
-                this.updateCurrentAccountBalance();
+                //成功投注后 更新各个方案的账户余额
+                this.updateAllPlanAccountBalance();
                 //输出当前账户余额
                 log.info('买号后余额：%s', Config.currentAccountBalance);
                 //真实投注成功后，记录已经成功投注的期数
                 Config.currentInvestTotalCount++;
-                let investInfo: InvestInfo = this.initInvestInfo();
+                let allPlanInvestInfo: Array<InvestInfo> = this.initAllPlanInvestInfo();
                 log.info('投注记录已保存');
                 log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                 //保存投注记录
-                return LotteryDbService.saveOrUpdateInvestInfo(investInfo);
+                return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);

@@ -65,8 +65,20 @@ export abstract class AbstractInvestBase {
         //更新当前账号余额
         if (investInfo.isWin == 1) {
             investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + (CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
-            //更新全局余额
-            Config.currentAccountBalance = investInfo.currentAccountBalance;
+            let planType: number = 1;
+            //更新所有方案的余额
+            for (let key in Config.investPlan) {
+                if (planType == investInfo.planType) {
+                    Config.investPlan[key].accountBalance = investInfo.currentAccountBalance;
+                }
+                planType++;
+            }
+
+            //当前选择的方案为主 投注方案时 更新公共全局余额
+            if (CONFIG_CONST.currentSelectedInvestPlanType == investInfo.planType) {
+                //更新全局余额
+                Config.currentAccountBalance = investInfo.currentAccountBalance;
+            }
         }
     }
 
@@ -227,20 +239,27 @@ export abstract class AbstractInvestBase {
      *
      * 初始化投注信息
      */
-    public initInvestInfo(): InvestInfo {
-        let investInfo: InvestInfo = {
-            period: Config.globalVariable.current_Peroid,
-            planType: 1,
-            investNumbers: Config.currentInvestNumbers,
-            currentAccountBalance: Config.currentAccountBalance,
-            investNumberCount: Config.currentInvestNumbers.split(',').length,
-            awardMode: Config.currentSelectedAwardMode,
-            winMoney: 0,
-            status: 0,
-            isWin: 0,
-            investTime: moment().format('YYYY-MM-DD HH:mm:ss')
-        };
-        return investInfo;
+    public initAllPlanInvestInfo(): Array<InvestInfo> {
+        let allPlanInvests: Array<InvestInfo> = [];
+        let planType: number = 1;
+        for (let key in Config.investPlan) {
+            let planInfo = Config.investPlan[key];
+            let investInfo: InvestInfo = {
+                period: Config.globalVariable.current_Peroid,
+                planType: planType,
+                investNumbers: planInfo.investNumbers,
+                currentAccountBalance: planInfo.accountBalance,
+                investNumberCount: planInfo.investNumbers.split(',').length,
+                awardMode: Config.currentSelectedAwardMode,
+                winMoney: 0,
+                status: 0,
+                isWin: 0,
+                investTime: moment().format('YYYY-MM-DD HH:mm:ss')
+            };
+            planType++;
+            allPlanInvests.push(investInfo);
+        }
+        return allPlanInvests;
     }
 
     /**
@@ -571,9 +590,17 @@ export abstract class AbstractInvestBase {
     /**
      *
      *
-     * 正式投注成功后台 更新投注后的账户余额
+     * 正式投注成功 更新各个方案的账户余额
      */
-    public updateCurrentAccountBalance(): void {
+    public updateAllPlanAccountBalance(): void {
+        for (let key in Config.investPlan) {
+            //计划投注号码
+            let planInvestNumbersArray = (Config.investPlan[key].investNumbers == "") ? [] : Config.investPlan[key].investNumbers.split(',');
+            //计划当前投入
+            let planInvestMoney = planInvestNumbersArray.length * 2;
+            Config.investPlan[key].accountBalance = Number((Config.investPlan[key].accountBalance - ((planInvestMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
+        }
+
         //投注号码数组
         let investNumbersArray = (Config.currentInvestNumbers == "") ? [] : Config.currentInvestNumbers.split(',');
         //当前投入

@@ -2,7 +2,7 @@ import {JiOuType} from "../rules/JiOuType";
 import {Road012Type} from "../rules/Road012Type";
 import {KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
 import {BraveNumbers} from "../rules/BraveNumbers";
-import {Config} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
 import Promise = require('bluebird');
 import _ = require('lodash');
@@ -150,13 +150,26 @@ export class NumberService extends AbstractRuleBase {
                 return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {
+                //真实投注的方案 对应投注号码
+                let finallyResult: string = '';
                 //计划杀号条件：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
                 let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
+                Config.investPlan.one.investNumbers = resultArray01.join(',');
                 //【不可取】计划杀号条件：根据计划杀百、十、个，百、十、个的最大遗漏号码，杀奇偶，杀断组125
-                //let resultArray02: Array<string> = _.intersection(promiseAllResult[1].finalResult.killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[0].killNumberResult, promiseAllResult[6].killNumberResult);
+                let resultArray02: Array<string> = _.intersection(promiseAllResult[1].finalResult.killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[0].killNumberResult, promiseAllResult[6].killNumberResult);
+                Config.investPlan.two.investNumbers = resultArray02.join(',');
                 //取反
                 //let leftArray = this.getAvailableNumbers(this.getTotalNumberArray(), resultArray02);
-                return resultArray01.join(',');
+                //根据设置的真实投注方案 返回对应的投注号码
+                let planType: number = 1;
+                for (let key in Config.investPlan) {
+                    if (planType == CONFIG_CONST.currentSelectedInvestPlanType) {
+                        finallyResult = Config.investPlan[key];
+                        break;
+                    }
+                    planType++;
+                }
+                return finallyResult;
             });
     }
 
