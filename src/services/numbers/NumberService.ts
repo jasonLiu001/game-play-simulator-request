@@ -164,7 +164,7 @@ export class NumberService extends AbstractRuleBase {
                 let planType: number = 1;
                 for (let key in Config.investPlan) {
                     if (planType == CONFIG_CONST.currentSelectedInvestPlanType) {
-                        finallyResult = Config.investPlan[key];
+                        finallyResult = Config.investPlan[key].investNumbers;
                         break;
                     }
                     planType++;
