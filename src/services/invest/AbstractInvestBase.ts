@@ -9,6 +9,7 @@ import {AppServices} from "../AppServices";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
+import {AwardInfo} from "../../models/db/AwardInfo";
 
 
 let log4js = require('log4js'),
@@ -212,6 +213,20 @@ export abstract class AbstractInvestBase {
 
     /**
      *
+     * 检查已开奖的期数个数
+     */
+    private checkAwardHistoryCount(historyCount: number): Promise<boolean> {
+        return LotteryDbService.getAwardInfoHistory(historyCount)
+            .then((awardHistoryList: Array<AwardInfo>) => {
+                if (!awardHistoryList || awardHistoryList.length != historyCount) {
+                    return Promise.reject("历史开奖总期数个数，不足" + historyCount + "期，不满足投注条件，已放弃本次投注");
+                }
+                return Promise.resolve(true);
+            });
+    }
+
+    /**
+     *
      *
      * 是否可投注检查
      * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
@@ -226,6 +241,10 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查开奖号码是否满足投注条件
                 return this.checkLastPrizeNumberValidation();
+            })
+            .then(() => {
+                //检查数据库中是否存在的已开奖的期数个数
+                return this.checkAwardHistoryCount(CONFIG_CONST.historyCount);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
