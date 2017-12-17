@@ -13,13 +13,13 @@ export const CONFIG_CONST = {
     //开奖延迟时间，单位为秒
     openTimeDelaySeconds: 60,
     //自动检查定时器 时间间隔 单位为毫秒ms
-    autoCheckTimerInterval: 35000,
+    autoCheckTimerInterval: 40000,
     //三星奖金
     awardPrice: 1954,
     //当前选择的投注方案类型
     currentSelectedInvestPlanType: 1,
     //投注倍数
-    touZhuBeiShu: '1',
+    touZhuBeiShu: '6',
     //登录用户名
     username: '',
     //登录密码
@@ -27,9 +27,9 @@ export const CONFIG_CONST = {
     //元、角、分 模式
     awardMode: EnumAwardMode.jiao,//yuan,jiao,feng,li
     //账户初始余额
-    originAccoutBalance: 500,
+    originAccoutBalance: 2000,
     //账号最大值 盈利金额设置 单位为元  比如：需要盈利120，则设置成620，这里不能设置
-    maxAccountBalance: 620,
+    maxAccountBalance: 2800,
     //账号最小值 亏损金额设置 单位为元  比如：账户当前最低余额
     minAccountBalance: 0
 };
