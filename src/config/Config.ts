@@ -69,6 +69,14 @@ export class Config {
         two: {
             investNumbers: '',
             accountBalance: CONFIG_CONST.originAccoutBalance
+        },
+        three: {
+            investNumbers: '',
+            accountBalance: CONFIG_CONST.originAccoutBalance
+        },
+        four: {
+            investNumbers: '',
+            accountBalance: CONFIG_CONST.originAccoutBalance
         }
     };
 }

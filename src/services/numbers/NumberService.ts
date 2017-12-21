@@ -152,14 +152,18 @@ export class NumberService extends AbstractRuleBase {
             .then(() => {
                 //真实投注的方案 对应投注号码
                 let finallyResult: string = '';
-                //计划杀号条件：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
+                //方案一：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
                 let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
                 Config.investPlan.one.investNumbers = resultArray01.join(',');
-                //【不可取】计划杀号条件：根据计划杀百、十、个，百、十、个的最大遗漏号码，杀奇偶，杀断组125
-                let resultArray02: Array<string> = _.intersection(promiseAllResult[1].finalResult.killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[0].killNumberResult, promiseAllResult[6].killNumberResult);
+                //方案二：杀断组1-2-5 ，杀跨度，杀和值，杀百位，杀个位
+                let resultArray02: Array<string> = _.intersection(promiseAllResult[6].killNumberResult, promiseAllResult[7].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[10].killNumberResult, promiseAllResult[11].killNumberResult);
                 Config.investPlan.two.investNumbers = resultArray02.join(',');
-                //取反
-                //let leftArray = this.getAvailableNumbers(this.getTotalNumberArray(), resultArray02);
+                //方案3: 杀012路，杀断组3-3-4，杀断组2-2-4，杀和值，定胆
+                let resultArray03: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[4].killNumberResult, promiseAllResult[5].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[12].killNumberResult);
+                Config.investPlan.three.investNumbers = resultArray03.join(',');
+                //方案4：杀012路，杀和值，杀三连，杀百位，杀个位
+                let resultArray04: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[9].killNumberResult, promiseAllResult[10].killNumberResult, promiseAllResult[11].killNumberResult);
+                Config.investPlan.four.investNumbers = resultArray04.join(',');
                 //根据设置的真实投注方案 返回对应的投注号码
                 let planType: number = 1;
                 for (let key in Config.investPlan) {

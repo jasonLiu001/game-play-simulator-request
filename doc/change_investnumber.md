@@ -29,3 +29,9 @@
         }
     };
 ```
+3. 在InvestService.ts中添加类似如下代码
+```javascript
+ //....
+ let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
+ Config.investPlan.one.investNumbers = resultArray01.join(',');
+```
