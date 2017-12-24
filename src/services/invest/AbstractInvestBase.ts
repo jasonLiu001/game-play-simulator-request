@@ -69,14 +69,14 @@ export abstract class AbstractInvestBase {
             let planType: number = 1;
             //更新所有方案的余额
             for (let key in Config.investPlan) {
-                if (planType == investInfo.planType) {
+                if (planType == investInfo.planType && Config.investPlan[key].investNumbers != '') {
                     Config.investPlan[key].accountBalance = investInfo.currentAccountBalance;
                 }
                 planType++;
             }
 
             //当前选择的方案为主 投注方案时 更新公共全局余额
-            if (CONFIG_CONST.currentSelectedInvestPlanType == investInfo.planType) {
+            if (CONFIG_CONST.currentSelectedInvestPlanType == investInfo.planType && Config.currentInvestNumbers != '') {
                 //更新全局余额
                 Config.currentAccountBalance = investInfo.currentAccountBalance;
             }
@@ -612,19 +612,21 @@ export abstract class AbstractInvestBase {
      * 正式投注成功 更新各个方案的账户余额
      */
     public updateAllPlanAccountBalance(): void {
+        let planType: number = 1;
+
         for (let key in Config.investPlan) {
             //计划投注号码
             let planInvestNumbersArray = (Config.investPlan[key].investNumbers == "") ? [] : Config.investPlan[key].investNumbers.split(',');
             //计划当前投入
             let planInvestMoney = planInvestNumbersArray.length * 2;
             Config.investPlan[key].accountBalance = Number((Config.investPlan[key].accountBalance - ((planInvestMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
-        }
 
-        //投注号码数组
-        let investNumbersArray = (Config.currentInvestNumbers == "") ? [] : Config.currentInvestNumbers.split(',');
-        //当前投入
-        let investMoney = investNumbersArray.length * 2;
-        //投注前保存 投注后的账号余额
-        Config.currentAccountBalance = Number((Config.currentAccountBalance - ((investMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
+            //更新当前选择的方案余额到全局余额
+            if (CONFIG_CONST.currentSelectedInvestPlanType == planType) {
+                //更新选择方案的余额 到全局余额
+                Config.currentAccountBalance = Config.investPlan[key].accountBalance;
+            }
+            planType++;
+        }
     }
 }
