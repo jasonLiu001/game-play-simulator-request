@@ -82,6 +82,10 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
 1. 杀号：当出现“偶偶奇”形态时，开始投注，杀“奇奇偶”+“偶偶奇”
 2. 杀号：杀“360杀百十个的计划”
 
+#### 方案五【慎重】遇到特殊形态投注
+1. 杀号：当出现“偶偶奇”形态时，开始投注，杀“奇奇偶”+“偶偶奇”+“奇奇奇”+“偶偶偶”
+2. 杀号：杀“360杀百十个的计划”
+
 ##待实现的杀号方案
 
 1. ~~杀012路~~
@@ -104,8 +108,24 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
    + 断组的依据号码产生：倒数第一期十位分别加6,5,1,2,7,3,9,8,4,0后的各自结果取和尾组成10位数
    + 断组号码：取10位数第一位（1断）--10位数后8位的前2位（2断）--10位数的后5位（3断）
 
-## 投注本金及盈利设置技巧
-当本金全部收回以后，采取两天提现一次的策略，用昨天的盈利继续作为今天的本金来使用，提高投注倍数和最大盈利值
+## 暂时移除的规则
+#### 晚上22:00后停止投注
+```javascript
+        //当天22:00以后自动切换到模拟投注
+        if (isRealInvest && currentTime > thirdTime) {
+            //AppServices.startMockTask();//结束正式投注，启动模拟投注
+            //return Promise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注");
+        }
+```
+#### 当奇奇偶或者偶偶奇时移除奇奇奇和偶偶偶的投注
+```javascript
+                case '001'://偶偶奇 杀奇奇偶
+                {
+                    if (JiOuType == '110' || JiOuType == '001') {//这里没有再排除000或者111的情况
+                        continue;
+                    }
+                }
+```
 
 ## 亏损及盈利计算规则
 1. 投入本金计算
