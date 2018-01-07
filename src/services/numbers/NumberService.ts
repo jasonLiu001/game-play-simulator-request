@@ -182,20 +182,29 @@ export class NumberService extends AbstractRuleBase {
      * 检查上期开奖号码是否满足投注条件
      */
     public isLastPrizeNumberValid(): boolean {
-        //开奖号码
-        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+        //region 偶偶奇过滤条件[已废弃]
+        // //开奖号码
+        // let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+        //
+        // //上期开奖号码后三奇偶 倒杀
+        // let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
+        // let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
+        // let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
+        // //上期号码的奇偶类型
+        // let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
+        // if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
+        //     log.info('当前开奖号码【%s】，满足【偶偶奇】', prizeNumber.prizeString);
+        //     return true;
+        // }
+        // log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
+        // return false;
+        //endregion
 
-        //上期开奖号码后三奇偶 倒杀
-        let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
-        let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
-        let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
-        //上期号码的奇偶类型
-        let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
-        if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
-            log.info('当前开奖号码【%s】，满足【偶偶奇】', prizeNumber.prizeString);
-            return true;
-        }
-        log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
-        return false;
+        //region 达到指定期号才执行投注
+        //可以投注的期号
+        let periodNumberArray: Array<string> = ['005', '010', '015', '020', '025', '030', '035', '040', '045', '050', '055', '060', '065', '070', '075', '080', '085', '090', '095', '100', '105', '110', '115', '120'];
+        let currentPeriodNumberPart: string = this.getPeriodPartString(Config.globalVariable.current_Peroid, 1);
+        return periodNumberArray.indexOf(currentPeriodNumberPart) > 0;
+        //endregion
     }
 }

@@ -127,6 +127,9 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
                 }
 ```
 
+## 现有的规则
+#### 在固定的期号才执行投注，每天是固定的投注24期
+
 ## 亏损及盈利计算规则
 1. 投入本金计算
     + 每局投注金额*5期，比如每局投注74

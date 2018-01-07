@@ -56,7 +56,6 @@ export class AbstractRuleBase {
         return number % 2;
     }
 
-
     /**
      *
      * 从指定的号码中排除指定的号码数组并返回排除后的数组
@@ -120,5 +119,20 @@ export class AbstractRuleBase {
         }
 
         return restNumberArray;
+    }
+
+    /**
+     *
+     * 获取期号中指定位置的字符
+     * @param periodString 期号字符串 格式：20170107-031
+     * @param positionIndex 位置索引 0或者1
+     */
+    protected getPeriodPartString(periodString: string, positionIndex: number): string {
+        let periodArray: Array<string> = periodString.split('-');
+        if (periodArray.length != 2) return null;
+
+        if (positionIndex != 0 || positionIndex != 1) return null;
+
+        return periodArray[positionIndex];
     }
 }
