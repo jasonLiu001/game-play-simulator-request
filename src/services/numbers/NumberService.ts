@@ -155,8 +155,8 @@ export class NumberService extends AbstractRuleBase {
                 //方案一：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
                 let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
                 Config.investPlan.one.investNumbers = resultArray01.join(',');
-                //方案二：杀断组1-2-5 ，杀跨度，杀和值，杀百位，杀个位
-                let resultArray02: Array<string> = _.intersection(promiseAllResult[6].killNumberResult, promiseAllResult[7].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[10].baiWei.killNumberResult, promiseAllResult[11].geWei.killNumberResult);
+                //方案二：杀012路  杀遗漏百，十，个 杀和值  杀三连
+                let resultArray02: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[9].killNumberResult);
                 Config.investPlan.two.investNumbers = resultArray02.join(',');
                 //方案3: 杀012路，杀断组3-3-4，杀断组2-2-4，杀和值，定胆
                 let resultArray03: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[4].killNumberResult, promiseAllResult[5].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[12].killNumberResult);
