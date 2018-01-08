@@ -127,7 +127,7 @@ export class AbstractRuleBase {
      * @param periodString 期号字符串 格式：20170107-031
      * @param positionIndex 位置索引 0或者1
      */
-    protected getPeriodPartString(periodString: string, positionIndex: number): string {
+    protected getPeriodPartString(periodString: string, positionIndex: any): string {
         let periodArray: Array<string> = periodString.split('-');
         if (periodArray.length != 2) return null;
 

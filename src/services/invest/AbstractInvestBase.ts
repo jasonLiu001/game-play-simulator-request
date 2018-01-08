@@ -249,6 +249,7 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
                 //return this.checkPlanResultHistory();
+                return Promise.resolve(true);
             });
     }
 
