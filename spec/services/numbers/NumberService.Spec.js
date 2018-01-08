@@ -1,31 +1,14 @@
 let NumberService = require('../../../dist/services/numbers/NumberService').NumberService;
 let Config = require('../../../dist/config/Config').Config;
-let Nightmare = require('nightmare');
 let path = require('path');
 let Promise = require('bluebird');
 
 describe("Class NumberService Test", () => {
-    let numberService, config, nightmare;
+    let numberService;
 
     beforeEach((done) => {
         numberService = new NumberService();
-        config = new Config();
-        nightmare = Nightmare({
-            show: false,
-            width: 800,
-            heigh: 600,
-            alwaysOnTop: false,
-            Promise: require('bluebird'),
-            webSecurity: false,
-            allowRunningInsecureContent: true //允许在https的页面中调用http的资源
-        });
         done();
-    });
-
-    afterAll(() => {
-        nightmare
-            .end()
-            .then();
     });
 
     it("function getTotalNumberArray Test", () => {
@@ -34,7 +17,13 @@ describe("Class NumberService Test", () => {
         expect(totalNumberArray).toBeDefined();
     });
 
-    it("generate invest numbers count Test", (done) => {
+    it("function isLastPrizeNumberValid Test", () => {
+        Config.globalVariable.current_Peroid = "20180210-005";
+        let isLastPrizeNumberValid = numberService.isLastPrizeNumberValid();
+        expect(isLastPrizeNumberValid).toBe(true);
+    });
+
+    xit("generate invest numbers count Test", (done) => {
         Config.globalVariable.last_PrizeNumber = "96789";
         numberService
             .generateInvestNumber()

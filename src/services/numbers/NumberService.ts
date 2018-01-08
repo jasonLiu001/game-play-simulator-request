@@ -204,7 +204,7 @@ export class NumberService extends AbstractRuleBase {
         //可以投注的期号
         let periodNumberArray: Array<string> = ['005', '010', '015', '020', '025', '030', '035', '040', '045', '050', '055', '060', '065', '070', '075', '080', '085', '090', '095', '100', '105', '110', '115', '120'];
         let currentPeriodNumberPart: string = this.getPeriodPartString(Config.globalVariable.current_Peroid, 1);
-        return periodNumberArray.indexOf(currentPeriodNumberPart) > 0;
+        return periodNumberArray.indexOf(currentPeriodNumberPart) > -1;
         //endregion
     }
 }

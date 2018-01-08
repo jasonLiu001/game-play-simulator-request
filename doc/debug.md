@@ -1,3 +1,41 @@
+## 使用nvm管理多个node版本
+
+参考链接[nvm-windows](https://www.sitepoint.com/quick-tip-multiple-versions-node-nvm/)
+
+1. 查看可用的node版本
+
+   ```shell
+   nvm ls available
+   ```
+
+2. 安装特定的node版本
+
+   ```shell
+   nvm install 6.9.3
+   ```
+
+3. 卸载特定版本node
+
+   ```shell
+   nvm uninstall 6.9.3
+   ```
+
+4. 切换node版本
+
+   ```shell
+   nvm use 6.9.3   #使用特定版本
+   nvm use node   #使用最新的node版本
+   ```
+
+5. 查看已经安装的node版本
+
+   ```shell
+   nvm ls  #查看所有本机安装的所以node版本
+   nvm current  #查看当前使用的node版本
+   ```
+
+6. 通过`.nvmrc`文件在项目中指定使用的node版本
+
 ## WebStorm下调试Jasmine测试代码
 
 打开`jasmine`的文件，右键选择`create<filename>`
@@ -8,7 +46,12 @@
 
 ![jasmine_debug02](./img/jasmine_debug_02.png)
 
-
+Node 8.0以后调试的时候可能提示
+```shell
+node: bad option: --expose_debug_as=v8debug
+```
+解决方法：在node参数配置中添加`--inspect`  
+![jamine_debug03](./img/jasmine_debug_03.png)
 
 ## Linux环境的debug输出
 
