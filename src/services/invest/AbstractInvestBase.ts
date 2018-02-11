@@ -89,16 +89,19 @@ export abstract class AbstractInvestBase {
      * 检查是否可以执行真正的投注操作
      */
     private checkLastPrizeNumberValidation(): Promise<boolean> {
-        //上期的开奖号码是否满足投注条件
-        let isValid = numberService.isLastPrizeNumberValid();
         log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, moment().format('YYYY-MM-DD HH:mm:ss'));
         log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
-        if (!isValid) {
-            let errorMsg = Config.globalVariable.last_Period + '期号码:' + Config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + Config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
-            //上期号码不满足条件时，则结束当前Promise调用链并返回
-            return Promise.reject(errorMsg);
-        }
-        return Promise.resolve(true);
+        //上期的开奖号码是否满足投注条件
+        return numberService.isLastPrizeNumberValid()
+            .then((result) => {
+                if (!result) {
+                    let errorMsg = Config.globalVariable.last_Period + '期号码:' + Config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + Config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
+                    //上期号码不满足条件时，则结束当前Promise调用链并返回
+                    return Promise.reject(errorMsg);
+                }
+                return Promise.resolve(result);
+            });
+
     }
 
     /**
@@ -240,7 +243,7 @@ export abstract class AbstractInvestBase {
             })
             .then(() => {
                 //检查开奖号码是否满足投注条件
-                //return this.checkLastPrizeNumberValidation();
+                return this.checkLastPrizeNumberValidation();
             })
             .then(() => {
                 //检查数据库中是否存在的已开奖的期数个数

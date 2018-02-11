@@ -1,6 +1,6 @@
 import {JiOuType} from "../rules/JiOuType";
 import {Road012Type} from "../rules/Road012Type";
-import {KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
+import {KillNumberInfo, KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
 import {BraveNumbers} from "../rules/BraveNumbers";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
@@ -23,6 +23,9 @@ import {NumbersDistance} from "../rules/NumbersDistance";
 import {SumValues} from "../rules/SumValues";
 import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
+import {KillNumberRandom} from "../rules/killnumber/KillNumberRandom";
+import {RejectionMsg} from "../../models/EnumModel";
+import {AwardInfo} from "../../models/db/AwardInfo";
 
 
 let log4js = require('log4js'),
@@ -39,7 +42,9 @@ let log4js = require('log4js'),
     brokenGroup125 = new BrokenGroup125(),
     numbersDistance = new NumbersDistance(),
     sumValues = new SumValues(),
-    threeNumberTogether = new ThreeNumberTogether();
+    threeNumberTogether = new ThreeNumberTogether(),
+    killNumberRandom = new KillNumberRandom();
+
 export class NumberService extends AbstractRuleBase {
     /**
      *
@@ -99,7 +104,8 @@ export class NumberService extends AbstractRuleBase {
                         threeNumberTogether.filterNumbers(),//杀特殊形态：三连
                         killNumberBaiWei.filterNumbers(),//杀百位 这个方法里面有reject方法
                         killNumberGeWei.filterNumbers(),//杀个位 这个里面有reject方法
-                        braveNumber.filterNumbers() //定胆 这个里面有reject方法
+                        braveNumber.filterNumbers(), //定胆 这个里面有reject方法
+                        killNumberRandom.filterNumbers()//前两期有相同号码，杀3个号码，3个定胆号码 这个里面有reject方法
                     ]);
             })
             .then((results) => {
@@ -161,8 +167,8 @@ export class NumberService extends AbstractRuleBase {
                 //方案3: 杀012路，杀断组3-3-4，杀断组2-2-4，杀和值，定胆
                 let resultArray03: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[4].killNumberResult, promiseAllResult[5].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[12].killNumberResult);
                 Config.investPlan.three.investNumbers = resultArray03.join(',');
-                //方案4：杀012路，杀和值，杀三连，杀百位，杀个位
-                let resultArray04: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[9].killNumberResult, promiseAllResult[10].baiWei.killNumberResult, promiseAllResult[11].geWei.killNumberResult);
+                //方案4：只用一个方案
+                let resultArray04: Array<string> = promiseAllResult[13].killNumberResult;
                 Config.investPlan.four.investNumbers = resultArray04.join(',');
                 //根据设置的真实投注方案 返回对应的投注号码
                 let planType: number = 1;
@@ -181,7 +187,7 @@ export class NumberService extends AbstractRuleBase {
      *
      * 检查上期开奖号码是否满足投注条件
      */
-    public isLastPrizeNumberValid(): boolean {
+    public isLastPrizeNumberValid(): Promise<boolean> {
         //region 偶偶奇过滤条件[已废弃]
         // //开奖号码
         // let prizeNumber: OpenNumber = this.getPrizeNumberObj();
@@ -202,9 +208,47 @@ export class NumberService extends AbstractRuleBase {
 
         //region 达到指定期号才执行投注
         //可以投注的期号
-        let periodNumberArray: Array<string> = ['005', '010', '015', '020', '025', '030', '035', '040', '045', '050', '055', '060', '065', '070', '075', '080', '085', '090', '095', '100', '105', '110', '115', '120'];
-        let currentPeriodNumberPart: string = this.getPeriodPartString(Config.globalVariable.current_Peroid, 1);
-        return periodNumberArray.indexOf(currentPeriodNumberPart) > -1;
+        //let periodNumberArray: Array<string> = ['005', '010', '015', '020', '025', '030', '035', '040', '045', '050', '055', '060', '065', '070', '075', '080', '085', '090', '095', '100', '105', '110', '115', '120'];
+        //let currentPeriodNumberPart: string = this.getPeriodPartString(Config.globalVariable.current_Peroid, 1);
+        //return periodNumberArray.indexOf(currentPeriodNumberPart) > -1;
         //endregion
+
+        //region 前两期有相同号码才开始投注
+        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+            .then((awardHistoryList: Array<AwardInfo>) => {
+                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀跨提示：" + RejectionMsg.historyCountIsNotEnough);
+
+
+                //倒数第二期 开奖号码
+                let last_02 = awardHistoryList[1].openNumber;
+                let last_bai = Number(last_02.substr(2, 1));
+                let last_shi = Number(last_02.substr(3, 1));
+                let last_ge = Number(last_02.substr(4, 1));
+
+                //开奖号码
+                let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+                let bai = prizeNumber.bai;
+                let shi = prizeNumber.shi;
+                let ge = prizeNumber.ge;
+                let killNumberInfo: KillNumberInfo = new KillNumberInfo();
+
+                //上上期百位==上期十位
+                if (last_bai == shi) {
+                    //本期杀十位 号码取上期百位
+                    return Promise.resolve(true);
+                } else if (last_bai == ge) {
+                    return Promise.resolve(true);
+                } else if (last_shi == bai) {
+                    return Promise.resolve(true);
+                } else if (last_shi == ge) {
+                    return Promise.resolve(true);
+                } else if (last_ge == bai) {
+                    return Promise.resolve(true);
+                } else if (last_ge == shi) {
+                    return Promise.resolve(true);
+                }
+                return Promise.resolve(false);
+            });
+        //region
     }
 }
