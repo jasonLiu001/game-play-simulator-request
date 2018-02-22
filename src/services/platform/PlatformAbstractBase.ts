@@ -36,7 +36,7 @@ export class PlatformAbstractBase {
         return new Promise((resolve, reject) => {
             request.get(
                 {
-                    url: CONFIG_CONST.siteUrl + '/resources/captcha.jpg?' + Math.random()
+                    url: CONFIG_CONST.siteUrl + captchaCodeUrl + Math.random()
                 })
                 .on('error', (error) => {
                     log.error(error);
@@ -104,9 +104,9 @@ export interface IPlatformLoginService {
      *
      * 开始模拟登录操作
      * @param request
-     * @param capatchaCodeString
+     * @param captchaCodeString
      */
-    loginMock(request: any, capatchaCodeString: string): Promise<any>;
+    loginMock(request: any, captchaCodeString: string): Promise<any>;
 
     /**
      *

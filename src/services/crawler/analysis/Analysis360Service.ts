@@ -150,7 +150,6 @@ export class Analysis360Service implements IAnalysisCrawler {
      *
      * 获取最大遗漏号码
      * 返回需要杀掉号码组成的数组
-     * @param {Number} numberCount 如果有值则取多个号码 ，无值则只取1个号码
      */
     public getMaxMissNumber(maxMissNumberPosition: EnumKillNumberPosition): Promise<any> {
         return new Promise((resolve, reject) => {

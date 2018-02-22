@@ -23,12 +23,12 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      *
      * 开始模拟登录操作
      */
-    public loginMock(request: any, capatchaCodeString: string): Promise<any> {
+    public loginMock(request: any, captchaCodeString: string): Promise<any> {
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?null')
             .then(() => {
                 return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc', {
                     username: CONFIG_CONST.username,
-                    validate: capatchaCodeString,
+                    validate: captchaCodeString,
                     password: CONFIG_CONST.password,
                     _BrowserInfo: 'chrome/53.0.2785.104'
                 });
