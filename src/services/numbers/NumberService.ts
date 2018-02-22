@@ -188,7 +188,7 @@ export class NumberService extends AbstractRuleBase {
      * 检查上期开奖号码是否满足投注条件
      */
     public isLastPrizeNumberValid(): Promise<boolean> {
-        //region 偶偶奇过滤条件[已废弃]
+        ////region 偶偶奇过滤条件[已废弃]
         // //开奖号码
         // let prizeNumber: OpenNumber = this.getPrizeNumberObj();
         //
@@ -204,52 +204,54 @@ export class NumberService extends AbstractRuleBase {
         // }
         // log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
         // return Promise.resolve(false);
-        //endregion
+        ////endregion
 
-        //region 达到指定期号才执行投注
+        ////region 达到指定期号才执行投注[条件2]--已废弃
         //可以投注的期号
         //let periodNumberArray: Array<string> = ['005', '010', '015', '020', '025', '030', '035', '040', '045', '050', '055', '060', '065', '070', '075', '080', '085', '090', '095', '100', '105', '110', '115', '120'];
         //let currentPeriodNumberPart: string = this.getPeriodPartString(Config.globalVariable.current_Peroid, 1);
         //let result = periodNumberArray.indexOf(currentPeriodNumberPart) > -1;
         //return Promise.resolve(result);
-        //endregion
+        //// endregion
 
-        //region 前两期有相同号码才开始投注
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
-            .then((awardHistoryList: Array<AwardInfo>) => {
-                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀跨提示：" + RejectionMsg.historyCountIsNotEnough);
+        // //region 前两期有相同号码才开始投注[条件3]--已废弃
+        // return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        //     .then((awardHistoryList: Array<AwardInfo>) => {
+        //         if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀跨提示：" + RejectionMsg.historyCountIsNotEnough);
+        //
+        //
+        //         //倒数第二期 开奖号码
+        //         let last_02 = awardHistoryList[1].openNumber;
+        //         let last_bai = Number(last_02.substr(2, 1));
+        //         let last_shi = Number(last_02.substr(3, 1));
+        //         let last_ge = Number(last_02.substr(4, 1));
+        //
+        //         //开奖号码
+        //         let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+        //         let bai = prizeNumber.bai;
+        //         let shi = prizeNumber.shi;
+        //         let ge = prizeNumber.ge;
+        //         let killNumberInfo: KillNumberInfo = new KillNumberInfo();
+        //
+        //         //上上期百位==上期十位
+        //         if (last_bai == shi) {
+        //             //本期杀十位 号码取上期百位
+        //             return Promise.resolve(true);
+        //         } else if (last_bai == ge) {
+        //             return Promise.resolve(true);
+        //         } else if (last_shi == bai) {
+        //             return Promise.resolve(true);
+        //         } else if (last_shi == ge) {
+        //             return Promise.resolve(true);
+        //         } else if (last_ge == bai) {
+        //             return Promise.resolve(true);
+        //         } else if (last_ge == shi) {
+        //             return Promise.resolve(true);
+        //         }
+        //         return Promise.resolve(false);
+        //     });
+        // //region
 
-
-                //倒数第二期 开奖号码
-                let last_02 = awardHistoryList[1].openNumber;
-                let last_bai = Number(last_02.substr(2, 1));
-                let last_shi = Number(last_02.substr(3, 1));
-                let last_ge = Number(last_02.substr(4, 1));
-
-                //开奖号码
-                let prizeNumber: OpenNumber = this.getPrizeNumberObj();
-                let bai = prizeNumber.bai;
-                let shi = prizeNumber.shi;
-                let ge = prizeNumber.ge;
-                let killNumberInfo: KillNumberInfo = new KillNumberInfo();
-
-                //上上期百位==上期十位
-                if (last_bai == shi) {
-                    //本期杀十位 号码取上期百位
-                    return Promise.resolve(true);
-                } else if (last_bai == ge) {
-                    return Promise.resolve(true);
-                } else if (last_shi == bai) {
-                    return Promise.resolve(true);
-                } else if (last_shi == ge) {
-                    return Promise.resolve(true);
-                } else if (last_ge == bai) {
-                    return Promise.resolve(true);
-                } else if (last_ge == shi) {
-                    return Promise.resolve(true);
-                }
-                return Promise.resolve(false);
-            });
-        //region
+        return Promise.resolve(true);
     }
 }
