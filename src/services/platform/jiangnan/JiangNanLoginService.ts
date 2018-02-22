@@ -44,15 +44,17 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
         return this.gotoLoginPage(request, '/login')
             .then((indexContent) => {
                 //请求验证码
-                return this.saveCaptchaCodeImage(request, '/verifyCode?');
+                //return this.saveCaptchaCodeImage(request, '/verifyCode?');
             })
             .then(() => {
                 //破解验证码
-                return captchaService.decoder();
+                //return captchaService.decoder();
+                return null;
             })
             .then((parserRes: ResponseData) => {
-                //开始登录
-                return this.loginMock(request, parserRes.pic_str);
+                //开始登录 带验证码
+                //return this.loginMock(request, parserRes.pic_str);
+                return this.loginMock(request, '');
             }).catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
             });
