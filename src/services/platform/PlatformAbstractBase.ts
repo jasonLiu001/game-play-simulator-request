@@ -14,7 +14,7 @@ export class PlatformAbstractBase {
      * 打开登录页
      */
     public gotoLoginPage(request: any, loginUrl: string): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/login');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + loginUrl);
     }
 
     /**
@@ -22,7 +22,7 @@ export class PlatformAbstractBase {
      * 请求成功登录之后的页面
      */
     public gotoLoginSuccessPage(request: any, loginSuccessUrl: string): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + '/Index');
+        return this.httpGet(request, CONFIG_CONST.siteUrl + loginSuccessUrl);
     }
 
 
