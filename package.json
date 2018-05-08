@@ -8,8 +8,9 @@
     "lodash": "^4.17.4",
     "log4js": "^2.0.0",
     "moment": "^2.19.1",
-    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
     "request": "^2.81.0",
+    "sequelize": "^4.37.7",
     "sqlite3": "^3.1.8",
     "typescript": "^2.3.2"
   },
