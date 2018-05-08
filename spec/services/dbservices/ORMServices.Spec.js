@@ -1,10 +1,8 @@
 let ORMService = require('../../../dist/services/dbservices/ORMService').ORMService;
 
 describe("ORMService Test", () => {
-    let ormService;
 
     beforeEach((done) => {
-        ormService = new ORMService();
         done();
     });
 
@@ -12,7 +10,10 @@ describe("ORMService Test", () => {
      *
      * 测试连接
      */
-    it("db connection test", () => {
-        ormService.test();
+    it("db connection test", (done) => {
+        ORMService.test()
+            .catch((e) => {
+                done();
+            });
     });
 });
