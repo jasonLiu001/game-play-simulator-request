@@ -57,4 +57,12 @@ describe("ORMService Test", () => {
                 done();
             });
     });
+
+    it('should get history count records', function (done) {
+        ORMService.getInvestInfoHistory(2)
+            .then((res) => {
+                console.log(res);
+                done();
+            });
+    });
 });

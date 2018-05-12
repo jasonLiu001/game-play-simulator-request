@@ -241,7 +241,6 @@ export class ORMService {
     /**
      *
      * 获取投注信息
-     * SELECT rowid AS id, * FROM invest where period='' and planType=
      */
     public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
         return Invest.findOne({
@@ -272,6 +271,22 @@ export class ORMService {
         }
         return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
             return results;
+        });
+    }
+
+    /**
+     *
+     * 获取特定数量的最新投注记录
+     * @param historyCount
+     * @return {Promise<any>}
+     */
+    public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
+        return Invest.findAll({
+            limit: historyCount,
+            order: [
+                ['period', 'DESC']
+            ],
+            raw: true
         });
     }
 
