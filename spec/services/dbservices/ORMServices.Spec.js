@@ -1,18 +1,40 @@
 let ORMService = require('../../../dist/services/dbservices/ORMService').ORMService;
+let AwardInfo = require('../../../dist/models/db/AwardInfo').AwardInfo;
 
 describe("ORMService Test", () => {
+    let ormService;
 
     beforeEach((done) => {
+        ormService = new ORMService();
         done();
     });
 
-    /**
-     *
-     * 测试连接
-     */
-    it("db connection test", (done) => {
-        ORMService.test()
+    xit('should drop all tables in db', function (done) {
+        ormService.dropAllTables()
+            .then(() => {
+                done();
+            });
+    });
+
+    it('should connect mysql db success', (done) => {
+        ormService.dbConnectionTest()
+            .then(() => {
+                done();
+            });
+
+    });
+
+    it('should create table award', function (done) {
+        let award = new AwardInfo();
+        award.period = String(new Date().getTime());
+        award.openNumber = '';
+        award.openTime = '';
+        ormService.saveOrUpdateAwardInfo(award)
+            .then(() => {
+                done();
+            })
             .catch((e) => {
+                console.error(e);
                 done();
             });
     });
