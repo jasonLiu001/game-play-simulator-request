@@ -177,7 +177,6 @@ const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelD
     freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
 });
 
-
 /**
  *
  * 数据库操作实体类
@@ -217,7 +216,7 @@ export class ORMService {
      * 保存或更新开奖数据
      * @param award
      */
-    public saveOrUpdateAwardInfo(award: AwardInfo) {
+    public saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
         return Award.create(award);
     }
 
@@ -225,7 +224,7 @@ export class ORMService {
      *
      * 保存或者更新投注信息
      */
-    public saveOrUpdateInvestInfo(investInfo: InvestInfo) {
+    public saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
         return Invest.create(investInfo);
     }
 
@@ -234,7 +233,7 @@ export class ORMService {
      *
      * 保存或更新计划记录表
      */
-    public saveOrUpdatePlanInfo(planInfo: PlanInfo) {
+    public saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
         return Plan.create(planInfo);
     }
 
@@ -243,7 +242,7 @@ export class ORMService {
      *
      * 保存或更新计划记录投注结果表
      */
-    public saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo) {
+    public saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
         return PlanResult.create(planResultInfo);
     }
 
@@ -251,7 +250,7 @@ export class ORMService {
      *
      * 保存或更新计划投注号码表
      */
-    public saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo) {
+    public saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
         return PlanInvestNumbers.create(planInvestNumbers);
     }
 }

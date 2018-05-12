@@ -30,7 +30,8 @@ describe("ORMService Test", () => {
         award.openNumber = '';
         award.openTime = '';
         ormService.saveOrUpdateAwardInfo(award)
-            .then(() => {
+            .then((resultAward) => {
+                console.log(resultAward.get());
                 done();
             })
             .catch((e) => {
