@@ -21,39 +21,163 @@ const sequelize = new Sequelize('reward', 'root', '123456', {
 
 /**
  *
+ * 计划相关的表模型定义
+ */
+class PlanBaseModelDefinition {
+    /**
+     *
+     * 根据传递的类型返回新的实体
+     * @param type
+     */
+    public static getModelDefinition(type) {
+        return {
+            period: {//期号
+                type: type,
+                primaryKey: true
+            },
+            jiou_type: {//杀奇偶类型
+                type: type
+            },
+            killplan_bai_wei: {//杀号计划 杀百位
+                type: type
+            },
+            killplan_shi_wei: {//杀号计划 杀十位
+                type: type
+            },
+            killplan_ge_wei: {//杀号计划 杀个位
+                type: type
+            },
+            missplan_bai_wei: {//遗漏计划 杀百位
+                type: type
+            },
+            missplan_shi_wei: {//遗漏计划 杀十位
+                type: type
+            },
+            missplan_ge_wei: {//遗漏计划 杀个位
+                type: type
+            },
+            brokengroup_01_334: {//断组 3-3-4
+                type: type
+            },
+            brokengroup_01_224: {//断组 2-2-4 断组
+                type: type
+            },
+            brokengroup_01_125: {//断组 1-2-5 断组
+                type: type
+            },
+            road012_01: {//杀012路类型
+                type: type
+            },
+            number_distance: {//杀跨度
+                type: type
+            },
+            sum_values: {//杀和值
+                type: type
+            },
+            three_number_together: {//特殊号：三连
+                type: type
+            },
+            killbaiwei_01: {//杀百位
+                type: type
+            },
+            killshiwei_01: {//杀十位
+                type: type
+            },
+            killgewei_01: {//杀个位
+                type: type
+            },
+            bravenumber_6_01: {//6胆
+                type: type
+            },
+            status: {//当前数据是否已经更新
+                type: Sequelize.INTEGER
+            }
+        };
+    }
+}
+
+/**
+ *
  *  开奖信息表
  */
 const Award = sequelize.define('award', {
-    period: {
+    period: {//开奖期号
         type: Sequelize.STRING,
         primaryKey: true
     },
-    openNumber: {
+    openNumber: {//开奖号码
         type: Sequelize.STRING
     },
-    openTime: {
+    openTime: {//开奖时间
         type: Sequelize.STRING
     }
+}, {
+    freezeTableName: true//采用第一个参数作为表名，不会自动修改表名
 });
 /**
  *
  * 投注记录表
  */
-const Invest = sequelize.define('invest', {});
+const Invest = sequelize.define('invest', {
+    period: {//期号
+        type: Sequelize.STRING,
+        primaryKey: true
+    },
+    planType: {//方案类型
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
+    investNumbers: {//投注号码
+        type: Sequelize.STRING
+    },
+    investNumberCount: {//投注号码总注数
+        type: Sequelize.INTEGER
+    },
+    currentAccountBalance: {//当前账户余额
+        type: Sequelize.DECIMAL(10, 3)
+    },
+    awardMode: {//元、角、分、厘 模式
+        type: Sequelize.INTEGER
+    },
+    winMoney: {//盈利金额
+        type: Sequelize.DECIMAL(10, 3)
+    },
+    status: {//是否开奖标识
+        type: Sequelize.INTEGER
+    },
+    isWin: {//是否中奖标识
+        type: Sequelize.INTEGER
+    },
+    investTime: {//投注时间
+        type: Sequelize.DATE
+    }
+}, {
+    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
+    createdAt: false
+});
+//删除默认的id属性
+Invest.removeAttribute("id");
+
 /**
  * 计划投注号码表
  */
-const Plan = sequelize.define('plan', {});
+const Plan = sequelize.define('plan', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING), {
+    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
+});
 /**
  *
  * 计划杀号结果表
  */
-const PlanResult = sequelize.define('plan_result');
+const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getModelDefinition(Sequelize.INTEGER), {
+    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
+});
 /**
  *
  * 计划投注号码表
  */
-const PlanInvestNumbers = sequelize.define('plan_invest_numbers');
+const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING), {
+    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
+});
 
 /**
  *
@@ -70,6 +194,7 @@ export class ORMService {
             .authenticate()
             .then(() => {
                 console.log('Connection has been established successfully.');
+                //创建或者同步数据表
                 return sequelize.sync();
             })
             .catch(err => {
