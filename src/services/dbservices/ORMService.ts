@@ -128,7 +128,7 @@ const Invest = sequelize.define('invest', {
         primaryKey: true
     },
     investNumbers: {//投注号码
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
     },
     investNumberCount: {//投注号码总注数
         type: Sequelize.INTEGER
@@ -155,8 +155,6 @@ const Invest = sequelize.define('invest', {
     freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
     createdAt: false
 });
-//删除默认的id属性
-Invest.removeAttribute("id");
 
 /**
  * 计划投注号码表
@@ -175,9 +173,10 @@ const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getMo
  *
  * 计划投注号码表
  */
-const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING), {
+const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.TEXT), {
     freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
 });
+
 
 /**
  *
@@ -194,7 +193,10 @@ export class ORMService {
             .authenticate()
             .then(() => {
                 console.log('Connection has been established successfully.');
-                //创建或者同步数据表
+                //表存在时，执行修改操作，这个操作谨慎使用，如果修改已经存在的列名，会清空数据
+                // return sequelize.sync({
+                //     alter: true
+                // });
                 return sequelize.sync();
             })
             .catch(err => {
