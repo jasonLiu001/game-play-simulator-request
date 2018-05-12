@@ -16,7 +16,10 @@ const sequelize = new Sequelize('reward', 'root', '123456', {
         acquire: 30000,
         idle: 10000
     },
-    timezone: '+08:00'
+    timezone: '+08:00',
+    define: {
+        timestamps: false // 生成表的时候不带updatedAt, createdAt这两个字段
+    }
 });
 
 /**
@@ -149,11 +152,10 @@ const Invest = sequelize.define('invest', {
         type: Sequelize.INTEGER
     },
     investTime: {//投注时间
-        type: Sequelize.DATE
+        type: Sequelize.STRING
     }
 }, {
-    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
-    createdAt: false
+    freezeTableName: true//采用第一个参数作为表名，不会自动修改表名
 });
 
 /**
@@ -186,7 +188,7 @@ export class ORMService {
      *
      * 测试数据库连接同时创建数据库
      */
-    public dbConnectionTest() {
+    public static dbConnectionTest() {
         //测试数据库连接
         return sequelize
             .authenticate()
@@ -208,15 +210,27 @@ export class ORMService {
      *
      * 删除数据库中所有表
      */
-    public dropAllTables() {
+    public static dropAllTables() {
         return sequelize.drop();
+    }
+
+    /**
+     *
+     * 获取开奖信息
+     */
+    public static getAwardInfo(period: string): Promise<AwardInfo> {
+        return Award.findOne(
+            {
+                where: {period: period},
+                raw: true
+            });
     }
 
     /**
      * 保存或更新开奖数据
      * @param award
      */
-    public saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
+    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
         return Award.create(award);
     }
 
@@ -224,7 +238,7 @@ export class ORMService {
      *
      * 保存或者更新投注信息
      */
-    public saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
+    public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
         return Invest.create(investInfo);
     }
 
@@ -233,7 +247,7 @@ export class ORMService {
      *
      * 保存或更新计划记录表
      */
-    public saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
+    public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
         return Plan.create(planInfo);
     }
 
@@ -242,7 +256,7 @@ export class ORMService {
      *
      * 保存或更新计划记录投注结果表
      */
-    public saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
+    public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
         return PlanResult.create(planResultInfo);
     }
 
@@ -250,7 +264,7 @@ export class ORMService {
      *
      * 保存或更新计划投注号码表
      */
-    public saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
+    public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
         return PlanInvestNumbers.create(planInvestNumbers);
     }
 }
