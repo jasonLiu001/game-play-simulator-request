@@ -32,7 +32,7 @@ class PlanBaseModelDefinition {
     public static getModelDefinition(type) {
         return {
             period: {//期号
-                type: type,
+                type: Sequelize.STRING,
                 primaryKey: true
             },
             jiou_type: {//杀奇偶类型
