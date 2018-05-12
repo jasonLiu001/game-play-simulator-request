@@ -1,3 +1,4 @@
+import Promise = require('bluebird');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
@@ -231,7 +232,22 @@ export class ORMService {
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
-        return Award.create(award);
+        return Award.create(award)
+            .then((model) => {
+                return model.get({plain: true});
+            });
+    }
+
+    /**
+     *
+     * 获取投注信息
+     * SELECT rowid AS id, * FROM invest where period='' and planType=
+     */
+    public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
+        return Invest.findOne({
+            where: {period: period, planType: planType},
+            raw: true
+        });
     }
 
     /**
@@ -239,7 +255,24 @@ export class ORMService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
-        return Invest.create(investInfo);
+        return Invest.create(investInfo)
+            .then((model) => {
+                return model.get({plain: true});
+            });
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in investInfoList) {
+            promiseArray.push(ORMService.saveOrUpdateInvestInfo(investInfoList[index]));
+        }
+        return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
+            return results;
+        });
     }
 
     /**
@@ -248,7 +281,10 @@ export class ORMService {
      * 保存或更新计划记录表
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
-        return Plan.create(planInfo);
+        return Plan.create(planInfo)
+            .then((model) => {
+                return model.get({plain: true});
+            });
     }
 
     /**
@@ -257,7 +293,10 @@ export class ORMService {
      * 保存或更新计划记录投注结果表
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
-        return PlanResult.create(planResultInfo);
+        return PlanResult.create(planResultInfo)
+            .then((model) => {
+                return model.get({plain: true});
+            });
     }
 
     /**
@@ -265,7 +304,10 @@ export class ORMService {
      * 保存或更新计划投注号码表
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        return PlanInvestNumbers.create(planInvestNumbers);
+        return PlanInvestNumbers.create(planInvestNumbers)
+            .then((model) => {
+                return model.get({plain: true});
+            });
     }
 }
 

@@ -1,5 +1,6 @@
 let ORMService = require('../../../dist/services/dbservices/ORMService').ORMService;
 let AwardInfo = require('../../../dist/models/db/AwardInfo').AwardInfo;
+let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 
 describe("ORMService Test", () => {
 
@@ -29,7 +30,7 @@ describe("ORMService Test", () => {
         award.openTime = '';
         ORMService.saveOrUpdateAwardInfo(award)
             .then((resultAward) => {
-                console.log(resultAward.get());
+                console.log(resultAward);
                 done();
             })
             .catch((e) => {
@@ -38,8 +39,19 @@ describe("ORMService Test", () => {
             });
     });
 
-    it('should be a plain object: getAwardInfo', function (done) {
-        ORMService.getAwardInfo('1526138188114')
+    xit('should be a plain object: saveOrUpdateInvestInfoList', function (done) {
+        let investInfoList = [];
+        let investInfo = new InvestInfo();
+        investInfo.period = '22';
+        investInfo.planType = 1;
+        investInfoList.push(investInfo);
+
+        let investInfo1 = new InvestInfo();
+        investInfo1.period = '23';
+        investInfo1.planType = 2;
+        investInfoList.push(investInfo1);
+
+        ORMService.saveOrUpdateInvestInfoList(investInfoList)
             .then((award) => {
                 console.log(award);
                 done();
