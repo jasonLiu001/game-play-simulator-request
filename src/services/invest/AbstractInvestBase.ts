@@ -65,7 +65,7 @@ export abstract class AbstractInvestBase {
     private updateCurrentAccountBalace(investInfo: InvestInfo) {
         //更新当前账号余额
         if (investInfo.isWin == 1) {
-            investInfo.currentAccountBalance = Number((investInfo.currentAccountBalance + (CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
+            investInfo.currentAccountBalance = Number((Number(investInfo.currentAccountBalance) + Number(CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
             let planType: number = 1;
             //更新所有方案的余额
             for (let key in Config.investPlan) {
@@ -625,7 +625,7 @@ export abstract class AbstractInvestBase {
             let planInvestNumbersArray = (Config.investPlan[key].investNumbers == "") ? [] : Config.investPlan[key].investNumbers.split(',');
             //计划当前投入
             let planInvestMoney = planInvestNumbersArray.length * 2;
-            Config.investPlan[key].accountBalance = Number((Config.investPlan[key].accountBalance - ((planInvestMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
+            Config.investPlan[key].accountBalance = Number(Number((Config.investPlan[key].accountBalance) - (Number(planInvestMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
 
             //更新当前选择的方案余额到全局余额
             if (CONFIG_CONST.currentSelectedInvestPlanType == planType) {

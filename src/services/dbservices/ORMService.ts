@@ -147,13 +147,13 @@ const Invest = sequelize.define('invest', {
         type: Sequelize.INTEGER
     },
     currentAccountBalance: {//当前账户余额
-        type: Sequelize.DECIMAL(10, 3)
+        type: Sequelize.DECIMAL(10, 2)
     },
     awardMode: {//元、角、分、厘 模式
         type: Sequelize.INTEGER
     },
     winMoney: {//盈利金额
-        type: Sequelize.DECIMAL(10, 3)
+        type: Sequelize.DECIMAL(10, 2)
     },
     status: {//是否开奖标识
         type: Sequelize.INTEGER
