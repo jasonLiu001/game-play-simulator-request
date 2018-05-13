@@ -1,4 +1,5 @@
 import Promise = require('bluebird');
+import {Config} from "../../config/Config";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
@@ -8,7 +9,6 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
-import {LotteryDbService} from "./DBSerivice";
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reward', 'root', '123456', {
