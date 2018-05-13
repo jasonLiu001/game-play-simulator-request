@@ -6,6 +6,9 @@ import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
+import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
+import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
+import {LotteryDbService} from "./DBSerivice";
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reward', 'root', '123456', {
@@ -295,6 +298,7 @@ export class ORMService {
     /**
      *
      * 根据状态获取投注信息
+     * SELECT i.*, a.openNumber FROM invest AS i INNER JOIN award AS a ON i.period = a.period WHERE i.status =1  order by a.period asc
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
@@ -321,6 +325,35 @@ export class ORMService {
 
     /**
      *
+     * 获取特定数量的最新开奖数据
+     * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
+     * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
+     */
+    public static getAwardInfoHistory(historyCount: number) {
+        return Award.findAll({
+            limit: historyCount,
+            order: [
+                ['period', 'DESC']
+            ],
+            raw: true
+        });
+    }
+
+    /**
+     *
+     * 获取杀号计划实体
+     * SELECT rowid AS id, * FROM plan where period=''
+     * @param period
+     */
+    public static getPlanInfo(period: string): Promise<PlanInfo> {
+        return Plan.findOne({
+            where: {period: period},
+            raw: true
+        });
+    }
+
+    /**
+     *
      *
      * 保存或更新计划记录表
      */
@@ -329,6 +362,62 @@ export class ORMService {
             .then((model) => {
                 return model.get({plain: true});
             });
+    }
+
+    /**
+     *
+     * 获取杀号计划对错结果
+     * SELECT rowid AS id, * FROM plan_result where period=''
+     * @param period
+     */
+    public static getPlanResultInfo(period: string): Promise<PlanResultInfo> {
+        return PlanResult.findOne({
+            where: {period: period},
+            raw: true
+        });
+    }
+
+    /**
+     *
+     * 根据状态获取投注计划结果
+     * SELECT r.*, a.openNumber FROM plan_result AS r INNER JOIN award AS a ON r.period = a.period WHERE r.status =1  order by a.period asc
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getPlanResultInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_RESULT_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_RESULT_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_RESULT_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+    }
+
+    /**
+     *
+     * 获取特定数量的最新投注计划结果
+     * SELECT rowid AS id, * FROM plan_result where status=1 ORDER BY period DESC limit 4
+     * @param historyCount
+     * @return {Promise<any>}
+     */
+    public static getPlanResultInfoHistory(historyCount: number): Promise<Array<any>> {
+        return PlanResult.findOne({
+            limit: historyCount,
+            where: {status: 1},
+            order: [
+                ['period', 'DESC']
+            ],
+            raw: true
+        });
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdatePlanResultInfoList(planResultInfoList: Array<PlanResultInfo>): Promise<Array<PlanResultInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in planResultInfoList) {
+            promiseArray.push(ORMService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
+        }
+        return Promise.all(promiseArray).then((results: Array<PlanResultInfo>) => {
+            return results;
+        });
     }
 
     /**
@@ -345,6 +434,20 @@ export class ORMService {
 
     /**
      *
+     * 获取杀号计划产生投注号码号码
+     * SELECT rowid AS id, * FROM plan_result where period=''
+     * @param period
+     */
+    public static getPlanInvestNumberesInfo(period: string): Promise<PlanInvestNumbersInfo> {
+        return PlanInvestNumbers.findOne({
+            where: {period: period},
+            raw: true
+        });
+    }
+
+
+    /**
+     *
      * 保存或更新计划投注号码表
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
@@ -352,6 +455,31 @@ export class ORMService {
             .then((model) => {
                 return model.get({plain: true});
             });
+    }
+
+    /**
+     *
+     * 根据状态获取投注号码
+     * SELECT r.*, a.openNumber FROM plan_invest_numbers AS r INNER JOIN award AS a ON r.period = a.period WHERE r.status =1  order by a.period asc
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getPlanInvestNumbersInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in planInvestNumbersInfo) {
+            promiseArray.push(ORMService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
+        }
+        return Promise.all(promiseArray).then((results: Array<PlanInvestNumbersInfo>) => {
+            return results;
+        });
     }
 }
 

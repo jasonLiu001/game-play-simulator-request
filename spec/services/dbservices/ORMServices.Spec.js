@@ -1,6 +1,7 @@
 let ORMService = require('../../../dist/services/dbservices/ORMService').ORMService;
 let AwardInfo = require('../../../dist/models/db/AwardInfo').AwardInfo;
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
+let PlanResultInfo = require('../../../dist/models/db/PlanResultInfo').PlanResultInfo;
 
 describe("ORMService Test", () => {
 
@@ -40,26 +41,26 @@ describe("ORMService Test", () => {
     });
 
     xit('should be a plain object: saveOrUpdateInvestInfoList', function (done) {
-        let investInfoList = [];
-        let investInfo = new InvestInfo();
-        investInfo.period = '22';
-        investInfo.planType = 1;
-        investInfoList.push(investInfo);
+        let planResultInfoList = [];
+        let planResultInfo = new PlanResultInfo();
+        planResultInfo.period = '22';
+        planResultInfo.status = 1;
+        planResultInfoList.push(planResultInfo);
 
-        let investInfo1 = new InvestInfo();
-        investInfo1.period = '23';
-        investInfo1.planType = 2;
-        investInfoList.push(investInfo1);
+        let planResultInfo1 = new PlanResultInfo();
+        planResultInfo1.period = '23';
+        planResultInfo1.status = 1;
+        planResultInfoList.push(planResultInfo1);
 
-        ORMService.saveOrUpdateInvestInfoList(investInfoList)
-            .then((award) => {
-                console.log(award);
+        ORMService.saveOrUpdatePlanResultInfoList(planResultInfoList)
+            .then((res) => {
+                console.log(res);
                 done();
             });
     });
 
-    xit('should get history count records', function (done) {
-        ORMService.getInvestInfoListByStatus(1)
+    it('should get history count records', function (done) {
+        ORMService.getPlanInvestNumbersInfoListByStatus(1)
             .then((res) => {
                 console.log(res);
                 done();
