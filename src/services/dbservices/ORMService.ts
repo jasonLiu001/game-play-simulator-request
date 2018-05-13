@@ -243,6 +243,9 @@ export class LotteryDbService {
                     return Award.update(award,
                         {
                             where: {period: award.period}
+                        })
+                        .then(() => {
+                            return award;
                         });
                 } else {
                     return Award.create(award)
@@ -285,6 +288,9 @@ export class LotteryDbService {
                                 period: investInfo.period,
                                 planType: investInfo.planType
                             }
+                        })
+                        .then(() => {
+                            return investInfo;
                         });
                 } else {
                     return Invest.create(investInfo)
@@ -398,6 +404,9 @@ export class LotteryDbService {
                     return Plan.update(planInfo,
                         {
                             where: {period: planInfo.period}
+                        })
+                        .then(() => {
+                            return planInfo;
                         });
                 } else {
                     return Plan.create(planInfo)
@@ -480,6 +489,9 @@ export class LotteryDbService {
                     return PlanResult.update(planResultInfo,
                         {
                             where: {period: planResultInfo.period}
+                        })
+                        .then(() => {
+                            return planResultInfo;
                         });
                 } else {
                     return PlanResult.create(planResultInfo)
@@ -519,6 +531,9 @@ export class LotteryDbService {
                     return PlanInvestNumbers.update(planInvestNumbers,
                         {
                             where: {period: planInvestNumbers.period}
+                        })
+                        .then(() => {
+                            return planInvestNumbers;
                         });
                 } else {
                     return PlanInvestNumbers.create(planInvestNumbers)

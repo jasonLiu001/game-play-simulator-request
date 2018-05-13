@@ -294,7 +294,7 @@ export abstract class AbstractInvestBase {
             .then((resultList: Array<any>) => {
                 if (!resultList) Promise.resolve(true);
                 let investInfoList: Array<InvestInfo> = [];
-                log.info('查询到未开奖数据%s条', resultList.length);
+                log.info('查询到invest表中未开奖数据%s条', resultList.length);
                 for (let i = 0; i < resultList.length; i++) {
                     let item = resultList[i];
                     let investInfo: InvestInfo = {
@@ -324,6 +324,9 @@ export abstract class AbstractInvestBase {
                 return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
             })
             .then((list: Array<any>) => {
+                if (!list) Promise.resolve([]);
+                log.info("查询到plan_invest_numbers表中未开奖数据%条", list.length);
+
                 //各个计划产生号码结果
                 let planInvestNumbersInfoList: Array<PlanInvestNumbersInfo> = [];
                 //各个计划开奖结果
