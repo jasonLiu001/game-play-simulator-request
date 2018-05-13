@@ -9,7 +9,7 @@ import _ = require('lodash');
 import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
-import {LotteryDbService} from "../dbservices/DBSerivice";
+import {LotteryDbService} from "../dbservices/ORMService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {TimeService} from "../time/TimeService";
 import {PlanTableBase} from "../../models/db/PlanTableBase";

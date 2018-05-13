@@ -3,7 +3,7 @@ import Promise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {Award360Service} from "../crawler/award/Award360Service";
-import {LotteryDbService} from "../dbservices/DBSerivice";
+import {LotteryDbService} from "../dbservices/ORMService";
 import {RejectionMsg} from "../../models/EnumModel";
 import {AwardCaiBaXianService} from "../crawler/award/AwardCaiBaXianService";
 

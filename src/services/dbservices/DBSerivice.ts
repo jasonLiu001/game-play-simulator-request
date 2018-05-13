@@ -15,7 +15,7 @@ import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 
 let path = require('path');
 
-export class LotteryDbService {
+export class SqliteLotteryDbService {
     public static sqliteService: SqliteService = new SqliteService(Config.dbPath);
 
     /**
@@ -51,11 +51,11 @@ export class LotteryDbService {
             + " TEXT, " + CONST_PLAN_INVEST_NUMBERS_TABLE.numberDistance + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.sumValues + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.threeNumberTogether + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.killBaiWei_01 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.killShiWei_01 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.killGeWei_01 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.braveNumber_6_01 + " TEXT," + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " INTERGER)";
         return Promise.all(
             [
-                LotteryDbService.sqliteService.run(sqlCreateAwardTable),
-                LotteryDbService.sqliteService.run(sqlCreateInvestTable),
-                LotteryDbService.sqliteService.run(sqlCreatePlanTable),
-                LotteryDbService.sqliteService.run(sqlCreatePlanResultTable),
-                LotteryDbService.sqliteService.run(sqlCreatePlanInvestNumbersTable)
+                SqliteLotteryDbService.sqliteService.run(sqlCreateAwardTable),
+                SqliteLotteryDbService.sqliteService.run(sqlCreateInvestTable),
+                SqliteLotteryDbService.sqliteService.run(sqlCreatePlanTable),
+                SqliteLotteryDbService.sqliteService.run(sqlCreatePlanResultTable),
+                SqliteLotteryDbService.sqliteService.run(sqlCreatePlanInvestNumbersTable)
             ]);
     }
 
@@ -68,7 +68,7 @@ export class LotteryDbService {
      */
     public static getAwardInfo(period: string): Promise<AwardInfo> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_AWARD_TABLE.tableName + " where " + CONST_AWARD_TABLE.period + "='" + period + "'";
-        return LotteryDbService.sqliteService.get(sql);
+        return SqliteLotteryDbService.sqliteService.get(sql);
     }
 
 
@@ -79,7 +79,7 @@ export class LotteryDbService {
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_AWARD_TABLE.tableName + " VALUES ($period,$openNumber,$openTime)";
-        return LotteryDbService.sqliteService.prepare(sql,
+        return SqliteLotteryDbService.sqliteService.prepare(sql,
             {
                 $period: award.period,
                 $openNumber: award.openNumber,
@@ -97,7 +97,7 @@ export class LotteryDbService {
      */
     public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " where " + CONST_INVEST_TABLE.period + "='" + period + "' and planType=" + planType;
-        return LotteryDbService.sqliteService.get(sql);
+        return SqliteLotteryDbService.sqliteService.get(sql);
     }
 
     /**
@@ -107,7 +107,7 @@ export class LotteryDbService {
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_INVEST_TABLE.tableName + " VALUES ($period,$planType,$investNumbers,$investNumberCount,$currentAccountBalance,$awardMode,$winMoney,$status,$isWin,$investTime)";
-        return LotteryDbService.sqliteService.prepare(sql,
+        return SqliteLotteryDbService.sqliteService.prepare(sql,
             {
                 $period: investInfo.period,
                 $planType:investInfo.planType,
@@ -132,7 +132,7 @@ export class LotteryDbService {
     public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in investInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
+            promiseArray.push(SqliteLotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
         }
         return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
             return results;
@@ -148,7 +148,7 @@ export class LotteryDbService {
      */
     public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_INVEST_TABLE.tableName + " ORDER BY period DESC limit " + historyCount;
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -157,7 +157,7 @@ export class LotteryDbService {
      * @return {Promise<any>}
      */
     public static closeDb(): Promise<any> {
-        return LotteryDbService.sqliteService.closeDb();
+        return SqliteLotteryDbService.sqliteService.closeDb();
     }
 
     /**
@@ -168,7 +168,7 @@ export class LotteryDbService {
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT i.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_INVEST_TABLE.tableName + " AS i INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON i." + CONST_INVEST_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE i." + CONST_INVEST_TABLE.status + " = " + status + " order by a." + CONST_AWARD_TABLE.period + " asc";
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -179,7 +179,7 @@ export class LotteryDbService {
      */
     public static getAwardInfoHistory(historyCount: number) {
         let sql = "SELECT rowid AS id, * FROM " + CONST_AWARD_TABLE.tableName + " ORDER BY " + CONST_AWARD_TABLE.period + " DESC LIMIT " + historyCount;
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -190,7 +190,7 @@ export class LotteryDbService {
      */
     public static getPlanInfo(period: string): Promise<PlanInfo> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_TABLE.tableName + " where period='" + period + "'";
-        return LotteryDbService.sqliteService.get(sql);
+        return SqliteLotteryDbService.sqliteService.get(sql);
     }
 
     /**
@@ -201,7 +201,7 @@ export class LotteryDbService {
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$killbaiwei_01,$killshiwei_01,$killgewei_01,$bravenumber_6_01,$status)";
-        return LotteryDbService.sqliteService.prepare(sql,
+        return SqliteLotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInfo.period,
                 $jiou_type: planInfo.jiou_type,
@@ -237,7 +237,7 @@ export class LotteryDbService {
      */
     public static getPlanResultInfo(period: string): Promise<PlanResultInfo> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_RESULT_TABLE.tableName + " where period='" + period + "'";
-        return LotteryDbService.sqliteService.get(sql);
+        return SqliteLotteryDbService.sqliteService.get(sql);
     }
 
     /**
@@ -248,7 +248,7 @@ export class LotteryDbService {
      */
     public static getPlanResultInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_RESULT_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_RESULT_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_RESULT_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -260,7 +260,7 @@ export class LotteryDbService {
      */
     public static getPlanResultInfoHistory(historyCount: number): Promise<Array<any>> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_RESULT_TABLE.tableName + " where status=1 ORDER BY period DESC limit " + historyCount;
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -270,7 +270,7 @@ export class LotteryDbService {
     public static saveOrUpdatePlanResultInfoList(planResultInfoList: Array<PlanResultInfo>): Promise<Array<PlanResultInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in planResultInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
+            promiseArray.push(SqliteLotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
         }
         return Promise.all(promiseArray).then((results: Array<PlanResultInfo>) => {
             return results;
@@ -285,7 +285,7 @@ export class LotteryDbService {
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_RESULT_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$killbaiwei_01,$killshiwei_01,$killgewei_01,$bravenumber_6_01,$status)";
-        return LotteryDbService.sqliteService.prepare(sql,
+        return SqliteLotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planResultInfo.period,
                 $jiou_type: planResultInfo.jiou_type,
@@ -321,7 +321,7 @@ export class LotteryDbService {
      */
     public static getPlanInvestNumberesInfo(period: string): Promise<PlanInvestNumbersInfo> {
         let sql = "SELECT rowid AS id, * FROM " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " where period='" + period + "'";
-        return LotteryDbService.sqliteService.get(sql);
+        return SqliteLotteryDbService.sqliteService.get(sql);
     }
 
     /**
@@ -331,7 +331,7 @@ export class LotteryDbService {
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
         let sql = "INSERT OR REPLACE INTO " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " VALUES ($period,$jiou_type,$killplan_bai_wei,$killplan_shi_wei,$killplan_ge_wei,$missplan_bai_wei,$missplan_shi_wei,$missplan_ge_wei,$brokengroup_01_334,$brokengroup_01_224,$brokengroup_01_125,$road012_01,$number_distance,$sum_values,$three_number_together,$killbaiwei_01,$killshiwei_01,$killgewei_01,$bravenumber_6_01,$status)";
-        return LotteryDbService.sqliteService.prepare(sql,
+        return SqliteLotteryDbService.sqliteService.prepare(sql,
             {
                 $period: planInvestNumbers.period,
                 $jiou_type: planInvestNumbers.jiou_type,
@@ -367,7 +367,7 @@ export class LotteryDbService {
      */
     public static getPlanInvestNumbersInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT r.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_PLAN_INVEST_NUMBERS_TABLE.tableName + " AS r INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON r." + CONST_PLAN_INVEST_NUMBERS_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE r." + CONST_PLAN_INVEST_NUMBERS_TABLE.status + " =" + status + "  order by a." + CONST_AWARD_TABLE.period + " asc";
-        return LotteryDbService.sqliteService.all(sql);
+        return SqliteLotteryDbService.sqliteService.all(sql);
     }
 
     /**
@@ -377,7 +377,7 @@ export class LotteryDbService {
     public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in planInvestNumbersInfo) {
-            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
+            promiseArray.push(SqliteLotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
         }
         return Promise.all(promiseArray).then((results: Array<PlanInvestNumbersInfo>) => {
             return results;

@@ -17,7 +17,7 @@ describe("ORMService Test", () => {
     });
 
     xit('should connect mysql db success', (done) => {
-        ORMService.dbConnectionTest()
+        ORMService.createLotteryTable()
             .then(() => {
                 done();
             });

@@ -189,12 +189,12 @@ const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelD
  *
  * 数据库操作实体类
  */
-export class ORMService {
+export class LotteryDbService {
     /**
      *
      * 测试数据库连接同时创建数据库
      */
-    public static dbConnectionTest() {
+    public static createLotteryTable() {
         //测试数据库连接
         return sequelize
             .authenticate()
@@ -272,7 +272,7 @@ export class ORMService {
     public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in investInfoList) {
-            promiseArray.push(ORMService.saveOrUpdateInvestInfo(investInfoList[index]));
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
         }
         return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
             return results;
@@ -413,7 +413,7 @@ export class ORMService {
     public static saveOrUpdatePlanResultInfoList(planResultInfoList: Array<PlanResultInfo>): Promise<Array<PlanResultInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in planResultInfoList) {
-            promiseArray.push(ORMService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
         }
         return Promise.all(promiseArray).then((results: Array<PlanResultInfo>) => {
             return results;
@@ -475,7 +475,7 @@ export class ORMService {
     public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let index in planInvestNumbersInfo) {
-            promiseArray.push(ORMService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
         }
         return Promise.all(promiseArray).then((results: Array<PlanInvestNumbersInfo>) => {
             return results;

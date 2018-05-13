@@ -1,4 +1,4 @@
-import {LotteryDbService} from "../dbservices/DBSerivice";
+import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');

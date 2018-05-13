@@ -3,7 +3,7 @@ import {CONFIG_CONST} from "../../../config/Config";
 import {AbstractRuleBase} from "../AbstractRuleBase";
 import Promise = require('bluebird');
 import _ = require('lodash');
-import {LotteryDbService} from "../../dbservices/DBSerivice";
+import {LotteryDbService} from "../../dbservices/ORMService";
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {RejectionMsg} from "../../../models/EnumModel";
 import {FixedPositionKillNumberResult} from "../../../models/RuleResult";

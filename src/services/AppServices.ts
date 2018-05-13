@@ -3,7 +3,7 @@ import {InvestService} from "./invest/InvestService";
 import {ErrorService} from "./ErrorService";
 import {CONFIG_CONST, Config} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
-import {LotteryDbService} from "./dbservices/DBSerivice";
+import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
 let Request = require('request'), path = require('path');
 

@@ -4,7 +4,7 @@ import _ = require('lodash');
 import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
 import {OpenNumber} from "../../models/OpenNumber";
-import {LotteryDbService} from "../dbservices/DBSerivice";
+import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {RejectionMsg} from "../../models/EnumModel";

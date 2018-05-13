@@ -7,7 +7,7 @@ import {KillNumberInfo} from "./KillNumbersFollowPlay";
 import {CommonKillNumberResult} from "../../../models/RuleResult";
 import {OpenNumber} from "../../../models/OpenNumber";
 import {CONFIG_CONST} from "../../../config/Config";
-import {LotteryDbService} from "../../dbservices/DBSerivice";
+import {LotteryDbService} from "../../dbservices/ORMService";
 import {AwardInfo} from "../../../models/db/AwardInfo";
 
 let log4js = require('log4js'),

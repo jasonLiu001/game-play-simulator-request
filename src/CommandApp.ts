@@ -1,5 +1,5 @@
 import {Config} from './config/Config';
-import {LotteryDbService} from "./services/dbservices/DBSerivice";
+import {LotteryDbService} from "./services/dbservices/ORMService";
 import Promise = require('bluebird');
 import {ErrorService} from "./services/ErrorService";
 import {JiangNanLoginService} from "./services/platform/jiangnan/JiangNanLoginService";
