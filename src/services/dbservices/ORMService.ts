@@ -4,6 +4,8 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
+import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
+import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reward', 'root', '123456', {
@@ -288,6 +290,33 @@ export class ORMService {
             ],
             raw: true
         });
+    }
+
+    /**
+     *
+     * 根据状态获取投注信息
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT i.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_INVEST_TABLE.tableName + " AS i INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON i." + CONST_INVEST_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE i." + CONST_INVEST_TABLE.status + " = " + status + " order by a." + CONST_AWARD_TABLE.period + " asc";
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+
+        ////这里的表关联暂时无法使用
+        // return Invest.findAll({
+        //     where: {
+        //         status: status
+        //     },
+        //     order: [
+        //         ['period', 'ASC']
+        //     ],
+        //     include: [{
+        //         model: Award,
+        //         required: true,
+        //         attributes: ['openNumber', 'openTime'],
+        //         where: {period: Sequelize.col('award.period')}
+        //     }],
+        //     raw: true
+        // });
     }
 
     /**
