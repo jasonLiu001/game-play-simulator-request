@@ -66,7 +66,7 @@ export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNu
                 log.info('排除012类型：%s,%s', cur012Type_1, cur012Type_2, cur012Type_3);
 
                 let ruleResult: CommonKillNumberResult = {
-                    killNumber: cur012Type_1 + '|' + cur012Type_2 + '|' + cur012Type_3,
+                    killNumber: cur012Type_1 + '-' + cur012Type_2 + '-' + cur012Type_3,
                     killNumberResult: restNumberArray
                 };
 

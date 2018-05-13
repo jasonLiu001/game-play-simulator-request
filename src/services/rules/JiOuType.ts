@@ -102,7 +102,7 @@ export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumbe
         log.info('排除奇偶类型：%s', killJiouType_02);
 
         let ruleResult: CommonKillNumberResult = {
-            killNumber: killJiouType_02 + " | " + lastPrizeNumberJiOuType,
+            killNumber: killJiouType_02 + "-" + lastPrizeNumberJiOuType,
             killNumberResult: restNumberArray
         };
 
