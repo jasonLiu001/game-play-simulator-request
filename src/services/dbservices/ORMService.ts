@@ -11,7 +11,7 @@ import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
+const sequelize = new Sequelize('reward', 'root', '123456', {
     host: 'localhost',
     port: 3306,
     dialect: 'mysql',
@@ -237,9 +237,23 @@ export class LotteryDbService {
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
-        return Award.create(award)
-            .then((model) => {
-                return model.get({plain: true});
+        return Award.findOne(
+            {
+                where: {period: award.period},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Award.update(award,
+                        {
+                            where: {period: award.period}
+                        });
+                } else {
+                    return Award.create(award)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
             });
     }
 
@@ -259,9 +273,29 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
-        return Invest.create(investInfo)
-            .then((model) => {
-                return model.get({plain: true});
+        return Invest.findOne(
+            {
+                where: {
+                    period: investInfo.period,
+                    planType: investInfo.planType
+                },
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Invest.update(investInfo,
+                        {
+                            where: {
+                                period: investInfo.period,
+                                planType: investInfo.planType
+                            }
+                        });
+                } else {
+                    return Invest.create(investInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
             });
     }
 
@@ -358,9 +392,23 @@ export class LotteryDbService {
      * 保存或更新计划记录表
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
-        return Plan.create(planInfo)
-            .then((model) => {
-                return model.get({plain: true});
+        return Plan.findOne(
+            {
+                where: {period: planInfo.period},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Plan.update(planInfo,
+                        {
+                            where: {period: planInfo.period}
+                        });
+                } else {
+                    return Plan.create(planInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
             });
     }
 
@@ -426,9 +474,23 @@ export class LotteryDbService {
      * 保存或更新计划记录投注结果表
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
-        return PlanResult.create(planResultInfo)
-            .then((model) => {
-                return model.get({plain: true});
+        return PlanResult.findOne(
+            {
+                where: {period: planResultInfo.period},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return PlanResult.update(planResultInfo,
+                        {
+                            where: {period: planResultInfo.period}
+                        });
+                } else {
+                    return PlanResult.create(planResultInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
             });
     }
 
@@ -451,9 +513,23 @@ export class LotteryDbService {
      * 保存或更新计划投注号码表
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        return PlanInvestNumbers.create(planInvestNumbers)
-            .then((model) => {
-                return model.get({plain: true});
+        return PlanInvestNumbers.findOne(
+            {
+                where: {period: planInvestNumbers.period},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return PlanInvestNumbers.update(planInvestNumbers,
+                        {
+                            where: {period: planInvestNumbers.period}
+                        });
+                } else {
+                    return PlanInvestNumbers.create(planInvestNumbers)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
             });
     }
 

@@ -1,4 +1,4 @@
-let ORMService = require('../../../dist/services/dbservices/ORMService').ORMService;
+let LotteryDbService = require('../../../dist/services/dbservices/ORMService').LotteryDbService;
 let AwardInfo = require('../../../dist/models/db/AwardInfo').AwardInfo;
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 let PlanResultInfo = require('../../../dist/models/db/PlanResultInfo').PlanResultInfo;
@@ -10,26 +10,26 @@ describe("ORMService Test", () => {
     });
 
     xit('should drop all tables in db', function (done) {
-        ORMService.dropAllTables()
+        LotteryDbService.dropAllTables()
             .then(() => {
                 done();
             });
     });
 
     xit('should connect mysql db success', (done) => {
-        ORMService.createLotteryTable()
+        LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
             });
 
     });
 
-    xit('should create table award', function (done) {
+    it('should create table award', function (done) {
         let award = new AwardInfo();
-        award.period = String(new Date().getTime());
+        award.period = String('1526181887096');
         award.openNumber = '';
         award.openTime = '';
-        ORMService.saveOrUpdateAwardInfo(award)
+        LotteryDbService.saveOrUpdateAwardInfo(award)
             .then((resultAward) => {
                 console.log(resultAward);
                 done();
@@ -52,15 +52,15 @@ describe("ORMService Test", () => {
         planResultInfo1.status = 1;
         planResultInfoList.push(planResultInfo1);
 
-        ORMService.saveOrUpdatePlanResultInfoList(planResultInfoList)
+        LotteryDbService.saveOrUpdatePlanResultInfoList(planResultInfoList)
             .then((res) => {
                 console.log(res);
                 done();
             });
     });
 
-    it('should get history count records', function (done) {
-        ORMService.getPlanInvestNumbersInfoListByStatus(1)
+    xit('should get history count records', function (done) {
+        LotteryDbService.getPlanInvestNumbersInfoListByStatus(1)
             .then((res) => {
                 console.log(res);
                 done();
