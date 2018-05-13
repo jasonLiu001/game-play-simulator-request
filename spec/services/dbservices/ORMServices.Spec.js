@@ -26,9 +26,9 @@ describe("ORMService Test", () => {
 
     it('should create table award', function (done) {
         let award = new AwardInfo();
-        award.period = String('1526181887096');
-        award.openNumber = '';
-        award.openTime = '';
+        award.period = String('1526181889200');
+        award.openNumber = '中午';
+        award.openTime = '中文';
         LotteryDbService.saveOrUpdateAwardInfo(award)
             .then((resultAward) => {
                 console.log(resultAward);

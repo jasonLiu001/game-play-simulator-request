@@ -11,10 +11,11 @@ import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
+const sequelize = new Sequelize('reward', 'root', '123456', {
     host: 'localhost',
     port: 3306,
     dialect: 'mysql',
+    dialectOptions: {},
 
     pool: {
         max: 5,
@@ -24,6 +25,11 @@ const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     },
     timezone: '+08:00',
     define: {
+        freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
+        charset: 'utf8',
+        dialectOptions: {
+            collate: 'utf8_general_ci'
+        },
         timestamps: false // 生成表的时候不带updatedAt, createdAt这两个字段
     }
 });
@@ -120,8 +126,6 @@ const Award = sequelize.define('award', {
     openTime: {//开奖时间
         type: Sequelize.STRING
     }
-}, {
-    freezeTableName: true//采用第一个参数作为表名，不会自动修改表名
 });
 /**
  *
@@ -160,30 +164,22 @@ const Invest = sequelize.define('invest', {
     investTime: {//投注时间
         type: Sequelize.STRING
     }
-}, {
-    freezeTableName: true//采用第一个参数作为表名，不会自动修改表名
 });
 
 /**
  * 计划投注号码表
  */
-const Plan = sequelize.define('plan', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING), {
-    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
-});
+const Plan = sequelize.define('plan', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING));
 /**
  *
  * 计划杀号结果表
  */
-const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getModelDefinition(Sequelize.INTEGER), {
-    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
-});
+const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getModelDefinition(Sequelize.INTEGER));
 /**
  *
  * 计划投注号码表
  */
-const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.TEXT), {
-    freezeTableName: true,//采用第一个参数作为表名，不会自动修改表名
-});
+const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.TEXT));
 
 /**
  *
