@@ -11,7 +11,7 @@ import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('reward', 'root', '123456', {
+const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     host: 'localhost',
     port: 3306,
     dialect: 'mysql',
