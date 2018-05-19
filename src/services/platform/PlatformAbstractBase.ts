@@ -82,7 +82,8 @@ export class PlatformAbstractBase {
             request.post(
                 {
                     url: url,
-                    form: form
+                    form: form,
+                    strictSSL: false
                 }, (error, response, body) => {
                     if (error) {
                         reject(error);
