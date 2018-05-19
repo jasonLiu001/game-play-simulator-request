@@ -5,13 +5,13 @@
     },
     "app": {
       "type": "dateFile",
-      "filename": "log.log",
+      "filename": "logs/log.log",
       "pattern": "-yyyy-MM-dd.log",
       "compress": true
     },
     "errorFile": {
       "type": "dateFile",
-      "filename": "error.log",
+      "filename": "logs/error.log",
       "pattern": "-yyyy-MM-dd.log",
       "compress": true
     },
