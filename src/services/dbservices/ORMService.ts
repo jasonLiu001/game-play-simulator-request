@@ -16,6 +16,7 @@ const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     port: 3306,
     dialect: 'mysql',
     dialectOptions: {},
+    logging: false,//不输出sql操作日志
 
     pool: {
         max: 5,
