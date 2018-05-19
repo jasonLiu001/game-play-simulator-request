@@ -79,6 +79,9 @@ var guidHead = 'ABCDEFGHIJKMNLOPQRSTUVWXYZ'.split('').sort(new Function('return 
 2. 杀号：上期开啥，下期杀啥
 
 #### 方案四【可行】遇到特殊形态投注
+
+该方案的初始账号金额500，目标盈利24%，最大盈利金额620
+
 1. 杀号：当出现“偶偶奇”形态时，开始投注，杀“奇奇偶”+“偶偶奇”
 2. 杀号：杀“360杀百十个的计划”
 
