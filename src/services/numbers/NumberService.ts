@@ -188,23 +188,23 @@ export class NumberService extends AbstractRuleBase {
      * 检查上期开奖号码是否满足投注条件
      */
     public isLastPrizeNumberValid(): Promise<boolean> {
-        ////region 偶偶奇过滤条件[已废弃]
-        // //开奖号码
-        // let prizeNumber: OpenNumber = this.getPrizeNumberObj();
-        //
-        // //上期开奖号码后三奇偶 倒杀
-        // let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
-        // let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
-        // let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
-        // //上期号码的奇偶类型
-        // let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
-        // if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
-        //     log.info('当前开奖号码【%s】，满足【偶偶奇】', prizeNumber.prizeString);
-        //     return Promise.resolve(true);
-        // }
-        // log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
-        // return Promise.resolve(false);
-        ////endregion
+        //region 偶偶奇过滤条件[已废弃]
+        //开奖号码
+        let prizeNumber: OpenNumber = this.getPrizeNumberObj();
+
+        //上期开奖号码后三奇偶 倒杀
+        let baiWeiJiOuType = this.getJiEouType(prizeNumber.bai);//百位奇偶类型
+        let shiWeiJiOuType = this.getJiEouType(prizeNumber.shi);//十位奇偶类型
+        let geWeiJiOuType = this.getJiEouType(prizeNumber.ge);//个位奇偶类型
+        //上期号码的奇偶类型
+        let lastPrizeNumberJiOuType = baiWeiJiOuType + '' + shiWeiJiOuType + '' + geWeiJiOuType;
+        if (lastPrizeNumberJiOuType == '001') {//偶偶奇 时投注
+            log.info('当前开奖号码【%s】，满足【偶偶奇】', prizeNumber.prizeString);
+            return Promise.resolve(true);
+        }
+        log.info('当前开奖号码【%s】，不满足【偶偶奇】，放弃投注', prizeNumber.prizeString);
+        return Promise.resolve(false);
+        //endregion
 
         ////region 达到指定期号才执行投注[条件2]--已废弃
         //可以投注的期号
@@ -252,6 +252,6 @@ export class NumberService extends AbstractRuleBase {
         //     });
         // //region
 
-        return Promise.resolve(true);
+        // return Promise.resolve(true);
     }
 }
