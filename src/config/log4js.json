@@ -8,13 +8,25 @@
       "filename": "log.log",
       "pattern": "-yyyy-MM-dd.log",
       "compress": true
+    },
+    "errorFile": {
+      "type": "dateFile",
+      "filename": "error.log",
+      "pattern": "-yyyy-MM-dd.log",
+      "compress": true
+    },
+    "errors": {
+      "type": "logLevelFilter",
+      "level": "ERROR",
+      "appender": "errorFile"
     }
   },
   "categories": {
     "default": {
       "appenders": [
         "out",
-        "app"
+        "app",
+        "errors"
       ],
       "level": "debug"
     }
