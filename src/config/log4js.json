@@ -4,8 +4,10 @@
       "type": "stdout"
     },
     "app": {
-      "type": "file",
-      "filename": "log.log"
+      "type": "dateFile",
+      "filename": "log.log",
+      "pattern": "-yyyy-MM-dd.log",
+      "compress": true
     }
   },
   "categories": {
