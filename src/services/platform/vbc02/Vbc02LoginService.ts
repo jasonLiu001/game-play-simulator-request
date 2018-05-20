@@ -20,14 +20,6 @@ let path = require('path'),
 export class Vbc02LoginService extends PlatformAbstractBase implements IPlatformLoginService {
     /**
      *
-     * 退出登录
-     */
-    loginOut(request: any): Promise<any> {
-        return Promise.resolve(true);
-    }
-
-    /**
-     *
      *
      * 开始模拟登录操作
      */

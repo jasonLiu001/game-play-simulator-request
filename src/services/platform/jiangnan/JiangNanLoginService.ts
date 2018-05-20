@@ -20,34 +20,23 @@ let path = require('path'),
 export class JiangNanLoginService extends PlatformAbstractBase implements IPlatformLoginService {
     /**
      *
-     * 退出登录
-     */
-    loginOut(request: any): Promise<any> {
-        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/loginOut.mvc');
-    }
-
-    /**
-     *
-     *
-     * 登录前提前请求的url
-     */
-    private gotoNeedValidateCode(request: any): Promise<any> {
-        return this.httpGet(request, CONFIG_CONST.siteUrl + "/login/need-validate-code.mvc");
-    }
-
-    /**
-     *
      *
      * 开始模拟登录操作
      */
     public loginMock(request: any, captchaCodeString: string): Promise<any> {
-        return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?')
+        return this.httpGet(request, CONFIG_CONST.siteUrl + "/login/need-validate-code.mvc")
+            .then(() => {
+                return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?');
+            })
+            .then(() => {
+                return this.httpFormPost(request, CONFIG_CONST.siteUrl + "/Uploadimg/list.mvc");
+            })
             .then(() => {
                 return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/login.mvc?', {
                     username: CONFIG_CONST.username,
                     validate: captchaCodeString,
                     password: CONFIG_CONST.password,
-                    _BrowserInfo: 'chrome/53.0.2785.104'
+                    _BrowserInfo: 'chrome/64.0.3282.167'
                 });
             });
     }
@@ -58,10 +47,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      * 对外的调用接口
      */
     public login(request: any): Promise<any> {
-        return this.gotoLoginPage(request, '/Login')
-            .then(() => {
-                return this.gotoNeedValidateCode(request);
-            })
+        return this.gotoLoginPage(request, '/pc')
             .then((indexContent) => {
                 //请求验证码
                 //return this.saveCaptchaCodeImage(request, '/verifyCode?');

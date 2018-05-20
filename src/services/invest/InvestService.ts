@@ -55,7 +55,7 @@ export class InvestService extends AbstractInvestBase {
                     return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
                         .then(() => {
                             //投注完成后 退出登录
-                            return jiangNanLoginService.loginOut(request);
+                            return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
                         });
                 }
             })

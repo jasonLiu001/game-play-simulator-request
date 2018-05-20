@@ -93,6 +93,14 @@ export class PlatformAbstractBase {
             );
         });
     }
+
+    /**
+     *
+     * 退出登录
+     */
+    public loginOut(request: any, logoutUrl): Promise<any> {
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + logoutUrl);
+    }
 }
 
 /**
@@ -114,12 +122,6 @@ export interface IPlatformLoginService {
      * @param request
      */
     login(request: any): Promise<any>;
-
-    /**
-     *
-     * 退出登录
-     */
-    loginOut(request: any): Promise<any>;
 }
 
 /**
