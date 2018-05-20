@@ -1,5 +1,7 @@
+import {SqliteLotteryDbService} from "../../../src/services/dbservices/SqliteLotteryDbService";
+
 let InvestService = require('../../../dist/services/invest/InvestService').InvestService;
-let LotteryDbService = require('../../../dist/services/dbservices/DBSerivice').LotteryDbService;
+let LotteryDbService = require('../../../dist/services/dbservices/SqliteLotteryDbService').SqliteLotteryDbService;
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 let Config = require('../../../dist/config/Config').Config;
 let EnumAwardMode = require('../../../dist/models/EnumModel').EnumAwardMode;
