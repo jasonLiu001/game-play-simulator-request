@@ -44,20 +44,23 @@ export class InvestService extends AbstractInvestBase {
                     //使用request投注 需要先登录在投注 每次投注前都需要登录
                     return jiangNanLoginService.login(request)
                         .then((loginResult) => {
-                            log.info(loginResult ? "真实登录失败" : "真实登录操作已执行完成");
+                            log.info('真实登录操作%s', loginResult ? '已执行完成' : '失败');
                             if (loginResult) log.info(loginResult);
                         });
                 }
             })
             .then(() => {
-                log.info('%s', (isRealInvest ? '真实投注执行中...' : '模拟投注执行中...'));
+                log.info(isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
                 log.info('投注前账户余额：%s', Config.currentAccountBalance);
                 //真实投注
                 if (isRealInvest) {
                     log.info('正在执行真实投注...');
                     return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
                         .then((investResult) => {
-                            log.info(investResult ? "真实投注失败" : "真实投注操作已执行完成");
+                            log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
+                            //真实投注成功后，记录已经成功投注的期数
+                            Config.currentInvestTotalCount++;
+                            log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                             if (investResult) log.info(investResult);
                         })
                         .then(() => {
@@ -71,16 +74,14 @@ export class InvestService extends AbstractInvestBase {
                 }
             })
             .then(() => {
-                log.info(isRealInvest ? '正在保存真实投注记录...' : '正在保存模拟投注记录...');
-                //成功投注后 更新各个方案的账户余额
+                let messageType = isRealInvest ? "真实投注" : "模拟投注";
+                log.info('正在保存%s记录...', messageType);
+                //真实后模拟投注后 更新各个方案的账户余额
                 this.updateAllPlanAccountBalance();
                 //输出当前账户余额
-                log.info('买号后余额：%s', Config.currentAccountBalance);
-                //真实投注成功后，记录已经成功投注的期数
-                Config.currentInvestTotalCount++;
+                log.info('%s买号后余额：%s', messageType, Config.currentAccountBalance);
                 let allPlanInvestInfo: Array<InvestInfo> = this.initAllPlanInvestInfo();
-                log.info('投注记录已保存');
-                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info('%记录已保存', messageType);
                 //保存投注记录
                 return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
             })
