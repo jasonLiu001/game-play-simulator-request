@@ -36,7 +36,10 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                     username: CONFIG_CONST.username,
                     validate: captchaCodeString,
                     password: CONFIG_CONST.password,
-                    _BrowserInfo: 'chrome/64.0.3282.167'
+                    _BrowserInfo: 'Chrome/64.0.3282.167'
+                }, {
+                    'Referer': CONFIG_CONST.siteUrl + '/pc',
+                    'Origin': CONFIG_CONST.siteUrl
                 });
             });
     }

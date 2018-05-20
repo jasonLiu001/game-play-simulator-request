@@ -77,12 +77,13 @@ export class PlatformAbstractBase {
      *  新的Content-Type类型，如：Content-Type:application/json 需要单独写实现方法，直接调用request原生方法来实现即可
      *  参照地址：https://github.com/request/request#requestoptions-callback
      */
-    public httpFormPost(request: any, url: string, form: any = {}): Promise<any> {
+    public httpFormPost(request: any, url: string, form: any = {}, headers: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             request.post(
                 {
                     url: url,
-                    form: form
+                    form: form,
+                    headers: headers
                 }, (error, response, body) => {
                     if (error) {
                         reject(error);
