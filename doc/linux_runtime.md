@@ -5,10 +5,10 @@ Linux 下运行环境配置
 
 1. 安装`node`  参考文档：<https://nodejs.org/en/download/package-manager/>
 
-   Run as root on RHEL, CentOS or Fedora, for Node.js v6 LTS:
+   On RHEL, CentOS or Fedora, for Node.js v8 LTS:
 
    ```shell
-   curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
+   curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
    ```
 
    Then install, as root:

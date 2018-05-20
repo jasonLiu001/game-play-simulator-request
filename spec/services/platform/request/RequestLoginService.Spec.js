@@ -15,6 +15,7 @@ let request = Request.defaults(
     {
         jar: cookie,
         timeout: 20000,
+        strictSSL: false,
         headers: HttpRequestHeaders
     });
 
@@ -44,7 +45,7 @@ describe('Vbc02LoginService Test', () => {
         jiangNanLoginService.login(request)
             .then((body) => {
                 console.log(body);
-                return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                //return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu);
             })
             .then((body) => {
                 console.log(body);
