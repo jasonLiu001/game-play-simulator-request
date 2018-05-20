@@ -9,6 +9,7 @@
     "log4js": "^2.0.0",
     "moment": "^2.19.1",
     "mysql2": "^1.5.3",
+    "nodemailer": "^4.6.4",
     "request": "^2.81.0",
     "sequelize": "^4.37.7",
     "sqlite3": "^3.1.8",

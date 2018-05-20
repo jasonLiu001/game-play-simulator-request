@@ -1,5 +1,27 @@
 import {EnumAwardMode} from "../models/EnumModel";
+
 let path = require('path');
+
+/**
+ *
+ * 邮件配置
+ */
+export const EMAIL_CONFIG = {
+    //邮件服务器地址
+    host: 'smtp.139.com',
+    //邮件服务器端口
+    port: 465,
+    secure: true,//true for 465, false for other ports
+    //用户名及密码
+    auth: {
+        user: '',
+        pass: ''
+    },
+    //发送人
+    from: '"foo" <foo@139.com>',
+    //收件人
+    to: 'foo@qq.com'
+};
 
 /**
  *
