@@ -7,7 +7,8 @@ describe("EamilSender Test", () => {
 
     it('should send email success', function (done) {
         EmailSender.sendEmail('测试', '<b>Hello</b>')
-            .then(() => {
+            .then((res) => {
+                console.log(res);
                 done();
             })
             .catch((error) => {

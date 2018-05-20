@@ -14,13 +14,13 @@ export const EMAIL_CONFIG = {
     secure: true,//true for 465, false for other ports
     //用户名及密码
     auth: {
-        user: '',
+        user: 'yourusername@139.com',
         pass: ''
     },
     //发送人
-    from: '"foo" <foo@139.com>',
+    from: '"小刘" <yourusername@139.com>',
     //收件人
-    to: 'foo@qq.com'
+    to: '522914767@qq.com'
 };
 
 /**
