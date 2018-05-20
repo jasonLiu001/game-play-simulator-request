@@ -33,9 +33,9 @@ export class MaxProfitInfo {
 
     /**
      *
-     * 达到目标利润时，共投注次数
+     * 达到目标利润时，实际投注次数
      */
-    investTotalCount: number;
+    actualInvestTotalCount: number;
 
     /**
      *

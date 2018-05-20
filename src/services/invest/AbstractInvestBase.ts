@@ -173,7 +173,7 @@ export abstract class AbstractInvestBase {
             originAccoutBalance: CONFIG_CONST.originAccoutBalance,
             maxAccountBalance: Config.currentAccountBalance,
             profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
-            investTotalCount: Config.currentInvestTotalCount,
+            actualInvestTotalCount: Config.currentInvestTotalCount,
             createTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
 

@@ -209,7 +209,7 @@ const MaxProfit = sequelize.define('max_profit', {
     profitPercent: {//利润百分比  0.2代表20%
         type: Sequelize.DECIMAL(10, 2)
     },
-    investTotalCount: {//达到目标利润时，共投注次数
+    actualInvestTotalCount: {//达到目标利润时，实际投注次数
         type: Sequelize.INTEGER
     },
     createTime: {//记录创建时间
