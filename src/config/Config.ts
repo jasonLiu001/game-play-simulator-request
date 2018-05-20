@@ -7,7 +7,7 @@ let path = require('path');
  */
 export const CONFIG_CONST = {
     //登录网站url
-    siteUrl: 'https://123.jn707.com',
+    siteUrl: 'https://123.jn716.com',
     //需要获取的历史号码数量
     historyCount: 3,
     //开奖延迟时间，单位为秒
@@ -19,17 +19,17 @@ export const CONFIG_CONST = {
     //当前选择的投注方案类型
     currentSelectedInvestPlanType: 1,
     //投注倍数
-    touZhuBeiShu: '6',
+    touZhuBeiShu: '1',
     //登录用户名
     username: '',
     //登录密码
     password: '',
     //元、角、分 模式
-    awardMode: EnumAwardMode.jiao,//yuan,jiao,feng,li
+    awardMode: EnumAwardMode.feng,//yuan,jiao,feng,li
     //账户初始余额
-    originAccoutBalance: 2000,
+    originAccoutBalance: 100,
     //账号最大值 盈利金额设置 单位为元  比如：需要盈利120，则设置成620，这里不能设置
-    maxAccountBalance: 2800,
+    maxAccountBalance: 120,
     //账号最小值 亏损金额设置 单位为元  比如：账户当前最低余额
     minAccountBalance: 0
 };
