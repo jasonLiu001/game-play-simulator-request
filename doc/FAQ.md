@@ -68,3 +68,7 @@ DEBUG=nightmare*,electron* node ./dist/App.js
 ### `linux` 下运行`nightmare`或`electron`需要安装的依赖
 
 参考文档：<https://github.com/electron/electron/blob/master/docs/development/build-instructions-linux.md#build-instructions-linux>
+
+## unable to verify the first certificate
+
+这个错误是因为服务器下发的证书有问题，可以通过更换请求地址来解决
