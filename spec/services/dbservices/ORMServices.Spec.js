@@ -2,6 +2,9 @@ let LotteryDbService = require('../../../dist/services/dbservices/ORMService').L
 let AwardInfo = require('../../../dist/models/db/AwardInfo').AwardInfo;
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 let PlanResultInfo = require('../../../dist/models/db/PlanResultInfo').PlanResultInfo;
+let MaxProfitInfo = require('../../../dist/models/db/MaxProfitInfo').MaxProfitInfo;
+let moment = require('moment');
+
 
 describe("ORMService Test", () => {
 
@@ -16,7 +19,7 @@ describe("ORMService Test", () => {
             });
     });
 
-    xit('should connect mysql db success', (done) => {
+    it('should connect mysql db success', (done) => {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -25,13 +28,36 @@ describe("ORMService Test", () => {
     });
 
     it('should create table award', function (done) {
+        let maxProfitInfo = new MaxProfitInfo();
+        maxProfitInfo.period = '20180520-028';
+        maxProfitInfo.planType = 1;
+        maxProfitInfo.originAccoutBalance = 100;
+        maxProfitInfo.maxAccountBalance = 120;
+        maxProfitInfo.profitPercent = 0.2;
+        maxProfitInfo.investTotalCount = 5;
+        maxProfitInfo.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        let investInfo = new InvestInfo();
+        investInfo.period = '20180520-028';
+        investInfo.planType = 1;
+        investInfo.investNumbers = "123";
+        investInfo.investNumberCount = 1;
+        investInfo.currentAccountBalance = 100;
+        investInfo.awardMode = 100;
+        investInfo.winMoney = 10;
+        investInfo.status = 1;
+        investInfo.isWin = 1;
+        investInfo.investTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+
         let award = new AwardInfo();
-        award.period = String('1526181889200');
-        award.openNumber = '中午';
-        award.openTime = '中文';
-        LotteryDbService.saveOrUpdateAwardInfo(award)
-            .then((resultAward) => {
-                console.log(resultAward);
+        award.period = '20180520-028';
+        award.openNumber = '45890';
+        award.openTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        LotteryDbService.saveOrUpdateInvestInfo(investInfo)
+            .then((result) => {
+                console.log(result);
                 done();
             })
             .catch((e) => {

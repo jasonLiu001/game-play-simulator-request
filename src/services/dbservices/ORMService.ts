@@ -1,5 +1,6 @@
 import Promise = require('bluebird');
 import {Config} from "../../config/Config";
+import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
@@ -165,7 +166,10 @@ const Invest = sequelize.define('invest', {
     },
     investTime: {//投注时间
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            return moment().format('YYYY-MM-DD HH:mm:ss');
+        }
     }
 });
 
@@ -210,7 +214,10 @@ const MaxProfit = sequelize.define('max_profit', {
     },
     createTime: {//记录创建时间
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            return moment().format('YYYY-MM-DD HH:mm:ss');
+        }
     }
 });
 
