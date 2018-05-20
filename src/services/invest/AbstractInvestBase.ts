@@ -261,6 +261,37 @@ export abstract class AbstractInvestBase {
     /**
      *
      *
+     * 当前投注是否是连续投注
+     */
+    private isSendContinueInvestWarnEmail(isRealInvest: boolean): Promise<boolean> {
+        //模拟投注不需要邮件提醒
+        if (!isRealInvest) return Promise.resolve(true);
+
+        //上期完整期号 格式：20180511-078
+        let lastPeriodString: string = Config.globalVariable.last_Period;
+        //当前完整期号 格式：20180511-078
+        let currentPeriodString: string = TimeService.getCurrentPeriodNumber(new Date());
+        //上期期号数值 格式：78
+        let lastPeriod: number = Number(lastPeriodString.split('-')[1]);
+        //当期期号数值 格式：65
+        let currentPeriod: number = Number(currentPeriodString.split('-')[1]);
+        //上期和当前差值
+        let diffValue = Math.abs(currentPeriod - lastPeriod);
+        if (diffValue == 1 || diffValue == 119) {
+            let warnMessage: string = "上期：" + lastPeriodString + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
+            //发送邮件提醒
+            return EmailSender.sendEmail("连续投注提醒", warnMessage)
+                .then(() => {
+                    return Promise.resolve(true);
+                });
+
+        }
+        return Promise.resolve(false);
+    }
+
+    /**
+     *
+     *
      * 是否可投注检查
      * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
@@ -278,6 +309,10 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查数据库中是否存在的已开奖的期数个数
                 return this.checkAwardHistoryCount(CONFIG_CONST.historyCount);
+            })
+            .then(() => {
+                //检查是否是连续投注，如果是则发送提醒邮件
+                return this.isSendContinueInvestWarnEmail(isRealInvest);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
