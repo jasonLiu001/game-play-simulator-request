@@ -40,28 +40,38 @@ export class InvestService extends AbstractInvestBase {
             .then(() => {
                 //真实投注执行登录操作
                 if (isRealInvest) {
-                    log.info('正在执行登录...');
+                    log.info('正在执行真实登录...');
                     //使用request投注 需要先登录在投注 每次投注前都需要登录
-                    return jiangNanLoginService.login(request);
-                }
-            })
-            .then(() => {
-                log.info('%s', (isRealInvest ? '正式投注执行中...' : '模拟投注执行中...'));
-                log.info('投注前账户余额：%s', Config.currentAccountBalance);
-                //真实投注
-                if (isRealInvest) {
-                    log.info('登录成功！');
-                    log.info('正在执行投注...');
-                    return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
-                        .then(() => {
-                            //投注完成后 退出登录
-                            return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
+                    return jiangNanLoginService.login(request)
+                        .then((loginResult) => {
+                            log.info(loginResult ? "真实登录失败" : "真实登录操作已执行完成");
+                            if (loginResult) log.info(loginResult);
                         });
                 }
             })
-            .then((result) => {
-                if (result) log.info(result);
-                log.info('投注成功，保存投注记录中...');
+            .then(() => {
+                log.info('%s', (isRealInvest ? '真实投注执行中...' : '模拟投注执行中...'));
+                log.info('投注前账户余额：%s', Config.currentAccountBalance);
+                //真实投注
+                if (isRealInvest) {
+                    log.info('正在执行真实投注...');
+                    return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
+                        .then((investResult) => {
+                            log.info(investResult ? "真实投注失败" : "真实投注操作已执行完成");
+                            if (investResult) log.info(investResult);
+                        })
+                        .then(() => {
+                            log.info('正在执行退出登录...');
+                            //投注完成后 退出登录
+                            return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
+                        })
+                        .then(() => {
+                            log.info("退出登录操作已执行完成");
+                        });
+                }
+            })
+            .then(() => {
+                log.info(isRealInvest ? '正在保存真实投注记录...' : '正在保存模拟投注记录...');
                 //成功投注后 更新各个方案的账户余额
                 this.updateAllPlanAccountBalance();
                 //输出当前账户余额
