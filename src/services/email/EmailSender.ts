@@ -40,6 +40,11 @@ export class EmailSender {
 
                 resolve(info);
             })
+        }).catch((emailError) => {
+            if (emailError) {
+                log.error("发送提醒邮失败");
+                log.error(emailError);
+            }
         });
     }
 }

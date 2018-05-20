@@ -11,6 +11,7 @@ import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {MaxProfitInfo} from "../../models/db/MaxProfitInfo";
+import {EmailSender} from "../email/EmailSender";
 
 
 let log4js = require('log4js'),
@@ -179,19 +180,27 @@ export abstract class AbstractInvestBase {
         if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
             if (isRealInvest) {//真实投注需要判断盈利金额设置
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
+                let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
                 //保存最大盈利记录
                 return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
                     .then(() => {
-                        return Promise.reject("当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance);
+                        return EmailSender.sendEmail("恭喜！恭喜！今天盈利！", winMessage);
+                    })
+                    .then(() => {
+                        return Promise.reject(winMessage);
                     });
             }
         } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
             if (isRealInvest) {//真实投注需要判断亏损金额设置
                 AppServices.startMockTask();//结束正式投注，启动模拟投注
+                let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
                 //保存最大亏损记录
                 return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
                     .then(() => {
-                        return Promise.reject("当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance);
+                        return EmailSender.sendEmail("明天继续努力，亏损严重！", loseMessage);
+                    })
+                    .then(() => {
+                        return Promise.reject(loseMessage);
                     });
             }
         }
