@@ -1,5 +1,6 @@
 import Promise = require('bluebird');
 import {CONFIG_CONST, Config} from "../../config/Config";
+import {ErrorService} from "../ErrorService";
 
 let path = require('path'),
     fs = require('fs'),
@@ -100,7 +101,10 @@ export class PlatformAbstractBase {
      * 退出登录
      */
     public loginOut(request: any, logoutUrl): Promise<any> {
-        return this.httpFormPost(request, CONFIG_CONST.siteUrl + logoutUrl);
+        return this.httpFormPost(request, CONFIG_CONST.siteUrl + logoutUrl)
+            .catch((e) => {
+                ErrorService.appInvestErrorHandler(log, e);
+            });
     }
 }
 
