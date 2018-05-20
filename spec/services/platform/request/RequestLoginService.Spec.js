@@ -15,7 +15,6 @@ let request = Request.defaults(
     {
         jar: cookie,
         timeout: 20000,
-        strictSSL: false,
         headers: HttpRequestHeaders
     });
 
@@ -67,7 +66,7 @@ describe('Vbc02LoginService Test', () => {
         vbc02LoginService.login(request)
             .then((body) => {
                 console.log(body);
-                return vbc02LotteryService.invest(request, 1000);
+                //return vbc02LotteryService.invest(request, 1000);
             })
             .then((body) => {
                 console.log(body);
