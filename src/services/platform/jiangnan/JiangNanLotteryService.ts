@@ -4,6 +4,7 @@ import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstract
 import Promise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
+
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
 
@@ -62,6 +63,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     url: CONFIG_CONST.siteUrl + '/gameType/initGame.mvc',
                     form: {
                         gameID: 1
+                    },
+                    headers: {
+                        'Referer': CONFIG_CONST.siteUrl + '/pchome'
                     }
                 }, (error, response, body) => {
                     if (error) {
@@ -144,6 +148,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
         let investStr = this.getInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
+        }, {
+            'Referer': CONFIG_CONST.siteUrl + '/pchome'
         });
     }
 
@@ -155,7 +161,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @return {Promise<any>} 返回token
      */
     public investPrepare(request: any): Promise<any> {
-        return this.gotoLoginSuccessPage(request, '/Index')
+        return this.gotoLoginSuccessPage(request, '/pchome')
             .then(() => {
                 return this.getLoginUserInfo(request);
             })
