@@ -54,9 +54,8 @@ rz -ary --o-sync
 > sz：将选定的文件发送（send）到本地机器,即下载  
 > rz：运行该命令会弹出一个文件选择窗口，从本地选择文件上传到服务器(receive),即上传，上传需要添加参数才能正常上传
 
-## TODO
-
-1. 添加网址检测功能，选择响应时间最小的网址
-2. 多平台投注同时投注，降低风险
-3. 用图表的形式展现每天的盈利状态，并保存每天的盈利截图(优先级低)
-4. 写一个客户端，监视各平台的投注状况，及时停止投注等功能(优先级低)
+## 在Linux服务器运行某个js的单元测试任务
+```shell
+# 切换到RequestLoginService.Spec.js文件所在目录 运行以下命令
+node /root/github/game-play-simulator-request/node_modules/jasmine/bin/jasmine.js RequestLoginService.Spec.js
+```
