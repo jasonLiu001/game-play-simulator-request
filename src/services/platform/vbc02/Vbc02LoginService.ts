@@ -20,6 +20,14 @@ let path = require('path'),
 export class Vbc02LoginService extends PlatformAbstractBase implements IPlatformLoginService {
     /**
      *
+     * 退出登录
+     */
+    loginOut(request: any): Promise<any> {
+        return Promise.resolve(true);
+    }
+
+    /**
+     *
      *
      * 开始模拟登录操作
      */
@@ -40,7 +48,7 @@ export class Vbc02LoginService extends PlatformAbstractBase implements IPlatform
      * 对外的调用接口
      */
     public login(request: any): Promise<any> {
-        return this.gotoLoginPage(request,'/login')
+        return this.gotoLoginPage(request, '/login')
             .then((indexContent) => {
                 //请求验证码
                 return this.saveCaptchaCodeImage(request, '/resources/captcha.jpg?');

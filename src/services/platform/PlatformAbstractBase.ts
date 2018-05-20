@@ -115,6 +115,12 @@ export interface IPlatformLoginService {
      * @param request
      */
     login(request: any): Promise<any>;
+
+    /**
+     *
+     * 退出登录
+     */
+    loginOut(request: any): Promise<any>;
 }
 
 /**

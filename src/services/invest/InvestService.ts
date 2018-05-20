@@ -52,7 +52,11 @@ export class InvestService extends AbstractInvestBase {
                 if (isRealInvest) {
                     log.info('登录成功！');
                     log.info('正在执行投注...');
-                    return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                    return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
+                        .then(() => {
+                            //投注完成后 退出登录
+                            return jiangNanLoginService.loginOut(request);
+                        });
                 }
             })
             .then((result) => {
