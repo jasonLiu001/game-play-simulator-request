@@ -280,7 +280,7 @@ export abstract class AbstractInvestBase {
         if (diffValue == 1 || diffValue == 119) {
             let warnMessage: string = "上期：" + lastPeriodString + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
             //发送邮件提醒
-            return EmailSender.sendEmail("连续投注提醒", warnMessage)
+            return EmailSender.sendEmail("当前余额" + Config.currentAccountBalance + "连续操作中", warnMessage)
                 .then(() => {
                     return Promise.resolve(true);
                 });

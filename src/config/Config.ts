@@ -18,7 +18,7 @@ export const EMAIL_CONFIG = {
         pass: ''
     },
     //发送人
-    from: '"小刘" <yourusername@139.com>',
+    from: '"提醒" <yourusername@139.com>',
     //收件人
     to: '522914767@qq.com'
 };
