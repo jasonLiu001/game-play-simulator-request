@@ -39,6 +39,12 @@ export class MaxProfitInfo {
 
     /**
      *
+     * 是否是真实投注  1：真实投注 2:模拟投注
+     */
+    isRealInvest: number;
+
+    /**
+     *
      * 记录创建时间
      */
     createTime: string;

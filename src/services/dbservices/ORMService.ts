@@ -212,6 +212,9 @@ const MaxProfit = sequelize.define('max_profit', {
     actualInvestTotalCount: {//达到目标利润时，实际投注次数
         type: Sequelize.INTEGER
     },
+    isRealInvest: {//是否是真实投注  1：真实投注 2:模拟投注
+        type: Sequelize.INTEGER
+    },
     createTime: {//记录创建时间
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,

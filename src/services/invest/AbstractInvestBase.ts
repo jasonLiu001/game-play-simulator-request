@@ -174,6 +174,7 @@ export abstract class AbstractInvestBase {
             maxAccountBalance: Config.currentAccountBalance,
             profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
             actualInvestTotalCount: Config.currentInvestTotalCount,
+            isRealInvest: isRealInvest ? 1 : 2,//是否是真实投注
             createTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
 
