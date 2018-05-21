@@ -189,6 +189,9 @@ export abstract class AbstractInvestBase {
                     .then(() => {
                         return Promise.reject(winMessage);
                     });
+            } else {
+                //模拟投注同样保存最大利润
+                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo);
             }
         } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
             if (isRealInvest) {//真实投注需要判断亏损金额设置
@@ -202,6 +205,9 @@ export abstract class AbstractInvestBase {
                     .then(() => {
                         return Promise.reject(loseMessage);
                     });
+            } else {
+                //模拟投注同样保存最大亏损
+                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo);
             }
         }
         return Promise.resolve(true);
