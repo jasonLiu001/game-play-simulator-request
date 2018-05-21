@@ -263,30 +263,25 @@ export abstract class AbstractInvestBase {
      *
      * 当前投注是否是连续投注
      */
-    private isSendContinueInvestWarnEmail(isRealInvest: boolean): Promise<boolean> {
+    private sendContinueInvestWarnEmail(isRealInvest: boolean): Promise<boolean> {
         //模拟投注不需要邮件提醒
         if (!isRealInvest) return Promise.resolve(true);
 
-        //上期完整期号 格式：20180511-078
-        let lastPeriodString: string = Config.globalVariable.last_Period;
-        //当前完整期号 格式：20180511-078
-        let currentPeriodString: string = TimeService.getCurrentPeriodNumber(new Date());
-        //上期期号数值 格式：78
-        let lastPeriod: number = Number(lastPeriodString.split('-')[1]);
-        //当期期号数值 格式：65
-        let currentPeriod: number = Number(currentPeriodString.split('-')[1]);
-        //上期和当前差值
-        let diffValue = Math.abs(currentPeriod - lastPeriod);
-        if (diffValue == 1 || diffValue == 119) {
-            let warnMessage: string = "上期：" + lastPeriodString + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
-            //发送邮件提醒
-            return EmailSender.sendEmail("当前余额" + Config.currentAccountBalance + "连续操作中", warnMessage)
-                .then(() => {
-                    return Promise.resolve(true);
-                });
+        //查询是否存在上期投注记录
+        return LotteryDbService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
+            .then((lastInvestInfo: InvestInfo) => {
+                //不存在上期的投注记录 直接返回，可以投注
+                if (!lastInvestInfo) return Promise.resolve(true);
 
-        }
-        return Promise.resolve(false);
+                //当期完整期号 格式：20180511-078
+                let currentPeriodString: string = TimeService.getCurrentPeriodNumber(new Date());
+                //提醒邮件
+                let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
+                //发送邮件提醒
+                return EmailSender.sendEmail("余额:" + Config.currentAccountBalance + "连续购买前", warnMessage);
+            }).then(() => {
+                return Promise.resolve(true);
+            });
     }
 
     /**
@@ -312,7 +307,7 @@ export abstract class AbstractInvestBase {
             })
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
-                return this.isSendContinueInvestWarnEmail(isRealInvest);
+                return this.sendContinueInvestWarnEmail(isRealInvest);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件

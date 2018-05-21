@@ -19,7 +19,7 @@ describe("ORMService Test", () => {
             });
     });
 
-    it('should connect mysql db success', (done) => {
+    xit('should connect mysql db success', (done) => {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -27,7 +27,19 @@ describe("ORMService Test", () => {
 
     });
 
-    it('should create table award', function (done) {
+    it('should get data from db', function (done) {
+        LotteryDbService.getInvestInfo('20180520-028', 1)
+            .then((res) => {
+                console.log(res);
+                done();
+            })
+            .catch((e) => {
+                console.error(e);
+                done();
+            });
+    });
+
+    xit('should create table award', function (done) {
         let maxProfitInfo = new MaxProfitInfo();
         maxProfitInfo.period = '20180520-028';
         maxProfitInfo.planType = 1;
