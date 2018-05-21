@@ -246,6 +246,21 @@ export abstract class AbstractInvestBase {
 
     /**
      *
+     * 检查投注历史
+     */
+    private checkInvestInfoHistory(): Promise<boolean> {
+        return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 3)
+            .then((res: Array<InvestInfo>) => {
+                //没有投注历史，或只有1条记录 直接返回
+                if (!res || res.length == 1) return Promise.resolve(true);
+
+                //最新的两个投注记录
+                return Promise.resolve(true);
+            });
+    }
+
+    /**
+     *
      * 检查已开奖的期数个数
      */
     private checkAwardHistoryCount(historyCount: number): Promise<boolean> {

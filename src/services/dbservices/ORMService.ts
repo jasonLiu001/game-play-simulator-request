@@ -358,12 +358,11 @@ export class LotteryDbService {
     /**
      *
      * 获取特定数量的最新投注记录
-     * @param historyCount
-     * @return {Promise<any>}
      */
-    public static getInvestInfoHistory(historyCount: number): Promise<Array<any>> {
+    public static getInvestInfoHistory(planType: number, historyCount: number): Promise<Array<any>> {
         return Invest.findAll({
             limit: historyCount,
+            where: {planType: planType},
             order: [
                 ['period', 'DESC']
             ],
