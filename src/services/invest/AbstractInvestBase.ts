@@ -185,7 +185,7 @@ export abstract class AbstractInvestBase {
                 //保存最大盈利记录
                 return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
                     .then(() => {
-                        return EmailSender.sendEmail("恭喜！恭喜！今天盈利！", winMessage);
+                        return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
                     })
                     .then(() => {
                         return Promise.reject(winMessage);
@@ -201,7 +201,7 @@ export abstract class AbstractInvestBase {
                 //保存最大亏损记录
                 return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
                     .then(() => {
-                        return EmailSender.sendEmail("明天继续努力，亏损严重！", loseMessage);
+                        return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage);
                     })
                     .then(() => {
                         return Promise.reject(loseMessage);
