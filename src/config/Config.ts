@@ -75,6 +75,8 @@ export class Config {
     public static currentSelectedAwardMode: number = CONFIG_CONST.awardMode;
     //开奖号更新计时器
     public static awardTimer: any = null;
+    //是否第一次出现连错
+    public static isContinueWrongForFirstTime: boolean = false;
     //全局变量 程序运行时可变
     public static globalVariable: any = {
         last_Period: null, //上期期号 程序运行时初始化

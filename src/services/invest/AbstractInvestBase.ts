@@ -299,16 +299,29 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * 检查投注历史
+     * 查询当前投注记录 投注历史是否满足特定条件
      */
-    private checkInvestInfoHistory(): Promise<boolean> {
-        return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 3)
+    private checkInvestInfoHistory(isRealInvest: boolean): Promise<boolean> {
+        return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 2)
             .then((res: Array<InvestInfo>) => {
                 //没有投注历史，或只有1条记录 直接返回
                 if (!res || res.length == 1) return Promise.resolve(true);
 
-                //最新的两个投注记录
-                return Promise.resolve(true);
+                //第一次出现连错
+                if (!Config.isContinueWrongForFirstTime) {
+                    //第一次出现连错连错 才开始投注
+                    if ((res[0].isWin == 0 && res[1].isWin == 0) || res[0].isWin == 1) {
+                        //出现连错条件修改为非第一次
+                        Config.isContinueWrongForFirstTime = true;
+
+                        return Promise.resolve(true);
+                    } else {//未出现连错 或者 上期没有盈利 则不允许投注
+                        return Promise.reject("暂未出现连错或上期未中奖，不满足投注条件，已放弃本次投注");
+                    }
+                } else {
+                    //非第一次出现连错，正常执行投注
+                    return Promise.resolve(true);
+                }
             });
     }
 
@@ -376,6 +389,11 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
                 return this.sendContinueInvestWarnEmail(isRealInvest);
+            })
+            .then(() => {
+                //检查投注历史是否满足特定条件
+                //return this.checkInvestInfoHistory(isRealInvest);
+                return Promise.resolve(true);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
