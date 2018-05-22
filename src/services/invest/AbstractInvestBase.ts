@@ -162,11 +162,49 @@ export abstract class AbstractInvestBase {
     }
 
     /**
+     * 保存  除当前实际投注方案外  其他投注方案
+     */
+    private saveOtherPlanMaxProfit(isRealInvest: boolean): Promise<Array<MaxProfitInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        let planType: number = 1;
+        for (let key in Config.investPlan) {
+            let planInfo = Config.investPlan[key];
+            let maxProfitInfo: MaxProfitInfo = {
+                period: Config.globalVariable.last_Period,
+                planType: planType,
+                originAccoutBalance: CONFIG_CONST.originAccoutBalance,
+                maxAccountBalance: planInfo.accountBalance,
+                profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
+                actualInvestTotalCount: 0,
+                isRealInvest: isRealInvest ? 1 : 2,//是否是真实投注
+                createTime: moment().format('YYYY-MM-DD HH:mm:ss')
+            };
+            //跳过当前实际投注的方案，避免重复操作
+            if (planType == CONFIG_CONST.currentSelectedInvestPlanType) continue;
+
+            if (planInfo.accountBalance >= CONFIG_CONST.maxAccountBalance) {//盈利
+                promiseArray.push(LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo));
+            } else if (planInfo.accountBalance <= CONFIG_CONST.minAccountBalance) {//亏损
+                promiseArray.push(LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo));
+            }
+
+            planType++;
+        }
+
+        return Promise.all(promiseArray).catch((error) => {
+            log.error("保存其他投注方案最大利润时出错，出错信息如下");
+            log.error(error);
+            return null;
+        });
+    }
+
+    /**
      *
      * 检查最大盈利金额是否达到设定目标
      * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
+        //构造利润记录实体
         let maxProfitInfo: MaxProfitInfo = {
             period: Config.globalVariable.last_Period,
             planType: CONFIG_CONST.currentSelectedInvestPlanType,
@@ -178,40 +216,48 @@ export abstract class AbstractInvestBase {
             createTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
 
-        if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
-            if (isRealInvest) {//真实投注需要判断盈利金额设置
-                AppServices.startMockTask();//结束正式投注，启动模拟投注
-                let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
-                //保存最大盈利记录
-                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
-                    .then(() => {
-                        return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
-                    })
-                    .then(() => {
-                        return Promise.reject(winMessage);
+        //保存其他方案的最大利润记录
+        return this.saveOtherPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
+            if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
+                if (isRealInvest) {//真实投注需要判断盈利金额设置
+                    AppServices.startMockTask();//结束正式投注，启动模拟投注
+                    let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
+                    //保存最大盈利记录
+                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
+                        .then(() => {
+                            return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
+                        })
+                        .then(() => {
+                            return Promise.reject(winMessage);
+                        });
+                } else {
+                    //模拟投注同样保存最大利润
+                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo).then(() => {
+                        return true
                     });
-            } else {
-                //模拟投注同样保存最大利润
-                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo);
-            }
-        } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
-            if (isRealInvest) {//真实投注需要判断亏损金额设置
-                AppServices.startMockTask();//结束正式投注，启动模拟投注
-                let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
-                //保存最大亏损记录
-                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
-                    .then(() => {
-                        return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage);
-                    })
-                    .then(() => {
-                        return Promise.reject(loseMessage);
+                }
+            } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
+                if (isRealInvest) {//真实投注需要判断亏损金额设置
+                    AppServices.startMockTask();//结束正式投注，启动模拟投注
+                    let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
+                    //保存最大亏损记录
+                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
+                        .then(() => {
+                            return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage);
+                        })
+                        .then(() => {
+                            return Promise.reject(loseMessage);
+                        });
+                } else {
+                    //模拟投注同样保存最大亏损
+                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo).then(() => {
+                        return true
                     });
+                }
             } else {
-                //模拟投注同样保存最大亏损
-                return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo);
+                return Promise.resolve(true);
             }
-        }
-        return Promise.resolve(true);
+        });
     }
 
     /**

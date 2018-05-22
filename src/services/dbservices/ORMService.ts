@@ -353,9 +353,7 @@ export class LotteryDbService {
         for (let index in investInfoList) {
             promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
         }
-        return Promise.all(promiseArray).then((results: Array<InvestInfo>) => {
-            return results;
-        });
+        return Promise.all(promiseArray);
     }
 
     /**
@@ -510,9 +508,7 @@ export class LotteryDbService {
         for (let index in planResultInfoList) {
             promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
         }
-        return Promise.all(promiseArray).then((results: Array<PlanResultInfo>) => {
-            return results;
-        });
+        return Promise.all(promiseArray);
     }
 
     /**
@@ -605,9 +601,7 @@ export class LotteryDbService {
         for (let index in planInvestNumbersInfo) {
             promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
         }
-        return Promise.all(promiseArray).then((results: Array<PlanInvestNumbersInfo>) => {
-            return results;
-        });
+        return Promise.all(promiseArray);
     }
 
     /**
