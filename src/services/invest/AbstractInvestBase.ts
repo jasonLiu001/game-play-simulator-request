@@ -305,12 +305,12 @@ export abstract class AbstractInvestBase {
         return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 2)
             .then((res: Array<InvestInfo>) => {
                 //没有投注历史，或只有1条记录 直接返回
-                if (!res || res.length == 1) return Promise.resolve(true);
+                if (!res || res.length == 1) return Promise.reject("当天历史投注数量少于2条，无法执行投注，已放弃本次投注");
 
                 //第一次出现连错
                 if (!Config.isContinueWrongForFirstTime) {
                     //第一次出现连错连错 才开始投注
-                    if ((res[0].isWin == 0 && res[1].isWin == 0) || res[0].isWin == 1) {
+                    if (res[0].isWin == 0 && res[1].isWin == 0) {
                         //出现连错条件修改为非第一次
                         Config.isContinueWrongForFirstTime = true;
 
