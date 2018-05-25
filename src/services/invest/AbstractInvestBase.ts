@@ -392,8 +392,8 @@ export abstract class AbstractInvestBase {
             })
             .then(() => {
                 //检查投注历史是否满足特定条件
-                return this.checkInvestInfoHistory(isRealInvest);
-                //return Promise.resolve(true);
+                //return this.checkInvestInfoHistory(isRealInvest);
+                return Promise.resolve(true);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
