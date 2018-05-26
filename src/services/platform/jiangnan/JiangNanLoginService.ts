@@ -4,6 +4,7 @@ import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {ErrorService} from "../../ErrorService";
+import {EmailSender} from "../../email/EmailSender";
 
 let path = require('path'),
     fs = require('fs'),
@@ -47,6 +48,8 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      *
      *
      * 对外的调用接口
+     *
+     * 返回数据：{"msg":"","code":200,"data":null}
      */
     public login(request: any): Promise<any> {
         return this.gotoLoginPage(request, '/pc')
@@ -63,8 +66,20 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                 //开始登录 带验证码
                 //return this.loginMock(request, parserRes.pic_str);
                 return this.loginMock(request, '');
-            }).catch((e) => {
+            })
+            .then((result) => {
+                //判断登录接口返回值，如果不是登录成功状态发送邮件通知
+                if (result && result.code != 200) {
+                    return EmailSender.sendEmail("登录异常", result)
+                        .then(() => {
+                            return result;
+                        });
+                }
+                return result;
+            })
+            .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
+                return EmailSender.sendEmail("登录异常", e.message);
             });
     }
 }

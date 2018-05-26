@@ -4,6 +4,7 @@ import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstract
 import Promise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
+import {EmailSender} from "../../email/EmailSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
@@ -174,6 +175,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     /**
      *
      * 直接投注的入口方法
+     *
+     * 返回数据：{"msg":"投注成功！","code":200,"data":{"MESSAGE":"投注成功！","STATUS":100,"token_tz":"3b2f1479-7bec-4369-a2e0-c7e0a4fe8bff","LIMIT":[],"BALANCE":"22.48"}}
+     *
      * @param request
      * @param touZhuBeiShu 投注倍数
      */
@@ -184,8 +188,19 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
 
                 return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
             })
+            .then((result) => {
+                if (result && result.code != 200) {
+                    return EmailSender.sendEmail("购买异常", result)
+                        .then(() => {
+                            return result;
+                        });
+                }
+
+                return result;
+            })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
+                return EmailSender.sendEmail("购买异常", e.message);
             });
     }
 
