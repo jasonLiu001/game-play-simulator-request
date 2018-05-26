@@ -164,7 +164,7 @@ export abstract class AbstractInvestBase {
     /**
      * 保存  除当前实际投注方案外  其他投注方案
      */
-    private saveOtherPlanMaxProfit(isRealInvest: boolean): Promise<Array<MaxProfitInfo>> {
+    private saveAllPlanMaxProfit(isRealInvest: boolean): Promise<Array<MaxProfitInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         let planType: number = 1;
         for (let key in Config.investPlan) {
@@ -175,12 +175,10 @@ export abstract class AbstractInvestBase {
                 originAccoutBalance: CONFIG_CONST.originAccoutBalance,
                 maxAccountBalance: planInfo.accountBalance,
                 profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
-                actualInvestTotalCount: 0,
+                actualInvestTotalCount: Config.currentInvestTotalCount,
                 isRealInvest: isRealInvest ? 1 : 2,//是否是真实投注
                 createTime: moment().format('YYYY-MM-DD HH:mm:ss')
             };
-            //跳过当前实际投注的方案，避免重复操作
-            if (planType == CONFIG_CONST.currentSelectedInvestPlanType) continue;
 
             if (planInfo.accountBalance >= CONFIG_CONST.maxAccountBalance) {//盈利
                 promiseArray.push(LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo));
@@ -192,7 +190,7 @@ export abstract class AbstractInvestBase {
         }
 
         return Promise.all(promiseArray).catch((error) => {
-            log.error("保存其他投注方案最大利润时出错，出错信息如下");
+            log.error("保存投注方案最大利润时出错，出错信息如下");
             log.error(error);
             return null;
         });
@@ -204,55 +202,29 @@ export abstract class AbstractInvestBase {
      * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
-        //构造利润记录实体
-        let maxProfitInfo: MaxProfitInfo = {
-            period: Config.globalVariable.last_Period,
-            planType: CONFIG_CONST.currentSelectedInvestPlanType,
-            originAccoutBalance: CONFIG_CONST.originAccoutBalance,
-            maxAccountBalance: Config.currentAccountBalance,
-            profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
-            actualInvestTotalCount: Config.currentInvestTotalCount,
-            isRealInvest: isRealInvest ? 1 : 2,//是否是真实投注
-            createTime: moment().format('YYYY-MM-DD HH:mm:ss')
-        };
-
-        //保存其他方案的最大利润记录
-        return this.saveOtherPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
+        //保存所有方案的最大利润记录
+        return this.saveAllPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
             if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
                 if (isRealInvest) {//真实投注需要判断盈利金额设置
                     AppServices.startMockTask();//结束正式投注，启动模拟投注
                     let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
-                    //保存最大盈利记录
-                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
-                        .then(() => {
-                            return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
-                        })
+
+                    //发送盈利提醒
+                    return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage)
                         .then(() => {
                             return Promise.reject(winMessage);
                         });
-                } else {
-                    //模拟投注同样保存最大利润
-                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo).then(() => {
-                        return true
-                    });
                 }
             } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
                 if (isRealInvest) {//真实投注需要判断亏损金额设置
                     AppServices.startMockTask();//结束正式投注，启动模拟投注
                     let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
-                    //保存最大亏损记录
-                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo)
-                        .then(() => {
-                            return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage);
-                        })
+
+                    //发送亏损提醒
+                    return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
                         .then(() => {
                             return Promise.reject(loseMessage);
                         });
-                } else {
-                    //模拟投注同样保存最大亏损
-                    return LotteryDbService.saveOrUpdateMaxProfitInfo(maxProfitInfo).then(() => {
-                        return true
-                    });
                 }
             } else {
                 return Promise.resolve(true);
