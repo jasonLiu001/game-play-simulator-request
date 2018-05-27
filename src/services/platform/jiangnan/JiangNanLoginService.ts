@@ -69,11 +69,14 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
             })
             .then((result) => {
                 //判断登录接口返回值，如果不是登录成功状态发送邮件通知
-                if (result && result.code != 200) {
-                    return EmailSender.sendEmail("登录异常", result)
-                        .then(() => {
-                            return result;
-                        });
+                if (result) {
+                    let jsonResult = JSON.parse(result);
+                    if (jsonResult.code != 200) {
+                        return EmailSender.sendEmail("登录异常", result)
+                            .then(() => {
+                                return result;
+                            });
+                    }
                 }
                 return result;
             })

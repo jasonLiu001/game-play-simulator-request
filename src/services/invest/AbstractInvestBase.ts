@@ -226,9 +226,8 @@ export abstract class AbstractInvestBase {
                             return Promise.reject(loseMessage);
                         });
                 }
-            } else {
-                return Promise.resolve(true);
             }
+            return Promise.resolve(true);
         });
     }
 
@@ -263,9 +262,8 @@ export abstract class AbstractInvestBase {
                 } else if (condition01) {
                     log.info("最新一期中奖情况：【中】，满足投注条件");
                     return Promise.resolve(true);
-                } else {
-                    return Promise.reject("最新一期中奖情况，不满足投注条件，放弃本次投注");
                 }
+                return Promise.reject("最新一期中奖情况，不满足投注条件，放弃本次投注");
             });
     }
 

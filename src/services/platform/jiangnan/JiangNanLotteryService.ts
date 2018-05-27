@@ -189,13 +189,15 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
             })
             .then((result) => {
-                if (result && result.code != 200) {
-                    return EmailSender.sendEmail("购买异常", result)
-                        .then(() => {
-                            return result;
-                        });
+                if (result) {
+                    let jsonResult = JSON.parse(result);
+                    if (jsonResult.code != 200) {
+                        return EmailSender.sendEmail("购买异常", result)
+                            .then(() => {
+                                return result;
+                            });
+                    }
                 }
-
                 return result;
             })
             .catch((e) => {
