@@ -128,7 +128,13 @@ export abstract class AbstractInvestBase {
         //当天22:00以后自动切换到模拟投注
         if (isRealInvest && currentTime > thirdTime) {
             AppServices.startMockTask();//结束正式投注，启动模拟投注
-            return Promise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注");
+            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
+
+            //发送盈利提醒
+            return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
+                .then(() => {
+                    return Promise.reject(timeReachMessage);
+                });
         }
 
         return Promise.resolve(true);
