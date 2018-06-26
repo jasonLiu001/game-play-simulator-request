@@ -46,10 +46,10 @@ export const CONFIG_CONST = {
     username: '',
     //登录密码
     password: '',
-    //元、角、分 模式
+    //元、角、分、厘模式
     awardMode: EnumAwardMode.feng,//yuan,jiao,feng,li
     //账户初始余额
-    originAccoutBalance: 100,
+    originAccountBalance: 100,
     //账号最大值 盈利金额设置 单位为元  比如：需要盈利120，则设置成620，这里不能设置
     maxAccountBalance: 120,
     //账号最小值 亏损金额设置 单位为元  比如：账户当前最低余额
@@ -68,7 +68,7 @@ export class Config {
     //正式需要投注的号码
     public static currentInvestNumbers: string = '';
     //当前账户余额 程序运行时初始化
-    public static currentAccountBalance: number = CONFIG_CONST.originAccoutBalance;
+    public static currentAccountBalance: number = CONFIG_CONST.originAccountBalance;
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
     //当期选择的奖金模式
@@ -88,19 +88,19 @@ export class Config {
     public static investPlan: any = {
         one: {
             investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccoutBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         two: {
             investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccoutBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         three: {
             investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccoutBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         four: {
             investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccoutBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         }
     };
 }

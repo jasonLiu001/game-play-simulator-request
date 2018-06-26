@@ -178,9 +178,9 @@ export abstract class AbstractInvestBase {
             let maxProfitInfo: MaxProfitInfo = {
                 period: Config.globalVariable.last_Period,
                 planType: planType,
-                originAccoutBalance: CONFIG_CONST.originAccoutBalance,
+                originAccoutBalance: CONFIG_CONST.originAccountBalance,
                 maxAccountBalance: planInfo.accountBalance,
-                profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccoutBalance) / CONFIG_CONST.originAccoutBalance).toFixed(2)),
+                profitPercent: Number(Number((CONFIG_CONST.maxAccountBalance - CONFIG_CONST.originAccountBalance) / CONFIG_CONST.originAccountBalance).toFixed(2)),
                 actualInvestTotalCount: Config.currentInvestTotalCount,
                 isRealInvest: isRealInvest ? 1 : 2,//是否是真实投注
                 createTime: moment().format('YYYY-MM-DD HH:mm:ss')
