@@ -11,6 +11,7 @@ import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
 import {MaxProfitInfo} from "../../models/db/MaxProfitInfo";
+import {SettingsInfo} from "../../models/db/SettingsInfo";
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
@@ -534,7 +535,7 @@ export class LotteryDbService {
      * @return {Promise<any>}
      */
     public static getPlanResultInfoHistory(historyCount: number): Promise<Array<any>> {
-        return PlanResult.findOne({
+        return PlanResult.findAll({
             limit: historyCount,
             where: {status: 1},
             order: [
@@ -690,6 +691,19 @@ export class LotteryDbService {
     public static getMaxProfitInfo(period: string, planType: number): Promise<MaxProfitInfo> {
         return MaxProfit.findOne({
             where: {period: period, planType: planType},
+            raw: true
+        });
+    }
+
+    /**
+     *
+     * 获取所有的参数设置信息
+     */
+    public static getSettingsInfoList(): Promise<Array<SettingsInfo>> {
+        return Setting.findAll({
+            order: [
+                ['id', 'DESC']
+            ],
             raw: true
         });
     }
