@@ -19,7 +19,7 @@ describe("ORMService Test", () => {
             });
     });
 
-    it('should connect mysql db success', (done) => {
+    xit('should connect mysql db success', (done) => {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -99,6 +99,18 @@ describe("ORMService Test", () => {
 
     xit('should get history count records', function (done) {
         LotteryDbService.getPlanInvestNumbersInfoListByStatus(1)
+            .then((res) => {
+                console.log(res);
+                done();
+            })
+            .catch((e) => {
+                console.log(e);
+                done();
+            });
+    });
+
+    it('should get all settings', function (done) {
+        LotteryDbService.getSettingsInfoList()
             .then((res) => {
                 console.log(res);
                 done();

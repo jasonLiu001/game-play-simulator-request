@@ -33,7 +33,26 @@ export class AppServices {
      * 初始化设置
      */
     public static initSettings(settingInfoList: Array<SettingsInfo>): void {
-        //todo:初始化设置选项
+        for (let index in settingInfoList) {
+            let item = settingInfoList[index];
+            if (item.key === 'originAccountBalance') {
+                CONFIG_CONST.originAccountBalance = Number(item.value);
+            } else if (item.key === 'maxAccountBalance') {
+                CONFIG_CONST.maxAccountBalance = Number(item.value);
+            } else if (item.key === 'minAccountBalance') {
+                CONFIG_CONST.minAccountBalance = Number(item.value);
+            } else if (item.key === 'awardMode') {
+                CONFIG_CONST.awardMode = Number(item.value);
+            } else if (item.key === 'touZhuBeiShu') {
+                CONFIG_CONST.touZhuBeiShu = item.value;
+            } else if (item.key === 'currentSelectedInvestPlanType') {
+                CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
+            } else if (item.key === 'historyCount') {
+                CONFIG_CONST.historyCount = Number(item.value);
+            } else if (item.key === 'isRealInvest') {
+                CONFIG_CONST.isRealInvest = Number(item.value);
+            }
+        }
     }
 
     /**

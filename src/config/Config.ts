@@ -38,6 +38,8 @@ export const CONFIG_CONST = {
     autoCheckTimerInterval: 40000,
     //三星奖金
     awardPrice: 1954,
+    //是否真实投注 1:真实投注  0:模拟投注
+    isRealInvest: 1,
     //当前选择的投注方案类型
     currentSelectedInvestPlanType: 1,
     //投注倍数
