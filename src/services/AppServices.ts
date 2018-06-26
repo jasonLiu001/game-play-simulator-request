@@ -5,6 +5,8 @@ import {CONFIG_CONST, Config} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
+import {SettingsInfo} from "../models/db/SettingsInfo";
+
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js');
@@ -28,6 +30,14 @@ let log = log4js.getLogger('AppServices'),
 export class AppServices {
     /**
      *
+     * 初始化设置
+     */
+    public static initSettings(settingInfoList: Array<SettingsInfo>): void {
+        //todo:初始化设置选项
+    }
+
+    /**
+     *
      *
      * 启动程序，自动获取开奖号码并投注
      * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
@@ -40,7 +50,12 @@ export class AppServices {
                 AppServices.clearAwardTimer();
                 //启动获取奖号任务 奖号更新成功后 自动投注
                 AwardService.startGetAwardInfoTask(() => {
-                    investService.executeAutoInvest(request, isRealInvest);//执行投注
+                    //投注前获取投注
+                    LotteryDbService.getSettingsInfoList()
+                        .then((settingInfoList: Array<SettingsInfo>) => {
+                            AppServices.initSettings(settingInfoList);
+                            investService.executeAutoInvest(request, isRealInvest);//执行投注
+                        });
                 });
             })
             .catch((err) => {
