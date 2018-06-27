@@ -5,7 +5,6 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {EnumAwardMode, RejectionMsg} from "../../models/EnumModel";
-import {AppServices} from "../AppServices";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
