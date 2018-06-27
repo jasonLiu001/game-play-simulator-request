@@ -51,6 +51,8 @@ export class AppServices {
                 CONFIG_CONST.historyCount = Number(item.value);
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value);
+            } else if (item.key === 'isEnableCheckMaxProfit') {
+                CONFIG_CONST.isEnableCheckMaxProfit = Number(item.value);
             }
         }
     }
@@ -59,10 +61,9 @@ export class AppServices {
      *
      *
      * 启动程序，自动获取开奖号码并投注
-     * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    public static start(isRealInvest: boolean): void {
-        log.info('%s程序已启动，持续监视中...', (isRealInvest ? '' : '模拟'));
+    public static start(): void {
+        log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //是否有模拟投注，有则先结束模拟投注
@@ -73,7 +74,7 @@ export class AppServices {
                     LotteryDbService.getSettingsInfoList()
                         .then((settingInfoList: Array<SettingsInfo>) => {
                             AppServices.initSettings(settingInfoList);
-                            investService.executeAutoInvest(request, isRealInvest);//执行投注
+                            investService.executeAutoInvest(request, CONFIG_CONST.isRealInvest === 1);//执行投注
                         });
                 });
             })
@@ -89,15 +90,5 @@ export class AppServices {
      */
     public static clearAwardTimer(): void {
         if (Config.awardTimer) clearInterval(Config.awardTimer);
-    }
-
-    /**
-     *
-     * 执行模拟投注
-     */
-    public static startMockTask(): void {
-        log.info('模拟投注启动中...');
-        AppServices.clearAwardTimer();//停止真实投注程序
-        AppServices.start(false);//启动模拟投注程序
     }
 }

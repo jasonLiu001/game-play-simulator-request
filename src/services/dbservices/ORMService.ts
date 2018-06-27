@@ -284,7 +284,8 @@ export class LotteryDbService {
                                 {key: 'touZhuBeiShu', value: '1', desc: '投注倍数'},
                                 {key: 'currentSelectedInvestPlanType', value: '1', desc: '当前选择的投注方案类型'},
                                 {key: 'historyCount', value: '3', desc: '需要获取的历史号码数量'},
-                                {key: 'isRealInvest', value: '0', desc: '是否是真实投注'}
+                                {key: 'isRealInvest', value: '0', desc: '是否是真实投注'},
+                                {key: 'isEnableCheckMaxProfit', value: '1', desc: '是否启最大利润检查'}
                             ]);
                         } else {
                             return res;

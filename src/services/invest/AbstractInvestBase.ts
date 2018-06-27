@@ -127,7 +127,6 @@ export abstract class AbstractInvestBase {
         let thirdTime = new Date(year, month, day, 21, 59, 0);
         //当天22:00以后自动切换到模拟投注
         if (isRealInvest && currentTime > thirdTime) {
-            AppServices.startMockTask();//结束正式投注，启动模拟投注
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
             //发送盈利提醒
@@ -212,7 +211,6 @@ export abstract class AbstractInvestBase {
         return this.saveAllPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
             if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
                 if (isRealInvest) {//真实投注需要判断盈利金额设置
-                    AppServices.startMockTask();//结束正式投注，启动模拟投注
                     let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
 
                     //发送盈利提醒
@@ -223,7 +221,6 @@ export abstract class AbstractInvestBase {
                 }
             } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
                 if (isRealInvest) {//真实投注需要判断亏损金额设置
-                    AppServices.startMockTask();//结束正式投注，启动模拟投注
                     let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
 
                     //发送亏损提醒
