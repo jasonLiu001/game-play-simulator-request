@@ -17,9 +17,7 @@
   },
   "scripts": {
     "grunt": "grunt",
-    "linux:mock": "npm run win:mock",
     "linux:start": "npm run win:start",
-    "win:mock": "npm run grunt && cd dist && node ./MockApp.js",
     "win:start": "npm run grunt && cd dist && node ./App.js"
   },
   "devDependencies": {
