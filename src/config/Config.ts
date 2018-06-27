@@ -1,6 +1,18 @@
 import {EnumAwardMode} from "../models/EnumModel";
+import {SettingsInfo} from "../models/db/SettingsInfo";
 
 let path = require('path');
+
+/**
+ *
+ * 模拟投注参数实体
+ */
+export const IS_INVEST_SETTING_MODEL: SettingsInfo = {
+    id: 0,
+    key: 'isRealInvest',
+    value: '0',
+    desc: '是否是真实投注'
+};
 
 /**
  *

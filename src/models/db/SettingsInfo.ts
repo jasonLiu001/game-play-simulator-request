@@ -7,7 +7,7 @@ export class SettingsInfo {
      *
      * id
      */
-    id: boolean;
+    id: number;
 
     /**
      *

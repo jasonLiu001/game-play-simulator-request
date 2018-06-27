@@ -66,9 +66,7 @@ export class AppServices {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
-                //是否有模拟投注，有则先结束模拟投注
-                AppServices.clearAwardTimer();
-                //启动获取奖号任务 奖号更新成功后 自动投注
+                //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
                 AwardService.startGetAwardInfoTask(() => {
                     //投注前获取投注
                     LotteryDbService.getSettingsInfoList()
@@ -81,14 +79,5 @@ export class AppServices {
             .catch((err) => {
                 ErrorService.appStartErrorHandler(log, err);
             });
-    }
-
-    /**
-     *
-     *
-     * 停止获取奖号
-     */
-    public static clearAwardTimer(): void {
-        if (Config.awardTimer) clearInterval(Config.awardTimer);
     }
 }

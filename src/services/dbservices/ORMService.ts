@@ -708,5 +708,35 @@ export class LotteryDbService {
             raw: true
         });
     }
+
+    /**
+     *
+     * 保存或更新设置
+     */
+    public static saveOrUpdateSettingsInfo(settingsInfo: SettingsInfo): Promise<SettingsInfo> {
+        return Setting.findOne(
+            {
+                where: {key: settingsInfo.key},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Setting.update(settingsInfo, {fields: ['value']},
+                        {
+                            where: {
+                                key: settingsInfo.key
+                            }
+                        })
+                        .then(() => {
+                            return settingsInfo;
+                        });
+                } else {
+                    return Setting.create(settingsInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
 }
 

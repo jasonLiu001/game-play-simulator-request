@@ -1,5 +1,5 @@
 import {LotteryDbService} from "../dbservices/ORMService";
-import {Config, CONFIG_CONST} from "../../config/Config";
+import {Config, CONFIG_CONST, IS_INVEST_SETTING_MODEL} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import Promise = require('bluebird');
@@ -12,6 +12,7 @@ import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {MaxProfitInfo} from "../../models/db/MaxProfitInfo";
 import {EmailSender} from "../email/EmailSender";
+import {SettingsInfo} from "../../models/db/SettingsInfo";
 
 
 let log4js = require('log4js'),
@@ -129,8 +130,12 @@ export abstract class AbstractInvestBase {
         if (isRealInvest && currentTime > thirdTime) {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
-            //发送盈利提醒
-            return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
+            //自动切换到模拟投注 同时发送购买结束提醒
+            return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
+                .then(() => {
+                    //发送 购买结束提醒
+                    return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
+                })
                 .then(() => {
                     return Promise.reject(timeReachMessage);
                 });
@@ -217,8 +222,12 @@ export abstract class AbstractInvestBase {
                 if (isRealInvest) {//真实投注需要判断盈利金额设置
                     let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
 
-                    //发送盈利提醒
-                    return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage)
+                    //自动切换到模拟后 发送盈利提醒
+                    return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
+                        .then(() => {
+                            //发送盈利提醒
+                            return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
+                        })
                         .then(() => {
                             return Promise.reject(winMessage);
                         });
@@ -227,8 +236,12 @@ export abstract class AbstractInvestBase {
                 if (isRealInvest) {//真实投注需要判断亏损金额设置
                     let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
 
-                    //发送亏损提醒
-                    return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
+                    //自动切换到模拟后 发送亏损提醒
+                    return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
+                        .then(() => {
+                            //发送亏损提醒
+                            return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
+                        })
                         .then(() => {
                             return Promise.reject(loseMessage);
                         });
