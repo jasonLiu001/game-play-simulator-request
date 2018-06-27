@@ -5,12 +5,6 @@
 export class SettingsInfo {
     /**
      *
-     * id
-     */
-    id: number;
-
-    /**
-     *
      * 参数项名称
      */
     key: string;

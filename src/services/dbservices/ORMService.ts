@@ -179,11 +179,6 @@ const Invest = sequelize.define('invest', {
  * 参数设置表
  */
 const Setting = sequelize.define('settings', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
     key: {//参数名称
         type: Sequelize.STRING,
         primaryKey: true
