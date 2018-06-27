@@ -212,10 +212,6 @@ export abstract class AbstractInvestBase {
      * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
     private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
-        if (CONFIG_CONST.isEnableCheckMaxProfit !== 1) {//是否检查最大盈利
-            return Promise.resolve(true);
-        }
-
         //保存所有方案的最大利润记录
         return this.saveAllPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
             if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {

@@ -277,15 +277,13 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             return Setting.bulkCreate([
-                                {key: 'originAccountBalance', value: '100', desc: '账户初始余额'},
-                                {key: 'maxAccountBalance', value: '120', desc: '最大盈利目标金额'},
+                                {key: 'originAccountBalance', value: '1000', desc: '账户初始余额'},
+                                {key: 'maxAccountBalance', value: '1200', desc: '最大盈利目标金额'},
                                 {key: 'minAccountBalance', value: '0', desc: '最大亏损金额'},
                                 {key: 'awardMode', value: '100', desc: '元、角、分、厘模式'},
-                                {key: 'touZhuBeiShu', value: '1', desc: '投注倍数'},
+                                {key: 'touZhuBeiShu', value: '2', desc: '投注倍数'},
                                 {key: 'currentSelectedInvestPlanType', value: '1', desc: '当前选择的投注方案类型'},
-                                {key: 'historyCount', value: '3', desc: '需要获取的历史号码数量'},
-                                {key: 'isRealInvest', value: '0', desc: '是否是真实投注'},
-                                {key: 'isEnableCheckMaxProfit', value: '1', desc: '是否启最大利润检查'}
+                                {key: 'isRealInvest', value: '0', desc: '是否是真实投注 1:真实 0:模拟'}
                             ]);
                         } else {
                             return res;

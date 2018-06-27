@@ -47,12 +47,8 @@ export class AppServices {
                 CONFIG_CONST.touZhuBeiShu = item.value;
             } else if (item.key === 'currentSelectedInvestPlanType') {
                 CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
-            } else if (item.key === 'historyCount') {
-                CONFIG_CONST.historyCount = Number(item.value);
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value);
-            } else if (item.key === 'isEnableCheckMaxProfit') {
-                CONFIG_CONST.isEnableCheckMaxProfit = Number(item.value);
             }
         }
     }
