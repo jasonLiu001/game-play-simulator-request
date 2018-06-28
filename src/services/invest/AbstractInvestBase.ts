@@ -220,11 +220,9 @@ export abstract class AbstractInvestBase {
                     //自动切换到模拟后 发送盈利提醒
                     return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
                         .then(() => {
+                            log.error(winMessage);
                             //发送盈利提醒
                             return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
-                        })
-                        .then(() => {
-                            return Promise.reject(winMessage);
                         });
                 }
             } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
@@ -234,11 +232,9 @@ export abstract class AbstractInvestBase {
                     //自动切换到模拟后 发送亏损提醒
                     return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
                         .then(() => {
+                            log.error(loseMessage);
                             //发送亏损提醒
                             return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
-                        })
-                        .then(() => {
-                            return Promise.reject(loseMessage);
                         });
                 }
             }
