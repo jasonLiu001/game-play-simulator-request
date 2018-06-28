@@ -281,7 +281,7 @@ export class LotteryDbService {
                                 {key: 'originAccountBalance', value: '1000', orderId: '4', desc: '账户初始余额'},
                                 {key: 'maxAccountBalance', value: '1200', orderId: '5', desc: '最大盈利目标金额'},
                                 {key: 'minAccountBalance', value: '0', orderId: '6', desc: '最大亏损金额'},
-                                {key: 'currentSelectedInvestPlanType', value: '7', orderId: '1', desc: '当前选择的投注方案类型'}
+                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '7', desc: '当前选择的投注方案类型'}
                             ]);
                         } else {
                             return res;
