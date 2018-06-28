@@ -21,9 +21,8 @@ export class InvestService extends AbstractInvestBase {
     /**
      * 模拟执行投注入口方法
      * @param request request对象实例
-     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    executeAutoInvest(request: any, isRealInvest: boolean): void {
+    executeAutoInvest(request: any): void {
         this.calculateWinMoney()
             .then(() => {
                 log.info('正在产生投注号码...');
@@ -36,12 +35,12 @@ export class InvestService extends AbstractInvestBase {
                 Config.currentInvestNumbers = investNumbers;
                 log.info('是否可投注..条件检查结果如下：');
                 //检查是否满足投注条件
-                return this.doCheck(isRealInvest);
+                return this.doCheck();
             })
             .then(() => {
                 //真实投注执行登录操作 未达到最大利润值和亏损值
                 if (Config.currentAccountBalance < CONFIG_CONST.maxAccountBalance && Config.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
-                    if (isRealInvest) {
+                    if (CONFIG_CONST.isRealInvest) {
                         log.info('正在执行真实登录...');
                         //使用request投注 需要先登录在投注 每次投注前都需要登录
                         return jiangNanLoginService.login(request)
@@ -53,11 +52,11 @@ export class InvestService extends AbstractInvestBase {
                 }
             })
             .then(() => {
-                log.info(isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
+                log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
                 log.info('投注前账户余额：%s', Config.currentAccountBalance);
                 if (Config.currentAccountBalance < CONFIG_CONST.maxAccountBalance && Config.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     //真实投注 未达到最大利润值和亏损值
-                    if (isRealInvest) {
+                    if (CONFIG_CONST.isRealInvest) {
                         log.info('正在执行真实投注...');
                         return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
                             .then((investResult) => {
@@ -79,7 +78,7 @@ export class InvestService extends AbstractInvestBase {
                 }
             })
             .then(() => {
-                let messageType = isRealInvest ? "真实投注" : "模拟投注";
+                let messageType = CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注";
                 log.info('正在保存%s记录...', messageType);
                 //真实后模拟投注后 更新各个方案的账户余额
                 this.updateAllPlanAccountBalance();

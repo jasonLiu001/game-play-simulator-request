@@ -109,9 +109,8 @@ export abstract class AbstractInvestBase {
     /**
      *
      * 检查投注时间 在02:00-10:00点之间不允许投注  当天22:00以后自动切换到模拟投注
-     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    private checkInvestTime(isRealInvest: boolean): Promise<any> {
+    private checkInvestTime(): Promise<any> {
         //检查在此时间内是否允许投注
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
@@ -126,12 +125,14 @@ export abstract class AbstractInvestBase {
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
         //当天22:00以后自动切换到模拟投注
-        if (isRealInvest && currentTime > thirdTime) {
+        if (CONFIG_CONST.isRealInvest && currentTime > thirdTime) {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
             return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
                 .then(() => {
+                    //切换到模拟投注
+                    CONFIG_CONST.isRealInvest = false;
                     //发送 购买结束提醒
                     return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
                 })
@@ -208,31 +209,34 @@ export abstract class AbstractInvestBase {
     /**
      *
      * 检查最大盈利金额是否达到设定目标
-     * @param isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    private checkMaxWinMoney(isRealInvest: boolean): Promise<any> {
+    private checkMaxWinMoney(): Promise<any> {
         //保存所有方案的最大利润记录
-        return this.saveAllPlanMaxProfit(isRealInvest).then((results: Array<MaxProfitInfo>) => {
+        return this.saveAllPlanMaxProfit(CONFIG_CONST.isRealInvest).then((results: Array<MaxProfitInfo>) => {
             if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
-                if (isRealInvest) {//真实投注需要判断盈利金额设置
+                if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
                     let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
 
                     //自动切换到模拟后 发送盈利提醒
                     return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
                         .then(() => {
                             log.error(winMessage);
+                            //切换到模拟投注
+                            CONFIG_CONST.isRealInvest = false;
                             //发送盈利提醒
                             return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
                         });
                 }
             } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
-                if (isRealInvest) {//真实投注需要判断亏损金额设置
+                if (CONFIG_CONST.isRealInvest) {//真实投注需要判断亏损金额设置
                     let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
 
                     //自动切换到模拟后 发送亏损提醒
                     return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
                         .then(() => {
                             log.error(loseMessage);
+                            //切换到模拟投注
+                            CONFIG_CONST.isRealInvest = false;
                             //发送亏损提醒
                             return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
                         });
@@ -245,7 +249,6 @@ export abstract class AbstractInvestBase {
     /**
      *
      * 检查开奖计划的结果是否满足投注条件
-     * @param planResults 投注计划结果
      */
     private checkPlanResultHistory(): Promise<boolean> {
         //检查各个计划之前的中奖结果，根据结果过滤
@@ -282,7 +285,7 @@ export abstract class AbstractInvestBase {
      *
      * 查询当前投注记录 投注历史是否满足特定条件
      */
-    private checkInvestInfoHistory(isRealInvest: boolean): Promise<boolean> {
+    private checkInvestInfoHistory(): Promise<boolean> {
         return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 2)
             .then((res: Array<InvestInfo>) => {
                 //没有投注历史，或只有1条记录 直接返回
@@ -310,11 +313,11 @@ export abstract class AbstractInvestBase {
      *
      * 检查已开奖的期数个数
      */
-    private checkAwardHistoryCount(historyCount: number): Promise<boolean> {
-        return LotteryDbService.getAwardInfoHistory(historyCount)
+    private checkAwardHistoryCount(): Promise<boolean> {
+        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
-                if (!awardHistoryList || awardHistoryList.length != historyCount) {
-                    return Promise.reject("历史开奖总期数个数，不足" + historyCount + "期，不满足投注条件，已放弃本次投注");
+                if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) {
+                    return Promise.reject("历史开奖总期数个数，不足" + CONFIG_CONST.historyCount + "期，不满足投注条件，已放弃本次投注");
                 }
                 return Promise.resolve(true);
             });
@@ -325,9 +328,9 @@ export abstract class AbstractInvestBase {
      *
      * 当前投注是否是连续投注
      */
-    private sendContinueInvestWarnEmail(isRealInvest: boolean): Promise<boolean> {
+    private sendContinueInvestWarnEmail(): Promise<boolean> {
         //模拟投注不需要邮件提醒
-        if (!isRealInvest) return Promise.resolve(true);
+        if (!CONFIG_CONST.isRealInvest) return Promise.resolve(true);
 
         //查询是否存在上期投注记录
         return LotteryDbService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
@@ -350,14 +353,13 @@ export abstract class AbstractInvestBase {
      *
      *
      * 是否可投注检查
-     * @param {Boolean} isRealInvest 是否是真实投注 true:真实投注  false:模拟投注
      */
-    public doCheck(isRealInvest: boolean): Promise<boolean> {
+    public doCheck(): Promise<boolean> {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
-        return this.checkInvestTime(isRealInvest)
+        return this.checkInvestTime()
             .then(() => {
                 //检查当前的最大盈利金额
-                return this.checkMaxWinMoney(isRealInvest);
+                return this.checkMaxWinMoney();
             })
             .then(() => {
                 //检查开奖号码是否满足投注条件
@@ -365,15 +367,15 @@ export abstract class AbstractInvestBase {
             })
             .then(() => {
                 //检查数据库中是否存在的已开奖的期数个数
-                return this.checkAwardHistoryCount(CONFIG_CONST.historyCount);
+                return this.checkAwardHistoryCount();
             })
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
-                return this.sendContinueInvestWarnEmail(isRealInvest);
+                return this.sendContinueInvestWarnEmail();
             })
             .then(() => {
                 //检查投注历史是否满足特定条件
-                //return this.checkInvestInfoHistory(isRealInvest);
+                //return this.checkInvestInfoHistory();
                 return Promise.resolve(true);
             })
             .then(() => {

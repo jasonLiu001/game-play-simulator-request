@@ -50,7 +50,7 @@ export class AppServices {
             } else if (item.key === 'currentSelectedInvestPlanType') {
                 CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
             } else if (item.key === 'isRealInvest') {
-                CONFIG_CONST.isRealInvest = Number(item.value);
+                CONFIG_CONST.isRealInvest = Number(item.value) === 1;
             }
         }
     }
@@ -94,7 +94,7 @@ export class AppServices {
                     //投注前 首先获取参数配置信息
                     AppServices.getAndInitSettings()
                         .then(() => {
-                            investService.executeAutoInvest(request, CONFIG_CONST.isRealInvest === 1);//执行投注
+                            investService.executeAutoInvest(request);//执行投注
                         });
                 });
             })
