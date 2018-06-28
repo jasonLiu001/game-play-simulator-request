@@ -49,6 +49,8 @@ export class AppServices {
                 CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value);
+            } else if (item.key === 'currentAccountBalance') {
+                Config.currentAccountBalance = Number(item.value);
             }
         }
     }

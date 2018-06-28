@@ -8,6 +8,7 @@ import {JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryServic
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
 import moment  = require('moment');
+import {SettingsInfo} from "../../models/db/SettingsInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -84,6 +85,15 @@ export class InvestService extends AbstractInvestBase {
                 log.info('%记录已保存', messageType);
                 //保存投注记录
                 return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
+            })
+            .then(() => {
+                //投注后 更新当前账户余额
+                let settingInfo: SettingsInfo = {
+                    key: 'currentAccountBalance',
+                    value: String(Config.currentAccountBalance),
+                    desc: '当前账户余额'
+                };
+                return LotteryDbService.saveOrUpdateSettingsInfo(settingInfo);
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
