@@ -183,6 +183,9 @@ const Setting = sequelize.define('settings', {
         type: Sequelize.STRING,
         primaryKey: true
     },
+    orderId: {//排序id
+        type: Sequelize.INTEGER
+    },
     value: {//参数值
         type: Sequelize.STRING
     },
@@ -272,13 +275,13 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             return Setting.bulkCreate([
-                                {key: 'originAccountBalance', value: '1000', desc: '账户初始余额'},
-                                {key: 'maxAccountBalance', value: '1200', desc: '最大盈利目标金额'},
-                                {key: 'minAccountBalance', value: '0', desc: '最大亏损金额'},
-                                {key: 'awardMode', value: '100', desc: '元、角、分、厘模式'},
-                                {key: 'touZhuBeiShu', value: '2', desc: '投注倍数'},
-                                {key: 'currentSelectedInvestPlanType', value: '1', desc: '当前选择的投注方案类型'},
-                                {key: 'isRealInvest', value: '0', desc: '是否是真实投注 1:真实 0:模拟'}
+                                {key: 'isRealInvest', value: '0', orderId: '1', desc: '是否是真实投注 1:真实 0:模拟'},
+                                {key: 'awardMode', value: '100', orderId: '2', desc: '元、角、分、厘模式'},
+                                {key: 'touZhuBeiShu', value: '2', orderId: '3', desc: '投注倍数'},
+                                {key: 'originAccountBalance', value: '1000', orderId: '4', desc: '账户初始余额'},
+                                {key: 'maxAccountBalance', value: '1200', orderId: '5', desc: '最大盈利目标金额'},
+                                {key: 'minAccountBalance', value: '0', orderId: '6', desc: '最大亏损金额'},
+                                {key: 'currentSelectedInvestPlanType', value: '7', orderId: '1', desc: '当前选择的投注方案类型'}
                             ]);
                         } else {
                             return res;
@@ -696,7 +699,7 @@ export class LotteryDbService {
     public static getSettingsInfoList(): Promise<Array<SettingsInfo>> {
         return Setting.findAll({
             order: [
-                ['id', 'DESC']
+                ['orderId', 'ASC']
             ],
             raw: true
         });
