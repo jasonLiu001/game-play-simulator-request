@@ -63,18 +63,33 @@ export class AppServices {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
+                //程序启动时 必须首先获取参数配置信息
+                return AppServices.getSettingsFromDatabase();
+            })
+            .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
                 AwardService.startGetAwardInfoTask(() => {
-                    //投注前获取投注
-                    LotteryDbService.getSettingsInfoList()
-                        .then((settingInfoList: Array<SettingsInfo>) => {
-                            AppServices.initSettings(settingInfoList);
+                    //投注前 首先获取参数配置信息
+                    AppServices.getSettingsFromDatabase()
+                        .then(() => {
                             investService.executeAutoInvest(request, CONFIG_CONST.isRealInvest === 1);//执行投注
                         });
                 });
             })
             .catch((err) => {
                 ErrorService.appStartErrorHandler(log, err);
+            });
+    }
+
+    /**
+     *
+     * 从数据库中获取配置
+     */
+    public static getSettingsFromDatabase(): Promise<any> {
+        return LotteryDbService.getSettingsInfoList()
+            .then((settingInfoList: Array<SettingsInfo>) => {
+                AppServices.initSettings(settingInfoList);
+                return settingInfoList;
             });
     }
 }
