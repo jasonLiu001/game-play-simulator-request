@@ -42,6 +42,7 @@ export class AppServices {
             } else if (item.key === 'minAccountBalance') {
                 CONFIG_CONST.minAccountBalance = Number(item.value);
             } else if (item.key === 'awardMode') {
+                Config.currentSelectedAwardMode = Number(item.value);
                 CONFIG_CONST.awardMode = Number(item.value);
             } else if (item.key === 'touZhuBeiShu') {
                 CONFIG_CONST.touZhuBeiShu = item.value;
