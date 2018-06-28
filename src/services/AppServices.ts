@@ -64,13 +64,13 @@ export class AppServices {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //程序启动时 必须首先获取参数配置信息
-                return AppServices.getSettingsFromDatabase();
+                return AppServices.getAndInitSettings();
             })
             .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
                 AwardService.startGetAwardInfoTask(() => {
                     //投注前 首先获取参数配置信息
-                    AppServices.getSettingsFromDatabase()
+                    AppServices.getAndInitSettings()
                         .then(() => {
                             investService.executeAutoInvest(request, CONFIG_CONST.isRealInvest === 1);//执行投注
                         });
@@ -83,9 +83,9 @@ export class AppServices {
 
     /**
      *
-     * 从数据库中获取配置
+     * 从数据库中获取配置并初始化
      */
-    public static getSettingsFromDatabase(): Promise<any> {
+    public static getAndInitSettings(): Promise<any> {
         return LotteryDbService.getSettingsInfoList()
             .then((settingInfoList: Array<SettingsInfo>) => {
                 AppServices.initSettings(settingInfoList);
