@@ -447,15 +447,6 @@ export abstract class AbstractInvestBase {
                 return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
             })
             .then(() => {
-                //开奖后 更新当前账户余额
-                let settingInfo: SettingsInfo = {
-                    key: 'currentAccountBalance',
-                    value: String(Config.currentAccountBalance),
-                    desc: '当前账户余额'
-                };
-                return LotteryDbService.saveOrUpdateSettingsInfo(settingInfo);
-            })
-            .then(() => {
                 //获取上期各计划投注号码
                 return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
             })

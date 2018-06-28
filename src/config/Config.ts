@@ -101,19 +101,19 @@ export class Config {
     public static investPlan: any = {
         one: {
             investNumbers: '',
-            accountBalance: Config.currentAccountBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         two: {
             investNumbers: '',
-            accountBalance: Config.currentAccountBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         three: {
             investNumbers: '',
-            accountBalance: Config.currentAccountBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         },
         four: {
             investNumbers: '',
-            accountBalance: Config.currentAccountBalance
+            accountBalance: CONFIG_CONST.originAccountBalance
         }
     };
 }

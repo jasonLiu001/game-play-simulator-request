@@ -90,15 +90,6 @@ export class InvestService extends AbstractInvestBase {
                 //保存投注记录
                 return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
             })
-            .then(() => {
-                //投注后 更新当前账户余额
-                let settingInfo: SettingsInfo = {
-                    key: 'currentAccountBalance',
-                    value: String(Config.currentAccountBalance),
-                    desc: '当前账户余额'
-                };
-                return LotteryDbService.saveOrUpdateSettingsInfo(settingInfo);
-            })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
             });
