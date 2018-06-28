@@ -64,7 +64,25 @@ export class AppServices {
         LotteryDbService.createLotteryTable()
             .then(() => {
                 //程序启动时 必须首先获取参数配置信息
-                return AppServices.getAndInitSettings();
+                return AppServices.getAndInitSettings()
+                    .then((settingInfoList: Array<SettingsInfo>) => {
+                        for (let index in settingInfoList) {
+                            let item = settingInfoList[index];
+                            if (item.key === 'originAccountBalance') {
+                                Config.currentAccountBalance = Number(item.value);
+
+                                let planType: number = 1;
+                                for (let key in Config.investPlan) {
+                                    if (CONFIG_CONST.currentSelectedInvestPlanType == planType) {
+                                        Config.investPlan[key].accountBalance = Number(item.value);
+                                    }
+                                    planType++;
+                                }
+                            } else if (item.key === 'awardMode') {
+                                Config.currentSelectedAwardMode = Number(item.value);
+                            }
+                        }
+                    });
             })
             .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
