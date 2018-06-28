@@ -36,7 +36,8 @@ export class AppServices {
         for (let index in settingInfoList) {
             let item = settingInfoList[index];
             if (item.key === 'originAccountBalance') {
-                CONFIG_CONST.originAccountBalance = Number(item.value);
+                //这里不需要 每次都设置初始余额 只在程序启动时赋值一次即可
+                //CONFIG_CONST.originAccountBalance = Number(item.value);
             } else if (item.key === 'maxAccountBalance') {
                 CONFIG_CONST.maxAccountBalance = Number(item.value);
             } else if (item.key === 'minAccountBalance') {
@@ -63,7 +64,7 @@ export class AppServices {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
-                //程序启动时 必须首先获取参数配置信息
+                //程序启动时 必须首先要获取的参数配置信息 originAccountBalance,currentAccountBalance,currentSelectedAwardMode
                 return AppServices.getAndInitSettings()
                     .then((settingInfoList: Array<SettingsInfo>) => {
                         for (let index in settingInfoList) {
@@ -80,6 +81,9 @@ export class AppServices {
                                 }
                             } else if (item.key === 'awardMode') {
                                 Config.currentSelectedAwardMode = Number(item.value);
+                            } else if (item.key === 'originAccountBalance') {
+                                //这里不需要 每次都设置初始余额 只在程序启动时赋值一次即可
+                                CONFIG_CONST.originAccountBalance = Number(item.value);
                             }
                         }
                     });
