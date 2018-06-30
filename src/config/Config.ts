@@ -74,8 +74,6 @@ export const CONFIG_CONST = {
  * @summary 配置文件
  * */
 export class Config {
-    //数据库文件路径
-    public static dbPath: string = path.resolve(__dirname, "..", "data.db");
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
     //正式需要投注的号码
