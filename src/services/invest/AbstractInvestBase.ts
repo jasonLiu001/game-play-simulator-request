@@ -405,7 +405,9 @@ export abstract class AbstractInvestBase {
                 winMoney: 0,
                 status: 0,
                 isWin: 0,
-                investTime: moment().format('YYYY-MM-DD HH:mm:ss')
+                investTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                investDate: moment().format('YYYY-MM-DD'),
+                investTimestamp: moment().format('HH:mm:ss')
             };
             planType++;
             allPlanInvests.push(investInfo);
@@ -436,7 +438,9 @@ export abstract class AbstractInvestBase {
                         winMoney: item.winMoney,
                         status: item.status,
                         isWin: item.isWin,
-                        investTime: item.investTime
+                        investTime: item.investTime,
+                        investDate: item.investDate,
+                        investTimestamp: item.investTimestamp
                     };
                     //后三开奖号码
                     let prizeNumber = item.openNumber.substring(2);

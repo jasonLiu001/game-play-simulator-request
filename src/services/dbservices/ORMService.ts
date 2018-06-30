@@ -165,12 +165,21 @@ const Invest = sequelize.define('invest', {
     isWin: {//是否中奖标识
         type: Sequelize.INTEGER
     },
-    investTime: {//投注时间
+    investTime: {//投注日期和时间
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
         get: function () {
-            return moment().format('YYYY-MM-DD HH:mm:ss');
+            const investTime = this.getDataValue('investTime');
+            return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
         }
+    },
+    investDate: {//投注日期
+        type: Sequelize.STRING,
+        defaultValue: moment().format('YYYY-MM-DD')
+    },
+    investTimestamp: {//投注时间
+        type: Sequelize.STRING,
+        defaultValue: moment().format('HH:mm:ss')
     }
 });
 

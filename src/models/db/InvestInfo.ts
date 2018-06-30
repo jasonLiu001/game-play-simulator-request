@@ -72,4 +72,16 @@ export class InvestInfo {
      * 投注时间
      */
     investTime: string;
+
+    /**
+     * 投注日期
+     *
+     */
+    investDate: string;
+
+    /**
+     *
+     * 投注时间
+     */
+    investTimestamp: string;
 }
