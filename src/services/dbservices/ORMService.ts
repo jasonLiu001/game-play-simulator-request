@@ -217,42 +217,6 @@ const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getMo
  * 计划投注号码表
  */
 const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.TEXT));
-/**
- *
- * 目标利润表
- */
-const MaxProfit = sequelize.define('max_profit', {
-    period: {//期号
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    planType: {//方案类型
-        type: Sequelize.INTEGER,
-        primaryKey: true
-    },
-    originAccoutBalance: {//初始账号余额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    maxAccountBalance: {//盈利的目标金额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    profitPercent: {//利润百分比  0.2代表20%
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    actualInvestTotalCount: {//达到目标利润时，实际投注次数
-        type: Sequelize.INTEGER
-    },
-    isRealInvest: {//是否是真实投注  1：真实投注 2:模拟投注
-        type: Sequelize.INTEGER
-    },
-    createTime: {//记录创建时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            return moment().format('YYYY-MM-DD HH:mm:ss');
-        }
-    }
-});
 
 /**
  *
@@ -654,51 +618,6 @@ export class LotteryDbService {
             promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
         }
         return Promise.all(promiseArray);
-    }
-
-    /**
-     *
-     * 保存或更新最大利润表
-     */
-    public static saveOrUpdateMaxProfitInfo(maxProfit: MaxProfitInfo): Promise<MaxProfitInfo> {
-        return MaxProfit.findOne(
-            {
-                where: {
-                    period: maxProfit.period,
-                    planType: maxProfit.planType
-                },
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return MaxProfit.update(maxProfit,
-                        {
-                            where: {
-                                period: maxProfit.period,
-                                planType: maxProfit.planType
-                            }
-                        })
-                        .then(() => {
-                            return maxProfit;
-                        });
-                } else {
-                    return MaxProfit.create(maxProfit)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
-    }
-
-    /**
-     *
-     * 获取投注信息
-     */
-    public static getMaxProfitInfo(period: string, planType: number): Promise<MaxProfitInfo> {
-        return MaxProfit.findOne({
-            where: {period: period, planType: planType},
-            raw: true
-        });
     }
 
     /**
