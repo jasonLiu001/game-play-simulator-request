@@ -9,9 +9,7 @@ import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
-import {MaxProfitInfo} from "../../models/db/MaxProfitInfo";
 import {EmailSender} from "../email/EmailSender";
-import {SettingsInfo} from "../../models/db/SettingsInfo";
 
 
 let log4js = require('log4js'),

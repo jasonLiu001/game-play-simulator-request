@@ -10,8 +10,9 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
-import {MaxProfitInfo} from "../../models/db/MaxProfitInfo";
 import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
+import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
@@ -185,6 +186,58 @@ const Invest = sequelize.define('invest', {
 
 /**
  *
+ * 记录每个计划全天所有投注记录
+ */
+const InvestTotal = sequelize.define('invest_total', {
+    period: {//期号
+        type: Sequelize.STRING,
+        primaryKey: true
+    },
+    planType: {//方案类型
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
+    investNumbers: {//投注号码
+        type: Sequelize.TEXT
+    },
+    investNumberCount: {//投注号码总注数
+        type: Sequelize.INTEGER
+    },
+    currentAccountBalance: {//当前账户余额
+        type: Sequelize.DECIMAL(10, 2)
+    },
+    awardMode: {//元、角、分、厘 模式
+        type: Sequelize.INTEGER
+    },
+    winMoney: {//盈利金额
+        type: Sequelize.DECIMAL(10, 2)
+    },
+    status: {//是否开奖标识
+        type: Sequelize.INTEGER
+    },
+    isWin: {//是否中奖标识
+        type: Sequelize.INTEGER
+    },
+    investTime: {//投注日期和时间
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            const investTime = this.getDataValue('investTime');
+            return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+        }
+    },
+    investDate: {//投注日期
+        type: Sequelize.STRING,
+        defaultValue: moment().format('YYYY-MM-DD')
+    },
+    investTimestamp: {//投注时间
+        type: Sequelize.STRING,
+        defaultValue: moment().format('HH:mm:ss')
+    }
+});
+
+/**
+ *
  * 参数设置表
  */
 const Setting = sequelize.define('settings', {
@@ -275,6 +328,7 @@ export class LotteryDbService {
         return sequelize.drop();
     }
 
+    //region 开奖信息award表
     /**
      *
      * 获取开奖信息
@@ -315,6 +369,24 @@ export class LotteryDbService {
             });
     }
 
+    /**
+     *
+     * 获取特定数量的最新开奖数据
+     * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
+     * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
+     */
+    public static getAwardInfoHistory(historyCount: number) {
+        return Award.findAll({
+            limit: historyCount,
+            order: [
+                ['period', 'DESC']
+            ],
+            raw: true
+        });
+    }
+    //endregion
+
+    //region 根据条件过滤后的 实际投注明细invest表
     /**
      *
      * 获取投注信息
@@ -414,16 +486,74 @@ export class LotteryDbService {
         //     raw: true
         // });
     }
+    //endregion
+
+    //region 所有计划每局投注明细invest_total表
+    /**
+     *
+     * 获取投注信息
+     */
+    public static getInvestTotalInfo(period: string, planType: number): Promise<InvestTotalInfo> {
+        return InvestTotal.findOne({
+            where: {period: period, planType: planType},
+            raw: true
+        });
+    }
 
     /**
      *
-     * 获取特定数量的最新开奖数据
-     * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
-     * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
+     * 保存或者更新投注信息
      */
-    public static getAwardInfoHistory(historyCount: number) {
-        return Award.findAll({
+    public static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
+        return InvestTotal.findOne(
+            {
+                where: {
+                    period: investTotalInfo.period,
+                    planType: investTotalInfo.planType
+                },
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return InvestTotal.update(investTotalInfo,
+                        {
+                            where: {
+                                period: investTotalInfo.period,
+                                planType: investTotalInfo.planType
+                            }
+                        })
+                        .then(() => {
+                            return investTotalInfo;
+                        });
+                } else {
+                    return InvestTotal.create(investTotalInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
+    /**
+     *
+     * 批量保存或者更新投注信息
+     */
+    public static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let index in investTotalInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investTotalInfoList[index]));
+        }
+        return Promise.all(promiseArray);
+    }
+
+    /**
+     *
+     * 获取特定数量的最新投注记录
+     */
+    public static getInvestTotalInfoHistory(planType: number, historyCount: number): Promise<Array<any>> {
+        return InvestTotal.findAll({
             limit: historyCount,
+            where: {planType: planType},
             order: [
                 ['period', 'DESC']
             ],
@@ -431,6 +561,36 @@ export class LotteryDbService {
         });
     }
 
+    /**
+     *
+     * 根据状态获取投注信息
+     * SELECT i.*, a.openNumber FROM invest AS i INNER JOIN award AS a ON i.period = a.period WHERE i.status =1  order by a.period asc
+     * @param status 0：未开奖，1：已开奖
+     */
+    public static getInvestTotalInfoListByStatus(status: number): Promise<Array<any>> {
+        let sql = "SELECT i.*, a." + CONST_AWARD_TABLE.openNumber + " FROM " + CONST_INVEST_TOTAL_TABLE.tableName + " AS i INNER JOIN " + CONST_AWARD_TABLE.tableName + " AS a ON i." + CONST_INVEST_TOTAL_TABLE.period + " = a." + CONST_AWARD_TABLE.period + " WHERE i." + CONST_INVEST_TOTAL_TABLE.status + " = " + status + " order by a." + CONST_AWARD_TABLE.period + " asc";
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+
+        ////这里的表关联暂时无法使用
+        // return InvestTotal.findAll({
+        //     where: {
+        //         status: status
+        //     },
+        //     order: [
+        //         ['period', 'ASC']
+        //     ],
+        //     include: [{
+        //         model: Award,
+        //         required: true,
+        //         attributes: ['openNumber', 'openTime'],
+        //         where: {period: Sequelize.col('award.period')}
+        //     }],
+        //     raw: true
+        // });
+    }
+    //endregion
+
+    //region 计划plan表
     /**
      *
      * 获取杀号计划实体
@@ -472,7 +632,9 @@ export class LotteryDbService {
                 }
             });
     }
+    //endregion
 
+    //region 计划结果plan_result表
     /**
      *
      * 获取杀号计划对错结果
@@ -555,7 +717,9 @@ export class LotteryDbService {
                 }
             });
     }
+    //endregion
 
+    //region 计划产生号码plan_invest_numbers表
     /**
      *
      * 获取杀号计划产生投注号码号码
@@ -619,7 +783,9 @@ export class LotteryDbService {
         }
         return Promise.all(promiseArray);
     }
+    //endregion
 
+    //region 参数设定Setting表
     /**
      *
      * 获取所有的参数设置信息
@@ -663,5 +829,6 @@ export class LotteryDbService {
                 }
             });
     }
+    //endregion
 }
 
