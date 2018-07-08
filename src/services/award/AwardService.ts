@@ -11,6 +11,7 @@ let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
     awardCaiBaXianService = new AwardCaiBaXianService(),
     crawl360Service = new Award360Service();
+
 /**
  *
  *
@@ -24,7 +25,11 @@ export class AwardService {
      */
     public static startGetAwardInfoTask(success?: Function): void {
         Config.awardTimer = setInterval(() => {
-            AwardService.saveOrUpdateAwardInfo(success)
+            AwardService.saveOrUpdateAwardInfo()
+                .then(() => {
+                    log.info('保存第三方开奖数据完成');
+                    if (success) success();
+                })
                 .catch((err) => {
                     if (err) {
                         log.error(err);
@@ -38,7 +43,7 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    public static saveOrUpdateAwardInfo(success?: Function): Promise<AwardInfo> {
+    public static saveOrUpdateAwardInfo(): Promise<AwardInfo> {
         let savedAwardInfo: AwardInfo = null;
         return TimeService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
             .then(() => {
@@ -66,10 +71,6 @@ export class AwardService {
                 Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
 
                 return LotteryDbService.saveOrUpdateAwardInfo(savedAwardInfo);
-            }).then(() => {
-                log.info('保存第三方开奖数据完成');
-                if (success) success(savedAwardInfo);
-                return savedAwardInfo;
             });
     }
 }
