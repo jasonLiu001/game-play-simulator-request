@@ -1,7 +1,7 @@
 import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import Promise = require('bluebird');
+import BlueBirdPromise = require('bluebird');
 import {AbstractInvestBase} from "./AbstractInvestBase";
 import {JiangNanLoginService} from "../platform/jiangnan/JiangNanLoginService";
 import {JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryService";

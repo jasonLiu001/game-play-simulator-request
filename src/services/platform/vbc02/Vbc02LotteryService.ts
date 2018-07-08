@@ -1,7 +1,7 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
-import BludBirdPromise = require('bluebird');
+import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 let log4js = require('log4js'),
@@ -37,7 +37,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 执行后三投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BludBirdPromise<any> {
+    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
         let json = {
             betWay: 'NORMAL',
             datas: [
@@ -56,7 +56,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
         };
         //输出request调试信息
         //require('request').debug = true;
-        return new BludBirdPromise((resolve, reject) => {
+        return new BlueBirdPromise((resolve, reject) => {
             request({
                 method: 'POST',
                 uri: CONFIG_CONST.siteUrl + '/caipiao/game/bet',
@@ -81,7 +81,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      * @param request
      * @param touZhuBeiShu 投注倍数
      */
-    public invest(request: any, touZhuBeiShu: string = '1'): BludBirdPromise<any> {
+    public invest(request: any, touZhuBeiShu: string = '1'): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/')
             .then((body) => {
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
