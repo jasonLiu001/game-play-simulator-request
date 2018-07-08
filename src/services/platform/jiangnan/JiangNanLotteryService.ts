@@ -1,7 +1,7 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
-import Promise = require('bluebird');
+import BludBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {EmailSender} from "../../email/EmailSender";
@@ -38,7 +38,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 获取当前账号余额
      */
-    public getBalance(request: any): Promise<any> {
+    public getBalance(request: any): BludBirdPromise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + '/userInfo/getBalance.mvc');
     }
 
@@ -46,7 +46,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 登录成功后，获取用户信息
      */
-    public getLoginUserInfo(request: any): Promise<any> {
+    public getLoginUserInfo(request: any): BludBirdPromise<any> {
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/userInfo/getUserInfo.mvc', {
             menuName: ''
         });
@@ -57,8 +57,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 产生投注的token  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      */
-    public getInvestToken(request: any): Promise<any> {
-        return new Promise((resolve, reject) => {
+    public getInvestToken(request: any): BludBirdPromise<any> {
+        return new BludBirdPromise((resolve, reject) => {
             request.post(
                 {
                     url: CONFIG_CONST.siteUrl + '/gameType/initGame.mvc',
@@ -133,7 +133,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行追号投注操作
      */
-    public multiInvestMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): Promise<any> {
+    public multiInvestMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BludBirdPromise<any> {
         let investStr = this.getMultiInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
@@ -145,7 +145,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any> {
+    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BludBirdPromise<any> {
         let investStr = this.getInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
@@ -158,10 +158,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     /**
      *
      * 投注准备
-     * @param request
-     * @return {Promise<any>} 返回token
      */
-    public investPrepare(request: any): Promise<any> {
+    public investPrepare(request: any): BludBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/pchome')
             .then(() => {
                 return this.getLoginUserInfo(request);
@@ -181,7 +179,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param request
      * @param touZhuBeiShu 投注倍数
      */
-    public invest(request: any, touZhuBeiShu: string = '1'): Promise<any> {
+    public invest(request: any, touZhuBeiShu: string = '1'): BludBirdPromise<any> {
         return this.investPrepare(request)
             .then((token) => {
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());

@@ -2,7 +2,7 @@ import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST, IS_INVEST_SETTING_MODEL} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import Promise = require('bluebird');
+import BludBirdPromise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {EnumAwardMode, RejectionMsg} from "../../models/EnumModel";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
@@ -88,7 +88,7 @@ export abstract class AbstractInvestBase {
      *
      * 检查是否可以执行真正的投注操作
      */
-    private checkLastPrizeNumberValidation(): Promise<boolean> {
+    private checkLastPrizeNumberValidation(): BludBirdPromise<boolean> {
         log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, moment().format('YYYY-MM-DD HH:mm:ss'));
         log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
         //上期的开奖号码是否满足投注条件
@@ -97,9 +97,9 @@ export abstract class AbstractInvestBase {
                 if (!result) {
                     let errorMsg = Config.globalVariable.last_Period + '期号码:' + Config.globalVariable.last_PrizeNumber + '，不满足执行条件，放弃' + Config.globalVariable.current_Peroid + '期投注，本次任务执行完毕';
                     //上期号码不满足条件时，则结束当前Promise调用链并返回
-                    return Promise.reject(errorMsg);
+                    return BludBirdPromise.reject(errorMsg);
                 }
-                return Promise.resolve(result);
+                return BludBirdPromise.resolve(result);
             });
 
     }
@@ -108,12 +108,12 @@ export abstract class AbstractInvestBase {
      *
      * 检查投注时间 在02:00-10:00点之间不允许投注  当天22:00以后自动切换到模拟投注
      */
-    private checkInvestTime(): Promise<any> {
+    private checkInvestTime(): BludBirdPromise<any> {
         //检查在此时间内是否允许投注
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
             TimeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
-            return Promise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
+            return BludBirdPromise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
         }
 
         let currentTime = new Date();
@@ -135,11 +135,11 @@ export abstract class AbstractInvestBase {
                     return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
                 })
                 .then(() => {
-                    return Promise.reject(timeReachMessage);
+                    return BludBirdPromise.reject(timeReachMessage);
                 });
         }
 
-        return Promise.resolve(true);
+        return BludBirdPromise.resolve(true);
     }
 
     /**
@@ -173,7 +173,7 @@ export abstract class AbstractInvestBase {
      *
      * 检查最大盈利金额是否达到设定目标
      */
-    private checkMaxWinMoney(): Promise<any> {
+    private checkMaxWinMoney(): BludBirdPromise<any> {
         if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
                 let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
@@ -203,18 +203,18 @@ export abstract class AbstractInvestBase {
                     });
             }
         }
-        return Promise.resolve(true);
+        return BludBirdPromise.resolve(true);
     }
 
     /**
      *
      * 检查开奖计划的结果是否满足投注条件
      */
-    private checkPlanResultHistory(): Promise<boolean> {
+    private checkPlanResultHistory(): BludBirdPromise<boolean> {
         //检查各个计划之前的中奖结果，根据结果过滤
         return LotteryDbService.getPlanResultInfoHistory(CONFIG_CONST.historyCount)
             .then((planResults: Array<PlanResultInfo>) => {
-                if (!planResults || planResults.length == 0 || planResults.length < CONFIG_CONST.historyCount) return Promise.reject(RejectionMsg.historyCountIsNotEnough);
+                if (!planResults || planResults.length == 0 || planResults.length < CONFIG_CONST.historyCount) return BludBirdPromise.reject(RejectionMsg.historyCountIsNotEnough);
 
                 let history01 = planResults[0];
                 let history02 = planResults[1];
@@ -232,12 +232,12 @@ export abstract class AbstractInvestBase {
                     && history03.jiou_type == 1;
 
                 if (condition01 && condition02 && condition3) {
-                    return Promise.reject("前三期中奖情况为：【中错中】，不满足投注条件，放弃本次投注")
+                    return BludBirdPromise.reject("前三期中奖情况为：【中错中】，不满足投注条件，放弃本次投注")
                 } else if (condition01) {
                     log.info("最新一期中奖情况：【中】，满足投注条件");
-                    return Promise.resolve(true);
+                    return BludBirdPromise.resolve(true);
                 }
-                return Promise.reject("最新一期中奖情况，不满足投注条件，放弃本次投注");
+                return BludBirdPromise.reject("最新一期中奖情况，不满足投注条件，放弃本次投注");
             });
     }
 
@@ -245,11 +245,11 @@ export abstract class AbstractInvestBase {
      *
      * 查询当前投注记录 投注历史是否满足特定条件
      */
-    private checkInvestInfoHistory(): Promise<boolean> {
+    private checkInvestInfoHistory(): BludBirdPromise<boolean> {
         return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 2)
             .then((res: Array<InvestInfo>) => {
                 //没有投注历史，或只有1条记录 直接返回
-                if (!res || res.length == 1) return Promise.reject("当天历史投注数量少于2条，无法执行投注，已放弃本次投注");
+                if (!res || res.length == 1) return BludBirdPromise.reject("当天历史投注数量少于2条，无法执行投注，已放弃本次投注");
 
                 //第一次出现连错
                 if (!Config.isContinueWrongForFirstTime) {
@@ -258,13 +258,13 @@ export abstract class AbstractInvestBase {
                         //出现连错条件修改为非第一次
                         Config.isContinueWrongForFirstTime = true;
 
-                        return Promise.resolve(true);
+                        return BludBirdPromise.resolve(true);
                     } else {//未出现连错 或者 上期没有盈利 则不允许投注
-                        return Promise.reject("暂未出现连错或上期未中奖，不满足投注条件，已放弃本次投注");
+                        return BludBirdPromise.reject("暂未出现连错或上期未中奖，不满足投注条件，已放弃本次投注");
                     }
                 } else {
                     //非第一次出现连错，正常执行投注
-                    return Promise.resolve(true);
+                    return BludBirdPromise.resolve(true);
                 }
             });
     }
@@ -273,13 +273,13 @@ export abstract class AbstractInvestBase {
      *
      * 检查已开奖的期数个数
      */
-    private checkAwardHistoryCount(): Promise<boolean> {
+    private checkAwardHistoryCount(): BludBirdPromise<boolean> {
         return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) {
-                    return Promise.reject("历史开奖总期数个数，不足" + CONFIG_CONST.historyCount + "期，不满足投注条件，已放弃本次投注");
+                    return BludBirdPromise.reject("历史开奖总期数个数，不足" + CONFIG_CONST.historyCount + "期，不满足投注条件，已放弃本次投注");
                 }
-                return Promise.resolve(true);
+                return BludBirdPromise.resolve(true);
             });
     }
 
@@ -288,15 +288,15 @@ export abstract class AbstractInvestBase {
      *
      * 当前投注是否是连续投注
      */
-    private sendContinueInvestWarnEmail(): Promise<boolean> {
+    private sendContinueInvestWarnEmail(): BludBirdPromise<boolean> {
         //模拟投注不需要邮件提醒
-        if (!CONFIG_CONST.isRealInvest) return Promise.resolve(true);
+        if (!CONFIG_CONST.isRealInvest) return BludBirdPromise.resolve(true);
 
         //查询是否存在上期投注记录
         return LotteryDbService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
             .then((lastInvestInfo: InvestInfo) => {
                 //不存在上期的投注记录 直接返回，可以投注
-                if (!lastInvestInfo) return Promise.resolve(true);
+                if (!lastInvestInfo) return BludBirdPromise.resolve(true);
 
                 //当期完整期号 格式：20180511-078
                 let currentPeriodString: string = TimeService.getCurrentPeriodNumber(new Date());
@@ -305,7 +305,7 @@ export abstract class AbstractInvestBase {
                 //发送邮件提醒
                 return EmailSender.sendEmail("余额:" + Config.currentAccountBalance + "连续购买前", warnMessage);
             }).then(() => {
-                return Promise.resolve(true);
+                return BludBirdPromise.resolve(true);
             });
     }
 
@@ -314,7 +314,7 @@ export abstract class AbstractInvestBase {
      *
      * 是否可投注检查
      */
-    public doCheck(): Promise<boolean> {
+    public doCheck(): BludBirdPromise<boolean> {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime()
             .then(() => {
@@ -336,12 +336,12 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查投注历史是否满足特定条件
                 //return this.checkInvestInfoHistory();
-                return Promise.resolve(true);
+                return BludBirdPromise.resolve(true);
             })
             .then(() => {
                 //检查开奖计划的结果是否满足投注条件
                 //return this.checkPlanResultHistory();
-                return Promise.resolve(true);
+                return BludBirdPromise.resolve(true);
             });
     }
 
@@ -380,10 +380,10 @@ export abstract class AbstractInvestBase {
      *
      * 计算上期盈亏
      */
-    public calculateWinMoney(): Promise<any> {
+    public calculateWinMoney(): BludBirdPromise<any> {
         return LotteryDbService.getInvestInfoListByStatus(0)
             .then((resultList: Array<any>) => {
-                if (!resultList) Promise.resolve(true);
+                if (!resultList) BludBirdPromise.resolve(true);
                 let investInfoList: Array<InvestInfo> = [];
                 log.info('查询到invest表中未开奖数据%s条', resultList.length);
                 for (let i = 0; i < resultList.length; i++) {
@@ -417,7 +417,7 @@ export abstract class AbstractInvestBase {
                 return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
             })
             .then((list: Array<any>) => {
-                if (!list) Promise.resolve([]);
+                if (!list) BludBirdPromise.resolve([]);
                 log.info("查询到plan_invest_numbers表中未开奖数据%条", list.length);
 
                 //各个计划产生号码结果
@@ -493,7 +493,7 @@ export abstract class AbstractInvestBase {
             })
             .then((results) => {
                 log.info('已更新未开奖数据%s条', results.length);
-                return Promise.resolve(true);
+                return BludBirdPromise.resolve(true);
             });
     }
 
