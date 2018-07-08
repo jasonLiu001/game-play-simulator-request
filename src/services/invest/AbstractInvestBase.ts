@@ -418,7 +418,7 @@ export abstract class AbstractInvestBase {
             })
             .then((list: Array<any>) => {
                 if (!list) BlueBirdPromise.resolve([]);
-                log.info("查询到plan_invest_numbers表中未开奖数据%条", list.length);
+                log.info("查询到plan_invest_numbers表中未开奖数据%s条", list.length);
 
                 //各个计划产生号码结果
                 let planInvestNumbersInfoList: Array<PlanInvestNumbersInfo> = [];
