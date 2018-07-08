@@ -22,8 +22,8 @@ export class InvestService extends AbstractInvestBase {
      * 模拟执行投注入口方法
      * @param request request对象实例
      */
-    executeAutoInvest(request: any): void {
-        this.calculateWinMoney()
+    async executeAutoInvest(request: any): BlueBirdPromise<any> {
+       return this.calculateWinMoney()
             .then(() => {
                 log.info('正在产生投注号码...');
                 //产生当期的投注号码

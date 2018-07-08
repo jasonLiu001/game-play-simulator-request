@@ -94,7 +94,7 @@ export class AppServices {
                     //投注前 首先获取参数配置信息
                     AppServices.getAndInitSettings()
                         .then(() => {
-                            investService.executeAutoInvest(request);//执行投注
+                            return investService.executeAutoInvest(request);//执行投注
                         });
                 });
             })
@@ -112,6 +112,9 @@ export class AppServices {
             .then((settingInfoList: Array<SettingsInfo>) => {
                 AppServices.initSettings(settingInfoList);
                 return settingInfoList;
+            })
+            .catch((err) => {
+                ErrorService.appStartErrorHandler(log, err);
             });
     }
 }
