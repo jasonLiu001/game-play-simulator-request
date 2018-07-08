@@ -190,8 +190,15 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
             })
             .then((result) => {
                 if (result) {
-                    let jsonResult = JSON.parse(result);
-                    if (jsonResult.code != 200) {
+                    let jsonResult: any;
+                    let jsonParseError: boolean = false;
+                    try {
+                        jsonResult = JSON.parse(result);
+                    } catch (e) {
+                        jsonParseError = true;
+                    }
+
+                    if (jsonResult.code != 200 || jsonParseError) {
                         return EmailSender.sendEmail("购买异常", result)
                             .then(() => {
                                 return result;

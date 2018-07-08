@@ -29,7 +29,13 @@ export class CaptchaDecoderService {
                 formData: formData
             }, function (err, response, body) {
                 if (err) reject(err);
-                resolve(JSON.parse(body));
+                let resBody: any;
+                try {
+                    resBody = JSON.parse(body);
+                } catch (e) {
+                    reject(e);
+                }
+                resolve(resBody);
             })
         });
     }
