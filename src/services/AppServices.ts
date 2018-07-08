@@ -1,4 +1,4 @@
-import Promise = require('bluebird');
+import BlueBirdPromise = require('bluebird');
 import {InvestService} from "./invest/InvestService";
 import {ErrorService} from "./ErrorService";
 import {CONFIG_CONST, Config} from "../config/Config";
@@ -60,7 +60,7 @@ export class AppServices {
      *
      * 启动程序，自动获取开奖号码并投注
      */
-    public static start(): void {
+    public static async start(): BlueBirdPromise<any> {
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
@@ -107,7 +107,7 @@ export class AppServices {
      *
      * 从数据库中获取配置并初始化
      */
-    public static getAndInitSettings(): Promise<any> {
+    public static getAndInitSettings(): BlueBirdPromise<any> {
         return LotteryDbService.getSettingsInfoList()
             .then((settingInfoList: Array<SettingsInfo>) => {
                 AppServices.initSettings(settingInfoList);
