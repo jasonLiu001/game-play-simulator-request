@@ -314,8 +314,8 @@ export abstract class AbstractInvestBase {
      *
      * 初始化投注信息 投注后 账户余额等信息
      */
-    public async initAllPlanInvestInfo(tableName: String): Promise<Array<InvestInfo>> {
-        let allPlanInvests: Array<InvestInfo> = [];
+    public async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
+        let allPlanInvests: Array<any> = [];
         let planType: number = 1;
         for (let planInfo of Config.investPlan) {
             //计划投注号码
@@ -323,7 +323,7 @@ export abstract class AbstractInvestBase {
             //计划当前投入
             let planInvestMoney = planInvestNumbersArray.length * 2;
             //获取上期余额
-            let invest: InvestInfo[] = null;
+            let invest: any[] = null;
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 invest = await LotteryDbService.getInvestInfoHistory(planType, 1);
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
@@ -335,7 +335,7 @@ export abstract class AbstractInvestBase {
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额
             log.info('%s买号后余额：%s', CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注", accountBalance);
-            let investInfo: InvestInfo = {
+            let investInfo: any = {
                 period: Config.globalVariable.current_Peroid,
                 planType: planType,
                 investNumbers: planInfo.investNumbers,
@@ -352,7 +352,7 @@ export abstract class AbstractInvestBase {
             planType++;
             allPlanInvests.push(investInfo);
         }
-        return allPlanInvests;
+        return BlueBirdPromise.resolve(allPlanInvests);
     }
 
     /**
