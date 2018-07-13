@@ -438,8 +438,8 @@ export class LotteryDbService {
      */
     public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
-        for (let index in investInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfoList[index]));
+        for (let investInfo of investInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investInfo));
         }
         return Promise.all(promiseArray);
     }
@@ -540,8 +540,8 @@ export class LotteryDbService {
      */
     public static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
         let promiseArray: Array<Promise<any>> = [];
-        for (let index in investTotalInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investTotalInfoList[index]));
+        for (let investTotal of investTotalInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investTotal));
         }
         return Promise.all(promiseArray);
     }
@@ -683,8 +683,8 @@ export class LotteryDbService {
      */
     public static saveOrUpdatePlanResultInfoList(planResultInfoList: Array<PlanResultInfo>): Promise<Array<PlanResultInfo>> {
         let promiseArray: Array<Promise<any>> = [];
-        for (let index in planResultInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfoList[index]));
+        for (let planResultInfo of planResultInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanResultInfo(planResultInfo));
         }
         return Promise.all(promiseArray);
     }
@@ -778,8 +778,8 @@ export class LotteryDbService {
      */
     public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
         let promiseArray: Array<Promise<any>> = [];
-        for (let index in planInvestNumbersInfo) {
-            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo[index]));
+        for (let planInvestNumbers of planInvestNumbersInfo) {
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers));
         }
         return Promise.all(promiseArray);
     }

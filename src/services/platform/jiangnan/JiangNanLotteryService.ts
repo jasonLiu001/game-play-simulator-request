@@ -5,6 +5,8 @@ import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {EmailSender} from "../../email/EmailSender";
+import {InvestInfo} from "../../../models/db/InvestInfo";
+import {LotteryDbService} from "../../dbservices/ORMService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
@@ -16,7 +18,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      */
     public getInvestMode(): any {
         let mode = String(EnumAwardMode.feng);//默认为分模式
-        switch (Config.currentSelectedAwardMode) {
+        switch (CONFIG_CONST.awardMode) {
             case EnumAwardMode.yuan:
                 mode = String(EnumAwardMode.yuan);
                 break;
@@ -103,7 +105,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      */
     private getInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
-        log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
+        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
         let mode: string = this.getInvestMode();
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu));
         return tokenStr;
@@ -122,7 +124,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      */
     private getMultiInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
-        log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
+        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
         let mode: string = this.getInvestMode();
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
         return tokenStr;
@@ -180,11 +182,15 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param touZhuBeiShu 投注倍数
      */
     public invest(request: any, touZhuBeiShu: string = '1'): BlueBirdPromise<any> {
+        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+        let requestToken = null;
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-
-                return this.investMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
+                requestToken = token;
+                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+            })
+            .then((invest: InvestInfo) => {
+                return this.investMock(request, requestToken, currentPeriod, invest.investNumbers, touZhuBeiShu, invest.investNumbers.split(',').length);
             })
             .then((result) => {
                 if (result) {
@@ -219,12 +225,16 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param touZhuBeiShu
      */
     public multiInvest(request: any, touZhuBeiShu: string = '1') {
+        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+        let currentNextPeriod = TimeService.getCurrentNextPeriodNumber(new Date());
+        let requestToken = null;
         return this.investPrepare(request)
             .then((token) => {
-                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-                let currentNextPeriod = TimeService.getCurrentNextPeriodNumber(new Date());
-
-                return this.multiInvestMock(request, token, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length, currentNextPeriod);
+                requestToken = token;
+                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+            })
+            .then((investInfo: InvestInfo) => {
+                return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
             });
     }
 }

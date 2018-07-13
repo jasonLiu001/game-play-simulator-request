@@ -76,14 +76,8 @@ export const CONFIG_CONST = {
 export class Config {
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
-    //正式需要投注的号码
-    public static currentInvestNumbers: string = '';
-    //当前账户余额 程序运行时初始化
-    public static currentAccountBalance: number = CONFIG_CONST.originAccountBalance;
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
-    //当期选择的奖金模式
-    public static currentSelectedAwardMode: number = CONFIG_CONST.awardMode;
     //开奖号更新计时器
     public static awardTimer: any = null;
     //是否第一次出现连错
@@ -98,20 +92,16 @@ export class Config {
     //投注方案
     public static investPlan: any = {
         one: {
-            investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccountBalance
+            investNumbers: ''
         },
         two: {
-            investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccountBalance
+            investNumbers: ''
         },
         three: {
-            investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccountBalance
+            investNumbers: ''
         },
         four: {
-            investNumbers: '',
-            accountBalance: CONFIG_CONST.originAccountBalance
+            investNumbers: ''
         }
     };
 }

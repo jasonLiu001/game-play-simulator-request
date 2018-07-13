@@ -9,6 +9,10 @@ import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
 import moment  = require('moment');
 import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {TimeService} from "../time/TimeService";
+import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
+import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
+import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -23,23 +27,43 @@ export class InvestService extends AbstractInvestBase {
      * @param request request对象实例
      */
     async executeAutoInvest(request: any): BlueBirdPromise<any> {
-       return this.calculateWinMoney()
+        return this.calculateWinMoney()
             .then(() => {
                 log.info('正在产生投注号码...');
                 //产生当期的投注号码
                 return numberService.generateInvestNumber();
             })
-            .then((investNumbers: string) => {
-                log.info('投注号码已生成！');
+            .then(() => {
+                return this.initAllPlanInvestInfo(CONST_INVEST_TOTAL_TABLE.tableName)
+                    .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
+                        return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
+                    });
+            })
+            .then(() => {
                 //投注前保存 投注号码
-                Config.currentInvestNumbers = investNumbers;
-                log.info('是否可投注..条件检查结果如下：');
+                log.info('是否可真实投注..条件检查结果如下：');
                 //检查是否满足投注条件
                 return this.doCheck();
             })
             .then(() => {
+                let messageType = CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注";
+                log.info('正在保存%s记录...', messageType);
+                //真实后模拟投注后 更新各个方案的账户余额
+                return this.initAllPlanInvestInfo(CONST_INVEST_TABLE.tableName)
+                    .then((allPlanInvestInfo: Array<InvestInfo>) => {
+                        log.info('%s记录已保存', messageType);
+                        //保存投注记录
+                        return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
+                    });
+            })
+            .then(() => {
+                //当前期号
+                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+            })
+            .then((investInfo: InvestInfo) => {
                 //真实投注执行登录操作 未达到最大利润值和亏损值
-                if (Config.currentAccountBalance < CONFIG_CONST.maxAccountBalance && Config.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
+                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
                         log.info('正在执行真实登录...');
                         //使用request投注 需要先登录在投注 每次投注前都需要登录
@@ -52,9 +76,14 @@ export class InvestService extends AbstractInvestBase {
                 }
             })
             .then(() => {
+                //当前期号
+                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+            })
+            .then((investInfo: InvestInfo) => {
                 log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
-                log.info('投注前账户余额：%s', Config.currentAccountBalance);
-                if (Config.currentAccountBalance < CONFIG_CONST.maxAccountBalance && Config.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
+                log.info('投注前账户余额：%s', investInfo.currentAccountBalance);
+                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     //真实投注 未达到最大利润值和亏损值
                     if (CONFIG_CONST.isRealInvest) {
                         log.info('正在执行真实投注...');
@@ -77,18 +106,7 @@ export class InvestService extends AbstractInvestBase {
                     }
                 }
             })
-            .then(() => {
-                let messageType = CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注";
-                log.info('正在保存%s记录...', messageType);
-                //真实后模拟投注后 更新各个方案的账户余额
-                this.updateAllPlanAccountBalance();
-                //输出当前账户余额
-                log.info('%s买号后余额：%s', messageType, Config.currentAccountBalance);
-                let allPlanInvestInfo: Array<InvestInfo> = this.initAllPlanInvestInfo();
-                log.info('%记录已保存', messageType);
-                //保存投注记录
-                return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
-            })
+
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
             });

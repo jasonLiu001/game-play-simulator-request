@@ -4,6 +4,9 @@ import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstract
 import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
+import {LotteryDbService} from "../../dbservices/ORMService";
+import {InvestInfo} from "../../../models/db/InvestInfo";
+
 let log4js = require('log4js'),
     log = log4js.getLogger('Vbc02LotteryService');
 
@@ -14,8 +17,8 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      */
     public getInvestMode(): any {
         let mode = 'FEN';//默认为分
-        log.info('当前投注单位：%s', Config.currentSelectedAwardMode);
-        switch (Config.currentSelectedAwardMode) {
+        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
+        switch (CONFIG_CONST.awardMode) {
             case EnumAwardMode.yuan:
                 mode = 'YUAN';
                 break;
@@ -82,10 +85,13 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      * @param touZhuBeiShu 投注倍数
      */
     public invest(request: any, touZhuBeiShu: string = '1'): BlueBirdPromise<any> {
+        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
         return this.gotoLoginSuccessPage(request, '/')
             .then((body) => {
-                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-                return this.investMock(request, null, currentPeriod, Config.currentInvestNumbers, touZhuBeiShu, Config.currentInvestNumbers.split(',').length);
+                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+            })
+            .then((investInfo: InvestInfo) => {
+                return this.investMock(request, null, currentPeriod, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length);
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);

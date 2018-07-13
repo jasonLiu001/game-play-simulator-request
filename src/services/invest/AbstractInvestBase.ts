@@ -10,6 +10,10 @@ import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {EmailSender} from "../email/EmailSender";
+import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
+import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
+import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 
 
 let log4js = require('log4js'),
@@ -39,8 +43,7 @@ export abstract class AbstractInvestBase {
     private updateIsWinStatus(prizeNumber: string, investNumbersArray: Array<string>, investInfo: InvestInfo) {
         if (prizeNumber.length != 3 || prizeNumber == '') throw new Error('目前只支持后三开奖号码兑奖');
 
-        for (let i = 0; i < investNumbersArray.length; i++) {
-            let item = investNumbersArray[i];
+        for (let item of investNumbersArray) {
             if (prizeNumber == item) {
                 investInfo.isWin = 1;
                 break;
@@ -66,20 +69,6 @@ export abstract class AbstractInvestBase {
         //更新当前账号余额
         if (investInfo.isWin == 1) {
             investInfo.currentAccountBalance = Number((Number(investInfo.currentAccountBalance) + Number(CONFIG_CONST.awardPrice / investInfo.awardMode) * Number(CONFIG_CONST.touZhuBeiShu)).toFixed(2));
-            let planType: number = 1;
-            //更新所有方案的余额
-            for (let key in Config.investPlan) {
-                if (planType == investInfo.planType && Config.investPlan[key].investNumbers != '') {
-                    Config.investPlan[key].accountBalance = investInfo.currentAccountBalance;
-                }
-                planType++;
-            }
-
-            //当前选择的方案为主 投注方案时 更新公共全局余额
-            if (CONFIG_CONST.currentSelectedInvestPlanType == investInfo.planType && Config.currentInvestNumbers != '') {
-                //更新全局余额
-                Config.currentAccountBalance = investInfo.currentAccountBalance;
-            }
         }
     }
 
@@ -108,7 +97,7 @@ export abstract class AbstractInvestBase {
      *
      * 检查投注时间 在02:00-10:00点之间不允许投注  当天22:00以后自动切换到模拟投注
      */
-    private checkInvestTime(): BlueBirdPromise<any> {
+    private async checkInvestTime(): BlueBirdPromise<any> {
         //检查在此时间内是否允许投注
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
@@ -127,16 +116,16 @@ export abstract class AbstractInvestBase {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
-            return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
-                .then(() => {
-                    //切换到模拟投注
-                    CONFIG_CONST.isRealInvest = false;
-                    //发送 购买结束提醒
-                    return EmailSender.sendEmail("购买完成，当前账号余额:" + Config.currentAccountBalance, timeReachMessage)
-                })
-                .then(() => {
-                    return BlueBirdPromise.reject(timeReachMessage);
-                });
+            let saveSetting: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+            //切换到模拟投注
+            CONFIG_CONST.isRealInvest = false;
+            //当前最新一条投注方案
+            let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+            //发送 购买结束提醒
+            let sendEmailResult: any = await EmailSender.sendEmail("购买完成，当前账号余额:" + investInfo[0].currentAccountBalance, timeReachMessage);
+
+            //终止当前的promise链
+            return BlueBirdPromise.reject(timeReachMessage);
         }
 
         return BlueBirdPromise.resolve(true);
@@ -144,63 +133,35 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * 根据当前选择的投注模式 转换金额
-     */
-    public convertMoneyFormat(money: number): number {
-        let result: number;
-        switch (Config.currentSelectedAwardMode) {
-            case EnumAwardMode.yuan:
-                result = money;
-                break;
-            case EnumAwardMode.jiao:
-                result = Number((money / EnumAwardMode.jiao).toFixed(2));
-                break;
-            case EnumAwardMode.feng:
-                result = Number((money / EnumAwardMode.feng).toFixed(2));
-                break;
-            case EnumAwardMode.li:
-                result = Number((money / EnumAwardMode.li).toFixed(2));
-                break;
-            default:
-                result = money;
-                break;
-        }
-
-        return result;
-    }
-
-    /**
-     *
      * 检查最大盈利金额是否达到设定目标
      */
-    private checkMaxWinMoney(): BlueBirdPromise<any> {
-        if (Config.currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
+    private async checkMaxWinMoney(): BlueBirdPromise<any> {
+        //当前最新一条投注方案
+        let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        let currentAccountBalance = investInfo[0].currentAccountBalance;
+        if (currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
-                let winMessage = "当前账号余额：" + Config.currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
-
+                let winMessage = "当前账号余额：" + currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
                 //自动切换到模拟后 发送盈利提醒
-                return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
-                    .then(() => {
-                        log.error(winMessage);
-                        //切换到模拟投注
-                        CONFIG_CONST.isRealInvest = false;
-                        //发送盈利提醒
-                        return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
-                    });
+                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+                log.error(winMessage);
+                //切换到模拟投注
+                CONFIG_CONST.isRealInvest = false;
+                //发送盈利提醒
+                return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
+
             }
-        } else if (Config.currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
+        } else if (currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断亏损金额设置
-                let loseMessage: string = "当前账号余额：" + Config.currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
+                let loseMessage: string = "当前账号余额：" + currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
 
                 //自动切换到模拟后 发送亏损提醒
-                return LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL)
-                    .then(() => {
-                        log.error(loseMessage);
-                        //切换到模拟投注
-                        CONFIG_CONST.isRealInvest = false;
-                        //发送亏损提醒
-                        return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
-                    });
+                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+                log.error(loseMessage);
+                //切换到模拟投注
+                CONFIG_CONST.isRealInvest = false;
+                //发送亏损提醒
+                return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
             }
         }
         return BlueBirdPromise.resolve(true);
@@ -303,7 +264,7 @@ export abstract class AbstractInvestBase {
                 //提醒邮件
                 let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
                 //发送邮件提醒
-                return EmailSender.sendEmail("余额:" + Config.currentAccountBalance + "连续购买前", warnMessage);
+                return EmailSender.sendEmail("余额:" + lastInvestInfo.currentAccountBalance + "连续购买前", warnMessage);
             }).then(() => {
                 return BlueBirdPromise.resolve(true);
             });
@@ -348,20 +309,36 @@ export abstract class AbstractInvestBase {
     /**
      *
      *
-     * 初始化投注信息
+     * 初始化投注信息 投注后 账户余额等信息
      */
-    public initAllPlanInvestInfo(): Array<InvestInfo> {
+    public async initAllPlanInvestInfo(tableName: String): Promise<Array<InvestInfo>> {
         let allPlanInvests: Array<InvestInfo> = [];
         let planType: number = 1;
-        for (let key in Config.investPlan) {
-            let planInfo = Config.investPlan[key];
+        for (let planInfo of Config.investPlan) {
+            //计划投注号码
+            let planInvestNumbersArray = (planInfo.investNumbers == "") ? [] : planInfo.investNumbers.split(',');
+            //计划当前投入
+            let planInvestMoney = planInvestNumbersArray.length * 2;
+            //获取上期余额
+            let invest: InvestInfo[] = null;
+            if (tableName === CONST_INVEST_TABLE.tableName) {
+                invest = await LotteryDbService.getInvestInfoHistory(planType, 1);
+            } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+                invest = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
+            }
+            //上期余额
+            let lastAccountBalance = invest[0].currentAccountBalance;
+
+            let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
+            //输出当前账户余额
+            log.info('%s买号后余额：%s', CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注", accountBalance);
             let investInfo: InvestInfo = {
                 period: Config.globalVariable.current_Peroid,
                 planType: planType,
                 investNumbers: planInfo.investNumbers,
-                currentAccountBalance: planInfo.accountBalance,
+                currentAccountBalance: accountBalance,
                 investNumberCount: planInfo.investNumbers.split(',').length,
-                awardMode: Config.currentSelectedAwardMode,
+                awardMode: CONFIG_CONST.awardMode,
                 winMoney: 0,
                 status: 0,
                 isWin: 0,
@@ -377,6 +354,50 @@ export abstract class AbstractInvestBase {
 
     /**
      *
+     * 更新盈利
+     */
+    private async updateInvestWinMoney(tableName: String): BlueBirdPromise<any> {
+        let resultList = null;
+        if (tableName === CONST_INVEST_TABLE.tableName) {
+            resultList = await LotteryDbService.getInvestInfoListByStatus(0);
+        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+            resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
+        }
+
+        let investInfoList: Array<InvestInfo> = [];
+        log.info('查询到%s表中未开奖数据%s条', tableName, resultList.length);
+        for (let item of resultList) {
+            let investInfo: InvestInfo = {
+                period: item.period,
+                planType: item.planType,
+                investNumbers: item.investNumbers,
+                currentAccountBalance: item.currentAccountBalance,
+                investNumberCount: item.investNumberCount,
+                awardMode: item.awardMode,
+                winMoney: item.winMoney,
+                status: item.status,
+                isWin: item.isWin,
+                investTime: item.investTime,
+                investDate: item.investDate,
+                investTimestamp: item.investTimestamp
+            };
+            //后三开奖号码
+            let prizeNumber = item.openNumber.substring(2);
+            //兑奖 更新开奖状态 更新盈利 更新账户余额
+            this.UpdatePrize(investInfo, prizeNumber);
+            investInfoList.push(investInfo);
+        }
+
+        //首先更新之前未开奖的数据
+        if (tableName === CONST_INVEST_TABLE.tableName) {
+            return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
+        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+            return LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
+        }
+    }
+
+    /**
+     *
      *
      * 计算上期盈亏
      */
@@ -386,8 +407,7 @@ export abstract class AbstractInvestBase {
                 if (!resultList) BlueBirdPromise.resolve(true);
                 let investInfoList: Array<InvestInfo> = [];
                 log.info('查询到invest表中未开奖数据%s条', resultList.length);
-                for (let i = 0; i < resultList.length; i++) {
-                    let item = resultList[i];
+                for (let item of resultList) {
                     let investInfo: InvestInfo = {
                         period: item.period,
                         planType: item.planType,
@@ -413,6 +433,39 @@ export abstract class AbstractInvestBase {
                 return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
             })
             .then(() => {
+                //获取所有未更新投注
+                return LotteryDbService.getInvestTotalInfoListByStatus(0);
+            })
+            .then((resultList: Array<any>) => {
+                if (!resultList) BlueBirdPromise.resolve(true);
+                let investInfoList: Array<InvestInfo> = [];
+                log.info('查询到invest_total表中未开奖数据%s条', resultList.length);
+                for (let item of resultList) {
+                    let investInfo: InvestInfo = {
+                        period: item.period,
+                        planType: item.planType,
+                        investNumbers: item.investNumbers,
+                        currentAccountBalance: item.currentAccountBalance,
+                        investNumberCount: item.investNumberCount,
+                        awardMode: item.awardMode,
+                        winMoney: item.winMoney,
+                        status: item.status,
+                        isWin: item.isWin,
+                        investTime: item.investTime,
+                        investDate: item.investDate,
+                        investTimestamp: item.investTimestamp
+                    };
+                    //后三开奖号码
+                    let prizeNumber = item.openNumber.substring(2);
+                    //兑奖 更新开奖状态 更新盈利 更新账户余额
+                    this.UpdatePrize(investInfo, prizeNumber);
+                    investInfoList.push(investInfo);
+                }
+
+                //首先更新之前未开奖的数据
+                return LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
+            })
+            .then(() => {
                 //获取上期各计划投注号码
                 return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
             })
@@ -425,8 +478,7 @@ export abstract class AbstractInvestBase {
                 //各个计划开奖结果
                 let planResultInfoList: Array<PlanResultInfo> = [];
 
-                for (let i = 0; i < list.length; i++) {
-                    let item = list[i];
+                for (let item of list) {
                     //后三开奖号码
                     let prizeNumber = item.openNumber.substring(2);
                     //兑奖
@@ -505,8 +557,7 @@ export abstract class AbstractInvestBase {
     private updatePlanResult(planInvestNumbersInfo: PlanInvestNumbersInfo, prizeNumber: string, planResultInfo: PlanResultInfo): void {
         //奇偶类型
         let jiOuTypeArray = planInvestNumbersInfo.jiou_type == null ? [] : planInvestNumbersInfo.jiou_type.split(',');
-        for (let j = 0; j < jiOuTypeArray.length; j++) {
-            let item = jiOuTypeArray[j];
+        for (let item of jiOuTypeArray) {
             if (prizeNumber == item) {
                 planResultInfo.jiou_type = 1;
                 break;
@@ -515,8 +566,7 @@ export abstract class AbstractInvestBase {
 
         //杀号计划 百位
         let killplanBaiWeiArray = planInvestNumbersInfo.killplan_bai_wei == null ? [] : planInvestNumbersInfo.killplan_bai_wei.split(',');
-        for (let j = 0; j < killplanBaiWeiArray.length; j++) {
-            let item = killplanBaiWeiArray[j];
+        for (let item of killplanBaiWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.killplan_bai_wei = 1;
                 break;
@@ -525,8 +575,7 @@ export abstract class AbstractInvestBase {
 
         //杀号计划 十位
         let killplanShiWeiArray = planInvestNumbersInfo.killplan_shi_wei == null ? [] : planInvestNumbersInfo.killplan_shi_wei.split(',');
-        for (let j = 0; j < killplanShiWeiArray.length; j++) {
-            let item = killplanShiWeiArray[j];
+        for (let item of killplanShiWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.killplan_shi_wei = 1;
                 break;
@@ -535,8 +584,7 @@ export abstract class AbstractInvestBase {
 
         //杀号计划 个位
         let killplanGeWeiArray = planInvestNumbersInfo.killplan_ge_wei == null ? [] : planInvestNumbersInfo.killplan_ge_wei.split(',');
-        for (let j = 0; j < killplanGeWeiArray.length; j++) {
-            let item = killplanGeWeiArray[j];
+        for (let item of killplanGeWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.killplan_ge_wei = 1;
                 break;
@@ -545,8 +593,7 @@ export abstract class AbstractInvestBase {
 
         //最大遗漏 百位
         let missplanBaiWeiArray = planInvestNumbersInfo.missplan_bai_wei == null ? [] : planInvestNumbersInfo.missplan_bai_wei.split(',');
-        for (let j = 0; j < missplanBaiWeiArray.length; j++) {
-            let item = missplanBaiWeiArray[j];
+        for (let item of missplanBaiWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.missplan_bai_wei = 1;
                 break;
@@ -555,8 +602,7 @@ export abstract class AbstractInvestBase {
 
         //最大遗漏 十位
         let missplanShiWeiArray = planInvestNumbersInfo.missplan_shi_wei == null ? [] : planInvestNumbersInfo.missplan_shi_wei.split(',');
-        for (let j = 0; j < missplanShiWeiArray.length; j++) {
-            let item = missplanShiWeiArray[j];
+        for (let item of missplanShiWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.missplan_shi_wei = 1;
                 break;
@@ -565,8 +611,7 @@ export abstract class AbstractInvestBase {
 
         //最大遗漏 个位
         let missplanGeWeiArray = planInvestNumbersInfo.missplan_ge_wei == null ? [] : planInvestNumbersInfo.missplan_ge_wei.split(',');
-        for (let j = 0; j < missplanGeWeiArray.length; j++) {
-            let item = missplanGeWeiArray[j];
+        for (let item of missplanGeWeiArray) {
             if (prizeNumber == item) {
                 planResultInfo.missplan_ge_wei = 1;
                 break;
@@ -575,8 +620,7 @@ export abstract class AbstractInvestBase {
 
         //3-3-4断组
         let brokengroup_01_334Array = planInvestNumbersInfo.brokengroup_01_334 == null ? [] : planInvestNumbersInfo.brokengroup_01_334.split(',');
-        for (let j = 0; j < brokengroup_01_334Array.length; j++) {
-            let item = brokengroup_01_334Array[j];
+        for (let item of brokengroup_01_334Array) {
             if (prizeNumber == item) {
                 planResultInfo.brokengroup_01_334 = 1;
                 break;
@@ -585,8 +629,7 @@ export abstract class AbstractInvestBase {
 
         //2-2-4断组
         let brokengroup_01_224Array = planInvestNumbersInfo.brokengroup_01_224 == null ? [] : planInvestNumbersInfo.brokengroup_01_224.split(',');
-        for (let j = 0; j < brokengroup_01_224Array.length; j++) {
-            let item = brokengroup_01_224Array[j];
+        for (let item of brokengroup_01_224Array) {
             if (prizeNumber == item) {
                 planResultInfo.brokengroup_01_224 = 1;
                 break;
@@ -595,8 +638,7 @@ export abstract class AbstractInvestBase {
 
         //3-3-4断组
         let brokengroup_01_125Array = planInvestNumbersInfo.brokengroup_01_125 == null ? [] : planInvestNumbersInfo.brokengroup_01_125.split(',');
-        for (let j = 0; j < brokengroup_01_125Array.length; j++) {
-            let item = brokengroup_01_125Array[j];
+        for (let item of brokengroup_01_125Array) {
             if (prizeNumber == item) {
                 planResultInfo.brokengroup_01_125 = 1;
                 break;
@@ -605,8 +647,7 @@ export abstract class AbstractInvestBase {
 
         //012路类型
         let road012_01_Array = planInvestNumbersInfo.road012_01 == null ? [] : planInvestNumbersInfo.road012_01.split(',');
-        for (let j = 0; j < road012_01_Array.length; j++) {
-            let item = road012_01_Array[j];
+        for (let item of road012_01_Array) {
             if (prizeNumber == item) {
                 planResultInfo.road012_01 = 1;
                 break;
@@ -615,8 +656,7 @@ export abstract class AbstractInvestBase {
 
         //杀跨度
         let number_distance_Array = planInvestNumbersInfo.number_distance == null ? [] : planInvestNumbersInfo.number_distance.split(',');
-        for (let j = 0; j < number_distance_Array.length; j++) {
-            let item = number_distance_Array[j];
+        for (let item of number_distance_Array) {
             if (prizeNumber == item) {
                 planResultInfo.number_distance = 1;
                 break;
@@ -625,8 +665,7 @@ export abstract class AbstractInvestBase {
 
         //杀和值
         let sum_values_Array = planInvestNumbersInfo.sum_values == null ? [] : planInvestNumbersInfo.sum_values.split(',');
-        for (let j = 0; j < sum_values_Array.length; j++) {
-            let item = sum_values_Array[j];
+        for (let item of sum_values_Array) {
             if (prizeNumber == item) {
                 planResultInfo.sum_values = 1;
                 break;
@@ -635,8 +674,7 @@ export abstract class AbstractInvestBase {
 
         //杀特殊号：三连
         let three_number_together_Array = planInvestNumbersInfo.three_number_together == null ? [] : planInvestNumbersInfo.three_number_together.split(',');
-        for (let j = 0; j < three_number_together_Array.length; j++) {
-            let item = three_number_together_Array[j];
+        for (let item of three_number_together_Array) {
             if (prizeNumber == item) {
                 planResultInfo.three_number_together = 1;
                 break;
@@ -645,8 +683,7 @@ export abstract class AbstractInvestBase {
 
         //杀百位
         let killbaiwei_01_Array = planInvestNumbersInfo.killbaiwei_01 == null ? [] : planInvestNumbersInfo.killbaiwei_01.split(',');
-        for (let j = 0; j < killbaiwei_01_Array.length; j++) {
-            let item = killbaiwei_01_Array[j];
+        for (let item of killbaiwei_01_Array) {
             if (prizeNumber == item) {
                 planResultInfo.killbaiwei_01 = 1;
                 break;
@@ -655,8 +692,7 @@ export abstract class AbstractInvestBase {
 
         //杀十位
         let killshiwei_01_Array = planInvestNumbersInfo.killshiwei_01 == null ? [] : planInvestNumbersInfo.killshiwei_01.split(',');
-        for (let j = 0; j < killshiwei_01_Array.length; j++) {
-            let item = killshiwei_01_Array[j];
+        for (let item of killshiwei_01_Array) {
             if (prizeNumber == item) {
                 planResultInfo.killshiwei_01 = 1;
                 break;
@@ -665,8 +701,7 @@ export abstract class AbstractInvestBase {
 
         //杀个位
         let killgewei_01_Array = planInvestNumbersInfo.killgewei_01 == null ? [] : planInvestNumbersInfo.killgewei_01.split(',');
-        for (let j = 0; j < killgewei_01_Array.length; j++) {
-            let item = killgewei_01_Array[j];
+        for (let item of killgewei_01_Array) {
             if (prizeNumber == item) {
                 planResultInfo.killgewei_01 = 1;
                 break;
@@ -675,8 +710,7 @@ export abstract class AbstractInvestBase {
 
         //定6胆
         let bravenumber_6_01_Array = planInvestNumbersInfo.bravenumber_6_01 == null ? [] : planInvestNumbersInfo.bravenumber_6_01.split(',');
-        for (let j = 0; j < bravenumber_6_01_Array.length; j++) {
-            let item = bravenumber_6_01_Array[j];
+        for (let item of bravenumber_6_01_Array) {
             if (prizeNumber == item) {
                 planResultInfo.bravenumber_6_01 = 1;
                 break;
@@ -703,29 +737,5 @@ export abstract class AbstractInvestBase {
         this.updateCurrentAccountBalace(investInfo);
         //更新开奖状态
         investInfo.status = 1;//已开奖
-    }
-
-    /**
-     *
-     *
-     * 正式投注成功 更新各个方案的账户余额
-     */
-    public updateAllPlanAccountBalance(): void {
-        let planType: number = 1;
-
-        for (let key in Config.investPlan) {
-            //计划投注号码
-            let planInvestNumbersArray = (Config.investPlan[key].investNumbers == "") ? [] : Config.investPlan[key].investNumbers.split(',');
-            //计划当前投入
-            let planInvestMoney = planInvestNumbersArray.length * 2;
-            Config.investPlan[key].accountBalance = Number(Number((Config.investPlan[key].accountBalance) - (Number(planInvestMoney / Config.currentSelectedAwardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
-
-            //更新当前选择的方案余额到全局余额
-            if (CONFIG_CONST.currentSelectedInvestPlanType == planType) {
-                //更新选择方案的余额 到全局余额
-                Config.currentAccountBalance = Config.investPlan[key].accountBalance;
-            }
-            planType++;
-        }
     }
 }

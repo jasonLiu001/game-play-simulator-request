@@ -172,9 +172,9 @@ export class NumberService extends AbstractRuleBase {
                 Config.investPlan.four.investNumbers = resultArray04.join(',');
                 //根据设置的真实投注方案 返回对应的投注号码
                 let planType: number = 1;
-                for (let key in Config.investPlan) {
+                for (let investInfo of Config.investPlan) {
                     if (planType == CONFIG_CONST.currentSelectedInvestPlanType) {
-                        finallyResult = Config.investPlan[key].investNumbers;
+                        finallyResult = investInfo.investNumbers;
                         break;
                     }
                     planType++;

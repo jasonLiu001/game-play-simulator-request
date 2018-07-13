@@ -85,8 +85,7 @@ export class TimeService {
         let openTimeList = TimeService.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
-        for (let i = 0; i < openTimeList.length; i++) {
-            let currentOpenTime = openTimeList[i];
+        for (let currentOpenTime of openTimeList) {
             if (currentOpenTime > currentTime) {//查找最近的开奖时间
                 let currentDiffTime = currentOpenTime.getTime() - currentTime.getTime();
                 if (currentDiffTime < minDiffTime) {//找出和当前时间的 时间差最小的时间，即为下期的开奖时间

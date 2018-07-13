@@ -19,7 +19,7 @@
    + 在`NumberService.ts`文件中添加对新计划的结果保存功能
 
      ```typescript
-     .........  //保存杀号计划内容                
+     .........  //保存杀号计划内容
      planInfo.jiou_type = promiseAllResult[0].killNumber;
                      planInfo.killplan_bai_wei = promiseAllResult[1].baiWei.killNumber;
                      planInfo.killplan_shi_wei = promiseAllResult[1].shiWei.killNumber;
@@ -52,8 +52,7 @@
    ```typescript
            //奇偶类型
            let jiOuTypeArray = planInvestNumbersInfo.jiou_type == null ? [] : planInvestNumbersInfo.jiou_type.split(',');
-           for (let j = 0; j < jiOuTypeArray.length; j++) {
-               let item = jiOuTypeArray[j];
+           for (let item of jiOuTypeArray) {
                if (prizeNumber == item) {
                    planResultInfo.jiou_type = 1;
                    break;

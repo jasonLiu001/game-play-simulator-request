@@ -43,7 +43,6 @@ export class AppServices {
             } else if (item.key === 'minAccountBalance') {
                 CONFIG_CONST.minAccountBalance = Number(item.value);
             } else if (item.key === 'awardMode') {
-                Config.currentSelectedAwardMode = Number(item.value);
                 CONFIG_CONST.awardMode = Number(item.value);
             } else if (item.key === 'touZhuBeiShu') {
                 CONFIG_CONST.touZhuBeiShu = item.value;
@@ -70,18 +69,6 @@ export class AppServices {
                         for (let index in settingInfoList) {
                             let item = settingInfoList[index];
                             if (item.key === 'originAccountBalance') {
-                                Config.currentAccountBalance = Number(item.value);
-
-                                let planType: number = 1;
-                                for (let key in Config.investPlan) {
-                                    if (CONFIG_CONST.currentSelectedInvestPlanType == planType) {
-                                        Config.investPlan[key].accountBalance = Number(item.value);
-                                    }
-                                    planType++;
-                                }
-                            } else if (item.key === 'awardMode') {
-                                Config.currentSelectedAwardMode = Number(item.value);
-                            } else if (item.key === 'originAccountBalance') {
                                 //这里不需要 每次都设置初始余额 只在程序启动时赋值一次即可
                                 CONFIG_CONST.originAccountBalance = Number(item.value);
                             }
