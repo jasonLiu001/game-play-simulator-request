@@ -23,7 +23,7 @@ let log4js = require('log4js'),
 export class InvestService extends AbstractInvestBase {
 
     /**
-     * 模拟执行投注入口方法
+     * 入口方法
      * @param request request对象实例
      */
     async executeAutoInvest(request: any): BlueBirdPromise<any> {
@@ -63,6 +63,8 @@ export class InvestService extends AbstractInvestBase {
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
+                if (!investInfo) return BlueBirdPromise.resolve();
+
                 //真实投注执行登录操作 未达到最大利润值和亏损值
                 if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
@@ -82,6 +84,8 @@ export class InvestService extends AbstractInvestBase {
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
+                if (!investInfo) return BlueBirdPromise.resolve();
+
                 log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
                 log.info('投注前账户余额：%s', investInfo.currentAccountBalance);
                 if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
@@ -107,7 +111,6 @@ export class InvestService extends AbstractInvestBase {
                     }
                 }
             })
-
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
             });
