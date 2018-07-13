@@ -332,12 +332,12 @@ export abstract class AbstractInvestBase {
                 investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
-            let lastAccountBalance = (!investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
+            let lastAccountBalance = (Config.isAppFirstStart || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额
             log.info('%s买号后余额：%s', CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注", accountBalance);
-            let investInfo: any = {
+            let investInfo: InvestInfo = {
                 period: Config.globalVariable.current_Peroid,
                 planType: planType,
                 investNumbers: planInfo.investNumbers,

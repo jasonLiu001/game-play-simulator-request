@@ -76,6 +76,8 @@ export const CONFIG_CONST = {
 export class Config {
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
+    //App是否第一次启动
+    public static isAppFirstStart: boolean = true;
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
     //开奖号更新计时器
