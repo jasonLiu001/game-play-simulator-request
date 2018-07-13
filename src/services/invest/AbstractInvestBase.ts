@@ -326,8 +326,8 @@ export abstract class AbstractInvestBase {
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
                 invest = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
-            //上期余额
-            let lastAccountBalance = invest[0].currentAccountBalance;
+            //上期余额 应用第一次启动时 当前余额等于初始账户余额
+            let lastAccountBalance = Config.isAppFirstStart ? CONFIG_CONST.originAccountBalance : invest[0].currentAccountBalance;
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额

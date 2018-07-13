@@ -60,6 +60,7 @@ export class AppServices {
      * 启动程序，自动获取开奖号码并投注
      */
     public static async start(): BlueBirdPromise<any> {
+        Config.isAppFirstStart = true;//程序首次运行标识
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
@@ -82,10 +83,15 @@ export class AppServices {
                     AppServices.getAndInitSettings()
                         .then(() => {
                             return investService.executeAutoInvest(request);//执行投注
+                        })
+                        .then(() => {
+                            //第一次运行结束后，设置首次运行值为false
+                            if (Config.isAppFirstStart) Config.isAppFirstStart = false;
                         });
                 });
             })
             .catch((err) => {
+                if (Config.isAppFirstStart) Config.isAppFirstStart = false;//第一次运行结束后，设置首次运行值为false
                 ErrorService.appStartErrorHandler(log, err);
             });
     }
