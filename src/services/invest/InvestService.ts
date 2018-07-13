@@ -36,6 +36,7 @@ export class InvestService extends AbstractInvestBase {
             .then(() => {
                 return this.initAllPlanInvestInfo(CONST_INVEST_TOTAL_TABLE.tableName)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
+                        log.info('%s表记录已保存', CONST_INVEST_TOTAL_TABLE.tableName);
                         return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
                     });
             })
@@ -51,7 +52,7 @@ export class InvestService extends AbstractInvestBase {
                 //真实后模拟投注后 更新各个方案的账户余额
                 return this.initAllPlanInvestInfo(CONST_INVEST_TABLE.tableName)
                     .then((allPlanInvestInfo: Array<InvestInfo>) => {
-                        log.info('%s记录已保存', messageType);
+                        log.info('%s表%s记录已保存', CONST_INVEST_TABLE.tableName, messageType);
                         //保存投注记录
                         return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
                     });
