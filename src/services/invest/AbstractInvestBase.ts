@@ -4,14 +4,13 @@ import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import BlueBirdPromise = require('bluebird');
 import {TimeService} from "../time/TimeService";
-import {EnumAwardMode, RejectionMsg} from "../../models/EnumModel";
+import {RejectionMsg} from "../../models/EnumModel";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {EmailSender} from "../email/EmailSender";
 import {SettingsInfo} from "../../models/db/SettingsInfo";
-import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 
@@ -120,9 +119,11 @@ export abstract class AbstractInvestBase {
             //切换到模拟投注
             CONFIG_CONST.isRealInvest = false;
             //当前最新一条投注方案
-            let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+            let investInfoList: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+            if (!investInfoList || investInfoList.length === 0) return BlueBirdPromise.reject(timeReachMessage);
+
             //发送 购买结束提醒
-            let sendEmailResult: any = await EmailSender.sendEmail("购买完成，当前账号余额:" + investInfo[0].currentAccountBalance, timeReachMessage);
+            let sendEmailResult: any = await EmailSender.sendEmail("购买完成，当前账号余额:" + investInfoList[0].currentAccountBalance, timeReachMessage);
 
             //终止当前的promise链
             return BlueBirdPromise.reject(timeReachMessage);
@@ -324,14 +325,14 @@ export abstract class AbstractInvestBase {
             //计划当前投入
             let planInvestMoney = planInvestNumbersArray.length * 2;
             //获取上期余额
-            let invest: any[] = null;
+            let investList: any[] = null;
             if (tableName === CONST_INVEST_TABLE.tableName) {
-                invest = await LotteryDbService.getInvestInfoHistory(planType, 1);
+                investList = await LotteryDbService.getInvestInfoHistory(planType, 1);
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
-                invest = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
+                investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
-            let lastAccountBalance = (invest === null || invest.length === 0) ? CONFIG_CONST.originAccountBalance : invest[0].currentAccountBalance;
+            let lastAccountBalance = (!investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额
