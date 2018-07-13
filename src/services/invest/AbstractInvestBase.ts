@@ -401,74 +401,13 @@ export abstract class AbstractInvestBase {
      *
      * 计算上期盈亏
      */
-    public calculateWinMoney(): BlueBirdPromise<any> {
-        return LotteryDbService.getInvestInfoListByStatus(0)
-            .then((resultList: Array<any>) => {
-                if (!resultList) BlueBirdPromise.resolve(true);
-                let investInfoList: Array<InvestInfo> = [];
-                log.info('查询到invest表中未开奖数据%s条', resultList.length);
-                for (let item of resultList) {
-                    let investInfo: InvestInfo = {
-                        period: item.period,
-                        planType: item.planType,
-                        investNumbers: item.investNumbers,
-                        currentAccountBalance: item.currentAccountBalance,
-                        investNumberCount: item.investNumberCount,
-                        awardMode: item.awardMode,
-                        winMoney: item.winMoney,
-                        status: item.status,
-                        isWin: item.isWin,
-                        investTime: item.investTime,
-                        investDate: item.investDate,
-                        investTimestamp: item.investTimestamp
-                    };
-                    //后三开奖号码
-                    let prizeNumber = item.openNumber.substring(2);
-                    //兑奖 更新开奖状态 更新盈利 更新账户余额
-                    this.UpdatePrize(investInfo, prizeNumber);
-                    investInfoList.push(investInfo);
-                }
+    public async calculateWinMoney(): BlueBirdPromise<any> {
+        //更新invest表余额
+        let updateInvestResult = await this.updateInvestWinMoney(CONST_INVEST_TABLE.tableName);
+        //更新invest_total表余额
+        let updateInvestTotalResult = await this.updateInvestWinMoney(CONST_INVEST_TOTAL_TABLE.tableName);
 
-                //首先更新之前未开奖的数据
-                return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
-            })
-            .then(() => {
-                //获取所有未更新投注
-                return LotteryDbService.getInvestTotalInfoListByStatus(0);
-            })
-            .then((resultList: Array<any>) => {
-                if (!resultList) BlueBirdPromise.resolve(true);
-                let investInfoList: Array<InvestInfo> = [];
-                log.info('查询到invest_total表中未开奖数据%s条', resultList.length);
-                for (let item of resultList) {
-                    let investInfo: InvestInfo = {
-                        period: item.period,
-                        planType: item.planType,
-                        investNumbers: item.investNumbers,
-                        currentAccountBalance: item.currentAccountBalance,
-                        investNumberCount: item.investNumberCount,
-                        awardMode: item.awardMode,
-                        winMoney: item.winMoney,
-                        status: item.status,
-                        isWin: item.isWin,
-                        investTime: item.investTime,
-                        investDate: item.investDate,
-                        investTimestamp: item.investTimestamp
-                    };
-                    //后三开奖号码
-                    let prizeNumber = item.openNumber.substring(2);
-                    //兑奖 更新开奖状态 更新盈利 更新账户余额
-                    this.UpdatePrize(investInfo, prizeNumber);
-                    investInfoList.push(investInfo);
-                }
-
-                //首先更新之前未开奖的数据
-                return LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
-            })
-            .then(() => {
-                //获取上期各计划投注号码
-                return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0);
-            })
+        return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0)
             .then((list: Array<any>) => {
                 if (!list) BlueBirdPromise.resolve([]);
                 log.info("查询到plan_invest_numbers表中未开奖数据%s条", list.length);
