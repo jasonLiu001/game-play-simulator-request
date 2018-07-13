@@ -317,7 +317,8 @@ export abstract class AbstractInvestBase {
     public async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
         let allPlanInvests: Array<any> = [];
         let planType: number = 1;
-        for (let planInfo of Config.investPlan) {
+        for (let key in Config.investPlan) {
+            let planInfo = Config.investPlan[key];
             //计划投注号码
             let planInvestNumbersArray = (planInfo.investNumbers == "") ? [] : planInfo.investNumbers.split(',');
             //计划当前投入

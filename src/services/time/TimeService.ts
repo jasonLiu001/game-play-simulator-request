@@ -82,7 +82,7 @@ export class TimeService {
      * 获取下期的可投注时间
      */
     public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
-        let openTimeList = TimeService.getOpenTimeList(currentTime, delaySeconds);
+        let openTimeList: Array<Date> = TimeService.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
         for (let currentOpenTime of openTimeList) {

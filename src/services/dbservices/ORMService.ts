@@ -781,10 +781,10 @@ export class LotteryDbService {
      *
      * 批量保存或者更新投注信息
      */
-    public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfo: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
+    public static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
         let promiseArray: Array<Promise<any>> = [];
-        for (let planInvestNumbers of planInvestNumbersInfo) {
-            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers));
+        for (let planInvestNumbersInfo of planInvestNumbersInfoList) {
+            promiseArray.push(LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo));
         }
         return Promise.all(promiseArray);
     }

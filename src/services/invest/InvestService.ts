@@ -8,7 +8,6 @@ import {JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryServic
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
 import moment  = require('moment');
-import {SettingsInfo} from "../../models/db/SettingsInfo";
 import {TimeService} from "../time/TimeService";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
