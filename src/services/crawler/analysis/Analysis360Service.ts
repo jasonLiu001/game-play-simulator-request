@@ -115,8 +115,7 @@ export class Analysis360Service implements IAnalysisCrawler {
         //获取杀号正确次数
         let strongElements = doc('#bd > div.mod-shdd-bd.mod-kpshdd-hd > div.bd > div > div.shdd-table-cont > table > tbody > tr:nth-child(23) strong');
 
-        for (let key in strongElements) {
-            let item = strongElements[key];
+        for (let item of strongElements) {
             successCountArray.push(doc(item).text());
         }
         //最后一个
@@ -132,8 +131,7 @@ export class Analysis360Service implements IAnalysisCrawler {
         //杀号集合
         let killNumberArray = [];
         let killNumberElements = doc('#bd > div.mod-shdd-bd.mod-kpshdd-hd > div.bd > div > div.shdd-table-cont > table > tbody > tr:nth-child(20) b');
-        for (let key in killNumberElements) {
-            let item = killNumberElements[key];
+        for (let item of killNumberElements) {
             killNumberArray.push(doc(item).text());
         }
 
