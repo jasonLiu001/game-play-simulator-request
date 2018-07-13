@@ -384,6 +384,7 @@ export class LotteryDbService {
             raw: true
         });
     }
+
     //endregion
 
     //region 根据条件过滤后的 实际投注明细invest表
@@ -486,6 +487,7 @@ export class LotteryDbService {
         //     raw: true
         // });
     }
+
     //endregion
 
     //region 所有计划每局投注明细invest_total表
@@ -541,7 +543,7 @@ export class LotteryDbService {
     public static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investTotal of investTotalInfoList) {
-            promiseArray.push(LotteryDbService.saveOrUpdateInvestInfo(investTotal));
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestTotalInfo(investTotal));
         }
         return Promise.all(promiseArray);
     }
@@ -588,6 +590,7 @@ export class LotteryDbService {
         //     raw: true
         // });
     }
+
     //endregion
 
     //region 计划plan表
@@ -632,6 +635,7 @@ export class LotteryDbService {
                 }
             });
     }
+
     //endregion
 
     //region 计划结果plan_result表
@@ -717,6 +721,7 @@ export class LotteryDbService {
                 }
             });
     }
+
     //endregion
 
     //region 计划产生号码plan_invest_numbers表
@@ -783,6 +788,7 @@ export class LotteryDbService {
         }
         return Promise.all(promiseArray);
     }
+
     //endregion
 
     //region 参数设定Setting表
@@ -829,6 +835,7 @@ export class LotteryDbService {
                 }
             });
     }
+
     //endregion
 }
 

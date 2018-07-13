@@ -36,7 +36,7 @@ export class InvestService extends AbstractInvestBase {
             .then(() => {
                 return this.initAllPlanInvestInfo(CONST_INVEST_TOTAL_TABLE.tableName)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
-                        log.info('%s表记录已保存', CONST_INVEST_TOTAL_TABLE.tableName);
+                        log.info('%s表记录已保存数据%s条', CONST_INVEST_TOTAL_TABLE.tableName, allInvestTotalInfo.length);
                         return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
                     });
             })
