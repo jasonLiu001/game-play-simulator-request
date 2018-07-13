@@ -138,6 +138,9 @@ export abstract class AbstractInvestBase {
     private async checkMaxWinMoney(): BlueBirdPromise<any> {
         //当前最新一条投注方案
         let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        // 首次无记录时 直接返回
+        if (!investInfo || investInfo.length === 0) return BlueBirdPromise.resolve(true);
+
         let currentAccountBalance = investInfo[0].currentAccountBalance;
         if (currentAccountBalance >= CONFIG_CONST.maxAccountBalance) {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
@@ -327,7 +330,7 @@ export abstract class AbstractInvestBase {
                 invest = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
-            let lastAccountBalance = Config.isAppFirstStart ? CONFIG_CONST.originAccountBalance : invest[0].currentAccountBalance;
+            let lastAccountBalance = (invest === null || invest.length === 0) ? CONFIG_CONST.originAccountBalance : invest[0].currentAccountBalance;
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额
