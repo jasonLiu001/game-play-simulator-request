@@ -76,6 +76,8 @@ export const CONFIG_CONST = {
 export class Config {
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
+    //初始余额是否为上期余额
+    public static isUseLastAccountBalance = false;
     //App是否第一次启动
     public static isAppFirstStart: boolean = true;
     //当前已经实际投注的期数
