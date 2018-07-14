@@ -33,6 +33,7 @@ export class InvestService extends AbstractInvestBase {
                 return numberService.generateInvestNumber();
             })
             .then(() => {
+                log.info('正在保存表%s 投注记录...', CONST_INVEST_TOTAL_TABLE.tableName);
                 return this.initAllPlanInvestInfo(CONST_INVEST_TOTAL_TABLE.tableName)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
                         log.info('%s表记录已保存数据%s条', CONST_INVEST_TOTAL_TABLE.tableName, allInvestTotalInfo.length);
@@ -47,11 +48,11 @@ export class InvestService extends AbstractInvestBase {
             })
             .then(() => {
                 let messageType = CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注";
-                log.info('正在保存%s记录...', messageType);
+                log.info('正在保存表%s %s记录...', CONST_INVEST_TABLE.tableName, messageType);
                 //真实后模拟投注后 更新各个方案的账户余额
                 return this.initAllPlanInvestInfo(CONST_INVEST_TABLE.tableName)
                     .then((allPlanInvestInfo: Array<InvestInfo>) => {
-                        log.info('%s表%s记录已保存', CONST_INVEST_TABLE.tableName, messageType);
+                        log.info('%s表 %s记录已保存', CONST_INVEST_TABLE.tableName, messageType);
                         //保存投注记录
                         return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
                     });

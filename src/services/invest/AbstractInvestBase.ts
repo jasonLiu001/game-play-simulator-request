@@ -316,7 +316,8 @@ export abstract class AbstractInvestBase {
      * 初始化投注信息 投注后 账户余额等信息
      */
     public async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
-        let allPlanInvests: Array<any> = [];
+        log.info('初始化表%s投注数据', tableName);
+        let allPlanInvests: Array<InvestInfo> = [];
         let planType: number = 1;
         for (let key in Config.investPlan) {
             let planInfo = Config.investPlan[key];
