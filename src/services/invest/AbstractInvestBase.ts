@@ -336,7 +336,7 @@ export abstract class AbstractInvestBase {
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额
-            log.info('%s买号后余额：%s', CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注", accountBalance);
+            log.info('方案%s %s买号后余额：%s', planType, CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注", accountBalance);
             let investInfo: InvestInfo = {
                 period: Config.globalVariable.current_Peroid,
                 planType: planType,
