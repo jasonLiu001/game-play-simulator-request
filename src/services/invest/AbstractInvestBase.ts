@@ -325,7 +325,7 @@ export abstract class AbstractInvestBase {
             //计划当前投入
             let planInvestMoney = planInvestNumbersArray.length * 2;
             //获取上期余额
-            let investList: any[] = null;
+            let investList: InvestInfo[] = null;
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 investList = await LotteryDbService.getInvestInfoHistory(planType, 1);
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
