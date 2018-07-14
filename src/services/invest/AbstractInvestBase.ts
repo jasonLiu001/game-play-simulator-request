@@ -363,12 +363,14 @@ export abstract class AbstractInvestBase {
      * 更新盈利
      */
     private async updateInvestWinMoney(tableName: String): BlueBirdPromise<any> {
-        let resultList = null;
+        let resultList;
+
         if (tableName === CONST_INVEST_TABLE.tableName) {
             resultList = await LotteryDbService.getInvestInfoListByStatus(0);
         } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
             resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
         }
+        if (!resultList) return BlueBirdPromise.resolve(true);
 
         let investInfoList: Array<InvestInfo> = [];
         log.info('查询到%s表中未开奖数据%s条', tableName, resultList.length);
@@ -394,12 +396,15 @@ export abstract class AbstractInvestBase {
             investInfoList.push(investInfo);
         }
 
+        let saveResult;
         //首先更新之前未开奖的数据
         if (tableName === CONST_INVEST_TABLE.tableName) {
-            return LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
+            saveResult = await LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
         } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
-            return LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
+            saveResult = await LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
         }
+        log.info('已更新%s表未开奖数据%s条', tableName, investInfoList.length);
+        return saveResult;
     }
 
     /**
@@ -489,7 +494,7 @@ export abstract class AbstractInvestBase {
                     });
             })
             .then((results) => {
-                log.info('已更新未开奖数据%s条', results.length);
+                log.info('已更新plan_invest_numbers表未开奖数据%s条', results.length);
                 return BlueBirdPromise.resolve(true);
             });
     }
