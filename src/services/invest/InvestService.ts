@@ -41,7 +41,7 @@ export class InvestService extends AbstractInvestBase {
             })
             .then(() => {
                 //投注前保存 投注号码
-                log.info('方案%s 是否可真实投注..条件检查结果如下：', CONFIG_CONST.currentSelectedInvestPlanType);
+                log.info('当前选择的方案%s 是否可真实投注..条件检查结果如下：', CONFIG_CONST.currentSelectedInvestPlanType);
                 //检查是否满足投注条件
                 return this.doCheck();
             })
