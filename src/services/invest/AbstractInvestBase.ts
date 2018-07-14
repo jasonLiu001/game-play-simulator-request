@@ -319,7 +319,7 @@ export abstract class AbstractInvestBase {
         //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
         if (Config.isAppFirstStart && Config.isUseLastAccountBalance) {
             return false;
-        } else if (Config.isAppFirstStart) {
+        } else if (Config.isAppFirstStart) {//只有程序第一次
             return true;
         } else {
             return false;
