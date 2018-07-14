@@ -318,9 +318,9 @@ export abstract class AbstractInvestBase {
     private isResetOriginalAccountBalance(): boolean {
         //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
         if (Config.isAppFirstStart && Config.isUseLastAccountBalance) {
-            return false;
-        } else if (Config.isAppFirstStart) {//只有程序第一次
-            return true;
+            return false;//不需要重置初始账号余额
+        } else if (Config.isAppFirstStart && !Config.isUseLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
+            return true;//重置初始账号余额
         } else {
             return false;
         }
