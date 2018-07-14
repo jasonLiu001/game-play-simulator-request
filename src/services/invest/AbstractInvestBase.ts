@@ -370,7 +370,7 @@ export abstract class AbstractInvestBase {
         } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
             resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
         }
-        if (!resultList) return BlueBirdPromise.resolve(true);
+        if (!resultList) return BlueBirdPromise.resolve([]);
 
         let investInfoList: Array<InvestInfo> = [];
         log.info('查询到%s表中未开奖数据%s条', tableName, resultList.length);
