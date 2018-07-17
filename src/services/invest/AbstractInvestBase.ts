@@ -315,14 +315,25 @@ export abstract class AbstractInvestBase {
      * 是否当前账户余额是否重置为初始余额
      * @returns {boolean}
      */
-    private isResetOriginalAccountBalance(): boolean {
-        //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
-        if (Config.isAppFirstStart && Config.isUseLastAccountBalance) {
-            return false;//不需要重置初始账号余额
-        } else if (Config.isAppFirstStart && !Config.isUseLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
-            return true;//重置初始账号余额
-        } else {
-            return false;
+    private isResetOriginalAccountBalance(tableName: String): boolean {
+        if (tableName === CONST_INVEST_TABLE.tableName) {
+            //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
+            if (Config.isInvestTableInitCompleted && Config.isInvestTableUserLastAccountBalance) {
+                return false;//不需要重置初始账号余额
+            } else if (Config.isInvestTableInitCompleted && !Config.isInvestTableUserLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
+                return true;//重置初始账号余额
+            } else {
+                return false;
+            }
+        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+            //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
+            if (Config.isInvestTotalTableInitCompleted && Config.isInvestTotalTableUseLastAccountBalance) {
+                return false;//不需要重置初始账号余额
+            } else if (Config.isInvestTotalTableInitCompleted && !Config.isInvestTotalTableUseLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
+                return true;//重置初始账号余额
+            } else {
+                return false;
+            }
         }
     }
 
@@ -349,7 +360,7 @@ export abstract class AbstractInvestBase {
                 investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
-            let lastAccountBalance = (this.isResetOriginalAccountBalance() || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
+            let lastAccountBalance = (this.isResetOriginalAccountBalance(tableName) || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
 
             let accountBalance = Number(Number(lastAccountBalance - (Number(planInvestMoney / CONFIG_CONST.awardMode) * Number(CONFIG_CONST.touZhuBeiShu))).toFixed(2));
             //输出当前账户余额

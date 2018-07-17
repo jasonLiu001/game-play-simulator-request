@@ -41,6 +41,8 @@ export class InvestService extends AbstractInvestBase {
                     });
             })
             .then(() => {
+                //表invest_total第一次初始化完毕 重置标识
+                if (Config.isInvestTotalTableInitCompleted) Config.isInvestTotalTableInitCompleted = false;
                 //投注前保存 投注号码
                 log.info('当前选择的方案%s 是否可真实投注..条件检查结果如下：', CONFIG_CONST.currentSelectedInvestPlanType);
                 //检查是否满足投注条件
@@ -58,6 +60,8 @@ export class InvestService extends AbstractInvestBase {
                     });
             })
             .then(() => {
+                //表invest第一次初始化完毕 重置标识
+                if (Config.isInvestTableInitCompleted) Config.isInvestTableInitCompleted = false;
                 //当前期号
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);

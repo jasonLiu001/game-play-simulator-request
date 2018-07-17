@@ -50,8 +50,10 @@ export class AppServices {
                 CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value) === 1;
-            } else if (item.key === 'isUseLastAccountBalance') {
-                Config.isUseLastAccountBalance = Number(item.value) === 1;
+            } else if (item.key === 'isInvestTotalTableUseLastAccountBalance') {
+                Config.isInvestTotalTableUseLastAccountBalance = Number(item.value) === 1;
+            } else if (item.key === 'isInvestTableUserLastAccountBalance') {
+                Config.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
             }
         }
     }
@@ -62,7 +64,6 @@ export class AppServices {
      * 启动程序，自动获取开奖号码并投注
      */
     public static async start(): BlueBirdPromise<any> {
-        Config.isAppFirstStart = true;
         log.info('程序已启动，持续监视中...');
         LotteryDbService.createLotteryTable()
             .then(() => {
@@ -85,16 +86,10 @@ export class AppServices {
                     AppServices.getAndInitSettings()
                         .then(() => {
                             return investService.executeAutoInvest(request);//执行投注
-                        })
-                        .then(() => {
-                            //第一次运行结束后 重置app第一次运行标识
-                            Config.isAppFirstStart = false;
                         });
                 });
             })
             .catch((err) => {
-                //第一次运行结束后 重置app第一次运行标识
-                Config.isAppFirstStart = false;
                 ErrorService.appStartErrorHandler(log, err);
             });
     }

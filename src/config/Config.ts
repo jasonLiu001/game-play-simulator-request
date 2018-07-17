@@ -76,10 +76,14 @@ export const CONFIG_CONST = {
 export class Config {
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
-    //初始余额是否为上期余额
-    public static isUseLastAccountBalance = false;
-    //App是否第一次启动
-    public static isAppFirstStart: boolean = true;
+    //invest_total表 初始余额是否为上期余额
+    public static isInvestTotalTableUseLastAccountBalance = false;
+    //invest表 初始余额是否为上期余额
+    public static isInvestTableUserLastAccountBalance = false;
+    //invest_total表是否第一次初始化完毕
+    public static isInvestTotalTableInitCompleted: boolean = true;
+    //invest表是否第一次初始化完毕
+    public static isInvestTableInitCompleted: boolean = true;
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
     //开奖号更新计时器
