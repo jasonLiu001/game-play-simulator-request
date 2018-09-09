@@ -95,12 +95,12 @@ export class InvestService extends AbstractInvestBase {
                 if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     //真实投注 未达到最大利润值和亏损值
                     if (CONFIG_CONST.isRealInvest) {
+                        //真实投注成功后，记录已经成功投注的期数
+                        Config.currentInvestTotalCount++;
                         log.info('正在执行真实投注...');
                         return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
                             .then((investResult) => {
                                 log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
-                                //真实投注成功后，记录已经成功投注的期数
-                                Config.currentInvestTotalCount++;
                                 log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                                 if (investResult) log.info(investResult);
                             })

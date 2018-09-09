@@ -137,6 +137,9 @@ export abstract class AbstractInvestBase {
      * 检查最大盈利金额是否达到设定目标
      */
     private async checkMaxWinMoney(): BlueBirdPromise<any> {
+        //第一次投注时不检查最大余额
+        if (Config.currentInvestTotalCount == 0) return BlueBirdPromise.resolve(true);
+
         //当前最新一条投注方案
         let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
         // 首次无记录时 直接返回
