@@ -196,9 +196,11 @@ export class NumberService extends AbstractRuleBase {
         if (Config.isUseReverseInvestNumbers) {//取相反的号码
             //从1000注中移除特定号码，得到相反的号码
             let diffArray: Array<string> = _.difference(totalNumbers, beforeReverseInvestNumbers);
-            resultString = diffArray.join(',')
+            resultString = diffArray.join(',');
+            log.info('生成正常反向投注号码');
         } else {//正常号码
             resultString = beforeReverseInvestNumbers.join(',');
+            log.info('生成正常正向投注号码');
         }
         return resultString;
     }
