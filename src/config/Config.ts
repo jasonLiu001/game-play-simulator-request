@@ -6,6 +6,7 @@ let path = require('path');
 /**
  *
  * 模拟投注参数实体
+ * 这里设置这个对象的原因是因为saveOrUpdateSettingsInfo方法的参数需要传递一个SettingInfo对象才能利用Sequelize中的方法
  */
 export const IS_INVEST_SETTING_MODEL: SettingsInfo = {
     key: 'isRealInvest',
