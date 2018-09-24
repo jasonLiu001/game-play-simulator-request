@@ -54,6 +54,8 @@ export class AppServices {
                 Config.isInvestTotalTableUseLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isInvestTableUserLastAccountBalance') {
                 Config.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
+            } else if (item.key === 'isUseReverseInvestNumbers') {
+                Config.isUseReverseInvestNumbers = Number(item.value) === 1;
             }
         }
     }

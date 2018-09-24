@@ -76,6 +76,8 @@ export const CONFIG_CONST = {
 export class Config {
     //保存的验证码图片本地路径
     public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
+    //是否用相反的投注号码进行投注
+    public static isUseReverseInvestNumbers = false;
     //invest_total表 初始余额是否为上期余额
     public static isInvestTotalTableUseLastAccountBalance = false;
     //invest表 初始余额是否为上期余额

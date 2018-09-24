@@ -13,7 +13,7 @@ export class AbstractRuleBase {
      *
      * 产生三星1000注原始号码 返回号码数组
      */
-    protected getTotalNumberArray(): Array<string> {
+    getTotalNumberArray(): Array<string> {
         let a = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], b = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
             c = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         let totalArray = [];

@@ -319,6 +319,12 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '9',
                                     desc: 'invest表初始余额为上期余额'
+                                },
+                                {
+                                    key: 'isUseReverseInvestNumbers',
+                                    value: '0',
+                                    orderId: '10',
+                                    desc: '是否用相反的号码投注'
                                 }
                             ]);
                         } else {

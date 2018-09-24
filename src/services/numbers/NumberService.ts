@@ -160,16 +160,16 @@ export class NumberService extends AbstractRuleBase {
                 let finallyResult: string = '';
                 //方案一：杀特定形态的奇偶  根据计划杀号 杀 百位 个位 十位【这个条件还可以，如果没有其他合适的，可以用，使用该计划需要把对应的判断条件修改为偶偶奇，同时需要修改奇偶的杀号计划，杀上期的奇偶号码】
                 let resultArray01: Array<string> = _.intersection(promiseAllResult[0].killNumberResult, promiseAllResult[1].finalResult.killNumberResult);
-                Config.investPlan.one.investNumbers = resultArray01.join(',');
+                Config.investPlan.one.investNumbers = this.isUseReverseInvestNumbers(resultArray01);
                 //方案二：杀012路  杀遗漏百，十，个 杀和值  杀三连
                 let resultArray02: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[3].finalResult.killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[9].killNumberResult);
-                Config.investPlan.two.investNumbers = resultArray02.join(',');
+                Config.investPlan.two.investNumbers = this.isUseReverseInvestNumbers(resultArray02);
                 //方案3: 杀012路，杀断组3-3-4，杀断组2-2-4，杀和值，定胆
                 let resultArray03: Array<string> = _.intersection(promiseAllResult[2].killNumberResult, promiseAllResult[4].killNumberResult, promiseAllResult[5].killNumberResult, promiseAllResult[8].killNumberResult, promiseAllResult[12].killNumberResult);
-                Config.investPlan.three.investNumbers = resultArray03.join(',');
+                Config.investPlan.three.investNumbers = this.isUseReverseInvestNumbers(resultArray03);
                 //方案4：只用一个方案
                 let resultArray04: Array<string> = promiseAllResult[13].killNumberResult;
-                Config.investPlan.four.investNumbers = resultArray04.join(',');
+                Config.investPlan.four.investNumbers = this.isUseReverseInvestNumbers(resultArray04);
                 //根据设置的真实投注方案 返回对应的投注号码
                 let planType: number = 1;
                 for (let key in Config.investPlan) {
@@ -182,6 +182,25 @@ export class NumberService extends AbstractRuleBase {
                 }
                 return finallyResult;
             });
+    }
+
+    /**
+     *
+     * 是否取相反的号码进行投注
+     * @returns {String}
+     */
+    private isUseReverseInvestNumbers(beforeReverseInvestNumbers: Array<string>): string {
+        let resultString = "";
+        //1000注原始号码
+        let totalNumbers = jiouType.getTotalNumberArray();
+        if (Config.isUseReverseInvestNumbers) {//取相反的号码
+            //从1000注中移除特定号码，得到相反的号码
+            let diffArray: Array<string> = _.difference(totalNumbers, beforeReverseInvestNumbers);
+            resultString = diffArray.join(',')
+        } else {//正常号码
+            resultString = beforeReverseInvestNumbers.join(',');
+        }
+        return resultString;
     }
 
     /**
