@@ -157,6 +157,12 @@ const Invest = sequelize.define('invest', {
     awardMode: {//元、角、分、厘 模式
         type: Sequelize.INTEGER
     },
+    touZhuBeiShu: {//投注倍数
+        type: Sequelize.INTEGER
+    },
+    isUseReverseInvestNumbers: {//是否取相反的号码投注
+        type: Sequelize.INTEGER
+    },
     winMoney: {//盈利金额
         type: Sequelize.DECIMAL(10, 2)
     },
@@ -207,6 +213,12 @@ const InvestTotal = sequelize.define('invest_total', {
         type: Sequelize.DECIMAL(10, 2)
     },
     awardMode: {//元、角、分、厘 模式
+        type: Sequelize.INTEGER
+    },
+    touZhuBeiShu: {//投注倍数
+        type: Sequelize.INTEGER
+    },
+    isUseReverseInvestNumbers: {//是否取相反的号码投注
         type: Sequelize.INTEGER
     },
     winMoney: {//盈利金额

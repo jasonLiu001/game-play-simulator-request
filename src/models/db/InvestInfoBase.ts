@@ -47,6 +47,18 @@ export class InvestInfoBase {
 
     /**
      *
+     * 投注倍数
+     */
+    touZhuBeiShu: number;
+
+    /**
+     *
+     * 是否反向投注
+     */
+    isUseReverseInvestNumbers: number;
+
+    /**
+     *
      *
      * 盈利金额
      */
