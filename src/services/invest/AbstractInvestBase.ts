@@ -137,7 +137,7 @@ export abstract class AbstractInvestBase {
      * 检查最大盈利金额是否达到设定目标
      */
     private async checkMaxWinMoney(): BlueBirdPromise<any> {
-        //第一次投注时不检查最大余额
+        //第一次投注时不检查最大余额 因为最大余额从数据库中取的，如果第二天运行的情况下，上条记录取的是上一条的余额，会导致判断错误
         if (Config.currentInvestTotalCount == 0) return BlueBirdPromise.resolve(true);
 
         //当前最新一条投注方案
