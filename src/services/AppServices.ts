@@ -20,7 +20,7 @@ let log = log4js.getLogger('AppServices'),
             jar: cookie,
             timeout: CONFIG_CONST.autoCheckTimerInterval,
             headers: HttpRequestHeaders,
-            strictSSL: false
+            strictSSL: false//解决:unable to verify the first certificat 参考https://github.com/request/request/issues/2505
         });
 
 
