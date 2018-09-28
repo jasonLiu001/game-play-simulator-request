@@ -7,15 +7,6 @@ import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
 import {SettingsInfo} from "../models/db/SettingsInfo";
 
-let rootCas = require('ssl-root-cas/latest').create();
-
-rootCas
-    .addFile(__dirname + '/ssl/01-cheap-ssl-intermediary-a.pem')
-    .addFile(__dirname + '/ssl/02-cheap-ssl-intermediary-b.pem')
-;
-// will work with all https requests will all libraries (i.e. request.js)
-require('https').globalAgent.options.ca = rootCas;
-
 let Request = require('request'), path = require('path');
 
 let log4js = require('log4js');
@@ -28,7 +19,8 @@ let log = log4js.getLogger('AppServices'),
         {
             jar: cookie,
             timeout: CONFIG_CONST.autoCheckTimerInterval,
-            headers: HttpRequestHeaders
+            headers: HttpRequestHeaders,
+            strictSSL: false
         });
 
 

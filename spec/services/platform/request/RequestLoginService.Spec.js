@@ -15,7 +15,8 @@ let request = Request.defaults(
     {
         jar: cookie,
         timeout: 20000,
-        headers: HttpRequestHeaders
+        headers: HttpRequestHeaders,
+        strictSSL: false
     });
 
 describe('Vbc02LoginService Test', () => {
