@@ -57,9 +57,9 @@ export const CONFIG_CONST = {
     //投注倍数
     touZhuBeiShu: '1',
     //登录用户名
-    username: '',
+    username: 'wangjackie',
     //登录密码
-    password: '',
+    password: '86liu5229147678j',
     //元、角、分、厘模式
     awardMode: EnumAwardMode.feng,//yuan,jiao,feng,li
     //账户初始余额
