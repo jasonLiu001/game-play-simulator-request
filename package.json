@@ -14,6 +14,7 @@
     "typescript": "^2.3.2"
   },
   "scripts": {
+    "test": "jasmine",
     "grunt": "grunt",
     "linux:start": "npm run win:start",
     "win:start": "npm run grunt && cd dist && node ./App.js"
