@@ -29,16 +29,16 @@ export class Analysis360Service implements IAnalysisCrawler {
         let killNumberUrl: string = null;
         switch (killNumberPosition) {
             case EnumKillNumberPosition.geWei:
-                killNumberUrl = "http://cp.360.cn/shdd/shax?LotID=255401&ItemID=1005&TopCount=20&r=" + Math.random();
+                killNumberUrl = "https://cp.360.cn/shdd/shax?LotID=255401&ItemID=1005&TopCount=20&r=" + Math.random();
                 break;
             case EnumKillNumberPosition.shiWei:
-                killNumberUrl = "http://cp.360.cn/shdd/shax?LotID=255401&ItemID=1004&TopCount=20&r=" + Math.random();
+                killNumberUrl = "https://cp.360.cn/shdd/shax?LotID=255401&ItemID=1004&TopCount=20&r=" + Math.random();
                 break;
             case EnumKillNumberPosition.baiWei:
-                killNumberUrl = "http://cp.360.cn/shdd/shax?LotID=255401&ItemID=1003&TopCount=20&r=" + Math.random();
+                killNumberUrl = "https://cp.360.cn/shdd/shax?LotID=255401&ItemID=1003&TopCount=20&r=" + Math.random();
                 break;
             default:
-                killNumberUrl = "http://cp.360.cn/shdd/shax?LotID=255401&ItemID=1005&TopCount=20&r=" + Math.random();
+                killNumberUrl = "https://cp.360.cn/shdd/shax?LotID=255401&ItemID=1005&TopCount=20&r=" + Math.random();
                 break;
         }
         return killNumberUrl;
