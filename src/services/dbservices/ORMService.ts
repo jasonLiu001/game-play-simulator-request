@@ -435,6 +435,19 @@ export class LotteryDbService {
 
     /**
      *
+     *
+     * 获取某一时期内的最大利润和最小利润值
+     * @param {string} date
+     * @param {number} planType
+     * @returns {Bluebird<any>}
+     */
+    public static getMaxAndMinProfitFromInvest(date: string, planType: number): Promise<any> {
+        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxProfit,MIN(t.`currentAccountBalance`) AS minProfit FROM invest t WHERE t.`investDate`='" + date + "' AND t.`planType`=" + planType;
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+    }
+
+    /**
+     *
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
