@@ -443,7 +443,12 @@ export class LotteryDbService {
      */
     public static getMaxAndMinProfitFromInvest(date: string, planType: number): Promise<any> {
         let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxProfit,MIN(t.`currentAccountBalance`) AS minProfit FROM invest t WHERE t.`investDate`='" + date + "' AND t.`planType`=" + planType;
-        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT})
+            .then((results: Array<any>) => {
+                if (results && results.length > 0) {
+                    return results[0];
+                }
+            });
     }
 
     /**
