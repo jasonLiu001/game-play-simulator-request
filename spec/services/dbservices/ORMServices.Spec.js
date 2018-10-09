@@ -109,8 +109,20 @@ describe("ORMService Test", () => {
             });
     });
 
-    it('should get all settings', function (done) {
+    xit('should get all settings', function (done) {
         LotteryDbService.getSettingsInfoList()
+            .then((res) => {
+                console.log(res);
+                done();
+            })
+            .catch((e) => {
+                console.log(e);
+                done();
+            });
+    });
+
+    it('should get profit data', function (done) {
+        LotteryDbService.getMaxAndMinProfitFromInvest('2018-10-08',1)
             .then((res) => {
                 console.log(res);
                 done();

@@ -1,5 +1,5 @@
 import Promise = require('bluebird');
-import {Config} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
@@ -447,6 +447,11 @@ export class LotteryDbService {
             .then((results: Array<any>) => {
                 if (results && results.length > 0) {
                     return results[0];
+                } else {
+                    return {
+                        maxProfit: CONFIG_CONST.originAccountBalance,
+                        minProfit: CONFIG_CONST.originAccountBalance
+                    }
                 }
             });
     }
