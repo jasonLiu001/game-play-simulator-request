@@ -445,21 +445,26 @@ export class LotteryDbService {
      *
      *
      * 获取某一时期内的最大利润和最小利润值
-     * @param {string} date
+     * @param {Array} dateArray 支持多个日期
      * @param {number} planType
      * @returns {Bluebird<any>}
      */
-    public static getMaxAndMinProfitFromInvest(date: string, planType: number): Promise<any> {
-        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxProfit,MIN(t.`currentAccountBalance`) AS minProfit FROM invest t WHERE t.`investDate`='" + date + "' AND t.`planType`=" + planType;
+    public static getMaxAndMinProfitFromInvest(dateArray: Array<string>, planType: number): Promise<any> {
+        let dateSql = '';//时间Sql
+        dateArray.forEach((item, index) => {
+            if (index < dateArray.length && dateArray.length > 1) {
+                dateSql = dateSql + "'" + item + "',";
+            } else {//最后一个不需要加逗号
+                dateSql = dateSql + "'" + item + "'";
+            }
+        });
+
+        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxAccountBalance,MIN(t.`currentAccountBalance`) AS minAccountBalance FROM invest t WHERE t.`investDate` in(" + dateSql + ") AND t.`planType`=" + planType;
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT})
             .then((results: Array<any>) => {
-                if (results && results.length > 0) {
-                    return results[0];
-                } else {
-                    return {
-                        maxProfit: CONFIG_CONST.originAccountBalance,
-                        minProfit: CONFIG_CONST.originAccountBalance
-                    }
+                return {
+                    maxAccountBalance: results[0].maxAccountBalance || CONFIG_CONST.originAccountBalance,
+                    minAccountBalance: results[0].minAccountBalance || CONFIG_CONST.originAccountBalance
                 }
             });
     }

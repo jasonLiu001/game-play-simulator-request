@@ -32,5 +32,5 @@ describe("Class NumberService Test", () => {
                 expect(res.length).toBeGreaterThan(500);
                 done();
             });
-    }, 200000);
+    }, 60000);
 });

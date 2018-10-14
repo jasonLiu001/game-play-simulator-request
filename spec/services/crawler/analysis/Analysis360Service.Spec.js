@@ -42,7 +42,7 @@ describe("Analysis360Service Test", () => {
                 done();
             });
 
-    }, 200000);
+    }, 60000);
 
     it("getMaxMissNumber test", (done) => {
         analysisService.getMaxMissNumber(0)
@@ -55,6 +55,6 @@ describe("Analysis360Service Test", () => {
                 done();
             });
 
-    }, 200000);
+    }, 60000);
 
 });

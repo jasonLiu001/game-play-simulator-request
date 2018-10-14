@@ -15,6 +15,6 @@ describe("EamilSender Test", () => {
                 console.log(error);
                 done();
             });
-    }, 2000000);
+    }, 60000);
 
 });

@@ -122,7 +122,8 @@ describe("ORMService Test", () => {
     });
 
     it('should get profit data', function (done) {
-        LotteryDbService.getMaxAndMinProfitFromInvest('2018-10-08',1)
+        let arr = ['2018-10-08'];
+        LotteryDbService.getMaxAndMinProfitFromInvest(arr, 1)
             .then((res) => {
                 console.log(res);
                 done();

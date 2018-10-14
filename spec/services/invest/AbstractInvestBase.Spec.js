@@ -42,7 +42,7 @@ describe("AbstractInvestBase Test", () => {
             .catch((e) => {
                 done();
             });
-    }, 20000);
+    }, 60000);
 
     /**
      *
@@ -59,5 +59,5 @@ describe("AbstractInvestBase Test", () => {
             .catch((e) => {
                 done();
             });
-    }, 20000000);
+    }, 60000);
 });

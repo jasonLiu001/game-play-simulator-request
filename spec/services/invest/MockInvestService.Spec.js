@@ -65,5 +65,5 @@ describe("MockInvestService Test", () => {
                     done();
                 }
             });
-    }, 20000000);
+    }, 60000);
 });

@@ -77,7 +77,7 @@ describe('Vbc02LoginService Test', () => {
                     done();
                 }
             });
-    }, 20000000);
+    }, 60000);
 
     /**
      *
@@ -99,5 +99,5 @@ describe('Vbc02LoginService Test', () => {
                     done();
                 }
             });
-    }, 20000000);
+    }, 60000);
 });

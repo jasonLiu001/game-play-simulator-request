@@ -23,5 +23,5 @@ describe("KillNumberGeWei Test", () => {
                 if (err) console.error(err);
                 done();
             });
-    }, 2000000);
+    }, 60000);
 });
