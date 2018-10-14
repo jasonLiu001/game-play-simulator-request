@@ -110,14 +110,13 @@ export class InvestService extends AbstractInvestBase {
                 log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
                 log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                 if (investResult) log.info(investResult);
-            })
-            .then(() => {
                 log.info('正在执行退出登录...');
                 //投注完成后 退出登录
-                return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
-            })
-            .then(() => {
-                log.info("退出登录操作已执行完成");
+                return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc")
+                    .then(() => {
+                        log.info("退出登录操作已执行完成");
+                        return investResult;
+                    });
             });
     }
 }
