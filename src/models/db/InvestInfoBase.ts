@@ -33,6 +33,12 @@ export class InvestInfoBase {
 
     /**
      *
+     * 初始账号余额
+     */
+    originAccountBalance: number;
+
+    /**
+     *
      *
      * 投注号码数量
      */

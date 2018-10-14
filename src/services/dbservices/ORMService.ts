@@ -154,6 +154,10 @@ const Invest = sequelize.define('invest', {
     currentAccountBalance: {//当前账户余额
         type: Sequelize.DECIMAL(10, 2)
     },
+    originAccountBalance: {//初始账户余额
+        type: Sequelize.DECIMAL(10, 2),
+        defaultValue: 1000
+    },
     awardMode: {//元、角、分、厘 模式
         type: Sequelize.INTEGER
     },
@@ -213,6 +217,10 @@ const InvestTotal = sequelize.define('invest_total', {
     },
     currentAccountBalance: {//当前账户余额
         type: Sequelize.DECIMAL(10, 2)
+    },
+    originAccountBalance: {//初始账户余额
+        type: Sequelize.DECIMAL(10, 2),
+        defaultValue: 1000
     },
     awardMode: {//元、角、分、厘 模式
         type: Sequelize.INTEGER
