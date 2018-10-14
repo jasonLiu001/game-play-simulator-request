@@ -38,11 +38,13 @@ export class InvestService extends AbstractInvestBase {
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
                         log.info('%s表记录已保存数据%s条', CONST_INVEST_TOTAL_TABLE.tableName, allInvestTotalInfo.length);
                         return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
+                    })
+                    .then(() => {
+                        //表invest_total第一次初始化完毕 重置标识
+                        if (Config.isInvestTotalTableInitCompleted) Config.isInvestTotalTableInitCompleted = false;
                     });
             })
             .then(() => {
-                //表invest_total第一次初始化完毕 重置标识
-                if (Config.isInvestTotalTableInitCompleted) Config.isInvestTotalTableInitCompleted = false;
                 //投注前保存 投注号码
                 log.info('当前选择的方案%s 是否可真实投注..条件检查结果如下：', CONFIG_CONST.currentSelectedInvestPlanType);
                 //检查是否满足投注条件
@@ -57,11 +59,13 @@ export class InvestService extends AbstractInvestBase {
                         log.info('%s表 %s记录已保存', CONST_INVEST_TABLE.tableName, messageType);
                         //保存投注记录
                         return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
+                    })
+                    .then(() => {
+                        //表invest第一次初始化完毕 重置标识
+                        if (Config.isInvestTableInitCompleted) Config.isInvestTableInitCompleted = false;
                     });
             })
             .then(() => {
-                //表invest第一次初始化完毕 重置标识
-                if (Config.isInvestTableInitCompleted) Config.isInvestTableInitCompleted = false;
                 //当前期号
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
@@ -72,51 +76,48 @@ export class InvestService extends AbstractInvestBase {
                 //真实投注执行登录操作 未达到最大利润值和亏损值
                 if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
-                        log.info('正在执行真实登录...');
-                        //使用request投注 需要先登录在投注 每次投注前都需要登录
-                        return jiangNanLoginService.login(request)
-                            .then((loginResult) => {
-                                log.info('真实登录操作%s', loginResult ? '已执行完成' : '失败');
-                                if (loginResult) log.info(loginResult);
-                            });
-                    }
-                }
-            })
-            .then(() => {
-                //当前期号
-                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
-            })
-            .then((investInfo: InvestInfo) => {
-                if (!investInfo) return BlueBirdPromise.resolve();
-
-                log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
-                log.info('方案%s 投注前账户余额：%s', CONFIG_CONST.currentSelectedInvestPlanType, investInfo.currentAccountBalance);
-                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
-                    //真实投注 未达到最大利润值和亏损值
-                    if (CONFIG_CONST.isRealInvest) {
-                        //真实投注成功后，记录已经成功投注的期数
-                        Config.currentInvestTotalCount++;
-                        log.info('正在执行真实投注...');
-                        return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu)
-                            .then((investResult) => {
-                                log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
-                                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
-                                if (investResult) log.info(investResult);
-                            })
-                            .then(() => {
-                                log.info('正在执行退出登录...');
-                                //投注完成后 退出登录
-                                return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
-                            })
-                            .then(() => {
-                                log.info("退出登录操作已执行完成");
-                            });
+                        return this.loginAndInvest(request, investInfo);
                     }
                 }
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
+            });
+    }
+
+    /**
+     *
+     * 登录平台并执行真实投注
+     * @param request
+     * @param investInfo
+     */
+    async loginAndInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+        log.info('正在执行真实登录...');
+        //使用request投注 需要先登录在投注 每次投注前都需要登录
+        return jiangNanLoginService.login(request)
+            .then((loginResult) => {
+                log.info('真实登录操作%s', loginResult ? '已执行完成' : '失败');
+                if (loginResult) log.info(loginResult);
+
+                log.info('正在执行真实投注...');
+                log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
+                log.info('方案%s 投注前账户余额：%s', CONFIG_CONST.currentSelectedInvestPlanType, investInfo.currentAccountBalance);
+                return jiangNanLotteryService.invest(request, investInfo);
+            })
+            .then((investResult) => {
+                //真实投注成功后，记录已经成功投注的期数
+                Config.currentInvestTotalCount++;
+                log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
+                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
+                if (investResult) log.info(investResult);
+            })
+            .then(() => {
+                log.info('正在执行退出登录...');
+                //投注完成后 退出登录
+                return jiangNanLoginService.loginOut(request, "/login/loginOut.mvc");
+            })
+            .then(() => {
+                log.info("退出登录操作已执行完成");
             });
     }
 }

@@ -82,16 +82,12 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 直接投注的入口方法
      * @param request
-     * @param touZhuBeiShu 投注倍数
+     * @param investInfo 投注记录实体
      */
-    public invest(request: any, touZhuBeiShu: string = '1'): BlueBirdPromise<any> {
-        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+    public invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/')
-            .then((body) => {
-                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
-            })
             .then((investInfo: InvestInfo) => {
-                return this.investMock(request, null, currentPeriod, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length);
+                return this.investMock(request, null, investInfo.period, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);

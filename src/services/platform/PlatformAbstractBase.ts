@@ -1,6 +1,7 @@
 import Promise = require('bluebird');
 import {CONFIG_CONST, Config} from "../../config/Config";
 import {ErrorService} from "../ErrorService";
+import {InvestInfo} from "../../models/db/InvestInfo";
 
 let path = require('path'),
     fs = require('fs'),
@@ -156,7 +157,7 @@ export interface IPlatformLotteryService {
      *
      * 直接投注的入口方法
      * @param request
-     * @param touZhuBeiShu 投注倍数
+     * @param investInfo 投注记录实体
      */
-    invest(request: any, touZhuBeiShu: string): Promise<any>;
+    invest(request: any, investInfo: InvestInfo): Promise<any>;
 }

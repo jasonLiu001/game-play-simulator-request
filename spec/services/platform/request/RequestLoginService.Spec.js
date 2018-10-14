@@ -6,9 +6,12 @@ let Config = require('../../../../dist/config/Config').Config;
 let CONFIG_CONST = require('../../../../dist/config/Config').CONFIG_CONST;
 let HttpRequestHeaders = require('../../../../dist/models/EnumModel').HttpRequestHeaders;
 let LotteryDbService = require('../../../../dist/services/dbservices/ORMService').LotteryDbService;
+let InvestInfo = require('../../../../dist/models/db/InvestInfo').InvestInfo;
+let TimeService = require('../../../../dist/services/time/TimeService').TimeService;
 
 let Request = require('request');
 let Promise = require('bluebird');
+let moment = require('moment');
 
 let cookie = Request.jar();
 let request = Request.defaults(
@@ -22,6 +25,7 @@ let request = Request.defaults(
 describe('Vbc02LoginService Test', () => {
     let vbc02LoginService, vbc02LotteryService, lotteryDbService;
     let jiangNanLoginService, jiangNanLotteryService;
+    let investInfo;
 
     beforeEach((done) => {
         //v博平台
@@ -33,8 +37,25 @@ describe('Vbc02LoginService Test', () => {
         jiangNanLotteryService = new JiangNanLotteryService();
 
         lotteryDbService = new LotteryDbService();
-        //投注号码
-        Config.currentInvestNumbers = "123,345";
+
+        //投注实体
+        investInfo = new InvestInfo();
+        //当前期号
+        investInfo.period = TimeService.getCurrentPeriodNumber(new Date());
+        investInfo.planType = "1";
+        investInfo.investNumbers = "234";
+        investInfo.currentAccountBalance = 1000;
+        investInfo.investNumberCount = 1;
+        investInfo.awardMode = 1000;//厘模式
+        investInfo.touZhuBeiShu = 1;//1倍
+        investInfo.isUseReverseInvestNumbers = 0;
+        investInfo.winMoney = 0;
+        investInfo.status = 0;
+        investInfo.isWin = 0;
+        investInfo.investTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        investInfo.investDate = moment().format('YYYY-MM-DD');
+        investInfo.investTimestamp = moment().format('HH:mm:ss');
+
         LotteryDbService.createLotteryTable()
             .then(() => {
                 done();
@@ -45,10 +66,9 @@ describe('Vbc02LoginService Test', () => {
         jiangNanLoginService.login(request)
             .then((body) => {
                 console.log(body);
-                //return jiangNanLotteryService.invest(request, CONFIG_CONST.touZhuBeiShu);
+                //return jiangNanLotteryService.invest(request, investInfo);
             })
             .then((body) => {
-                console.log(body);
                 done();
             })
             .catch((error) => {
@@ -67,7 +87,7 @@ describe('Vbc02LoginService Test', () => {
         vbc02LoginService.login(request)
             .then((body) => {
                 console.log(body);
-                //return vbc02LotteryService.invest(request, 1000);
+                //return vbc02LotteryService.invest(request, investInfo);
             })
             .then((body) => {
                 console.log(body);
