@@ -16,6 +16,7 @@
   "scripts": {
     "test": "jasmine",
     "test:login": "jasmine ./spec/services/platform/request/RequestLoginService.Spec.js",
+    "send:notification": "jasmine ./spec/services/notification/NotificationService.Spec.js",
     "grunt": "grunt",
     "linux:start": "npm run win:start",
     "win:start": "npm run grunt && cd dist && node ./App.js"
