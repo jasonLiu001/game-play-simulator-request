@@ -13,11 +13,13 @@ import {EmailSender} from "../email/EmailSender";
 import {SettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
+import {NotificationService} from "../notification/NotificationService";
 
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AbstractInvestBase'),
-    numberService = new NumberService();
+    numberService = new NumberService(),
+    notificationService = new NotificationService();
 
 /**
  *
@@ -300,6 +302,10 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
                 return this.sendContinueInvestWarnEmail();
+            })
+            .then(() => {
+                //连中 或者连错 邮件提醒
+                return notificationService.sendContinueWinOrLoseWarnEmail();
             })
             .then(() => {
                 //检查投注历史是否满足特定条件
