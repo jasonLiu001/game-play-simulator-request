@@ -15,6 +15,7 @@ import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     host: 'localhost',
     port: 3306,
@@ -459,7 +460,7 @@ export class LotteryDbService {
             }
         });
 
-        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxAccountBalance,MIN(t.`currentAccountBalance`) AS minAccountBalance FROM invest t WHERE t.`investDate` in(" + dateSql + ") AND t.`planType`=" + planType+' AND t.`investTimestamp`>\'10:00:00\' AND t.`investTimestamp`<\'22:00:00\'';
+        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxAccountBalance,MIN(t.`currentAccountBalance`) AS minAccountBalance FROM invest t WHERE t.`investDate` in(" + dateSql + ") AND t.`planType`=" + planType + ' AND t.`investTimestamp`>\'10:00:00\' AND t.`investTimestamp`<\'22:00:00\'';
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT})
             .then((results: Array<any>) => {
                 return {
@@ -519,15 +520,34 @@ export class LotteryDbService {
      *
      * 获取特定数量的最新投注记录
      */
-    public static getInvestInfoHistory(planType: number, historyCount: number): Promise<Array<any>> {
-        return Invest.findAll({
-            limit: historyCount,
-            where: {planType: planType},
-            order: [
-                ['period', 'DESC']
-            ],
-            raw: true
-        });
+    public static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+        if (afterTime == "") {
+            return Invest.findAll({
+                limit: historyCount,
+                where: {
+                    planType: planType
+                },
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        } else {
+            return Invest.findAll({
+                limit: historyCount,
+                where: {
+                    planType: planType,
+                    investTimestamp: {
+                        [Op.gt]: afterTime
+                    }
+                },
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        }
+
     }
 
     /**
@@ -622,15 +642,32 @@ export class LotteryDbService {
      *
      * 获取特定数量的最新投注记录
      */
-    public static getInvestTotalInfoHistory(planType: number, historyCount: number): Promise<Array<any>> {
-        return InvestTotal.findAll({
-            limit: historyCount,
-            where: {planType: planType},
-            order: [
-                ['period', 'DESC']
-            ],
-            raw: true
-        });
+    public static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+        if (afterTime == "") {
+            return InvestTotal.findAll({
+                limit: historyCount,
+                where: {planType: planType},
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        } else {
+            return InvestTotal.findAll({
+                limit: historyCount,
+                where: {
+                    planType: planType,
+                    investTimestamp: {
+                        [Op.gt]: afterTime
+                    }
+                },
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        }
+
     }
 
     /**

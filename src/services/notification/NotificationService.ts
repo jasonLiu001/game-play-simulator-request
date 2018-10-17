@@ -68,13 +68,27 @@ export class NotificationService implements INotificationService {
      * @param isWin
      */
     private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
+        //特定时间以后
+        let afterTime: string = '10:00:00';
         //方案  最新的投注记录
         let historyData: Array<InvestInfo> = [];
         if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount);
+            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, afterTime);
         } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount);
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount,afterTime);
         }
+
+        //数量不足 不发送邮件通知
+        if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(true);
+
+        let currentTime = new Date();
+        let year = currentTime.getFullYear();
+        let month = currentTime.getMonth();//month取值 0-11
+        let day = currentTime.getDate();
+        //当天的21:59
+        let thirdTime = new Date(year, month, day, 21, 59, 0);
+        //当天22:00以后停止发送邮件通知
+        if (currentTime > thirdTime) return BlueBirdPromise.resolve(true);
 
         //连中或联错
         let continueMaxWinOrLoseTimes: number = 0;
