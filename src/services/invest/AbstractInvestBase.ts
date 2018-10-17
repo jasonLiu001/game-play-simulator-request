@@ -308,6 +308,10 @@ export abstract class AbstractInvestBase {
                 return notificationService.sendContinueWinOrLoseWarnEmail();
             })
             .then(() => {
+                //当天第1次投注错误 邮件提醒
+                return notificationService.sendTodayFirstErrorWarnEmail();
+            })
+            .then(() => {
                 //检查投注历史是否满足特定条件
                 //return this.checkInvestInfoHistory();
                 return BlueBirdPromise.resolve(true);

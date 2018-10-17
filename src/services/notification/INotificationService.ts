@@ -18,4 +18,10 @@ export interface INotificationService {
      * 连错：5,4,3
      */
     sendContinueWinOrLoseWarnEmail(): BlueBirdPromise<any>;
+
+    /**
+     *
+     * 当前10:00:00后第一期错误 是邮件提醒
+     */
+    sendTodayFirstErrorWarnEmail():BlueBirdPromise<any>;
 }

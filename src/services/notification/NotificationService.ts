@@ -48,14 +48,23 @@ export class NotificationService implements INotificationService {
     public async sendContinueWinOrLoseWarnEmail(): BlueBirdPromise<any> {
         //region Invest表连中或者连错提醒
         //方案1 连续5,4,3期错误 发送邮件提醒
-        let plan01_continueLose_5: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName, false);
+        let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName, false);
         //endregion
 
         //region Invest_total表当前选中的方案连错提醒
         //只提醒当前选中的方案
-        //let plan01_total_continueLose_10: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TOTAL_TABLE.tableName, false);
+        //let planContinueLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TOTAL_TABLE.tableName, false);
         //endregion
 
+        return BlueBirdPromise.resolve(true);
+    }
+
+    /**
+     *
+     * 当前10:00:00后第一期错误 是邮件提醒
+     */
+    public async sendTodayFirstErrorWarnEmail(): BlueBirdPromise<any> {
+        let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 1, CONST_INVEST_TABLE.tableName, false);
         return BlueBirdPromise.resolve(true);
     }
 
@@ -66,16 +75,15 @@ export class NotificationService implements INotificationService {
      * @param maxWinOrLoseCount
      * @param {string} tableName
      * @param isWin
+     * @param afterTime 特定时间之后
      */
-    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
-        //特定时间以后
-        let afterTime: string = '10:00:00';
+    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //方案  最新的投注记录
         let historyData: Array<InvestInfo> = [];
         if (tableName == CONST_INVEST_TABLE.tableName) {
             historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, afterTime);
         } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount,afterTime);
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, afterTime);
         }
 
         //数量不足 不发送邮件通知
