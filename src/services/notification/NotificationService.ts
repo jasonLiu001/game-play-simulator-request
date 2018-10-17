@@ -79,19 +79,22 @@ export class NotificationService implements INotificationService {
         //连中或联错
         let continueMaxWinOrLoseTimes: number = 0;
         for (let investItem of historyData) {
-            if (isWin) {//连中
-                if (investItem.status == 1 && investItem.isWin == 1) {
-                    continueMaxWinOrLoseTimes++;
-                }
-            } else {//连错
-                if (investItem.status == 1 && investItem.isWin == 0) {
-                    continueMaxWinOrLoseTimes++;
+            if (investItem.status == 1) {
+                if (isWin) {//连中
+                    if (investItem.isWin == 1) {
+                        continueMaxWinOrLoseTimes++;
+                    }
+                } else {//连错
+                    if (investItem.isWin == 0) {
+                        continueMaxWinOrLoseTimes++;
+                    }
                 }
             }
+
         }
 
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
-            let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, true);
+            let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
         }
 
         return BlueBirdPromise.resolve(true);
@@ -107,8 +110,8 @@ export class NotificationService implements INotificationService {
      * @returns {Bluebird<any>}
      */
     private async sendWinOrLoseEmail(planType: number, count: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
-        let emailTitle = "连" + isWin ? "中" : "错" + "【" + count + "】期提醒";
-        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 连" + isWin ? "中" : "错" + "【" + count + "】期提醒";
+        let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
+        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         return EmailSender.sendEmail(emailTitle, emailContent);
     }
 }
