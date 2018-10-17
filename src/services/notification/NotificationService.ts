@@ -78,12 +78,14 @@ export class NotificationService implements INotificationService {
      * @param afterTime 特定时间之后
      */
     private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+        //当天
+        let today: string = moment().format("YYYY-MM-DD");
         //方案  最新的投注记录
         let historyData: Array<InvestInfo> = [];
         if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, afterTime);
+            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
         } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, afterTime);
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
         }
 
         //数量不足 不发送邮件通知

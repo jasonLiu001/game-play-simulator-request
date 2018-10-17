@@ -537,7 +537,7 @@ export class LotteryDbService {
                 limit: historyCount,
                 where: {
                     planType: planType,
-                    investTimestamp: {
+                    investTime: {
                         [Op.gt]: afterTime
                     }
                 },
@@ -657,7 +657,7 @@ export class LotteryDbService {
                 limit: historyCount,
                 where: {
                     planType: planType,
-                    investTimestamp: {
+                    investTime: {
                         [Op.gt]: afterTime
                     }
                 },
