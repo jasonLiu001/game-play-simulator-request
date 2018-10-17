@@ -47,28 +47,13 @@ export class NotificationService implements INotificationService {
      */
     public async sendContinueWinOrLoseWarnEmail(): BlueBirdPromise<any> {
         //region Invest表连中或者连错提醒
-        //方案1 连续5,4,3期中 发送邮件提醒
-        let plan01_continueWin_5: any = await  this.continueWin(1, 5, CONST_INVEST_TABLE.tableName);
-
-        //方案2 连续5,4,3期中 发送邮件提醒
-        let plan02_continueWin_5: any = await  this.continueWin(2, 5, CONST_INVEST_TABLE.tableName);
-
-        //方案3 连续5,4,3期中 发送邮件提醒
-        let plan03_continueWin_5: any = await  this.continueWin(3, 5, CONST_INVEST_TABLE.tableName);
-
         //方案1 连续5,4,3期错误 发送邮件提醒
-        let plan01_continueLose_5: any = await  this.continueLose(1, 5, CONST_INVEST_TABLE.tableName);
-
-        //方案2 连续5,4,3期错误 发送邮件提醒
-        let plan02_continueLose_5: any = await  this.continueLose(2, 5, CONST_INVEST_TABLE.tableName);
-
-        //方案3 连续5,4,3期错误 发送邮件提醒
-        let plan03_continueLose_5: any = await  this.continueLose(3, 5, CONST_INVEST_TABLE.tableName);
+        let plan01_continueLose_5: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName, false);
         //endregion
 
         //region Invest_total表当前选中的方案连错提醒
         //只提醒当前选中的方案
-        let plan01_total_continueLose_10: any = await  this.continueWin(CONFIG_CONST.currentSelectedInvestPlanType, 10, CONST_INVEST_TOTAL_TABLE.tableName);
+        //let plan01_total_continueLose_10: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TOTAL_TABLE.tableName, false);
         //endregion
 
         return BlueBirdPromise.resolve(true);
@@ -78,54 +63,36 @@ export class NotificationService implements INotificationService {
      *
      * 连续中奖特定期数提醒
      * @param {number} planType
-     * @param maxWinCount
+     * @param maxWinOrLoseCount
      * @param {string} tableName
+     * @param isWin
      */
-    private async continueWin(planType: number, maxWinCount: number, tableName: string): BlueBirdPromise<any> {
+    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
         //方案  最新的投注记录
         let historyData: Array<InvestInfo> = [];
         if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinCount);
+            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount);
         } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinCount);
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount);
         }
 
-        if (maxWinCount == 5) {
-            //连中5次
-            let continueWinFiveTimes: number = 0;
-            for (let investItem of historyData) {
+        //连中或联错
+        let continueMaxWinOrLoseTimes: number = 0;
+        for (let investItem of historyData) {
+            if (isWin) {//连中
                 if (investItem.status == 1 && investItem.isWin == 1) {
-                    continueWinFiveTimes++;
+                    continueMaxWinOrLoseTimes++;
+                }
+            } else {//连错
+                if (investItem.status == 1 && investItem.isWin == 0) {
+                    continueMaxWinOrLoseTimes++;
                 }
             }
-
-            //连中4次
-            let continueWinFourTimes: number = 0;//连中4次
-            for (let investItem of historyData.slice(0, 4)) {
-                if (investItem.status == 1 && investItem.isWin == 1) {
-                    continueWinFourTimes++;
-                }
-            }
-
-            //连中3次
-            let continueWinThreeTimes: number = 0;//连中3次
-            for (let investItem of historyData.slice(0, 3)) {
-                if (investItem.status == 1 && investItem.isWin == 1) {
-                    continueWinFourTimes++;
-                }
-            }
-
-            if (continueWinFiveTimes == maxWinCount) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueWinFiveTimes, tableName, true);
-            } else if (continueWinFourTimes == maxWinCount - 1) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueWinFourTimes, tableName, true);
-            } else if (continueWinThreeTimes == maxWinCount - 2) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueWinThreeTimes, tableName, true);
-            }
-        } else if (maxWinCount == 10) {
-
         }
 
+        if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
+            let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, true);
+        }
 
         return BlueBirdPromise.resolve(true);
     }
@@ -143,60 +110,5 @@ export class NotificationService implements INotificationService {
         let emailTitle = "连" + isWin ? "中" : "错" + "【" + count + "】期提醒";
         let emailContent = "【" + tableName + "】表 方案【" + planType + "】 连" + isWin ? "中" : "错" + "【" + count + "】期提醒";
         return EmailSender.sendEmail(emailTitle, emailContent);
-    }
-
-    /**
-     * 连续错误提醒
-     * @param {number} planType
-     * @param maxLoseCount
-     * @param {string} tableName
-     */
-    private async continueLose(planType: number, maxLoseCount: number, tableName: string): BlueBirdPromise<any> {
-        //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = [];
-        if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxLoseCount);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxLoseCount);
-        }
-
-        if (maxLoseCount == 5) {
-            //连错5次
-            let continueLoseFiveTimes: number = 0;
-            for (let investItem of historyData) {
-                if (investItem.status == 1 && investItem.isWin == 0) {
-                    continueLoseFiveTimes++;
-                }
-            }
-
-            //连错4次
-            let continueLoseFourTimes: number = 0;
-            for (let investItem of historyData.slice(0, 4)) {
-                if (investItem.status == 1 && investItem.isWin == 0) {
-                    continueLoseFourTimes++;
-                }
-            }
-
-            //连错3次
-            let continueLoseThreeTimes: number = 0;
-            for (let investItem of historyData.slice(0, 3)) {
-                if (investItem.status == 1 && investItem.isWin == 0) {
-                    continueLoseFourTimes++;
-                }
-            }
-
-
-            if (continueLoseFiveTimes == maxLoseCount) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueLoseFiveTimes, tableName, false);
-            } else if (continueLoseFourTimes == maxLoseCount - 1) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueLoseFourTimes, tableName, false);
-            } else if (continueLoseThreeTimes == maxLoseCount - 2) {
-                let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueLoseThreeTimes, tableName, false);
-            }
-        } else if (maxLoseCount == 10) {
-
-        }
-
-        return BlueBirdPromise.resolve(true);
     }
 }
