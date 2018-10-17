@@ -64,7 +64,18 @@ export class NotificationService implements INotificationService {
      * 当前10:00:00后第一期错误 是邮件提醒
      */
     public async sendTodayFirstErrorWarnEmail(): BlueBirdPromise<any> {
-        let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 1, CONST_INVEST_TABLE.tableName, false);
+        let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 120, CONST_INVEST_TABLE.tableName, false);
+        //当天
+        let today: string = moment().format("YYYY-MM-DD");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " " + "10:00:00");
+        if (historyData.length == 0) return BlueBirdPromise.resolve(true);
+
+        //当天第1条投注记录
+        let todayFirstInvestItem: InvestInfo = historyData[historyData.length - 1];
+        if (todayFirstInvestItem.status == 1 && todayFirstInvestItem.isWin == 0) {
+            return EmailSender.sendEmail("当天" + today + "第1条投注记录错误", today + " 首次投注错误");
+        }
+
         return BlueBirdPromise.resolve(true);
     }
 
