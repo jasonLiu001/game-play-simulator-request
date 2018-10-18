@@ -53,7 +53,7 @@ export class NotificationService implements INotificationService {
 
         //region Invest_total表当前选中的方案连错提醒
         //只提醒当前选中的方案
-        //let planContinueLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TOTAL_TABLE.tableName, false);
+        let planContinueLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 4, CONST_INVEST_TOTAL_TABLE.tableName, false);
         //endregion
 
         return BlueBirdPromise.resolve(true);
@@ -128,7 +128,7 @@ export class NotificationService implements INotificationService {
 
         }
 
-        if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
+        if (historyData[0].status == 1 && historyData[0].isWin == 1 && continueMaxWinOrLoseTimes == (maxWinOrLoseCount - 1)) {
             let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
         }
 

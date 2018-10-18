@@ -288,6 +288,10 @@ export abstract class AbstractInvestBase {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime()
             .then(() => {
+                //连中 或者连错 邮件提醒
+                return notificationService.sendContinueWinOrLoseWarnEmail();
+            })
+            .then(() => {
                 //检查当前的最大盈利金额
                 return this.checkMaxWinMoney();
             })
@@ -302,10 +306,6 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
                 return this.sendContinueInvestWarnEmail();
-            })
-            .then(() => {
-                //连中 或者连错 邮件提醒
-                return notificationService.sendContinueWinOrLoseWarnEmail();
             })
             .then(() => {
                 //当天第1次投注错误 邮件提醒
