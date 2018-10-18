@@ -48,7 +48,7 @@ export class NotificationService implements INotificationService {
     public async sendContinueWinOrLoseWarnEmail(): BlueBirdPromise<any> {
         //region Invest表连中或者连错提醒
         //方案1 连续5,4,3期错误 发送邮件提醒
-        let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 2, CONST_INVEST_TABLE.tableName, false);
+        //let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 2, CONST_INVEST_TABLE.tableName, false);
         //endregion
 
         //region Invest_total表当前选中的方案连错提醒
