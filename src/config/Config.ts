@@ -47,7 +47,7 @@ export const CONFIG_CONST = {
     //开奖延迟时间，单位为秒
     openTimeDelaySeconds: 60,
     //自动检查定时器 时间间隔 单位为毫秒ms
-    autoCheckTimerInterval: 40000,
+    autoCheckTimerInterval: 25000,
     //三星奖金
     awardPrice: 1954,
     //是否真实投注 1:true真实投注  0:false模拟投注
