@@ -157,7 +157,7 @@ export abstract class AbstractInvestBase {
                 //切换到模拟投注
                 CONFIG_CONST.isRealInvest = false;
                 //发送盈利提醒
-                return EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
+                return await EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
 
             }
         } else if (currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
@@ -170,7 +170,7 @@ export abstract class AbstractInvestBase {
                 //切换到模拟投注
                 CONFIG_CONST.isRealInvest = false;
                 //发送亏损提醒
-                return EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
+                return await EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
             }
         }
         return BlueBirdPromise.resolve(true);

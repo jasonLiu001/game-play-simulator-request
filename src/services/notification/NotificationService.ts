@@ -32,9 +32,9 @@ export class NotificationService implements INotificationService {
         let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 账户余额亏损状态提醒';//通知邮件标题
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，账号最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
-            return EmailSender.sendEmail(emailTitle, emailContent);
+            return await EmailSender.sendEmail(emailTitle, emailContent);
         } else if (yesterdayAccountBalance.minAccountBalance < parseFloat((CONFIG_CONST.originAccountBalance / 5).toFixed(2))) {//最小账户余额小于初始账号的1/5 亏损
-            return EmailSender.sendEmail(emailTitle, emailContent);
+            return await EmailSender.sendEmail(emailTitle, emailContent);
         }
         return BlueBirdPromise.resolve(true);
     }
@@ -72,7 +72,7 @@ export class NotificationService implements INotificationService {
         //当天第1条投注记录
         let todayFirstInvestItem: InvestInfo = historyData[historyData.length - 1];
         if (todayFirstInvestItem.status == 1 && todayFirstInvestItem.isWin == 0) {
-            return EmailSender.sendEmail("当天" + today + "第1条投注记录错误", today + " 首次投注错误");
+            return await EmailSender.sendEmail("当天" + today + "第1条投注记录错误", today + " 首次投注错误");
         }
 
         return BlueBirdPromise.resolve(true);
@@ -128,7 +128,7 @@ export class NotificationService implements INotificationService {
         }
 
         if (historyData[0].status == 1 && historyData[0].isWin == 1 && continueMaxWinOrLoseTimes == (maxWinOrLoseCount - 1)) {
-            let continueWinFourTimesEmail: any = await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
+            return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
         }
 
         return BlueBirdPromise.resolve(true);
@@ -146,6 +146,6 @@ export class NotificationService implements INotificationService {
     private async sendWinOrLoseEmail(planType: number, count: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【" + tableName + "】表 方案【" + planType + "】 连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
-        return EmailSender.sendEmail(emailTitle, emailContent);
+        return await EmailSender.sendEmail(emailTitle, emailContent);
     }
 }
