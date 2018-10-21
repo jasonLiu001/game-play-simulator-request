@@ -6,6 +6,7 @@ import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
 import {SettingsInfo} from "../models/db/SettingsInfo";
+import {NotificationService} from "./notification/NotificationService";
 
 let Request = require('request'), path = require('path');
 
@@ -15,6 +16,7 @@ log4js.configure(path.resolve(__dirname, '..', 'config/log4js.json'));
 let log = log4js.getLogger('AppServices'),
     investService = new InvestService(),
     cookie = Request.jar(),
+    notificationService = new NotificationService(),
     request = Request.defaults(
         {
             jar: cookie,
@@ -81,6 +83,10 @@ export class AppServices {
                             }
                         }
                     });
+            })
+            .then(()=>{
+                //发送邮件通知 利润未达标
+               return notificationService.WhenYesterdayAccountBalanceLowerThan();
             })
             .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
