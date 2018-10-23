@@ -305,7 +305,7 @@ export class LotteryDbService {
      *
      * 测试数据库连接同时创建数据库
      */
-    public static createLotteryTable() {
+    public static createLotteryTable(): Promise<any> {
         //测试数据库连接
         return sequelize
             .authenticate()

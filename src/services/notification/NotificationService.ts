@@ -16,9 +16,43 @@ let log4js = require('log4js'),
 
 /**
  *
+ * 通知配置类
+ */
+class NotificationConfig {
+    //数据库中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
+    public static lastedRealInvestPeriod: string = null;
+    //数据库中 当天第一条记录的投注期号 用于不重复发送通知邮件
+    public static todayFirstRealInvestPeriod: string = null;
+}
+
+/**
+ *
  * 消息通知服务
  */
 export class NotificationService implements INotificationService {
+
+    /**
+     *
+     * 间隔5分钟检查是否需要发送通知  入口方法
+     */
+    public start(): void {
+        //5分钟检查一次是否需要发送通知
+        setInterval(() => {
+            //当天第1期错误提醒
+            this.sendTodayFirstErrorWarnEmail()
+                .then(() => {
+                    //连错2期提醒
+                    return this.sendContinueWinOrLoseWarnEmail(2, false);
+                })
+                .catch((err) => {
+                    if (err) {
+                        log.error("间隔发送邮件通知异常");
+                        log.error(err);
+                    }
+                });
+
+        }, 300000);
+    }
 
     /**
      *
@@ -45,18 +79,9 @@ export class NotificationService implements INotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(): BlueBirdPromise<any> {
-        //region Invest表连中或者连错提醒
-        //方案1 连续5,4,3期错误 发送邮件提醒
-        //let continueWinOrLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 2, CONST_INVEST_TABLE.tableName, false);
-        //endregion
-
-        //region Invest_total表当前选中的方案连错提醒
-        //只提醒当前选中的方案
-        let planContinueLoseData: any = await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, 4, CONST_INVEST_TOTAL_TABLE.tableName, false);
-        //endregion
-
-        return BlueBirdPromise.resolve(true);
+    public async sendContinueWinOrLoseWarnEmail(maxWinOrLoseCount: number, isWin: boolean): BlueBirdPromise<any> {
+        //方案 连续5,4,3期错误 发送邮件提醒
+        return await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, CONST_INVEST_TABLE.tableName, isWin);
     }
 
     /**
@@ -71,7 +96,9 @@ export class NotificationService implements INotificationService {
 
         //当天第1条投注记录
         let todayFirstInvestItem: InvestInfo = historyData[historyData.length - 1];
-        if (todayFirstInvestItem.status == 1 && todayFirstInvestItem.isWin == 0) {
+        if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && todayFirstInvestItem.status == 1 && todayFirstInvestItem.isWin == 0) {
+            //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
+            NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
             return await EmailSender.sendEmail("当天" + today + "第1条投注记录错误", today + " 首次投注错误");
         }
 
@@ -110,15 +137,15 @@ export class NotificationService implements INotificationService {
         //当天22:00以后停止发送邮件通知
         if (currentTime > thirdTime) return BlueBirdPromise.resolve(true);
 
-        //连中或联错
+        //连中或连错
         let continueMaxWinOrLoseTimes: number = 0;
         for (let investItem of historyData) {
             if (investItem.status == 1) {
-                if (isWin) {//连中
+                if (isWin) {//判断连中
                     if (investItem.isWin == 1) {
                         continueMaxWinOrLoseTimes++;
                     }
-                } else {//连错
+                } else {//判断连错
                     if (investItem.isWin == 0) {
                         continueMaxWinOrLoseTimes++;
                     }
@@ -127,8 +154,13 @@ export class NotificationService implements INotificationService {
 
         }
 
-        if (historyData[0].status == 1 && historyData[0].isWin == 1 && continueMaxWinOrLoseTimes == (maxWinOrLoseCount - 1)) {
-            return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
+        if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
+            if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
+                //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
+                NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
+                return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
+            }
+
         }
 
         return BlueBirdPromise.resolve(true);

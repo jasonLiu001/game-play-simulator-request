@@ -70,7 +70,7 @@ export class AppServices {
      */
     public static async start(): BlueBirdPromise<any> {
         log.info('程序已启动，持续监视中...');
-        LotteryDbService.createLotteryTable()
+        return LotteryDbService.createLotteryTable()
             .then(() => {
                 //程序启动时 必须首先要获取的参数配置信息 originAccountBalance,currentAccountBalance,currentSelectedAwardMode
                 return AppServices.getAndInitSettings()
@@ -83,10 +83,6 @@ export class AppServices {
                             }
                         }
                     });
-            })
-            .then(()=>{
-                //发送邮件通知 利润未达标
-               return notificationService.WhenYesterdayAccountBalanceLowerThan();
             })
             .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注
