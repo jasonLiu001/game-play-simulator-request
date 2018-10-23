@@ -73,6 +73,8 @@ export class InvestService extends AbstractInvestBase {
             .then((investInfo: InvestInfo) => {
                 if (!investInfo) return BlueBirdPromise.resolve();
 
+                //doCheck全部验证通过 则表明可投注，不管是模拟投注还是真实投注，当前的真实投注值都应该增加，此值可用于判断已经投注的次数，模拟或者真实
+                Config.currentInvestTotalCount++;
                 //真实投注执行登录操作 未达到最大利润值和亏损值
                 if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
@@ -105,8 +107,6 @@ export class InvestService extends AbstractInvestBase {
                 return jiangNanLotteryService.invest(request, investInfo);
             })
             .then((investResult) => {
-                //真实投注成功后，记录已经成功投注的期数
-                Config.currentInvestTotalCount++;
                 log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
                 log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
                 if (investResult) log.info(investResult);
