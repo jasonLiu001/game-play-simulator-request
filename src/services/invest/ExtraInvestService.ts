@@ -5,11 +5,9 @@ import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
-import {InvestService} from "./InvestService";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('ExtraInvestService'),
-    investService = new InvestService();
+    log = log4js.getLogger('ExtraInvestService');
 
 /**
  *
@@ -26,7 +24,7 @@ export class ExtraInvestService {
                 if (!isCanInvest) return BlueBirdPromise.reject("Not have two error in three!");
             })
             .then(() => {
-                return investService.loginAndInvest(request, investInfo);
+
             });
     }
 

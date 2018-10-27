@@ -12,14 +12,12 @@ import {TimeService} from "../time/TimeService";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
-import {ExtraInvestService} from "./ExtraInvestService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     jiangNanLoginService = new JiangNanLoginService(),
     jiangNanLotteryService = new JiangNanLotteryService,
-    numberService = new NumberService(),
-    extraInvestService = new ExtraInvestService();
+    numberService = new NumberService();
 
 export class InvestService extends AbstractInvestBase {
 
