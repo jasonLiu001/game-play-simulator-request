@@ -68,7 +68,7 @@ export class NotificationService implements INotificationService {
     public async sendMaxOrMinProfitNotification(): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + "  10:00:00");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
         let emailTitle: string = "方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】最高最低利润预警";
@@ -92,7 +92,7 @@ export class NotificationService implements INotificationService {
      *
      * 前一天的账号余额 低于特定值时发送通知
      */
-    public async WhenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any> {
+    public async whenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any> {
         let yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD');
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值

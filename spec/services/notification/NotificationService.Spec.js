@@ -9,8 +9,8 @@ describe("NotificationService Test", () => {
     });
 
 
-    it("WhenYesterdayAccountBalanceLowerThan test", (done) => {
-        notificationService.WhenYesterdayAccountBalanceLowerThan()
+    it("whenYesterdayAccountBalanceLowerThan test", (done) => {
+        notificationService.whenYesterdayAccountBalanceLowerThan()
             .then((result) => {
                 if (result) console.log(result);
                 done();

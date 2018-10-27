@@ -9,7 +9,7 @@ export interface INotificationService {
      *
      * 前一天的账号余额 低于特定值时发送通知
      */
-    WhenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any>;
+    whenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any>;
 
     /**
      *
