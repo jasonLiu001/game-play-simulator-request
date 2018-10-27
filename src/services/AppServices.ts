@@ -7,6 +7,7 @@ import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
 import {SettingsInfo} from "../models/db/SettingsInfo";
 import {NotificationService} from "./notification/NotificationService";
+import {RuntimeConfig} from "../config/RuntimeConfig";
 
 let Request = require('request'), path = require('path');
 
@@ -59,6 +60,10 @@ export class AppServices {
                 Config.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isUseReverseInvestNumbers') {
                 Config.isUseReverseInvestNumbers = Number(item.value) === 1;
+            } else if (item.key === 'minProfitNotification') {
+                RuntimeConfig.minProfitNotification = Number(item.value);
+            } else if (item.key === 'maxProfitNotification') {
+                RuntimeConfig.maxProfitNotification = Number(item.value);
             }
         }
     }

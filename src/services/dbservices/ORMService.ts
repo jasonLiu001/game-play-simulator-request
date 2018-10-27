@@ -350,6 +350,18 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '10',
                                     desc: '是否用相反的号码投注'
+                                },
+                                {
+                                    key: 'maxProfitNotification',
+                                    value: '0',
+                                    orderId: '11',
+                                    desc: '最高利润预警'
+                                },
+                                {
+                                    key: 'minProfitNotification',
+                                    value: '0',
+                                    orderId: '12',
+                                    desc: '最低利润预警'
                                 }
                             ]);
                         } else {

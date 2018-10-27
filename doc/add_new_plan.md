@@ -61,3 +61,6 @@
            }
    ```
 ### 添加新的配置项
+1. 在ORMService.ts中添加对应的配置key
+2. RuntimeConfig.ts中添加对应的key
+3. 在AppServices.ts中初始化新建的key
