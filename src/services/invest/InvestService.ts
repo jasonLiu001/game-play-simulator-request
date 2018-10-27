@@ -92,15 +92,15 @@ export class InvestService extends AbstractInvestBase {
 
                 //当前是模拟投注 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
                 if (!CONFIG_CONST.isRealInvest) {
-                    return extraInvestService.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
-                        .then((isCanInvest) => {
-                            if (isCanInvest) {
-                                // return this.loginAndInvest(request, investInfo)
-                                //     .then(() => {
-                                //         return EmailSender.sendEmail('符合对错错条件', '已自动投注')
-                                //     });
-                            }
-                        });
+                    // return extraInvestService.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
+                    //     .then((isCanInvest) => {
+                    //         if (isCanInvest) {
+                    //             return this.loginAndInvest(request, investInfo)
+                    //                 .then(() => {
+                    //                     return EmailSender.sendEmail('符合对错错条件', '已自动投注')
+                    //                 });
+                    //         }
+                    //     });
                 }
             })
             .catch((e) => {
