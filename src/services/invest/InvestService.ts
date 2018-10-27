@@ -13,6 +13,7 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {ExtraInvestService} from "./ExtraInvestService";
+import {EmailSender} from "../email/EmailSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -93,7 +94,12 @@ export class InvestService extends AbstractInvestBase {
                 if (!CONFIG_CONST.isRealInvest) {
                     return extraInvestService.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
                         .then((isCanInvest) => {
-                            if (isCanInvest) return this.loginAndInvest(request, investInfo);
+                            if (isCanInvest) {
+                                return this.loginAndInvest(request, investInfo)
+                                    .then(() => {
+                                        return EmailSender.sendEmail('符合对错错条件', '已自动投注')
+                                    });
+                            }
                         });
                 }
             })
