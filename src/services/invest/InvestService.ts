@@ -12,12 +12,14 @@ import {TimeService} from "../time/TimeService";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
+import {ExtraInvestService} from "./ExtraInvestService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     jiangNanLoginService = new JiangNanLoginService(),
     jiangNanLotteryService = new JiangNanLotteryService,
-    numberService = new NumberService();
+    numberService = new NumberService(),
+    extraInvestService = new ExtraInvestService();
 
 export class InvestService extends AbstractInvestBase {
 
@@ -81,6 +83,11 @@ export class InvestService extends AbstractInvestBase {
                         return this.loginAndInvest(request, investInfo);
                     }
                 }
+
+                //当前是模拟投注 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
+                if (!CONFIG_CONST.isRealInvest) {
+                    return extraInvestService.execute(request, investInfo);
+                }
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
@@ -93,7 +100,7 @@ export class InvestService extends AbstractInvestBase {
      * @param request
      * @param investInfo
      */
-    async loginAndInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    public async loginAndInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         log.info('正在执行真实登录...');
         //使用request投注 需要先登录在投注 每次投注前都需要登录
         return jiangNanLoginService.login(request)
