@@ -41,22 +41,36 @@ export class NotificationService implements INotificationService {
     public start(): void {
         //5分钟检查一次是否需要发送通知
         setInterval(() => {
+
             //当天第1期错误提醒
             this.sendTodayFirstErrorWarnEmail()
-                .then(() => {
-                    //连错2期提醒
-                    return this.sendContinueWinOrLoseWarnEmail(2, false);
-                })
-                .then(() => {
-                    //达到指定利润发送邮件提醒
-                    return this.sendMaxOrMinProfitNotification();
-                })
                 .catch((err) => {
                     if (err) {
-                        log.error("间隔发送邮件通知异常");
+                        log.error("当天第1期错误提醒邮件通知异常");
                         log.error(err);
                     }
                 });
+            //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
+            setTimeout(() => {
+                //连错2期提醒
+                this.sendContinueWinOrLoseWarnEmail(2, false)
+                    .catch((err) => {
+                        if (err) {
+                            log.error("连错2期提醒邮件通知异常");
+                            log.error(err);
+                        }
+                    });
+            }, 10000);
+            setTimeout(() => {
+                //最大最小利润预警
+                this.sendMaxOrMinProfitNotification()
+                    .catch((err) => {
+                        if (err) {
+                            log.error("最大最小利润预警邮件通知异常");
+                            log.error(err);
+                        }
+                    });
+            }, 10000);
 
         }, 120000);
     }
