@@ -86,7 +86,7 @@ export class InvestService extends AbstractInvestBase {
 
                 //当前是模拟投注 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
                 if (!CONFIG_CONST.isRealInvest) {
-                    return extraInvestService.execute(request, investInfo);
+                    //return extraInvestService.execute(request, investInfo);
                 }
             })
             .catch((e) => {
