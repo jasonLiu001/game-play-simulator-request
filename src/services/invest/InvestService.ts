@@ -95,10 +95,10 @@ export class InvestService extends AbstractInvestBase {
                     return extraInvestService.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
                         .then((isCanInvest) => {
                             if (isCanInvest) {
-                                return this.loginAndInvest(request, investInfo)
-                                    .then(() => {
-                                        return EmailSender.sendEmail('符合对错错条件', '已自动投注')
-                                    });
+                                // return this.loginAndInvest(request, investInfo)
+                                //     .then(() => {
+                                //         return EmailSender.sendEmail('符合对错错条件', '已自动投注')
+                                //     });
                             }
                         });
                 }
