@@ -42,14 +42,23 @@ export class NotificationService implements INotificationService {
         //5分钟检查一次是否需要发送通知
         setInterval(() => {
 
-            // //当天第1期错误提醒
-            // this.sendTodayFirstErrorWarnEmail()
-            //     .catch((err) => {
-            //         if (err) {
-            //             log.error("当天第1期错误提醒邮件通知异常");
-            //             log.error(err);
-            //         }
-            //     });
+            //当天第1期错误提醒
+            this.sendTodayFirstErrorWarnEmail(1)
+                .catch((err) => {
+                    if (err) {
+                        log.error("当天第1期错误提醒邮件通知异常");
+                        log.error(err);
+                    }
+                });
+
+            //当天前2期错误提醒
+            this.sendTodayFirstErrorWarnEmail(2)
+                .catch((err) => {
+                    if (err) {
+                        log.error("当天第1,2期错误提醒邮件通知异常");
+                        log.error(err);
+                    }
+                });
             //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
             setTimeout(() => {
                 //连错2期提醒
@@ -60,7 +69,7 @@ export class NotificationService implements INotificationService {
                             log.error(err);
                         }
                     });
-            }, 100);
+            }, 10000);
             setTimeout(() => {
                 //最大最小利润预警
                 this.sendMaxOrMinProfitNotification()
@@ -134,20 +143,28 @@ export class NotificationService implements INotificationService {
 
     /**
      *
-     * 当前10:00:00后第一期错误 是邮件提醒
+     * 当前10:00:00后前几期错误 是邮件提醒
      */
-    public async sendTodayFirstErrorWarnEmail(): BlueBirdPromise<any> {
+    public async sendTodayFirstErrorWarnEmail(firstErrorCount: number): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " 10:00:00");
         if (historyData.length == 0) return BlueBirdPromise.resolve(true);
 
+        let errorTotalTimes: number = 0;
+        for (let i = 1; i <= firstErrorCount; i++) {
+            let investItem: InvestInfo = historyData[historyData.length - i];
+            if (investItem.status == 1 && investItem.isWin == 0) {
+                errorTotalTimes++;
+            }
+        }
+
         //当天第1条投注记录
         let todayFirstInvestItem: InvestInfo = historyData[historyData.length - 1];
-        if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && todayFirstInvestItem.status == 1 && todayFirstInvestItem.isWin == 0) {
+        if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && errorTotalTimes == firstErrorCount) {
             //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
             NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
-            return await EmailSender.sendEmail("当天" + today + "第1条投注记录错误", today + " 首次投注错误");
+            return await EmailSender.sendEmail("当天" + today + "前" + firstErrorCount + "条投注记录错误", today + "前" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误");
         }
 
         return BlueBirdPromise.resolve(true);

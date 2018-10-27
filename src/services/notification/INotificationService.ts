@@ -21,7 +21,7 @@ export interface INotificationService {
 
     /**
      *
-     * 当前10:00:00后第一期错误 是邮件提醒
+     * 当前10:00:00后前几期错误 邮件提醒
      */
-    sendTodayFirstErrorWarnEmail(): BlueBirdPromise<any>;
+    sendTodayFirstErrorWarnEmail(firstErrorCount:number): BlueBirdPromise<any>;
 }
