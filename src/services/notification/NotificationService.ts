@@ -33,7 +33,7 @@ export class NotificationService implements INotificationService {
 
     /**
      *
-     * 间隔5分钟检查是否需要发送通知  入口方法
+     * 间隔2分钟检查是否需要发送通知  入口方法
      */
     public start(): void {
         //5分钟检查一次是否需要发送通知
@@ -51,7 +51,7 @@ export class NotificationService implements INotificationService {
                     }
                 });
 
-        }, 300000);
+        }, 120000);
     }
 
     /**
