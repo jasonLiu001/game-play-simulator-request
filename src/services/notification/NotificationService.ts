@@ -9,6 +9,7 @@ import {TimeService} from "../time/TimeService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
+import {RuntimeConfig} from "../../config/RuntimeConfig";
 
 
 let log4js = require('log4js'),
@@ -23,6 +24,8 @@ class NotificationConfig {
     public static lastedRealInvestPeriod: string = null;
     //数据库中 当天第一条记录的投注期号 用于不重复发送通知邮件
     public static todayFirstRealInvestPeriod: string = null;
+    //数据库中 达到利润预警值的投注期号 用于不重复发送通知邮件
+    public static todayMaxOrMinProfitInvestPeriod: string = null;
 }
 
 /**
@@ -44,6 +47,10 @@ export class NotificationService implements INotificationService {
                     //连错2期提醒
                     return this.sendContinueWinOrLoseWarnEmail(2, false);
                 })
+                .then(() => {
+                    //达到指定利润发送邮件提醒
+                    return this.sendMaxOrMinProfitNotification();
+                })
                 .catch((err) => {
                     if (err) {
                         log.error("间隔发送邮件通知异常");
@@ -52,6 +59,33 @@ export class NotificationService implements INotificationService {
                 });
 
         }, 120000);
+    }
+
+    /**
+     *
+     * 达到指定利润发送预警邮件
+     */
+    public async sendMaxOrMinProfitNotification(): BlueBirdPromise<any> {
+        //当天
+        let today: string = moment().format("YYYY-MM-DD");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + "  10:00:00");
+        if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
+
+        let emailTitle: string = "方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】最高最低利润预警";
+        //当前账号余额
+        let currentAccountBalance: number = historyData[0].currentAccountBalance;
+
+        //不重复发送邮件
+        if (NotificationConfig.todayMaxOrMinProfitInvestPeriod != historyData[0].period) {
+            NotificationConfig.todayMaxOrMinProfitInvestPeriod = historyData[0].period;
+            if (currentAccountBalance <= RuntimeConfig.minProfitNotification) {
+                return await EmailSender.sendEmail(emailTitle, "已达最低预警利润值：" + RuntimeConfig.minProfitNotification);
+            } else if (currentAccountBalance >= RuntimeConfig.maxProfitNotification) {
+                return await EmailSender.sendEmail(emailTitle, "已达最高预警利润值：" + RuntimeConfig.maxProfitNotification);
+            }
+        }
+
+        return BlueBirdPromise.resolve(false);
     }
 
     /**
@@ -91,7 +125,7 @@ export class NotificationService implements INotificationService {
     public async sendTodayFirstErrorWarnEmail(): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " " + "10:00:00");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " 10:00:00");
         if (historyData.length == 0) return BlueBirdPromise.resolve(true);
 
         //当天第1条投注记录
