@@ -23,9 +23,10 @@ export class ExtraInvestService {
     public async execute(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
             .then((isCanInvest: boolean) => {
-                if (isCanInvest) {
-                    return investService.loginAndInvest(request, investInfo);
-                }
+                if (!isCanInvest) return BlueBirdPromise.reject("Not have two error in three!");
+            })
+            .then(() => {
+                return investService.loginAndInvest(request, investInfo);
             });
     }
 
