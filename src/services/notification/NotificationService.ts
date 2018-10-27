@@ -42,14 +42,14 @@ export class NotificationService implements INotificationService {
         //5分钟检查一次是否需要发送通知
         setInterval(() => {
 
-            //当天第1期错误提醒
-            this.sendTodayFirstErrorWarnEmail()
-                .catch((err) => {
-                    if (err) {
-                        log.error("当天第1期错误提醒邮件通知异常");
-                        log.error(err);
-                    }
-                });
+            // //当天第1期错误提醒
+            // this.sendTodayFirstErrorWarnEmail()
+            //     .catch((err) => {
+            //         if (err) {
+            //             log.error("当天第1期错误提醒邮件通知异常");
+            //             log.error(err);
+            //         }
+            //     });
             //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
             setTimeout(() => {
                 //连错2期提醒
@@ -60,7 +60,7 @@ export class NotificationService implements INotificationService {
                             log.error(err);
                         }
                     });
-            }, 10000);
+            }, 100);
             setTimeout(() => {
                 //最大最小利润预警
                 this.sendMaxOrMinProfitNotification()
