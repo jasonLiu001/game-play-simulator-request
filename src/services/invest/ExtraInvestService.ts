@@ -4,7 +4,6 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
-import {CONFIG_CONST} from "../../config/Config";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -16,28 +15,13 @@ let log4js = require('log4js'),
 export class ExtraInvestService {
     /**
      *
-     * 执行投注
-     */
-    public async execute(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
-        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
-            .then((isCanInvest: boolean) => {
-                if (!isCanInvest) return BlueBirdPromise.reject("Not have two error in three!");
-            })
-            .then(() => {
-
-            });
-    }
-
-
-    /**
-     *
      * 三局中错误两局 "对错错" 这种形式才行 当天10点以后
      * @param planType 当前选择的方案类型
      * @param historyCount 需要取的历史奖号数量
      * @param tableName  数据表名称 invest和invest_total表
      * @param afterTime 取历史奖号的开始时间，默认是当天10点以后
      */
-    private async investWhenFindTwoErrorInThree(planType: number, historyCount: number, tableName: string, afterTime: string = '10:00:00'): BlueBirdPromise<boolean> {
+    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number, tableName: string, afterTime: string = '10:00:00'): BlueBirdPromise<boolean> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         //方案  最新的投注记录
