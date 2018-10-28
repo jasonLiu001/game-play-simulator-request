@@ -22,7 +22,7 @@ import {SumValues} from "../rules/SumValues";
 import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
 import {KillNumberRandom} from "../rules/killnumber/KillNumberRandom";
-import {AppConfig} from "../../config/AppConfig";
+import {AppSettings} from "../../config/AppSettings";
 
 
 let log4js = require('log4js'),
@@ -192,7 +192,7 @@ export class NumberService extends AbstractRuleBase {
         let resultString = "";
         //1000注原始号码
         let totalNumbers = jiouType.getTotalNumberArray();
-        if (AppConfig.isUseReverseInvestNumbers) {//取相反的号码
+        if (AppSettings.isUseReverseInvestNumbers) {//取相反的号码
             //从1000注中移除特定号码，得到相反的号码
             let diffArray: Array<string> = _.difference(totalNumbers, beforeReverseInvestNumbers);
             resultString = diffArray.join(',');

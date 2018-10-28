@@ -2,7 +2,7 @@ import {ErrorService} from "../ErrorService";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {SettingsInfo} from "../../models/db/SettingsInfo";
 import BlueBirdPromise = require('bluebird');
-import {AppConfig} from "../../config/AppConfig";
+import {AppSettings} from "../../config/AppSettings";
 import {Config, CONFIG_CONST} from "../../config/Config";
 
 let log4js = require('log4js'),
@@ -40,15 +40,15 @@ export class SettingService {
             } else if (item.key === 'isInvestTableUserLastAccountBalance') {
                 Config.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isUseReverseInvestNumbers') {
-                AppConfig.isUseReverseInvestNumbers = Number(item.value) === 1;
+                AppSettings.isUseReverseInvestNumbers = Number(item.value) === 1;
             } else if (item.key === 'minProfitNotification') {
-                AppConfig.minProfitNotification = Number(item.value);
+                AppSettings.minProfitNotification = Number(item.value);
             } else if (item.key === 'maxProfitNotification') {
-                AppConfig.maxProfitNotification = Number(item.value);
+                AppSettings.maxProfitNotification = Number(item.value);
             } else if (item.key === 'siteUrl') {
                 CONFIG_CONST.siteUrl = item.value;
             } else if (item.key === 'investEndTime') {
-                AppConfig.investEndTime = item.value;
+                AppSettings.investEndTime = item.value;
             }
         }
     }

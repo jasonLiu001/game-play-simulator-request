@@ -2,7 +2,7 @@
  *
  * 程序运行时变量配置
  */
-export class AppConfig {
+export class AppSettings {
     //是否用相反的投注号码进行投注
     public static isUseReverseInvestNumbers = false;
     //最低利润预警值

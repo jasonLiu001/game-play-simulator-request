@@ -14,7 +14,7 @@ import {SettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {NotificationService} from "../notification/NotificationService";
-import {AppConfig} from "../../config/AppConfig";
+import {AppSettings} from "../../config/AppSettings";
 
 
 let log4js = require('log4js'),
@@ -113,7 +113,7 @@ export abstract class AbstractInvestBase {
         let day = currentTime.getDate();
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
-        let investEndTimeArr: Array<string> = AppConfig.investEndTime.split(':');
+        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
         if (investEndTimeArr.length == 3) {
             thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
         }
@@ -384,7 +384,7 @@ export abstract class AbstractInvestBase {
                 investNumberCount: planInfo.investNumbers.split(',').length,
                 awardMode: CONFIG_CONST.awardMode,
                 touZhuBeiShu: parseInt(CONFIG_CONST.touZhuBeiShu),
-                isUseReverseInvestNumbers: AppConfig.isUseReverseInvestNumbers ? 1 : 0,
+                isUseReverseInvestNumbers: AppSettings.isUseReverseInvestNumbers ? 1 : 0,
                 winMoney: 0,
                 status: 0,
                 isWin: 0,

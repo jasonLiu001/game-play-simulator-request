@@ -8,7 +8,7 @@ import {EmailSender} from "../email/EmailSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
-import {AppConfig} from "../../config/AppConfig";
+import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 
 
@@ -104,12 +104,12 @@ export class NotificationService implements INotificationService {
         //不重复发送邮件
         if (NotificationConfig.todayMaxOrMinProfitInvestPeriod != historyData[0].period) {
             NotificationConfig.todayMaxOrMinProfitInvestPeriod = historyData[0].period;
-            if (currentAccountBalance <= AppConfig.minProfitNotification) {
+            if (currentAccountBalance <= AppSettings.minProfitNotification) {
                 let lowerTitle = "最低预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最低利润值点";
-                return await EmailSender.sendEmail(lowerTitle, "已达最低预警利润值：" + AppConfig.minProfitNotification);
-            } else if (currentAccountBalance >= AppConfig.maxProfitNotification) {
+                return await EmailSender.sendEmail(lowerTitle, "已达最低预警利润值：" + AppSettings.minProfitNotification);
+            } else if (currentAccountBalance >= AppSettings.maxProfitNotification) {
                 let higherTitle = "最高预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最高利润值点";
-                return await EmailSender.sendEmail(higherTitle, "已达最高预警利润值：" + AppConfig.maxProfitNotification);
+                return await EmailSender.sendEmail(higherTitle, "已达最高预警利润值：" + AppSettings.maxProfitNotification);
             }
         }
 
