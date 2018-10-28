@@ -12,6 +12,7 @@ import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {ExtraInvestService} from "./ExtraInvestService";
 import {PlatformService} from "../platform/PlatformService";
+import {AppConfig} from "../../config/AppConfig";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -82,7 +83,7 @@ export class InvestService extends AbstractInvestBase {
                 }
 
                 //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
-                if (!CONFIG_CONST.isRealInvest && !Config.isUseReverseInvestNumbers) {
+                if (!CONFIG_CONST.isRealInvest && !AppConfig.isUseReverseInvestNumbers) {
                     //return extraInvestService.executeExtraInvest(request, investInfo);
                 }
             })

@@ -384,7 +384,7 @@ export abstract class AbstractInvestBase {
                 investNumberCount: planInfo.investNumbers.split(',').length,
                 awardMode: CONFIG_CONST.awardMode,
                 touZhuBeiShu: parseInt(CONFIG_CONST.touZhuBeiShu),
-                isUseReverseInvestNumbers: Config.isUseReverseInvestNumbers ? 1 : 0,
+                isUseReverseInvestNumbers: AppConfig.isUseReverseInvestNumbers ? 1 : 0,
                 winMoney: 0,
                 status: 0,
                 isWin: 0,
