@@ -1,6 +1,6 @@
 import {JiOuType} from "../rules/JiOuType";
 import {Road012Type} from "../rules/Road012Type";
-import {KillNumberInfo, KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
+import {KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
 import {BraveNumbers} from "../rules/BraveNumbers";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
@@ -12,8 +12,6 @@ import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {TimeService} from "../time/TimeService";
-import {PlanTableBase} from "../../models/db/PlanTableBase";
-import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
@@ -24,8 +22,6 @@ import {SumValues} from "../rules/SumValues";
 import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
 import {KillNumberRandom} from "../rules/killnumber/KillNumberRandom";
-import {RejectionMsg} from "../../models/EnumModel";
-import {AwardInfo} from "../../models/db/AwardInfo";
 
 
 let log4js = require('log4js'),

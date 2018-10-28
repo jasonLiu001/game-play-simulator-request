@@ -1,10 +1,8 @@
-import {Config, CONFIG_CONST} from "../../../config/Config";
-import {TimeService} from "../../time/TimeService";
+import {CONFIG_CONST} from "../../../config/Config";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 
 let log4js = require('log4js'),

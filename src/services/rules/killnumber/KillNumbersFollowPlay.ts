@@ -1,5 +1,4 @@
 import {IRules} from "../IRules";
-import {Config} from "../../../config/Config";
 import {AbstractRuleBase} from "../AbstractRuleBase";
 import {Analysis360Service} from "../../crawler/analysis/Analysis360Service";
 import Promise = require('bluebird');

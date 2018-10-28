@@ -3,13 +3,13 @@ import {INotificationService} from "./INotificationService";
 import {LotteryDbService} from "../dbservices/ORMService";
 
 import moment  = require('moment');
-import {Config, CONFIG_CONST} from "../../config/Config";
+import {CONFIG_CONST} from "../../config/Config";
 import {EmailSender} from "../email/EmailSender";
-import {TimeService} from "../time/TimeService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {RuntimeConfig} from "../../config/RuntimeConfig";
+import {SettingService} from "../settings/SettingService";
 
 
 let log4js = require('log4js'),
@@ -38,54 +38,53 @@ export class NotificationService implements INotificationService {
      *
      * 间隔2分钟检查是否需要发送通知  入口方法
      */
-    public start(): void {
+    public async start(): BlueBirdPromise<any> {
         //5分钟检查一次是否需要发送通知
         setInterval(() => {
-
-            setTimeout(() => {
-                //当天第1期错误提醒
-                this.sendTodayFirstErrorWarnEmail(1)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("当天第1期错误提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            }, 1000);
-
-            setTimeout(() => {
-                //当天前2期错误提醒
-                this.sendTodayFirstErrorWarnEmail(2)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("当天第1,2期错误提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            }, 10000);
-
-            //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
-            setTimeout(() => {
-                //连错2期提醒
-                this.sendContinueWinOrLoseWarnEmail(2, false)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("连错2期提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            }, 10000);
-            setTimeout(() => {
-                //最大最小利润预警
-                this.sendMaxOrMinProfitNotification()
-                    .catch((err) => {
-                        if (err) {
-                            log.error("最大最小利润预警邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            }, 10000);
-
+            SettingService.getAndInitSettings()
+                .then(() => {
+                    setTimeout(() => {
+                        //当天第1期错误提醒
+                        this.sendTodayFirstErrorWarnEmail(1)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("当天第1期错误提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 1000);
+                    setTimeout(() => {
+                        //当天前2期错误提醒
+                        this.sendTodayFirstErrorWarnEmail(2)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("当天第1,2期错误提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
+                    //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
+                    setTimeout(() => {
+                        //连错2期提醒
+                        this.sendContinueWinOrLoseWarnEmail(2, false)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("连错2期提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
+                    setTimeout(() => {
+                        //最大最小利润预警
+                        this.sendMaxOrMinProfitNotification()
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("最大最小利润预警邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
+                });
         }, 120000);
     }
 

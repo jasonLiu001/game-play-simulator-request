@@ -1,4 +1,4 @@
-import {Config, CONFIG_CONST} from "../../../config/Config";
+import {CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";

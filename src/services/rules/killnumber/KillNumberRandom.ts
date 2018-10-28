@@ -1,7 +1,7 @@
 import {IRules} from "../IRules";
 import {AbstractRuleBase} from "../AbstractRuleBase";
 import Promise = require('bluebird');
-import {EnumKillNumberPosition, RejectionMsg} from "../../../models/EnumModel";
+import {RejectionMsg} from "../../../models/EnumModel";
 import _ = require('lodash');
 import {KillNumberInfo} from "./KillNumbersFollowPlay";
 import {CommonKillNumberResult} from "../../../models/RuleResult";

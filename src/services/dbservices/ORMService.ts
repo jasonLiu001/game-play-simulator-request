@@ -1,5 +1,5 @@
 import Promise = require('bluebird');
-import {Config, CONFIG_CONST} from "../../config/Config";
+import {CONFIG_CONST} from "../../config/Config";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
