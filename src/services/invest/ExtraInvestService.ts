@@ -4,6 +4,9 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
+import {CONFIG_CONST} from "../../config/Config";
+import {EmailSender} from "../email/EmailSender";
+import {PlatformService} from "../platform/PlatformService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -13,6 +16,26 @@ let log4js = require('log4js'),
  * 特别投注服务，在这里的方法可以在模拟投注时，直接进行真实投注
  */
 export class ExtraInvestService {
+
+    /**
+     *
+     * 执行投注入口
+     * @returns {Bluebird<any>}
+     */
+    public executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
+            .then((isCanInvest) => {
+                if (isCanInvest) {
+                    log.info('忽略设置，开始正式投注...');
+                    return PlatformService.loginAndInvest(request, investInfo)
+                        .then(() => {
+                            return EmailSender.sendEmail('符合对错错条件', '程序已忽略设置，自动投注')
+                        });
+                }
+            });
+    }
+
+
     /**
      *
      * 三局中错误两局 "对错错" 这种形式才行 当天10点以后

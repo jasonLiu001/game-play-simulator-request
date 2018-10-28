@@ -1,8 +1,6 @@
-let InvestService = require('../../../dist/services/invest/InvestService').InvestService;
+let PlatformService = require('../../../dist/services/platform/PlatformService').PlatformService;
 let LotteryDbService = require('../../../dist/services/dbservices/ORMService').LotteryDbService;
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
-let Config = require('../../../dist/config/Config').Config;
-let CONFIG_CONST = require('../../../dist/config/Config').CONFIG_CONST;
 let HttpRequestHeaders = require('../../../dist/models/EnumModel').HttpRequestHeaders;
 let TimeService = require('../../../dist/services/time/TimeService').TimeService;
 
@@ -20,10 +18,9 @@ let request = Request.defaults(
     });
 
 describe("MockInvestService Test", () => {
-    let investService, lotteryDbService;
+    let lotteryDbService;
 
     beforeEach((done) => {
-        investService = new InvestService();
         lotteryDbService = new LotteryDbService();
         LotteryDbService.createLotteryTable()
             .then(() => {
@@ -31,10 +28,6 @@ describe("MockInvestService Test", () => {
             });
     });
 
-
-    xit("executeAutoInvest test", () => {
-        investService.executeAutoInvest(null);
-    });
 
     it("loginAndInvest test", (done) => {
         let investInfo = new InvestInfo();
@@ -54,7 +47,7 @@ describe("MockInvestService Test", () => {
         investInfo.investDate = moment().format('YYYY-MM-DD');
         investInfo.investTimestamp = moment().format('HH:mm:ss');
 
-        investService.loginAndInvest(request, investInfo)
+        PlatformService.loginAndInvest(request, investInfo)
             .then((body) => {
                 console.log(body);
                 done();
