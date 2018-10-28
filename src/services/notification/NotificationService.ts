@@ -98,7 +98,6 @@ export class NotificationService implements INotificationService {
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
-        let emailTitle: string = "方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】最高最低利润预警";
         //当前账号余额
         let currentAccountBalance: number = historyData[0].currentAccountBalance;
 
@@ -106,9 +105,11 @@ export class NotificationService implements INotificationService {
         if (NotificationConfig.todayMaxOrMinProfitInvestPeriod != historyData[0].period) {
             NotificationConfig.todayMaxOrMinProfitInvestPeriod = historyData[0].period;
             if (currentAccountBalance <= RuntimeConfig.minProfitNotification) {
-                return await EmailSender.sendEmail(emailTitle, "已达最低预警利润值：" + RuntimeConfig.minProfitNotification);
+                let lowerTitle = "最低预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最低利润值点";
+                return await EmailSender.sendEmail(lowerTitle, "已达最低预警利润值：" + RuntimeConfig.minProfitNotification);
             } else if (currentAccountBalance >= RuntimeConfig.maxProfitNotification) {
-                return await EmailSender.sendEmail(emailTitle, "已达最高预警利润值：" + RuntimeConfig.maxProfitNotification);
+                let higherTitle = "最高预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最高利润值点";
+                return await EmailSender.sendEmail(higherTitle, "已达最高预警利润值：" + RuntimeConfig.maxProfitNotification);
             }
         }
 
@@ -124,8 +125,8 @@ export class NotificationService implements INotificationService {
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值
         let yesterdayAccountBalance: any = await LotteryDbService.getMaxAndMinProfitFromInvest(yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
-        let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 账户余额亏损状态提醒';//通知邮件标题
-        let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，账号最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
+        let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 亏损状态提醒';//通知邮件标题
+        let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
             return await EmailSender.sendEmail(emailTitle, emailContent);
         } else if (yesterdayAccountBalance.minAccountBalance < parseFloat((CONFIG_CONST.originAccountBalance / 5).toFixed(2))) {//最小账户余额小于初始账号的1/5 亏损
@@ -168,7 +169,7 @@ export class NotificationService implements INotificationService {
         if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && errorTotalTimes == firstErrorCount) {
             //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
             NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
-            return await EmailSender.sendEmail("当天" + today + "前" + firstErrorCount + "条投注记录错误", today + "前" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误");
+            return await EmailSender.sendEmail("当天" + today + "起始" + firstErrorCount + "条投注记录全部错误", today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买");
         }
 
         return BlueBirdPromise.resolve(true);
@@ -246,7 +247,7 @@ export class NotificationService implements INotificationService {
      */
     private async sendWinOrLoseEmail(planType: number, count: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
-        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
+        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         return await EmailSender.sendEmail(emailTitle, emailContent);
     }
 }
