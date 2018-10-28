@@ -48,7 +48,7 @@ export class SettingService {
             } else if (item.key === 'siteUrl') {
                 CONFIG_CONST.siteUrl = item.value;
             } else if (item.key === 'investEndTime') {
-                CONFIG_CONST.siteUrl = item.value;
+                AppConfig.investEndTime = item.value;
             }
         }
     }
