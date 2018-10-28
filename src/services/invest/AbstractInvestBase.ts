@@ -14,6 +14,7 @@ import {SettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {NotificationService} from "../notification/NotificationService";
+import {AppConfig} from "../../config/AppConfig";
 
 
 let log4js = require('log4js'),
@@ -112,6 +113,10 @@ export abstract class AbstractInvestBase {
         let day = currentTime.getDate();
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
+        let investEndTimeArr: Array<string> = AppConfig.investEndTime.split(':');
+        if (investEndTimeArr.length == 3) {
+            thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
+        }
         //当天22:00以后自动切换到模拟投注
         if (CONFIG_CONST.isRealInvest && currentTime > thirdTime) {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";

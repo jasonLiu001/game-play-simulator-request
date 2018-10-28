@@ -364,9 +364,15 @@ export class LotteryDbService {
                                     desc: '最低利润预警'
                                 },
                                 {
+                                    key: 'investEndTime',
+                                    value: '21:59:00',
+                                    orderId: '13',
+                                    desc: '自动终止投注截止时间如21:59:00'
+                                },
+                                {
                                     key: 'siteUrl',
                                     value: 'https://123.jn704.com',
-                                    orderId: '13',
+                                    orderId: '14',
                                     desc: '网站首页地址'
                                 }
                             ]);
