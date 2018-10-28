@@ -3,6 +3,10 @@
  * 程序运行时变量配置
  */
 export class AppSettings {
+    //invest表 初始余额是否为上期余额
+    public static isInvestTableUserLastAccountBalance = false;
+    //invest_total表 初始余额是否为上期余额
+    public static isInvestTotalTableUseLastAccountBalance = false;
     //是否用相反的投注号码进行投注
     public static isUseReverseInvestNumbers = false;
     //最低利润预警值

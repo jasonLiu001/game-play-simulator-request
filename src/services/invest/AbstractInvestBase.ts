@@ -255,18 +255,18 @@ export abstract class AbstractInvestBase {
     private isResetOriginalAccountBalance(tableName: String): boolean {
         if (tableName === CONST_INVEST_TABLE.tableName) {
             //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
-            if (Config.isInvestTableInitCompleted && Config.isInvestTableUserLastAccountBalance) {
+            if (Config.isInvestTableInitCompleted && AppSettings.isInvestTableUserLastAccountBalance) {
                 return false;//不需要重置初始账号余额
-            } else if (Config.isInvestTableInitCompleted && !Config.isInvestTableUserLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
+            } else if (Config.isInvestTableInitCompleted && !AppSettings.isInvestTableUserLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
                 return true;//重置初始账号余额
             } else {
                 return false;
             }
         } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
             //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
-            if (Config.isInvestTotalTableInitCompleted && Config.isInvestTotalTableUseLastAccountBalance) {
+            if (Config.isInvestTotalTableInitCompleted && AppSettings.isInvestTotalTableUseLastAccountBalance) {
                 return false;//不需要重置初始账号余额
-            } else if (Config.isInvestTotalTableInitCompleted && !Config.isInvestTotalTableUseLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
+            } else if (Config.isInvestTotalTableInitCompleted && !AppSettings.isInvestTotalTableUseLastAccountBalance) {//只有程序第一次 这里的判断和上面的判断不能调换顺序，第一次运行的两张情况
                 return true;//重置初始账号余额
             } else {
                 return false;

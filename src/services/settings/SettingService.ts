@@ -36,9 +36,9 @@ export class SettingService {
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value) === 1;
             } else if (item.key === 'isInvestTotalTableUseLastAccountBalance') {
-                Config.isInvestTotalTableUseLastAccountBalance = Number(item.value) === 1;
+                AppSettings.isInvestTotalTableUseLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isInvestTableUserLastAccountBalance') {
-                Config.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
+                AppSettings.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isUseReverseInvestNumbers') {
                 AppSettings.isUseReverseInvestNumbers = Number(item.value) === 1;
             } else if (item.key === 'minProfitNotification') {
