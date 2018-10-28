@@ -45,6 +45,8 @@ export class SettingService {
                 RuntimeConfig.minProfitNotification = Number(item.value);
             } else if (item.key === 'maxProfitNotification') {
                 RuntimeConfig.maxProfitNotification = Number(item.value);
+            } else if (item.key === 'siteUrl') {
+                CONFIG_CONST.siteUrl = item.value;
             }
         }
     }

@@ -64,3 +64,4 @@
 1. 在ORMService.ts中添加对应的配置key
 2. RuntimeConfig.ts中添加对应的key
 3. 在AppServices.ts中初始化新建的key
+4. 数据库中提前手工添加对应的key和value

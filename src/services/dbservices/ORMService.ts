@@ -362,6 +362,12 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '12',
                                     desc: '最低利润预警'
+                                },
+                                {
+                                    key: 'siteUrl',
+                                    value: 'https://123.jn704.com',
+                                    orderId: '13',
+                                    desc: '网站首页地址'
                                 }
                             ]);
                         } else {
