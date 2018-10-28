@@ -183,69 +183,6 @@ export abstract class AbstractInvestBase {
 
     /**
      *
-     * 检查开奖计划的结果是否满足投注条件
-     */
-    private checkPlanResultHistory(): BlueBirdPromise<boolean> {
-        //检查各个计划之前的中奖结果，根据结果过滤
-        return LotteryDbService.getPlanResultInfoHistory(CONFIG_CONST.historyCount)
-            .then((planResults: Array<PlanResultInfo>) => {
-                if (!planResults || planResults.length == 0 || planResults.length < CONFIG_CONST.historyCount) return BlueBirdPromise.reject(RejectionMsg.historyCountIsNotEnough);
-
-                let history01 = planResults[0];
-                let history02 = planResults[1];
-                let history03 = planResults[2];
-
-                //排除 对错对 这种情况
-                //对
-                let condition01 = history01.killplan_bai_wei == 1 && history01.killplan_shi_wei == 1 && history01.killplan_ge_wei == 1
-                    && history01.jiou_type == 1;
-                //错
-                let condition02 = history02.killplan_bai_wei == 0 || history02.killplan_shi_wei == 0 || history02.killplan_ge_wei == 0
-                    || history02.jiou_type == 0;
-                //对
-                let condition3 = history03.killplan_bai_wei == 1 && history03.killplan_shi_wei == 1 && history03.killplan_ge_wei == 1
-                    && history03.jiou_type == 1;
-
-                if (condition01 && condition02 && condition3) {
-                    return BlueBirdPromise.reject("前三期中奖情况为：【中错中】，不满足投注条件，放弃本次投注")
-                } else if (condition01) {
-                    log.info("最新一期中奖情况：【中】，满足投注条件");
-                    return BlueBirdPromise.resolve(true);
-                }
-                return BlueBirdPromise.reject("最新一期中奖情况，不满足投注条件，放弃本次投注");
-            });
-    }
-
-    /**
-     *
-     * 查询当前投注记录 投注历史是否满足特定条件
-     */
-    private checkInvestInfoHistory(): BlueBirdPromise<boolean> {
-        return LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 2)
-            .then((res: Array<InvestInfo>) => {
-                //没有投注历史，或只有1条记录 直接返回
-                if (!res || res.length == 1) return BlueBirdPromise.reject("当天历史投注数量少于2条，无法执行投注，已放弃本次投注");
-
-                //第一次出现连错
-                if (!Config.isContinueWrongForFirstTime) {
-                    //第一次出现连错连错 才开始投注
-                    if (res[0].isWin == 0 && res[1].isWin == 0) {
-                        //出现连错条件修改为非第一次
-                        Config.isContinueWrongForFirstTime = true;
-
-                        return BlueBirdPromise.resolve(true);
-                    } else {//未出现连错 或者 上期没有盈利 则不允许投注
-                        return BlueBirdPromise.reject("暂未出现连错或上期未中奖，不满足投注条件，已放弃本次投注");
-                    }
-                } else {
-                    //非第一次出现连错，正常执行投注
-                    return BlueBirdPromise.resolve(true);
-                }
-            });
-    }
-
-    /**
-     *
      * 检查已开奖的期数个数
      */
     private checkAwardHistoryCount(): BlueBirdPromise<boolean> {
@@ -307,16 +244,6 @@ export abstract class AbstractInvestBase {
             .then(() => {
                 //检查是否是连续投注，如果是则发送提醒邮件
                 return this.sendContinueInvestWarnEmail();
-            })
-            .then(() => {
-                //检查投注历史是否满足特定条件
-                //return this.checkInvestInfoHistory();
-                return BlueBirdPromise.resolve(true);
-            })
-            .then(() => {
-                //检查开奖计划的结果是否满足投注条件
-                //return this.checkPlanResultHistory();
-                return BlueBirdPromise.resolve(true);
             });
     }
 
