@@ -4,6 +4,8 @@ import BlueBirdPromise = require('bluebird');
 import {JiangNanLoginService} from "./jiangnan/JiangNanLoginService";
 import {JiangNanLotteryService} from "./jiangnan/JiangNanLotteryService";
 import moment  = require('moment');
+import {AppSettings} from "../../config/AppSettings";
+import {EmailSender} from "../email/EmailSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PlatformService'),
@@ -45,6 +47,17 @@ export class PlatformService {
                         log.info("退出登录操作已执行完成");
                         return investResult;
                     });
+            })
+            .then((investResult) => {
+                if (AppSettings.investNotification) {//发送邮件通知
+                    let emailTitle = "【" + investInfo.period + "】期投注提醒";
+                    let emailContent = "【" + investInfo.period + "】期已执行投注！投注时间【" + investInfo.investTime + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】，号码个数【" + investInfo.investNumberCount + "】，投注模式【" + investInfo.awardMode + "】，投注倍数【" + investInfo.touZhuBeiShu + "】";
+                    return EmailSender.sendEmail(emailTitle, emailContent)
+                        .then(() => {
+                            return investResult;
+                        });
+                }
+                return investResult;
             });
     }
 }
