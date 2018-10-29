@@ -35,10 +35,8 @@ export class SettingService {
                 CONFIG_CONST.currentSelectedInvestPlanType = Number(item.value);
             } else if (item.key === 'isRealInvest') {
                 CONFIG_CONST.isRealInvest = Number(item.value) === 1;
-            } else if (item.key === 'isInvestTotalTableUseLastAccountBalance') {
-                AppSettings.isInvestTotalTableUseLastAccountBalance = Number(item.value) === 1;
-            } else if (item.key === 'isInvestTableUserLastAccountBalance') {
-                AppSettings.isInvestTableUserLastAccountBalance = Number(item.value) === 1;
+            } else if (item.key === 'isUseLastAccountBalance') {
+                AppSettings.isUseLastAccountBalance = Number(item.value) === 1;
             } else if (item.key === 'isUseReverseInvestNumbers') {
                 AppSettings.isUseReverseInvestNumbers = Number(item.value) === 1;
             } else if (item.key === 'minProfitNotification') {
@@ -49,6 +47,8 @@ export class SettingService {
                 CONFIG_CONST.siteUrl = item.value;
             } else if (item.key === 'investEndTime') {
                 AppSettings.investEndTime = item.value;
+            } else if (item.key === 'isEnableInvestInMock') {
+                AppSettings.isEnableInvestInMock = Number(item.value) === 1;
             }
         }
     }

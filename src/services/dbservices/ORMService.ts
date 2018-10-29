@@ -334,16 +334,16 @@ export class LotteryDbService {
                                 {key: 'awardMode', value: '10', orderId: '6', desc: '元、角、分、厘模式'},
                                 {key: 'currentSelectedInvestPlanType', value: '1', orderId: '7', desc: '当前选择的投注方案类型'},
                                 {
-                                    key: 'isInvestTotalTableUseLastAccountBalance',
+                                    key: 'isUseLastAccountBalance',
                                     value: '0',
                                     orderId: '8',
-                                    desc: 'invest_total表初始余额为上期余额'
+                                    desc: '初始余额为上期余额'
                                 },
                                 {
-                                    key: 'isInvestTableUserLastAccountBalance',
+                                    key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '9',
-                                    desc: 'invest表初始余额为上期余额'
+                                    desc: '是否模拟投注时根据情况自行投注'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
