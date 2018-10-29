@@ -1,7 +1,5 @@
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
@@ -23,7 +21,7 @@ export class ExtraInvestService {
      * @returns {Bluebird<any>}
      */
     public executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
-        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3, CONST_INVEST_TABLE.tableName)
+        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3)
             .then((isCanInvest) => {
                 if (isCanInvest) {
                     log.info('忽略设置，开始正式投注...');
@@ -41,19 +39,13 @@ export class ExtraInvestService {
      * 三局中错误两局 "对错错" 这种形式才行 当天10点以后
      * @param planType 当前选择的方案类型
      * @param historyCount 需要取的历史奖号数量
-     * @param tableName  数据表名称 invest和invest_total表
      * @param afterTime 取历史奖号的开始时间，默认是当天10点以后
      */
-    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number, tableName: string, afterTime: string = '10:00:00'): BlueBirdPromise<boolean> {
+    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number, afterTime: string = '10:00:00'): BlueBirdPromise<boolean> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = [];
-        if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, historyCount, today + " " + afterTime);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, historyCount, today + " " + afterTime);
-        }
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, historyCount, today + " " + afterTime);
 
         //数量不足 直接返回
         if (historyData.length < historyCount) return BlueBirdPromise.resolve(false);

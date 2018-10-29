@@ -6,8 +6,6 @@ import moment  = require('moment');
 import {CONFIG_CONST} from "../../config/Config";
 import {EmailSender} from "../email/EmailSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 
@@ -143,7 +141,7 @@ export class NotificationService implements INotificationService {
      */
     public async sendContinueWinOrLoseWarnEmail(maxWinOrLoseCount: number, isWin: boolean): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
-        return await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, CONST_INVEST_TABLE.tableName, isWin);
+        return await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin);
     }
 
     /**
@@ -180,20 +178,14 @@ export class NotificationService implements INotificationService {
      * 连续中奖特定期数提醒
      * @param {number} planType
      * @param maxWinOrLoseCount
-     * @param {string} tableName
      * @param isWin
      * @param afterTime 特定时间之后
      */
-    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, tableName: string, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = [];
-        if (tableName == CONST_INVEST_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
-        }
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
 
         //数量不足 不发送邮件通知
         if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(true);
@@ -228,7 +220,7 @@ export class NotificationService implements INotificationService {
             if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
                 //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                 NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
-                return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, tableName, isWin);
+                return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, isWin);
             }
 
         }
@@ -241,13 +233,12 @@ export class NotificationService implements INotificationService {
      * 连中或者连错数量
      * @param planType
      * @param {number} count
-     * @param tableName
      * @param isWin
      * @returns {Bluebird<any>}
      */
-    private async sendWinOrLoseEmail(planType: number, count: number, tableName: string, isWin: boolean): BlueBirdPromise<any> {
+    private async sendWinOrLoseEmail(planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
-        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
+        let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         return await EmailSender.sendEmail(emailTitle, emailContent);
     }
 }
