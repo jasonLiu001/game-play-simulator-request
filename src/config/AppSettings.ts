@@ -4,11 +4,13 @@
  */
 export class AppSettings {
     //初始余额是否为上期余额
-    public static isUseLastAccountBalance = false;
+    public static isUseLastAccountBalance: boolean = false;
     //是否模拟投注时根据情况自行投注
-    public static isEnableInvestInMock = false;
+    public static isEnableInvestInMock: boolean = false;
     //是否用相反的投注号码进行投注
-    public static isUseReverseInvestNumbers = false;
+    public static isUseReverseInvestNumbers: boolean = false;
+    //是否开启投注提醒
+    public static investNotification: boolean = false;
     //最低利润预警值
     public static minProfitNotification: number = 4500;
     //最高利润预警

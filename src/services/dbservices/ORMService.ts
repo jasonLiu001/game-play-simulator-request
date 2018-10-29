@@ -374,6 +374,12 @@ export class LotteryDbService {
                                     value: 'https://123.jn704.com',
                                     orderId: '14',
                                     desc: '网站首页地址'
+                                },
+                                {
+                                    key: 'investNotification',
+                                    value: '0',
+                                    orderId: '15',
+                                    desc: '是否开启投注提醒'
                                 }
                             ]);
                         } else {
