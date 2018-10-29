@@ -53,10 +53,8 @@ export class ExtraInvestService {
         //连错数量
         let continueLoseTimes: number = 0;
         for (let investItem of historyData) {
-            if (investItem.status == 1) {
-                if (investItem.isWin == 1) {
-                    continueLoseTimes++;
-                }
+            if (investItem.status == 1 && investItem.isWin == 0) {
+                continueLoseTimes++;
             }
         }
 
