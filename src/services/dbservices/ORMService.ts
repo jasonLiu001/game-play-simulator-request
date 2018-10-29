@@ -343,7 +343,7 @@ export class LotteryDbService {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '9',
-                                    desc: '是否模拟投注时根据情况自行投注'
+                                    desc: '是否模拟投注时根据情况自行投注 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
