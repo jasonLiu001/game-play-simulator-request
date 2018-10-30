@@ -96,6 +96,9 @@ export class NotificationService implements INotificationService {
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
+        //未开奖直接返回
+        if (historyData[0].status == 0) return BlueBirdPromise.resolve(false);
+
         //当前账号余额
         let currentAccountBalance: number = historyData[0].currentAccountBalance;
 
