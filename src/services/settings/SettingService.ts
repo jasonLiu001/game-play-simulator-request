@@ -22,8 +22,10 @@ export class SettingService {
             let item = settingInfoList[index];
             if (item.key === 'originAccountBalance') {
                 //这里不需要 每次都设置初始余额 只在程序启动时赋值一次即可
-                //CONFIG_CONST.originAccountBalance = Number(item.value);
-            } else if (item.key === 'maxAccountBalance') {
+            } else if (item.key === 'enableRealInvestWhenProgramStart') {
+                //这里不需要 每次都设置启动自动切换到自动投注 只在程序启动时赋值一次即可
+            }
+            else if (item.key === 'maxAccountBalance') {
                 CONFIG_CONST.maxAccountBalance = Number(item.value);
             } else if (item.key === 'minAccountBalance') {
                 CONFIG_CONST.minAccountBalance = Number(item.value);
@@ -51,8 +53,6 @@ export class SettingService {
                 AppSettings.isEnableInvestInMock = Number(item.value) === 1;
             } else if (item.key === 'investNotification') {
                 AppSettings.investNotification = Number(item.value) === 1;
-            } else if (item.key === 'enableRealInvestWhenProgramStart') {
-                AppSettings.enableRealInvestWhenProgramStart = Number(item.value) === 1;
             }
         }
     }

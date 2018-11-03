@@ -48,6 +48,9 @@ export class AppServices {
                             if (item.key === 'originAccountBalance') {
                                 //这里不需要 每次都设置初始余额 只在程序启动时赋值一次即可
                                 CONFIG_CONST.originAccountBalance = Number(item.value);
+                            } else if (item.key === 'enableRealInvestWhenProgramStart') {
+                                //这里不需要 每次都设置启动自动切换到自动投注 只在程序启动时赋值一次即可
+                                AppSettings.enableRealInvestWhenProgramStart = Number(item.value) === 1;
                             }
                         }
                     });
