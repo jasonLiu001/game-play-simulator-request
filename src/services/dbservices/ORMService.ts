@@ -10,7 +10,7 @@ import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_AWARD_TABLE} from "../../models/db/CONST_AWARD_TABLE";
 import {CONST_PLAN_RESULT_TABLE} from "../../models/db/CONST_PLAN_RESULT_TABLE";
 import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST_NUMBERS_TABLE";
-import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {SettingsInfo, UpdateSettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 
@@ -380,6 +380,12 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '15',
                                     desc: '是否开启投注提醒'
+                                },
+                                {
+                                    key: 'enableRealInvestWhenProgramStart',
+                                    value: '0',
+                                    orderId: '16',
+                                    desc: '每天程序启动时自动开启投注，当天重启程序时需要关闭此项'
                                 }
                             ]);
                         } else {
@@ -947,6 +953,37 @@ export class LotteryDbService {
      * 保存或更新设置
      */
     public static saveOrUpdateSettingsInfo(settingsInfo: SettingsInfo): Promise<SettingsInfo> {
+        return Setting.findOne(
+            {
+                where: {key: settingsInfo.key},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Setting.update(settingsInfo,
+                        {
+                            fields: ['value'],
+                            where: {
+                                key: settingsInfo.key
+                            }
+                        })
+                        .then(() => {
+                            return settingsInfo;
+                        });
+                } else {
+                    return Setting.create(settingsInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
+    /**
+     *
+     * 保存或更新设置
+     */
+    public static saveOrUpdate_UpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
         return Setting.findOne(
             {
                 where: {key: settingsInfo.key},

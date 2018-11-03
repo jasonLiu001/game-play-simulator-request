@@ -5,17 +5,6 @@ let path = require('path');
 
 /**
  *
- * 模拟投注参数实体
- * 这里设置这个对象的原因是因为saveOrUpdateSettingsInfo方法的参数需要传递一个SettingInfo对象才能利用Sequelize中的方法
- */
-export const IS_INVEST_SETTING_MODEL: SettingsInfo = {
-    key: 'isRealInvest',
-    value: '0',
-    desc: '是否是真实投注'
-};
-
-/**
- *
  * 邮件配置
  */
 export const EMAIL_CONFIG = {
@@ -37,7 +26,7 @@ export const EMAIL_CONFIG = {
 
 /**
  *
- * 常量
+ * 常量 需要提前设置的系统级值
  */
 export const CONFIG_CONST = {
     //登录网站url
@@ -72,7 +61,7 @@ export const CONFIG_CONST = {
 
 /**
  *
- * @summary 配置文件
+ * @summary 程序运行时变量
  * */
 export class Config {
     //保存的验证码图片本地路径

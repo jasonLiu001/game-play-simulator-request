@@ -1,26 +1,23 @@
 import {LotteryDbService} from "../dbservices/ORMService";
-import {Config, CONFIG_CONST, IS_INVEST_SETTING_MODEL} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import BlueBirdPromise = require('bluebird');
 import {TimeService} from "../time/TimeService";
-import {RejectionMsg} from "../../models/EnumModel";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {EmailSender} from "../email/EmailSender";
-import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {SettingsInfo, update_isRealInvest_to_mock} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
-import {NotificationService} from "../notification/NotificationService";
 import {AppSettings} from "../../config/AppSettings";
 
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AbstractInvestBase'),
-    numberService = new NumberService(),
-    notificationService = new NotificationService();
+    numberService = new NumberService();
 
 /**
  *
@@ -122,7 +119,7 @@ export abstract class AbstractInvestBase {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
-            let saveSetting: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+            let saveSetting: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
             //切换到模拟投注
             CONFIG_CONST.isRealInvest = false;
             //当前最新一条投注方案
@@ -157,7 +154,7 @@ export abstract class AbstractInvestBase {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
                 let winMessage = "当前账号余额：" + currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
                 //自动切换到模拟后 发送盈利提醒
-                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
                 log.error(winMessage);
                 //切换到模拟投注
                 CONFIG_CONST.isRealInvest = false;
@@ -170,7 +167,7 @@ export abstract class AbstractInvestBase {
                 let loseMessage: string = "当前账号余额：" + currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
 
                 //自动切换到模拟后 发送亏损提醒
-                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdateSettingsInfo(IS_INVEST_SETTING_MODEL);
+                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
                 log.error(loseMessage);
                 //切换到模拟投注
                 CONFIG_CONST.isRealInvest = false;

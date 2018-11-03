@@ -1,12 +1,13 @@
 import BlueBirdPromise = require('bluebird');
 import {InvestService} from "./invest/InvestService";
 import {ErrorService} from "./ErrorService";
-import {CONFIG_CONST, Config} from "../config/Config";
+import {CONFIG_CONST} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
-import {SettingsInfo} from "../models/db/SettingsInfo";
+import {SettingsInfo, update_isRealInvest_to_real} from "../models/db/SettingsInfo";
 import {SettingService} from "./settings/SettingService";
+import {AppSettings} from "../config/AppSettings";
 
 let Request = require('request'), path = require('path');
 
@@ -50,6 +51,15 @@ export class AppServices {
                             }
                         }
                     });
+            })
+            .then(() => {
+                if (AppSettings.enableRealInvestWhenProgramStart) {//程序启动时 开启真实投注
+                    //切换到模拟投注
+                    CONFIG_CONST.isRealInvest = true;
+                    //自动切换到真实投注
+                    return LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_real);
+
+                }
             })
             .then(() => {
                 //启动获取奖号任务 间隔特定时间获取号码 奖号更新成功后 自动投注

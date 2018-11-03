@@ -17,4 +17,6 @@ export class AppSettings {
     public static maxProfitNotification: number = 7000;
     //自动投注截止时间
     public static investEndTime: string = "21:59:00";
+    //程序启动时 自动开启真实投注
+    public static enableRealInvestWhenProgramStart: boolean = false;
 }

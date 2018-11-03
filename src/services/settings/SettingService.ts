@@ -51,6 +51,8 @@ export class SettingService {
                 AppSettings.isEnableInvestInMock = Number(item.value) === 1;
             } else if (item.key === 'investNotification') {
                 AppSettings.investNotification = Number(item.value) === 1;
+            } else if (item.key === 'enableRealInvestWhenProgramStart') {
+                AppSettings.enableRealInvestWhenProgramStart = Number(item.value) === 1;
             }
         }
     }
