@@ -63,5 +63,5 @@ export const update_isRealInvest_to_mock: UpdateSettingsInfo = {
  */
 export const update_isRealInvest_to_real: UpdateSettingsInfo = {
     key: 'isRealInvest',
-    value: '0'
+    value: '1'
 };
