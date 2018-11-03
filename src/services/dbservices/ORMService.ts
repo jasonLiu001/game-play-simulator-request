@@ -333,53 +333,53 @@ export class LotteryDbService {
                                     orderId: '2',
                                     desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
                                 },
-                                {key: 'touZhuBeiShu', value: '1', orderId: '3', desc: '投注倍数'},
-                                {key: 'originAccountBalance', value: '1000', orderId: '4', desc: '账户初始余额'},
-                                {key: 'maxAccountBalance', value: '1200', orderId: '5', desc: '最大盈利目标金额'},
-                                {key: 'minAccountBalance', value: '0', orderId: '6', desc: '最大亏损金额'},
-                                {key: 'awardMode', value: '10', orderId: '7', desc: '元、角、分、厘模式'},
-                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '8', desc: '当前选择的投注方案类型'},
+                                {
+                                    key: 'investEndTime',
+                                    value: '21:59:00',
+                                    orderId: '3',
+                                    desc: '自动终止投注截止时间如21:59:00，优先级高于最大利润'
+                                },
+                                {key: 'touZhuBeiShu', value: '1', orderId: '4', desc: '投注倍数'},
+                                {key: 'originAccountBalance', value: '1000', orderId: '5', desc: '账户初始余额'},
+                                {key: 'maxAccountBalance', value: '1200', orderId: '6', desc: '最大盈利目标金额'},
+                                {key: 'minAccountBalance', value: '0', orderId: '7', desc: '最大亏损金额'},
+                                {key: 'awardMode', value: '10', orderId: '8', desc: '元、角、分、厘模式'},
+                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '9', desc: '当前选择的投注方案类型'},
                                 {
                                     key: 'isUseLastAccountBalance',
                                     value: '0',
-                                    orderId: '9',
+                                    orderId: '10',
                                     desc: '每次程序启动时初始余额自动设置为上期余额，当天【重启程序】时需要开启此项'
                                 },
                                 {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
-                                    orderId: '10',
+                                    orderId: '11',
                                     desc: '遇【对错错】且未达盈利目标，自主进入真实投注 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
                                     value: '0',
-                                    orderId: '11',
+                                    orderId: '12',
                                     desc: '是否用相反的号码投注'
                                 },
                                 {
                                     key: 'maxProfitNotification',
                                     value: '0',
-                                    orderId: '12',
+                                    orderId: '13',
                                     desc: '最高利润邮件预警'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
-                                    orderId: '13',
+                                    orderId: '14',
                                     desc: '最低利润邮件预警'
                                 },
                                 {
                                     key: 'investNotification',
                                     value: '0',
-                                    orderId: '14',
-                                    desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'investEndTime',
-                                    value: '21:59:00',
                                     orderId: '15',
-                                    desc: '自动终止投注截止时间如21:59:00，优先级高于最大利润'
+                                    desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'siteUrl',
