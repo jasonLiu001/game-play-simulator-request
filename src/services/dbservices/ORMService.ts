@@ -327,65 +327,65 @@ export class LotteryDbService {
                         if (!res) {
                             return Setting.bulkCreate([
                                 {key: 'isRealInvest', value: '0', orderId: '1', desc: '是否是真实投注 1:真实 0:模拟'},
-                                {key: 'touZhuBeiShu', value: '2', orderId: '2', desc: '投注倍数'},
-                                {key: 'originAccountBalance', value: '1000', orderId: '3', desc: '账户初始余额'},
-                                {key: 'maxAccountBalance', value: '1200', orderId: '4', desc: '最大盈利目标金额'},
-                                {key: 'minAccountBalance', value: '0', orderId: '5', desc: '最大亏损金额'},
-                                {key: 'awardMode', value: '10', orderId: '6', desc: '元、角、分、厘模式'},
-                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '7', desc: '当前选择的投注方案类型'},
+                                {
+                                    key: 'enableRealInvestWhenProgramStart',
+                                    value: '0',
+                                    orderId: '2',
+                                    desc: '每天程序启动时自动开启投注，当天【重启程序】时需要关闭此项'
+                                },
+                                {key: 'touZhuBeiShu', value: '1', orderId: '3', desc: '投注倍数'},
+                                {key: 'originAccountBalance', value: '1000', orderId: '4', desc: '账户初始余额'},
+                                {key: 'maxAccountBalance', value: '1200', orderId: '5', desc: '最大盈利目标金额'},
+                                {key: 'minAccountBalance', value: '0', orderId: '6', desc: '最大亏损金额'},
+                                {key: 'awardMode', value: '10', orderId: '7', desc: '元、角、分、厘模式'},
+                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '8', desc: '当前选择的投注方案类型'},
                                 {
                                     key: 'isUseLastAccountBalance',
                                     value: '0',
-                                    orderId: '8',
-                                    desc: '初始余额为上期余额'
+                                    orderId: '9',
+                                    desc: '初始余额为上期余额，【重启程序】时可使用'
                                 },
                                 {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
-                                    orderId: '9',
+                                    orderId: '10',
                                     desc: '是否模拟投注时根据情况自行投注 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
                                     value: '0',
-                                    orderId: '10',
+                                    orderId: '11',
                                     desc: '是否用相反的号码投注'
                                 },
                                 {
                                     key: 'maxProfitNotification',
                                     value: '0',
-                                    orderId: '11',
-                                    desc: '最高利润预警'
+                                    orderId: '12',
+                                    desc: '最高利润邮件预警'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
-                                    orderId: '12',
-                                    desc: '最低利润预警'
+                                    orderId: '13',
+                                    desc: '最低利润邮件预警'
+                                },
+                                {
+                                    key: 'investNotification',
+                                    value: '0',
+                                    orderId: '14',
+                                    desc: '是否开启每期投注邮件提醒，模拟+真实'
                                 },
                                 {
                                     key: 'investEndTime',
                                     value: '21:59:00',
-                                    orderId: '13',
+                                    orderId: '15',
                                     desc: '自动终止投注截止时间如21:59:00'
                                 },
                                 {
                                     key: 'siteUrl',
                                     value: 'https://123.jn704.com',
-                                    orderId: '14',
-                                    desc: '网站首页地址'
-                                },
-                                {
-                                    key: 'investNotification',
-                                    value: '0',
-                                    orderId: '15',
-                                    desc: '是否开启投注提醒'
-                                },
-                                {
-                                    key: 'enableRealInvestWhenProgramStart',
-                                    value: '0',
                                     orderId: '16',
-                                    desc: '每天程序启动时自动开启投注，当天重启程序时需要关闭此项'
+                                    desc: '网站首页地址'
                                 }
                             ]);
                         } else {
