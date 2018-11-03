@@ -331,7 +331,7 @@ export class LotteryDbService {
                                     key: 'enableRealInvestWhenProgramStart',
                                     value: '0',
                                     orderId: '2',
-                                    desc: '每天程序启动时自动开启投注，当天【重启程序】时需要关闭此项'
+                                    desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
                                 },
                                 {key: 'touZhuBeiShu', value: '1', orderId: '3', desc: '投注倍数'},
                                 {key: 'originAccountBalance', value: '1000', orderId: '4', desc: '账户初始余额'},
@@ -343,13 +343,13 @@ export class LotteryDbService {
                                     key: 'isUseLastAccountBalance',
                                     value: '0',
                                     orderId: '9',
-                                    desc: '初始余额为上期余额，【重启程序】时可使用'
+                                    desc: '每次程序启动时初始余额自动设置为上期余额，当天【重启程序】时需要开启此项'
                                 },
                                 {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '10',
-                                    desc: '是否模拟投注时根据情况自行投注 模拟+正向投注时生效'
+                                    desc: '遇【对错错】且未达盈利目标，自主进入真实投注 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
@@ -373,13 +373,13 @@ export class LotteryDbService {
                                     key: 'investNotification',
                                     value: '0',
                                     orderId: '14',
-                                    desc: '是否开启每期投注邮件提醒，模拟+真实'
+                                    desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'investEndTime',
                                     value: '21:59:00',
                                     orderId: '15',
-                                    desc: '自动终止投注截止时间如21:59:00'
+                                    desc: '自动终止投注截止时间如21:59:00，优先级高于最大利润'
                                 },
                                 {
                                     key: 'siteUrl',
