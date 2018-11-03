@@ -57,10 +57,8 @@ export class AppServices {
             })
             .then(() => {
                 if (AppSettings.enableRealInvestWhenProgramStart) {//程序启动时 开启真实投注
-                    //切换到模拟投注
-                    CONFIG_CONST.isRealInvest = true;
-                    //自动切换到真实投注
-                    return LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_real);
+                    //切换到真实投注
+                    return SettingService.switchToRealInvest();
 
                 }
             })

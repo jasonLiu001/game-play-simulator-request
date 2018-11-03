@@ -13,6 +13,7 @@ import {SettingsInfo, update_isRealInvest_to_mock} from "../../models/db/Setting
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {AppSettings} from "../../config/AppSettings";
+import {SettingService} from "../settings/SettingService";
 
 
 let log4js = require('log4js'),
@@ -119,9 +120,7 @@ export abstract class AbstractInvestBase {
             let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
-            let saveSetting: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
-            //切换到模拟投注
-            CONFIG_CONST.isRealInvest = false;
+            let mockResult: any = await SettingService.switchToMockInvest();
             //当前最新一条投注方案
             let investInfoList: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
             if (!investInfoList || investInfoList.length === 0) return BlueBirdPromise.reject(timeReachMessage);
@@ -154,10 +153,8 @@ export abstract class AbstractInvestBase {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断盈利金额设置
                 let winMessage = "当前账号余额：" + currentAccountBalance + "，已达到目标金额：" + CONFIG_CONST.maxAccountBalance;
                 //自动切换到模拟后 发送盈利提醒
-                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
+                let mockResult: any = await SettingService.switchToMockInvest();
                 log.error(winMessage);
-                //切换到模拟投注
-                CONFIG_CONST.isRealInvest = false;
                 //发送盈利提醒
                 return await EmailSender.sendEmail("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
 
@@ -165,12 +162,9 @@ export abstract class AbstractInvestBase {
         } else if (currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
             if (CONFIG_CONST.isRealInvest) {//真实投注需要判断亏损金额设置
                 let loseMessage: string = "当前账号余额：" + currentAccountBalance + "，已达到亏损警戒金额：" + CONFIG_CONST.minAccountBalance;
-
                 //自动切换到模拟后 发送亏损提醒
-                let settingInfo: SettingsInfo = await LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
+                let mockResult: any = await SettingService.switchToMockInvest();
                 log.error(loseMessage);
-                //切换到模拟投注
-                CONFIG_CONST.isRealInvest = false;
                 //发送亏损提醒
                 return await EmailSender.sendEmail("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
             }

@@ -1,6 +1,6 @@
 import {ErrorService} from "../ErrorService";
 import {LotteryDbService} from "../dbservices/ORMService";
-import {SettingsInfo} from "../../models/db/SettingsInfo";
+import {SettingsInfo, update_isRealInvest_to_mock, update_isRealInvest_to_real} from "../../models/db/SettingsInfo";
 import BlueBirdPromise = require('bluebird');
 import {AppSettings} from "../../config/AppSettings";
 import {Config, CONFIG_CONST} from "../../config/Config";
@@ -70,5 +70,27 @@ export class SettingService {
             .catch((err) => {
                 ErrorService.appStartErrorHandler(log, err);
             });
+    }
+
+    /**
+     *
+     * 切换到模拟投注
+     */
+    public static switchToMockInvest(): BlueBirdPromise<any> {
+        //切换到模拟投注
+        CONFIG_CONST.isRealInvest = false;
+        return LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_mock);
+
+    }
+
+    /**
+     *
+     * 切换到真实投注
+     */
+    public static switchToRealInvest(): BlueBirdPromise<any> {
+        //切换到真实投注
+        CONFIG_CONST.isRealInvest = true;
+        //自动切换到真实投注
+        return LotteryDbService.saveOrUpdate_UpdateSettingsInfo(update_isRealInvest_to_real);
     }
 }
