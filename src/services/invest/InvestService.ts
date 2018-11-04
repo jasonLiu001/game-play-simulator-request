@@ -86,16 +86,14 @@ export class InvestService extends AbstractInvestBase {
 
                 //doCheck全部验证通过 则表明可投注，不管是模拟投注还是真实投注，当前的真实投注值都应该增加，此值可用于判断已经投注的次数，模拟或者真实
                 Config.currentInvestTotalCount++;
-                //真实投注执行登录操作 未达到最大利润值和亏损值
-                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
-                    if (CONFIG_CONST.isRealInvest) {
-                        return PlatformService.loginAndInvest(request, investInfo);
-                    }
+                //真实投注执行登录操作
+                if (CONFIG_CONST.isRealInvest) {
+                    return PlatformService.loginAndInvest(request, investInfo);
                 }
 
                 //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
                 if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
-                    //切换到真实投注
+                    //该方法内部会根据条件 自动切换到真实投注
                     return extraInvestService.executeExtraInvest(request, investInfo);
                 }
             })
