@@ -91,14 +91,12 @@ export class InvestService extends AbstractInvestBase {
                     if (CONFIG_CONST.isRealInvest) {
                         return PlatformService.loginAndInvest(request, investInfo);
                     }
-                    //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
-                    if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
-                        //切换到真实投注
-                        return SettingService.switchToRealInvest()
-                            .then(() => {
-                                return extraInvestService.executeExtraInvest(request, investInfo);
-                            });
-                    }
+                }
+
+                //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
+                if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
+                    //切换到真实投注
+                    return extraInvestService.executeExtraInvest(request, investInfo);
                 }
             })
             .catch((e) => {

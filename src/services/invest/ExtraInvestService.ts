@@ -5,6 +5,7 @@ import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
 import {EmailSender} from "../email/EmailSender";
 import {PlatformService} from "../platform/PlatformService";
+import {SettingService} from "../settings/SettingService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -21,14 +22,26 @@ export class ExtraInvestService {
      * @returns {Bluebird<any>}
      */
     public executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+        //首先判断是否满足特定的投注形态 不受当天最高盈利限制
         return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3)
             .then((isCanInvest) => {
-                if (isCanInvest) {
-                    log.info('忽略设置，开始正式投注...');
-                    return PlatformService.loginAndInvest(request, investInfo)
+                if (isCanInvest) {//满足特定的投注形态 自动进入真实投注
+                    log.info('忽略设置，自动启用正式投注...');
+                    return SettingService.switchToRealInvest()
                         .then(() => {
-                            return EmailSender.sendEmail('符合对错错条件', '程序已忽略设置，自动投注')
+                            //更新停止投注的最大盈利值
+                            CONFIG_CONST.maxAccountBalance = investInfo.currentAccountBalance + 1;
+                            return LotteryDbService.saveOrUpdate_UpdateSettingsInfo({
+                                key: 'maxAccountBalance',
+                                value: String(CONFIG_CONST.maxAccountBalance)
+                            })
+                        }).then(() => {
+                            PlatformService.loginAndInvest(request, investInfo)
+                                .then(() => {
+                                    return EmailSender.sendEmail('符合对错错条件', '程序已忽略设置，自动投注')
+                                });
                         });
+
                 }
             });
     }
