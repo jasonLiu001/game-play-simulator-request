@@ -91,6 +91,8 @@ export class InvestService extends AbstractInvestBase {
                     if (CONFIG_CONST.isRealInvest) {
                         return PlatformService.loginAndInvest(request, investInfo);
                     }
+                } else {//投注后 如果金额已经为负值了，说明这期开始账号余额就不足了，所以直接切换到模拟投注
+                    return SettingService.switchToMockInvest();
                 }
 
                 //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
