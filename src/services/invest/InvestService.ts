@@ -86,19 +86,19 @@ export class InvestService extends AbstractInvestBase {
 
                 //doCheck全部验证通过 则表明可投注，不管是模拟投注还是真实投注，当前的真实投注值都应该增加，此值可用于判断已经投注的次数，模拟或者真实
                 Config.currentInvestTotalCount++;
-                //真实投注执行登录操作 这里为什么在未开奖的时候就判断 盈利目标 因为买号后当前账号余额如果为负值，说明余额不足了，所以没必要再执行真实投注了，即使开奖以后金额又够投注了，也算今天输了
-                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
+                //真实投注执行登录操作 确保买号后的金额仍然大于最小利润 这里用买号以后的账号余额和最小盈利比较目的，因为买号后当前账号余额可能为负值，说明余额不足了，所以没必要再执行真实投注了，即使开奖以后金额又够投注了，也算今天输了
+                if (investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
                         return PlatformService.loginAndInvest(request, investInfo);
                     }
-                } else {//投注后 如果金额已经为负值了，说明这期开始账号余额就不足了，所以直接切换到模拟投注
-                    return SettingService.switchToMockInvest();
-                }
 
-                //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
-                if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
-                    //该方法内部会根据条件 自动切换到真实投注
-                    return extraInvestService.executeExtraInvest(request, investInfo);
+                    //在当前账号余额充足的情况下 当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
+                    if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
+                        //该方法内部会根据条件 自动切换到真实投注
+                        return extraInvestService.executeExtraInvest(request, investInfo);
+                    }
+                } else {//投注后 如果买号以后的金额已经为负值了，说明从这期开始账号余额就不足了，所以直接切换到模拟投注
+                    return SettingService.switchToMockInvest();
                 }
             })
             .catch((e) => {
