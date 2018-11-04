@@ -86,9 +86,11 @@ export class InvestService extends AbstractInvestBase {
 
                 //doCheck全部验证通过 则表明可投注，不管是模拟投注还是真实投注，当前的真实投注值都应该增加，此值可用于判断已经投注的次数，模拟或者真实
                 Config.currentInvestTotalCount++;
-                //真实投注执行登录操作
-                if (CONFIG_CONST.isRealInvest) {
-                    return PlatformService.loginAndInvest(request, investInfo);
+                //真实投注执行登录操作 这里为什么在未开奖的时候就判断 盈利目标 因为买号后当前账号余额如果为负值，说明余额不足了，所以没必要再执行真实投注了，即使开奖以后金额又够投注了，也算今天输了
+                if (investInfo.currentAccountBalance < CONFIG_CONST.maxAccountBalance && investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
+                    if (CONFIG_CONST.isRealInvest) {
+                        return PlatformService.loginAndInvest(request, investInfo);
+                    }
                 }
 
                 //当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
