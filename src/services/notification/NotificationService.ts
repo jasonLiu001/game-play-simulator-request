@@ -41,8 +41,9 @@ export class NotificationService implements INotificationService {
         setInterval(() => {
             SettingService.getAndInitSettings()
                 .then(() => {
+                    //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     setTimeout(() => {
-                        //当天第1期错误提醒
+                        //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
                         this.sendTodayFirstErrorWarnEmail(1)
                             .catch((err) => {
                                 if (err) {
@@ -51,16 +52,6 @@ export class NotificationService implements INotificationService {
                                 }
                             });
                     }, 1000);
-                    setTimeout(() => {
-                        //当天前2期错误提醒
-                        this.sendTodayFirstErrorWarnEmail(2)
-                            .catch((err) => {
-                                if (err) {
-                                    log.error("当天第1,2期错误提醒邮件通知异常");
-                                    log.error(err);
-                                }
-                            });
-                    }, 10000);
                     //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
                     setTimeout(() => {
                         //连错2期提醒
@@ -71,7 +62,28 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
+                    //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
+                    setTimeout(() => {
+                        //连中5期提醒
+                        this.sendContinueWinOrLoseWarnEmail(5, true)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("连中5期提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 5000);
+                    setTimeout(() => {
+                        //连中4期提醒
+                        this.sendContinueWinOrLoseWarnEmail(4, true)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("连中4期提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 5000);
                     setTimeout(() => {
                         //最大最小利润预警
                         this.sendMaxOrMinProfitNotification()
@@ -81,9 +93,9 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
                 });
-        }, 120000);
+        }, 90000);
     }
 
     /**
@@ -199,6 +211,10 @@ export class NotificationService implements INotificationService {
         let day = currentTime.getDate();
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
+        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
+        if (investEndTimeArr.length == 3) {
+            thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
+        }
         //当天22:00以后停止发送邮件通知
         if (currentTime > thirdTime) return BlueBirdPromise.resolve(true);
 

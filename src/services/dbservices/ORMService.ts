@@ -355,7 +355,7 @@ export class LotteryDbService {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '11',
-                                    desc: '遇【对错错】且未达盈利目标，自主进入真实投注 模拟+正向投注时生效'
+                                    desc: '遇【对错错】形态，只自主投注一期 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
