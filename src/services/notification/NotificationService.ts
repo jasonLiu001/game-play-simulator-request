@@ -62,7 +62,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 5000);
+                    }, 10000);
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     setTimeout(() => {
                         //连中5期提醒
@@ -73,7 +73,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 5000);
+                    }, 10000);
                     setTimeout(() => {
                         //连中4期提醒
                         this.sendContinueWinOrLoseWarnEmail(4, true)
@@ -83,7 +83,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 5000);
+                    }, 10000);
                     setTimeout(() => {
                         //最大最小利润预警
                         this.sendMaxOrMinProfitNotification()
@@ -93,9 +93,9 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 5000);
+                    }, 10000);
                 });
-        }, 90000);
+        }, 100000);
     }
 
     /**

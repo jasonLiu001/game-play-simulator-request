@@ -90,14 +90,13 @@ export class InvestService extends AbstractInvestBase {
                 if (investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
                         return PlatformService.loginAndInvest(request, investInfo);
+                    } else if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
+                        //在当前账号余额充足的情况下 当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
+                        return extraInvestService.executeExtraInvest(request, investInfo);//该方法内部会根据条件 自动切换到真实投注
                     }
 
-                    //在当前账号余额充足的情况下 当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
-                    if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
-                        //该方法内部会根据条件 自动切换到真实投注
-                        return extraInvestService.executeExtraInvest(request, investInfo);
-                    }
                 } else {//投注后 如果买号以后的金额已经为负值了，说明从这期开始账号余额就不足了，所以直接切换到模拟投注
+                    log.info("方案【%s】 买号后账户余额为: %s，小于最小值：%s，已无法进行真实购买！自动进入模拟投注模式！", CONFIG_CONST.currentSelectedInvestPlanType, investInfo.currentAccountBalance, CONFIG_CONST.minAccountBalance);
                     return SettingService.switchToMockInvest();
                 }
             })
