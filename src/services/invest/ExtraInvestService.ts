@@ -38,7 +38,8 @@ export class ExtraInvestService {
                         }).then(() => {
                             PlatformService.loginAndInvest(request, investInfo)
                                 .then(() => {
-                                    return EmailSender.sendEmail('符合对错错条件', '程序已忽略设置，自动投注')
+                                    let emailContent: string = "程序已忽略设置，自动投注，盈利目标从：" + investInfo.currentAccountBalance + " 更新为：" + CONFIG_CONST.maxAccountBalance;
+                                    return EmailSender.sendEmail(investInfo.period + ' 符合对错错条件', emailContent)
                                 });
                         });
 
