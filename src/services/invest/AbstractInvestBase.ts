@@ -105,19 +105,9 @@ export abstract class AbstractInvestBase {
             return BlueBirdPromise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
         }
 
-        let currentTime = new Date();
-        let year = currentTime.getFullYear();
-        let month = currentTime.getMonth();//month取值 0-11
-        let day = currentTime.getDate();
-        //当天的21:59
-        let thirdTime = new Date(year, month, day, 21, 59, 0);
-        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
-        if (investEndTimeArr.length == 3) {
-            thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
-        }
         //当天22:00以后自动切换到模拟投注
-        if (CONFIG_CONST.isRealInvest && currentTime > thirdTime) {
-            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天22:00以后，自动启动模拟投注";
+        if (CONFIG_CONST.isRealInvest && TimeService.isReachInvestEndTime()) {
+            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天" + AppSettings.investEndTime + "以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
             let mockResult: any = await SettingService.switchToMockInvest();

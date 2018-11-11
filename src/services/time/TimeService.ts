@@ -4,6 +4,7 @@ import Promise = require('bluebird');
 import _ = require('lodash');
 import moment  = require('moment');
 import {RejectionMsg} from "../../models/EnumModel";
+import {AppSettings} from "../../config/AppSettings";
 
 export class TimeService {
     /**
@@ -83,7 +84,7 @@ export class TimeService {
      * @param currentTime 当前系统时间
      * @param delaySeconds 开奖延迟时间
      */
-    public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
+    private static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
         let openTimeList: Array<Date> = TimeService.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -237,10 +238,25 @@ export class TimeService {
         //当天10:00
         let tenClock = new Date(year, month, day, 10, 0, 0);
 
-        if (currentTime > twoClock && currentTime < tenClock) {
-            return true;
+        return currentTime > twoClock && currentTime < tenClock;
+    }
+
+    /**
+     *
+     * 是否到达设置中的结束投注时间
+     */
+    public static isReachInvestEndTime(): boolean {
+        let currentTime = new Date();
+        let year = currentTime.getFullYear();
+        let month = currentTime.getMonth();//month取值 0-11
+        let day = currentTime.getDate();
+        //当天的21:59
+        let thirdTime = new Date(year, month, day, 21, 59, 0);
+        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
+        if (investEndTimeArr.length == 3) {
+            thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
         }
 
-        return false;
+        return currentTime > thirdTime;
     }
 }
