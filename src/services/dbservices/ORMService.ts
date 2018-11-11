@@ -326,7 +326,7 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             return Setting.bulkCreate([
-                                {key: 'isRealInvest', value: '0', orderId: '1', desc: '是否是真实投注 1:真实 0:模拟'},
+                                {key: 'isRealInvest', value: '0', orderId: '1', desc: '开启真实投注模式 1:真实 0:模拟'},
                                 {
                                     key: 'enableRealInvestWhenProgramStart',
                                     value: '0',
@@ -361,19 +361,19 @@ export class LotteryDbService {
                                     key: 'isUseReverseInvestNumbers',
                                     value: '0',
                                     orderId: '12',
-                                    desc: '是否用相反的号码投注'
+                                    desc: '使用相反的号码投注'
                                 },
                                 {
                                     key: 'maxProfitNotification',
                                     value: '0',
                                     orderId: '13',
-                                    desc: '最高利润邮件预警'
+                                    desc: '启用最高利润邮件预警'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
                                     orderId: '14',
-                                    desc: '最低利润邮件预警'
+                                    desc: '启用最低利润邮件预警'
                                 },
                                 {
                                     key: 'investNotification',
@@ -382,9 +382,15 @@ export class LotteryDbService {
                                     desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
+                                    key: 'isStopCheckLastPrizeNumber',
+                                    value: '0',
+                                    orderId: '16',
+                                    desc: '停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
+                                },
+                                {
                                     key: 'siteUrl',
                                     value: 'https://123.jn704.com',
-                                    orderId: '16',
+                                    orderId: '17',
                                     desc: '网站首页地址'
                                 }
                             ]);
