@@ -7,13 +7,15 @@
       "type": "dateFile",
       "filename": "logs/log.log",
       "pattern": "-yyyy-MM-dd.log",
-      "compress": true
+      "compress": true,
+      "daysToKeep": 20
     },
     "errorFile": {
       "type": "dateFile",
       "filename": "logs/error.log",
       "pattern": "-yyyy-MM-dd.log",
-      "compress": true
+      "compress": true,
+      "daysToKeep": 20
     },
     "errors": {
       "type": "logLevelFilter",
