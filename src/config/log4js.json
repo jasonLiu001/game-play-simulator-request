@@ -8,14 +8,14 @@
       "filename": "logs/log.log",
       "pattern": "-yyyy-MM-dd.log",
       "compress": true,
-      "daysToKeep": 20
+      "daysToKeep": 30
     },
     "errorFile": {
       "type": "dateFile",
       "filename": "logs/error.log",
       "pattern": "-yyyy-MM-dd.log",
       "compress": true,
-      "daysToKeep": 20
+      "daysToKeep": 30
     },
     "errors": {
       "type": "logLevelFilter",
