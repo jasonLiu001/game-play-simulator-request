@@ -45,7 +45,7 @@ export class AwardService {
      */
     public static saveOrUpdateAwardInfo(): Promise<AwardInfo> {
         let savedAwardInfo: AwardInfo = null;
-        return TimeService.isInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds)
+        return TimeService.isInvestTime()
             .then(() => {
                 log.info('获取第三方开奖数据');
                 return crawl360Service.getAwardInfo();

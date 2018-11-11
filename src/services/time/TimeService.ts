@@ -21,7 +21,9 @@ export class TimeService {
      * @param delaySeconds
      * @return {any}
      */
-    public static isInvestTime(currentTime: Date, delaySeconds = 0): Promise<boolean> {
+    public static isInvestTime(): Promise<boolean> {
+        let currentTime: Date = new Date();//当前时间
+        let delaySeconds: number = CONFIG_CONST.openTimeDelaySeconds;//开奖延迟时间
         if (Config.globalVariable.nextPeriodInvestTime == null) {
             Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);
