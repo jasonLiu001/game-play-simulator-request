@@ -8,6 +8,7 @@ import {EmailSender} from "../email/EmailSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
+import {TimeService} from "../time/TimeService";
 
 
 let log4js = require('log4js'),
@@ -37,8 +38,11 @@ export class NotificationService implements INotificationService {
      * 间隔2分钟检查是否需要发送通知  入口方法
      */
     public async start(): BlueBirdPromise<any> {
-        //5分钟检查一次是否需要发送通知
+        //2分钟检查一次是否需要发送通知
         setInterval(() => {
+            //首先判断时间是否在设置的时间内 不在投注时间内直接返回
+            if (TimeService.isInStopInvestTime() || TimeService.isReachInvestEndTime()) return;
+
             SettingService.getAndInitSettings()
                 .then(() => {
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
