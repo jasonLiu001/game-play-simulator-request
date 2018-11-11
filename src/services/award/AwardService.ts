@@ -63,7 +63,7 @@ export class AwardService {
             })
             .then(() => {
                 //更新下期开奖时间
-                TimeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
+                TimeService.updateNextPeriodInvestTime();
                 log.info('正在保存第三方开奖数据...');
                 //更新全局变量
                 Config.globalVariable.last_Period = savedAwardInfo.period;

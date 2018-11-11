@@ -101,7 +101,7 @@ export abstract class AbstractInvestBase {
         //检查在此时间内是否允许投注
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
-            TimeService.updateNextPeriodInvestTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);
+            TimeService.updateNextPeriodInvestTime();
             return BlueBirdPromise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
         }
 

@@ -1,4 +1,4 @@
-import {Config} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {PeriodTime} from "../../models/PeriodTime";
 import Promise = require('bluebird');
 import _ = require('lodash');
@@ -9,11 +9,9 @@ export class TimeService {
     /**
      *
      * 更新下期可投注时间
-     * @param currentTime
-     * @param delaySeconds
      */
-    public static updateNextPeriodInvestTime(currentTime: Date, delaySeconds = 0): void {
-        Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(currentTime, delaySeconds);//更新开奖时间
+    public static updateNextPeriodInvestTime(): void {
+        Config.globalVariable.nextPeriodInvestTime = TimeService.getNextOpenTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);//更新开奖时间
     }
 
     /**
@@ -80,6 +78,8 @@ export class TimeService {
      *
      *
      * 获取下期的可投注时间
+     * @param currentTime 当前系统时间
+     * @param delaySeconds 开奖延迟时间
      */
     public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
         let openTimeList: Array<Date> = TimeService.getOpenTimeList(currentTime, delaySeconds);
