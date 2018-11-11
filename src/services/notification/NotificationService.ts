@@ -56,9 +56,30 @@ export class NotificationService implements INotificationService {
                                 }
                             });
                     }, 1000);
-                    //多个邮件同时发送需要设置间隔，否则上面的邮件无法正常发送
+
+                    //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
+                    //连错4期提醒
                     setTimeout(() => {
-                        //连错2期提醒
+                        this.sendContinueWinOrLoseWarnEmail(4, false)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("连错4期提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
+                    //连错3期提醒
+                    setTimeout(() => {
+                        this.sendContinueWinOrLoseWarnEmail(3, false)
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("连错3期提醒邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
+                    //连错2期提醒
+                    setTimeout(() => {
                         this.sendContinueWinOrLoseWarnEmail(2, false)
                             .catch((err) => {
                                 if (err) {
@@ -67,29 +88,10 @@ export class NotificationService implements INotificationService {
                                 }
                             });
                     }, 10000);
-                    //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
+
+
+                    //最大最小利润预警
                     setTimeout(() => {
-                        //连中5期提醒
-                        this.sendContinueWinOrLoseWarnEmail(5, true)
-                            .catch((err) => {
-                                if (err) {
-                                    log.error("连中5期提醒邮件通知异常");
-                                    log.error(err);
-                                }
-                            });
-                    }, 10000);
-                    setTimeout(() => {
-                        //连中4期提醒
-                        this.sendContinueWinOrLoseWarnEmail(4, true)
-                            .catch((err) => {
-                                if (err) {
-                                    log.error("连中4期提醒邮件通知异常");
-                                    log.error(err);
-                                }
-                            });
-                    }, 10000);
-                    setTimeout(() => {
-                        //最大最小利润预警
                         this.sendMaxOrMinProfitNotification()
                             .catch((err) => {
                                 if (err) {
