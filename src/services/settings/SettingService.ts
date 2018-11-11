@@ -55,6 +55,8 @@ export class SettingService {
                 AppSettings.investNotification = Number(item.value) === 1;
             } else if (item.key === 'isStopCheckLastPrizeNumber') {
                 AppSettings.isStopCheckLastPrizeNumber = Number(item.value) === 1;
+            } else if (item.key === 'lastPeriodErrorInvestNotification') {
+                AppSettings.lastPeriodErrorInvestNotification = Number(item.value) === 1;
             }
         }
     }

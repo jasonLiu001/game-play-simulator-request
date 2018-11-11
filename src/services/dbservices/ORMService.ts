@@ -373,13 +373,13 @@ export class LotteryDbService {
                                     key: 'maxProfitNotification',
                                     value: '0',
                                     orderId: '14',
-                                    desc: '启用最高利润邮件预警'
+                                    desc: '启用最高利润邮件预警，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
                                     orderId: '15',
-                                    desc: '启用最低利润邮件预警'
+                                    desc: '启用最低利润邮件预警，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'investNotification',
@@ -388,9 +388,15 @@ export class LotteryDbService {
                                     desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
+                                    key: 'lastPeriodErrorInvestNotification',
+                                    value: '0',
+                                    orderId: '17',
+                                    desc: '上期错误进行邮件提醒，模拟+真实下都有效'
+                                },
+                                {
                                     key: 'siteUrl',
                                     value: 'https://123.jn704.com',
-                                    orderId: '17',
+                                    orderId: '18',
                                     desc: '网站首页地址'
                                 }
                             ]);

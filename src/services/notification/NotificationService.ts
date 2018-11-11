@@ -89,6 +89,18 @@ export class NotificationService implements INotificationService {
                             });
                     }, 10000);
 
+                    if(AppSettings.lastPeriodErrorInvestNotification){
+                        //连错1期提醒
+                        setTimeout(() => {
+                            this.sendContinueWinOrLoseWarnEmail(1, false)
+                                .catch((err) => {
+                                    if (err) {
+                                        log.error("连错1期提醒邮件通知异常");
+                                        log.error(err);
+                                    }
+                                });
+                        }, 10000);
+                    }
 
                     //最大最小利润预警
                     setTimeout(() => {
