@@ -1,5 +1,6 @@
 import {TimeService} from "../../time/TimeService";
 import Promise = require('bluebird');
+import moment  = require('moment');
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {IAwardCrawler} from "./IAwardCrawler";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
@@ -68,7 +69,9 @@ export class Award360Service implements IAwardCrawler {
                         let awardInfo: AwardInfo = {
                             openNumber: lotteryData[0].WinNumber,
                             period: year + '' + monthFragment + '' + dayFragment + '-' + num,
-                            openTime: lotteryData[0].EndTime
+                            openTime: lotteryData[0].EndTime,
+                            createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                            updateStatus: 1//自动更新
                         };
                         resolve(awardInfo);
 

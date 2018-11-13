@@ -33,5 +33,18 @@ export const CONST_AWARD_TABLE = {
      * 开奖时间
      * @type {string}
      */
-    openTime: "openTime"
+    openTime: "openTime",
+
+
+    /**
+     *
+     * 记录创建时间
+     */
+    createdTime: "createdTime",
+
+    /**
+     *
+     * 更新状态 1：自动更新 2：手工更新
+     */
+    updateStatus: "updateStatus"
 };

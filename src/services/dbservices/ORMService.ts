@@ -131,6 +131,18 @@ const Award = sequelize.define('award', {
     },
     openTime: {//开奖时间
         type: Sequelize.STRING
+    },
+    createdTime: {//日期和时间
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            const createdTime = this.getDataValue('createdTime');
+            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+        }
+    },
+    updateStatus: {//更新状态 1：自动更新 2：手工更新
+        type: Sequelize.INTEGER,
+        defaultValue: 1
     }
 });
 /**
