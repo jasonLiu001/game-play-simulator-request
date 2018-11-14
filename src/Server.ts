@@ -18,11 +18,14 @@ ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskLis
     notificationService.start();
 });
 
+//每天固定时间停止 预警及获取奖号计划任务
 ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStopTaskEntity.cronTimeStr, () => {
     //销毁获取奖号
     ScheduleTaskList.awardFetchTaskEntity.cronSchedule.destroy();
+    ScheduleTaskList.awardFetchTaskEntity.cronSchedule = null;
     //销毁预警通知
     ScheduleTaskList.notificationTaskEntity.cronSchedule.destroy();
+    ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
 });
 
 app.listen(PORT, () => {

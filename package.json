@@ -1,7 +1,6 @@
 {
-  "main": "App.js",
+  "main": "Server.js",
   "dependencies": {
-    "@types/express": "^4.16.0",
     "bluebird": "3.5.0",
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
@@ -14,11 +13,10 @@
     "node-cron": "^2.0.3",
     "nodemailer": "^4.6.4",
     "request": "^2.81.0",
-    "sequelize": "^4.37.7",
-    "ts-node": "^7.0.1",
-    "typescript": "^2.3.2"
+    "sequelize": "^4.37.7"
   },
   "scripts": {
+    "ts-test": "jasmine-ts './spec/Server.Spec.ts'",
     "tsc": "tsc",
     "dev": "ts-node ./src/Server.ts",
     "test": "jasmine",
@@ -30,6 +28,7 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.6",
+    "@types/express": "^4.16.0",
     "@types/jasmine": "^2.5.53",
     "@types/jquery": "^2.0.45",
     "@types/lodash": "^4.14.68",
@@ -37,6 +36,9 @@
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-ts": "^6.0.0-beta.15"
+    "grunt-ts": "^6.0.0-beta.15",
+    "jasmine-ts": "^0.3.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^2.3.2"
   }
 }
