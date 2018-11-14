@@ -2,17 +2,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
             default: {
-                src: ['src/**/*.ts'],
-                outDir: 'dist',
-                options: {
-                    module: 'commonjs', //or commonjs
-                    target: 'es5', //or es3
-                    rootDir: 'src',
-                    sourceMap: true,
-                    declaration: true,
-                    lib: ["es2017", "dom"],
-                    allowSyntheticDefaultImports: true
-                }
+                tsconfig: './tsconfig.json'
             }
         },
         copy: {

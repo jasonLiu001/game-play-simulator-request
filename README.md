@@ -20,8 +20,9 @@
 0  6  *  *  * ntpd ntp1.aliyun.com   ##Ubuntu
 ```
  其中`ntp1.aliyun.com`是阿里的时间同步服务器，也可以根据自己的需要选择其他的
-#### 必备条件2
-在`Linux`下设置好时间同步后，还要设置程序的自动运行时间，周一到周五运行正式程序，周六、周日两天运行模拟程序
+
+#### ~~必备条件2【已废除，不再需要该定时任务，已在程序自身实现】~~
+~~在`Linux`下设置好时间同步后，还要设置程序的自动运行时间，周一到周五运行正式程序，周六、周日两天运行模拟程序~~
 ```shell
 0 2 * * 1-5 killall node
 56 9 * * 1-5 sh ~/start.sh
@@ -50,8 +51,8 @@ rz -ary --o-sync
 ```
 
 
-> **补充说明**   
-> sz：将选定的文件发送（send）到本地机器,即下载  
+> **补充说明**
+> sz：将选定的文件发送（send）到本地机器,即下载
 > rz：运行该命令会弹出一个文件选择窗口，从本地选择文件上传到服务器(receive),即上传，上传需要添加参数才能正常上传
 
 ## 在Linux服务器运行某个js的单元测试任务
@@ -59,3 +60,7 @@ rz -ary --o-sync
 # 切换到RequestLoginService.Spec.js文件所在目录 运行以下命令
 node /root/github/game-play-simulator-request/node_modules/jasmine/bin/jasmine.js RequestLoginService.Spec.js
 ```
+
+## ts编译生成js的最终路径设置
+- 需要在`tsconfig.json`中的`outDir`属性指定输出路径
+- 因为`typescript`编译器不会自动拷贝非`ts`文件到输出路径，所以需要借助第三方工具，本项目中使用的是`grunt-ts`中的`copy`功能，所以在`Gruntfile.js`中的`copy`节点中的`dest`属性注意要和`tsconfig.json`中的`outDir`目录保持一致，才能正确的拷贝文件到对应的目录下

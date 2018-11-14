@@ -9,6 +9,8 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 import {TimeService} from "../time/TimeService";
+import {ScheduleTaskList} from "../../config/ScheduleTaskList";
+import cron = require('node-cron');
 
 
 let log4js = require('log4js'),
@@ -39,7 +41,7 @@ export class NotificationService implements INotificationService {
      */
     public async start(): BlueBirdPromise<any> {
         //2分钟检查一次是否需要发送通知
-        setInterval(() => {
+        ScheduleTaskList.notificationTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.notificationTaskEntity.cronTimeStr, () => {
             //首先判断时间是否在设置的时间内 不在投注时间内直接返回
             if (TimeService.isInStopInvestTime() || TimeService.isReachInvestEndTime()) return;
 
@@ -89,7 +91,7 @@ export class NotificationService implements INotificationService {
                             });
                     }, 10000);
 
-                    if(AppSettings.lastPeriodErrorInvestNotification){
+                    if (AppSettings.lastPeriodErrorInvestNotification) {
                         //连错1期提醒
                         setTimeout(() => {
                             this.sendContinueWinOrLoseWarnEmail(1, false)
@@ -113,7 +115,7 @@ export class NotificationService implements INotificationService {
                             });
                     }, 10000);
                 });
-        }, 100000);
+        });
     }
 
     /**

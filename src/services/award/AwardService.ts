@@ -6,6 +6,8 @@ import {Award360Service} from "../crawler/award/Award360Service";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {RejectionMsg} from "../../models/EnumModel";
 import {AwardCaiBaXianService} from "../crawler/award/AwardCaiBaXianService";
+import cron = require('node-cron');
+import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -24,7 +26,7 @@ export class AwardService {
      * 开始获取奖号
      */
     public static startGetAwardInfoTask(success?: Function): void {
-        Config.awardTimer = setInterval(() => {
+        ScheduleTaskList.awardFetchTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.awardFetchTaskEntity.cronTimeStr, () => {
             AwardService.saveOrUpdateAwardInfo()
                 .then(() => {
                     log.info('保存第三方开奖数据完成');
@@ -35,7 +37,7 @@ export class AwardService {
                         log.error(err);
                     }
                 });
-        }, CONFIG_CONST.autoCheckTimerInterval)
+        });
     }
 
     /**

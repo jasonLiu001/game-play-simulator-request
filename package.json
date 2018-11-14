@@ -1,25 +1,32 @@
 {
   "main": "App.js",
   "dependencies": {
+    "@types/express": "^4.16.0",
     "bluebird": "3.5.0",
+    "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
     "jasmine": "^2.6.0",
     "lodash": "^4.17.4",
     "log4js": "^2.0.0",
     "moment": "^2.19.1",
     "mysql2": "^1.5.3",
+    "node-cron": "^2.0.3",
     "nodemailer": "^4.6.4",
     "request": "^2.81.0",
     "sequelize": "^4.37.7",
+    "ts-node": "^7.0.1",
     "typescript": "^2.3.2"
   },
   "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node ./src/Server.ts",
     "test": "jasmine",
     "test:login": "jasmine ./spec/services/platform/request/RequestLoginService.Spec.js",
     "send:notification": "jasmine ./spec/services/notification/NotificationService.Spec.js",
     "grunt": "grunt",
     "linux:start": "npm run win:start",
-    "win:start": "npm run grunt && cd dist && node ./App.js"
+    "win:start": "npm run grunt && cd dist && node ./Server.js"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.6",
