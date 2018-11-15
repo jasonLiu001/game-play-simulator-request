@@ -139,7 +139,7 @@ npm run grunt  //生成项目文件
 this.nightmare
                 .viewport(800, 600)
                 .goto(SITE_URL+'/Login')
-                .inject('js', path.join(__dirname, "..", "lib/jquery/jquery-3.2.1.js"))
+                .inject('js', path.join(__dirname, "..", "static/lib/jquery/jquery-3.2.1.js"))
 ```
 
 在`evaluate`方法中使用`jquery`
@@ -171,7 +171,7 @@ Nightmare.action('foo',
     // This task runs in the remote process
     function (name, options, parent, win, renderer, done) {
         parent.respondTo('foo',
-            function (args, done) { // <---- See args 
+            function (args, done) { // <---- See args
                 // Do whatever with args here...
                 done();
             });
@@ -249,7 +249,7 @@ class Automator implements UIAutomation.IAutomator {
 import {Foo} from 'Foo';
 export namespace UIAutomation {
     export class IAutomator {
-    
+
     }
 }
 ```

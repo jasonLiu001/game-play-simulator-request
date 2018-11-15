@@ -12,7 +12,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: "src/",
-                        src: ['lib/jquery-3.2.1.js', 'config/log4js.json', 'lib/lodash.js'],
+                        src: ['config/log4js.json', 'lib/**/**', 'pages/**/**', 'static/**/**'],
                         dest: 'dist/'
                     },
                     {
