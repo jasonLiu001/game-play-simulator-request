@@ -7,5 +7,9 @@ export class RoutesConfig {
         //router to award controller
         app.route('/award')
             .get(this.awardController.getAward);
+
+        //router to startApp controller
+        app.route('/startApp')
+            .get(this.awardController.startApp);
     }
 }

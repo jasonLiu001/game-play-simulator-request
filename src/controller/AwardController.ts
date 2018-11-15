@@ -12,6 +12,10 @@ export class AwardController {
         })
     }
 
+    /**
+     *
+     * 手动启动app
+     */
     public startApp(req: Request, res: Response) {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
