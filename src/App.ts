@@ -14,6 +14,8 @@ class App {
         this.app.use(bodyParser.json());
         //support application/x-www-form-urlencoded post data
         this.app.use(bodyParser.urlencoded({extended: false}));
+        //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
+        this.app.use(express.static(__dirname + '/static'));
 
         //register root routes
         this.app.use('/', rootRoutes);
