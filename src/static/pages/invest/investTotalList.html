@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>所有方案查询结果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0, minimal-ui">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../../css/dropload.css"/>
+    <script type="text/javascript" src="../../libs/vue.js"></script>
+    <script type="text/javascript" src="../../libs/axios.min.js"></script>
+    <script type="text/javascript" src="../../libs/zepto.min.js"></script>
+    <script type="text/javascript" src="../../libs/dropload.min.js"></script>
+    <script type="text/javascript" src="../../js/apiList.js"></script>
+    <script type="text/javascript" src="../../js/alertComponent.js"></script>
+</head>
+<body class="bg-light">
+<div class="container-fluid" id="app">
+
+    <header class="row d-flex flex-row justify-content-around border border-light rounded mt-2 mb-2 ml-1 mr-1 bg-white">
+        <div class="col-3 text-center">期号</div>
+        <div class="col-3 text-center">方案1</div>
+        <div class="col-3 text-center">方案2</div>
+        <div class="col-3 text-center">方案3</div>
+        <div class="col-2 text-center" style="display: none;">方案4</div>
+    </header>
+
+    <alert-component :is-show="isShowAlert" :message="alertMessage"></alert-component>
+
+    <main id="investList">
+        <template v-for="row in list">
+            <div class="row d-flex flex-row justify-content-around border border-light rounded mb-2 ml-1 mr-1 bg-white">
+                <div class="col-3">
+                    <div class="row d-flex flex-row justify-content-around">
+                        <span class="text-center">{{row.period}}</span>
+                    </div>
+                </div>
+
+                <template v-for="investTotalItem in row.investTotalInfos">
+                    <div v-if="investTotalItem.planType!=4" class="col-3"
+                         @click="redirectToDetail(row.period,investTotalItem,$event)">
+
+                        <div class="row d-flex flex-row justify-content-around">
+                            <span class="text-right">{{investTotalItem.currentAccountBalance}}</span>
+                        </div>
+                        <div class="row text-right d-flex flex-row justify-content-around">
+                            <img style="height: 24px;width: 24px;"
+                                 v-if="(investTotalItem.isUseReverseInvestNumbers==0&&investTotalItem.isWin==1&&investTotalItem.status==1)||(investTotalItem.isUseReverseInvestNumbers==1&&investTotalItem.isWin==0&&investTotalItem.status==1)"
+                                 src="https://www.cnlands.cn/images/icon_right.png"/>
+                            <img style="height: 24px;width: 24px;"
+                                 v-if="(investTotalItem.isUseReverseInvestNumbers==0&&investTotalItem.isWin==0&&investTotalItem.status==1)||(investTotalItem.isUseReverseInvestNumbers==1&&investTotalItem.isWin==1&&investTotalItem.status==1)"
+                                 src="https://www.cnlands.cn/images/icon_error.png"/>
+                            <span v-if="investTotalItem.status==0" class="text-right">...</span>
+                        </div>
+
+                    </div>
+                </template>
+
+            </div>
+        </template>
+    </main>
+
+    <footer class="row mb-5" style="display: none;">
+        <div class="col-12">
+            <input class="btn btn-outline-primary btn-block" @click="loadMore" type="button" value="加载更多...">
+        </div>
+    </footer>
+
+</div>
+<script type="text/javascript" src="../../js/invest/investTotalList.js"></script>
+</body>
+</html>

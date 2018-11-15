@@ -12,7 +12,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: "src/",
-                        src: ['config/log4js.json', 'lib/**/**', 'pages/**/**', 'static/**/**'],
+                        src: ['config/log4js.json', 'libs/**/**', 'static/**/**'],
                         dest: 'dist/'
                     },
                     {

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>详情页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0, minimal-ui">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <script type="text/javascript" src="../../libs/vue.js"></script>
+    <script type="text/javascript" src="../../libs/axios.min.js"></script>
+    <script type="text/javascript" src="../../js/apiList.js"></script>
+    <script type="text/javascript" src="../../js/alertComponent.js"></script>
+    <script type="text/javascript" src="../../js/utils.js"></script>
+</head>
+<body>
+<div class="container-fluid" id="app">
+
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>方案：</span>
+            <span>{{planType}}</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>期号：</span>
+            <span>{{investTotalItem.period}}</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>时间：</span>
+            <span>{{investTotalItem.investTime}}</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>状态：</span>
+            <span v-if="investTotalItem.status===0" style="color: #f76160;">进行中</span>
+            <span v-if="investTotalItem.status===1" style="color: #27f730;">已完成</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>账号余额：</span>
+            <span>{{investTotalItem.currentAccountBalance}}</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0"
+             style="height: 40px;">
+            <span>数量：</span>
+            <span>{{investTotalItem.investNumberCount}}</span>
+        </div>
+        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0">
+            <span>购买号码：</span>
+            <textarea class="form-control" rows="10">{{investTotalItem.investNumbers}}</textarea>
+        </div>
+        <alert-component :is-show="isShowAlert" :message="alertMessage"></alert-component>
+        <input class="btn mt-1 mb-1 btn-outline-primary btn-block" @click="copyInvestNumbers(investTotalItem,$event)"
+               type="button" value="复制正向号码">
+        <input class="btn mt-1 mb-3 btn-outline-primary btn-block"
+               @click="copyReverseInvestNumbers(investTotalItem,$event)" type="button" value="复制反向号码">
+
+    </div>
+</div>
+<script type="text/javascript" src="../../js/invest/investTotalDetail.js"></script>
+</body>
+</html>
