@@ -13,7 +13,7 @@ export class AwardController {
     }
 
     public startApp(req: Request, res: Response) {
-        if (ScheduleTaskList.appStartTaskEntity.cronSchedule == null) {
+        if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
             AppServices.start();
             //启动通知程序
