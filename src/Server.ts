@@ -34,9 +34,11 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
     //销毁获取奖号
     ScheduleTaskList.awardFetchTaskEntity.cronSchedule.destroy();
     ScheduleTaskList.awardFetchTaskEntity.cronSchedule = null;
+    log.info('主程序已停止');
     //销毁预警通知
     ScheduleTaskList.notificationTaskEntity.cronSchedule.destroy();
     ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
+    log.info('通知程序已停止');
 });
 
 app.listen(PORT, () => {

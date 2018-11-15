@@ -40,6 +40,7 @@ export class NotificationService implements INotificationService {
      * 间隔2分钟检查是否需要发送通知  入口方法
      */
     public async start(): BlueBirdPromise<any> {
+        log.info('通知已启动，持续监视中...');
         //2分钟检查一次是否需要发送通知
         ScheduleTaskList.notificationTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.notificationTaskEntity.cronTimeStr, () => {
             //首先判断时间是否在设置的时间内 不在投注时间内直接返回

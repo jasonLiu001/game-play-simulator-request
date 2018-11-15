@@ -37,7 +37,7 @@ export class AppServices {
      * 启动程序，自动获取开奖号码并投注
      */
     public static async start(): BlueBirdPromise<any> {
-        log.info('程序已启动，持续监视中...');
+        log.info('主程序已启动，持续监视中...');
         return LotteryDbService.createLotteryTable()
             .then(() => {
                 //程序启动时 必须首先要获取的参数配置信息 originAccountBalance,currentAccountBalance,currentSelectedAwardMode
