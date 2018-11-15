@@ -7,7 +7,7 @@ import {AwardController} from "../controller/AwardController";
  */
 class ApiRoutes {
     public router: express.Router;
-    public awardController: AwardController = new AwardController();
+    private awardController: AwardController = new AwardController();
 
     constructor() {
         this.router = express.Router();
