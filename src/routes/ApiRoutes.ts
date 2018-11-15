@@ -4,8 +4,6 @@ import {AwardController} from "../controller/AwardController";
 let router: express.Router = express.Router(),
     awardController: AwardController = new AwardController();
 
-router = express.Router();
-
 router.get('/award', awardController.getAward);
 
 router.get('/startApp', awardController.startApp);
