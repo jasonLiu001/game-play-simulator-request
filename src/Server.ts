@@ -1,6 +1,6 @@
 import {NotificationService} from "./services/notification/NotificationService";
 import cron = require('node-cron');
-import app from "./app";
+let app = require("./app");
 import moment  = require('moment');
 import {AppServices} from "./services/AppServices";
 import {ScheduleTaskList} from "./config/ScheduleTaskList";

@@ -1,28 +1,22 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import rootRoutes from "./routes/RootRoutes";
-import apiRoutes from "./routes/ApiRoutes";
 
-class App {
+let rootRoutes = require("./routes/RootRoutes");
+let apiRoutes = require("./routes/ApiRoutes");
 
-    public app: express.Application;
+let app: express.Application = express();
 
-    constructor() {
-        this.app = express();
+// support application/json type post data
+app.use(bodyParser.json());
+//support application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({extended: false}));
+//static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
+app.use(express.static(__dirname + '/static'));
 
-        // support application/json type post data
-        this.app.use(bodyParser.json());
-        //support application/x-www-form-urlencoded post data
-        this.app.use(bodyParser.urlencoded({extended: false}));
-        //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
-        this.app.use(express.static(__dirname + '/static'));
+//register root routes
+app.use('/', rootRoutes);
 
-        //register root routes
-        this.app.use('/', rootRoutes);
+//register api routes
+app.use('/api', apiRoutes);
 
-        //register api routes
-        this.app.use('/api', apiRoutes);
-    }
-}
-
-export default new App().app;
+module.exports = app;

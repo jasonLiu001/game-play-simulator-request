@@ -1,21 +1,15 @@
 import * as express from 'express';
 import {AwardController} from "../controller/AwardController";
+import {Router} from "express-serve-static-core";
 
-/**
- *
- * “/api” 路径路由
- */
-class ApiRoutes {
-    public router: express.Router;
-    private awardController: AwardController = new AwardController();
+let router: express.Router = express.Router(),
+    awardController: AwardController = new AwardController();
 
-    constructor() {
-        this.router = express.Router();
+router = express.Router();
 
-        this.router.get('/award', this.awardController.getAward);
+router.get('/award', awardController.getAward);
 
-        this.router.get('/startApp', this.awardController.startApp);
-    }
-}
+router.get('/startApp', awardController.startApp);
 
-export default new ApiRoutes().router;
+// “/api” 路径路由
+module.exports = router;
