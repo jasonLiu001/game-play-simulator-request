@@ -1,6 +1,5 @@
 import * as express from 'express';
 import {AwardController} from "../controller/AwardController";
-import {Router} from "express-serve-static-core";
 
 let router: express.Router = express.Router(),
     awardController: AwardController = new AwardController();
