@@ -5,7 +5,13 @@ import cron = require('node-cron');
 import moment  = require('moment');
 import {AppServices} from "./services/AppServices";
 import {ScheduleTaskList} from "./config/ScheduleTaskList";
+
 let app: express.Application = express();
+const PORT = 6080;
+
+let log4js = require('log4js'),
+    log = log4js.getLogger('Server'),
+    notificationService = new NotificationService();
 
 let rootRoutes = require("./routes/RootRoutes");
 let apiRoutes = require("./routes/ApiRoutes");
@@ -22,12 +28,6 @@ app.use('/', rootRoutes);
 
 //register api routes
 app.use('/api', apiRoutes);
-
-let log4js = require('log4js'),
-    log = log4js.getLogger('Server'),
-    notificationService = new NotificationService();
-
-const PORT = 6080;
 
 //node-cron的格式可能和linux中crontab有区别，设置时请参考文档：https://www.npmjs.com/package/node-cron
 ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStartTaskEntity.cronTimeStr, () => {
