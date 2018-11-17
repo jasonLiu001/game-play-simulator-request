@@ -2,7 +2,7 @@ import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import BlueBirdPromise = require('bluebird');
-import {AbstractInvestBase} from "./AbstractInvestBase";
+import {InvestBase} from "./InvestBase";
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
 import moment  = require('moment');
@@ -22,7 +22,7 @@ let log4js = require('log4js'),
     numberService = new NumberService(),
     extraInvestService = new ExtraInvestService();
 
-export class InvestService extends AbstractInvestBase {
+export class InvestService extends InvestBase {
 
     /**
      * 入口方法

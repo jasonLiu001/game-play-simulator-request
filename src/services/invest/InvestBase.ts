@@ -17,14 +17,14 @@ import {SettingService} from "../settings/SettingService";
 
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('AbstractInvestBase'),
+    log = log4js.getLogger('InvestBase'),
     numberService = new NumberService();
 
 /**
  *
- * 投注接口
+ * 投注基类
  */
-export abstract class AbstractInvestBase {
+export class InvestBase {
     /**
      *
      * 获取期号字符中的期号 返回纯数字，如期号为20170629-005，返回结果为5

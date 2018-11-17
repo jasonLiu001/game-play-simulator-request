@@ -48,7 +48,7 @@
 
 4. 给每个杀号计划添加开奖逻辑处理
 
-   * 在`AbstractInvestBase.ts`类中的`updatePlanResult`方法中添加开奖结果处理逻辑，如：奇偶类型
+   * 在`InvestBase.ts`类中的`updatePlanResult`方法中添加开奖结果处理逻辑，如：奇偶类型
 
    ```typescript
            //奇偶类型

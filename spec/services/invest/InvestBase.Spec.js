@@ -3,11 +3,11 @@ let LotteryDbService = require('../../../dist/services/dbservices/ORMService').L
 let InvestInfo = require('../../../dist/models/db/InvestInfo').InvestInfo;
 let Config = require('../../../dist/config/Config').Config;
 let EnumAwardMode = require('../../../dist/models/EnumModel').EnumAwardMode;
-describe("AbstractInvestBase Test", () => {
-    let abstractInvestBase, investInfo;
+describe("InvestBase Test", () => {
+    let InvestBase, investInfo;
 
     beforeEach((done) => {
-        abstractInvestBase = new InvestService();
+        InvestBase = new InvestService();
         investInfo = new InvestInfo();
         LotteryDbService.createLotteryTable()
             .then(() => {
@@ -24,7 +24,7 @@ describe("AbstractInvestBase Test", () => {
         investInfo.currentAccountBalance = 34.79;
         investInfo.awardMode = EnumAwardMode.feng;
 
-        abstractInvestBase.updateCurrentAccountBalace(investInfo);
+        InvestBase.updateCurrentAccountBalace(investInfo);
 
         let result = Config.currentAccountBalance - 16.34;
 
@@ -34,7 +34,7 @@ describe("AbstractInvestBase Test", () => {
     });
 
     xit("calculateWinMoney test", (done) => {
-        abstractInvestBase.calculateWinMoney()
+        InvestBase.calculateWinMoney()
             .then((result) => {
                 expect(result).toBeDefined();
                 done();
@@ -51,7 +51,7 @@ describe("AbstractInvestBase Test", () => {
     it("checkMaxWinMoney test", () => {
         //设置当前账号余额
         Config.currentAccountBalance = 743.2;
-        abstractInvestBase.checkMaxWinMoney()
+        InvestBase.checkMaxWinMoney()
             .then((result) => {
                 expect(result).toBe(false);
                 done();
