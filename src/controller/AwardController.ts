@@ -14,5 +14,15 @@ export class AwardController {
             message: 'Success! getAwardList invoked!'
         })
     }
+
+    /**
+     *
+     * 更新奖号
+     */
+    public updateAward(req: Request, res: Response){
+        res.status(200).send({
+            message: 'Success! updateAward invoked!'
+        })
+    }
 }
 

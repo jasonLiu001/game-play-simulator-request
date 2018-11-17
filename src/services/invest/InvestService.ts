@@ -14,7 +14,6 @@ import {ExtraInvestService} from "./ExtraInvestService";
 import {PlatformService} from "../platform/PlatformService";
 import {AppSettings} from "../../config/AppSettings";
 import {EmailSender} from "../email/EmailSender";
-import {update_isRealInvest_to_real} from "../../models/db/SettingsInfo";
 import {SettingService} from "../settings/SettingService";
 
 let log4js = require('log4js'),

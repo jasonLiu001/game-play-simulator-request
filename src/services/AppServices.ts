@@ -25,6 +25,13 @@ let log = log4js.getLogger('AppServices'),
             strictSSL: false//解决:unable to verify the first certificat 参考https://github.com/request/request/issues/2505
         });
 
+/**
+ *
+ * 导出Request对象
+ */
+export class DefaultRequest {
+    public static request: any = request;
+}
 
 /**
  *
