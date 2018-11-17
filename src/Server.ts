@@ -13,7 +13,6 @@ let log4js = require('log4js'),
     log = log4js.getLogger('Server'),
     notificationService = new NotificationService();
 
-let rootRoutes = require("./routes/RootRoutes");
 let apiRoutes = require("./routes/ApiRoutes");
 
 // support application/json type post data
@@ -22,9 +21,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
 app.use(express.static(__dirname + '/static'));
-
-//register root routes
-app.use('/', rootRoutes);
 
 //register api routes
 app.use('/api', apiRoutes);
