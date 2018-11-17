@@ -13,7 +13,9 @@ let log4js = require('log4js'),
     log = log4js.getLogger('Server'),
     notificationService = new NotificationService();
 
-let apiRoutes = require("./routes/ApiRoutes");
+let appRoutes = require("./routes/AppRoutes"),
+    awardRoutes = require("./routes/AwardRoutes"),
+    investRoutes = require("./routes/InvestRoutes");
 
 // support application/json type post data
 app.use(bodyParser.json());
@@ -22,8 +24,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
 app.use(express.static(__dirname + '/static'));
 
-//register api routes
-app.use('/api', apiRoutes);
+//register all routes
+app.use('/app', appRoutes);
+app.use('/award', awardRoutes);
+app.use('/invest', investRoutes);
 
 //node-cron的格式可能和linux中crontab有区别，设置时请参考文档：https://www.npmjs.com/package/node-cron
 ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStartTaskEntity.cronTimeStr, () => {

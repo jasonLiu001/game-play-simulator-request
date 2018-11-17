@@ -10,9 +10,9 @@ let log4js = require('log4js'),
 export class AppController {
     /**
      *
-     * 手动启动app
+     * 启动app
      */
-    public startApp(req: Request, res: Response) {
+    public start(req: Request, res: Response) {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
             AppServices.start();
