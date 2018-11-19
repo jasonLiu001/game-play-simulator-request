@@ -21,8 +21,6 @@ export class AwardKm28ComService implements IAwardCrawler {
     }
 
     getAwardInfo(updateStatus: number = 1): BlueBirdPromise<AwardInfo> {
-        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-        let dataUrl = this.getDataUrl(currentPeriod);
         return new BlueBirdPromise((resolve, reject) => {
             request(
                 {
