@@ -1,12 +1,8 @@
 import {Request, Response} from 'express';
-import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 import {AwardKm28ComService} from "../services/crawler/award/AwardKm28ComService";
 import {AwardInfo} from "../models/db/AwardInfo";
 import {ResponseJson} from "../models/ResponseJson";
-import {TimeService} from "../services/time/TimeService";
-import {LotteryDbService} from "../services/dbservices/ORMService";
-import {RejectionMsg} from "../models/EnumModel";
 import {AwardService} from "../services/award/AwardService";
 
 let log4js = require('log4js'),
