@@ -15,7 +15,7 @@ export class AwardController {
      *
      * 获取奖号列表
      */
-    public getAwardList(req: Request, res: Response) {
+    public getLatestAwardInfo(req: Request, res: Response) {
         awardKm28ComService.getAwardInfo()
             .then((award: AwardInfo) => {
                 let successMsg: string = "获取最新奖号信息成功";
