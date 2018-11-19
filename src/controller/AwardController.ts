@@ -1,4 +1,6 @@
 import {Request, Response} from 'express';
+import BlueBirdPromise = require('bluebird');
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardController');
@@ -19,7 +21,7 @@ export class AwardController {
      *
      * 更新奖号
      */
-    public updateAward(req: Request, res: Response){
+    public updateAward(req: Request, res: Response) {
         res.status(200).send({
             message: 'Success! updateAward invoked!'
         })

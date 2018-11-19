@@ -43,7 +43,7 @@ export class Award360Service implements IAwardCrawler {
      *
      * 获取奖号信息
      */
-    getAwardInfo(): Promise<any> {
+    getAwardInfo(updateStatus: number = 1): Promise<any> {
         let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
         let dataUrl = this.getDataUrl(currentPeriod);
         return new Promise((resolve, reject) => {
@@ -71,7 +71,7 @@ export class Award360Service implements IAwardCrawler {
                             period: year + '' + monthFragment + '' + dayFragment + '-' + num,
                             openTime: lotteryData[0].EndTime,
                             createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                            updateStatus: 1//自动更新
+                            updateStatus: updateStatus//自动更新
                         };
                         resolve(awardInfo);
 

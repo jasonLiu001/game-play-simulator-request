@@ -1,6 +1,7 @@
 import Promise = require('bluebird');
 
 let request = require('request');
+
 /**
  *
  *
@@ -12,7 +13,7 @@ export interface IAwardCrawler {
      *
      * 格式化期号 返回格式：20170809-045
      */
-    formatPeriod(periodString: string): string ;
+    formatPeriod(periodString: string): string;
 
     /**
      *
@@ -20,12 +21,13 @@ export interface IAwardCrawler {
      * 开奖数据url
      * @param currentPeriod
      */
-    getDataUrl(currentPeriod: string): string ;
+    getDataUrl(currentPeriod: string): string;
 
     /**
      *
      *
      * 抓取的开奖数据结果
+     * @param updateStatus 更新状态 1：自动更新 2：手动更新
      */
-    getAwardInfo(): Promise<any> ;
+    getAwardInfo(updateStatus: number): Promise<any>;
 }

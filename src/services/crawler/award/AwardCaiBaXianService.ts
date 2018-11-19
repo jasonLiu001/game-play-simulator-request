@@ -26,7 +26,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
         return 'http://www.caibaxian.com/open.aspx?callback=?';
     }
 
-    getAwardInfo(): Promise<any> {
+    getAwardInfo(updateStatus: number = 1): Promise<any> {
         let dataUrl = this.getDataUrl(null);
         return new Promise((resolve, reject) => {
             request(
@@ -57,7 +57,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
                             openNumber: lotteryData.opencode,
                             openTime: lotteryData.timeStop,
                             createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                            updateStatus: 1//自动更新
+                            updateStatus: updateStatus//自动更新
                         };
                         resolve(awardInfo);
                     } catch (e) {
