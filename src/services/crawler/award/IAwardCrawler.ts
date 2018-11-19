@@ -1,4 +1,5 @@
 import Promise = require('bluebird');
+import {AwardInfo} from "../../../models/db/AwardInfo";
 
 let request = require('request');
 
@@ -29,5 +30,5 @@ export interface IAwardCrawler {
      * 抓取的开奖数据结果
      * @param updateStatus 更新状态 1：自动更新 2：手动更新
      */
-    getAwardInfo(updateStatus: number): Promise<any>;
+    getAwardInfo(updateStatus: number): Promise<AwardInfo>;
 }

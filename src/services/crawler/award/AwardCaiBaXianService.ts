@@ -26,7 +26,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
         return 'http://www.caibaxian.com/open.aspx?callback=?';
     }
 
-    getAwardInfo(updateStatus: number = 1): Promise<any> {
+    getAwardInfo(updateStatus: number = 1): Promise<AwardInfo> {
         let dataUrl = this.getDataUrl(null);
         return new Promise((resolve, reject) => {
             request(

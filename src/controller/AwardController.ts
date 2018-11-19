@@ -1,9 +1,17 @@
 import {Request, Response} from 'express';
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
+import {AwardKm28ComService} from "../services/crawler/award/AwardKm28ComService";
+import {AwardInfo} from "../models/db/AwardInfo";
+import {ResponseJson} from "../models/ResponseJson";
+import {TimeService} from "../services/time/TimeService";
+import {LotteryDbService} from "../services/dbservices/ORMService";
+import {RejectionMsg} from "../models/EnumModel";
+import {AwardService} from "../services/award/AwardService";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('AwardController');
+    log = log4js.getLogger('AwardController'),
+    awardKm28ComService: AwardKm28ComService = new AwardKm28ComService();
 
 export class AwardController {
 
@@ -12,9 +20,19 @@ export class AwardController {
      * 获取奖号列表
      */
     public getAwardList(req: Request, res: Response) {
-        res.status(200).send({
-            message: 'Success! getAwardList invoked!'
-        })
+        awardKm28ComService.getAwardInfo()
+            .then((award: AwardInfo) => {
+                let successMsg: string = "获取最新奖号信息成功";
+                let jsonRes: ResponseJson = new ResponseJson();
+                jsonRes.success(successMsg, award);
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "获取奖号失败";
+                let jsonRes: ResponseJson = new ResponseJson();
+                jsonRes.fail(errMsg);
+                return res.status(200).send(jsonRes);
+            });
     }
 
     /**
@@ -22,9 +40,22 @@ export class AwardController {
      * 更新奖号
      */
     public updateAward(req: Request, res: Response) {
-        res.status(200).send({
-            message: 'Success! updateAward invoked!'
-        })
+        awardKm28ComService.getAwardInfo()
+            .then((award: AwardInfo) => {
+                return AwardService.saveOrUpdateAwardInfo(award);
+            })
+            .then(() => {
+                let successMsg: string = "奖号更新成功";
+                let jsonRes: ResponseJson = new ResponseJson();
+                jsonRes.success(successMsg);
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "奖号更新失败";
+                let jsonRes: ResponseJson = new ResponseJson();
+                jsonRes.fail(errMsg);
+                return res.status(200).send(jsonRes);
+            });
     }
 }
 

@@ -27,7 +27,14 @@ export class AwardService {
      */
     public static startGetAwardInfoTask(success?: Function): void {
         ScheduleTaskList.awardFetchTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.awardFetchTaskEntity.cronTimeStr, () => {
-            AwardService.saveOrUpdateAwardInfo()
+            TimeService.isInvestTime()
+                .then(() => {
+                    log.info('获取第三方开奖数据');
+                    return crawl360Service.getAwardInfo();
+                })
+                .then((award: AwardInfo) => {
+                    return AwardService.saveOrUpdateAwardInfo(award);
+                })
                 .then(() => {
                     log.info('保存第三方开奖数据完成');
                     if (success) success();
@@ -45,17 +52,8 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    public static saveOrUpdateAwardInfo(): Promise<AwardInfo> {
-        let savedAwardInfo: AwardInfo = null;
-        return TimeService.isInvestTime()
-            .then(() => {
-                log.info('获取第三方开奖数据');
-                return crawl360Service.getAwardInfo();
-            })
-            .then((award: AwardInfo) => {
-                savedAwardInfo = award;//保存awardinfo信息
-                return LotteryDbService.getAwardInfo(award.period);
-            })
+    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
+        return LotteryDbService.getAwardInfo(award.period)
             .then((dbAwardRecord: any) => {
                 if (dbAwardRecord) {
                     //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
@@ -68,11 +66,11 @@ export class AwardService {
                 TimeService.updateNextPeriodInvestTime();
                 log.info('正在保存第三方开奖数据...');
                 //更新全局变量
-                Config.globalVariable.last_Period = savedAwardInfo.period;
-                Config.globalVariable.last_PrizeNumber = savedAwardInfo.openNumber;
+                Config.globalVariable.last_Period = award.period;
+                Config.globalVariable.last_PrizeNumber = award.openNumber;
                 Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
 
-                return LotteryDbService.saveOrUpdateAwardInfo(savedAwardInfo);
+                return LotteryDbService.saveOrUpdateAwardInfo(award);
             });
     }
 }

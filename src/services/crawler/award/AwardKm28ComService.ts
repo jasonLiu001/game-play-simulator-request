@@ -20,7 +20,7 @@ export class AwardKm28ComService implements IAwardCrawler {
         return url;
     }
 
-    getAwardInfo(updateStatus: number = 1): BlueBirdPromise<any> {
+    getAwardInfo(updateStatus: number = 1): BlueBirdPromise<AwardInfo> {
         let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
         let dataUrl = this.getDataUrl(currentPeriod);
         return new BlueBirdPromise((resolve, reject) => {
@@ -55,7 +55,7 @@ export class AwardKm28ComService implements IAwardCrawler {
      * @param body 页面主体内容
      * @param updateStatus 更新状态 1：自动更新 2：手动更新
      */
-    htmlBodyHandler(body: string, updateStatus: number): AwardInfo {
+    private htmlBodyHandler(body: string, updateStatus: number): AwardInfo {
         let awardInfoList: Array<AwardInfo> = this.getAwardInfoList(body, updateStatus);
         return awardInfoList[0];
     }
@@ -66,7 +66,7 @@ export class AwardKm28ComService implements IAwardCrawler {
      * @param htmlBody html页面body体
      * @param updateStatus 更新状态 1：自动更新 2：手动更新
      */
-    getAwardInfoList(htmlBody: string, updateStatus: number): Array<AwardInfo> {
+    private getAwardInfoList(htmlBody: string, updateStatus: number): Array<AwardInfo> {
         let awardInfoList: Array<any> = [];
         let doc: any = cheerio.load(htmlBody);
         let openDateText: string = doc('div.r-box.fl.clearfix>div.padding>span:eq(1)').get(0).html();
@@ -90,16 +90,12 @@ export class AwardKm28ComService implements IAwardCrawler {
 
                 openTime = openDateArr[1] + " " + openTime + ":00";
                 let awardInfo: AwardInfo = {
-                    openNumber: '',
-                    openTime: '',
-                    period: '',
+                    openNumber: period,
+                    openTime: openTime,
+                    period: openNumber,
                     createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
                     updateStatus: updateStatus//自动更新
                 };
-
-                awardInfo.period = period;
-                awardInfo.openTime = openTime;
-                awardInfo.openNumber = openNumber;
 
                 awardInfoList.push(awardInfo);
             }
