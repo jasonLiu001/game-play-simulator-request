@@ -67,7 +67,7 @@ export class AwardKm28ComService implements IAwardCrawler {
     private getAwardInfoList(htmlBody: string, updateStatus: number): Array<AwardInfo> {
         let awardInfoList: Array<any> = [];
         let doc: any = cheerio.load(htmlBody);
-        let openDateText: string = doc('div.r-box.fl.clearfix>div.padding>span:eq(1)').get(0).html();
+        let openDateText: string = doc('body > div:nth-child(6) > div.container.right-ctn.fr > div > div > div > div > span:nth-child(2)').eq(0).text();
         let openDateArr: Array<string> = openDateText.split("：");
 
         let tables: any = doc('table.tac.fl');
@@ -78,9 +78,9 @@ export class AwardKm28ComService implements IAwardCrawler {
                 let columnElement: any = cheerio.load(row);
                 let columns: any = columnElement('tr td');
 
-                let period: string = columns.get(0).html();
-                let openTime: string = columns.get(1).html();
-                let openNumber: string = columns.get(2).html().replace(/ /g, '');
+                let period: string = columns.eq(0).html();
+                let openTime: string = columns.eq(1).html();
+                let openNumber: string = columns.eq(2).html().replace(/ /g, '');
 
                 if (period.length == 2) {
                     period = openDateArr[1].replace(/-/g, '') + "-0" + period;
@@ -94,8 +94,9 @@ export class AwardKm28ComService implements IAwardCrawler {
                     createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
                     updateStatus: updateStatus//自动更新
                 };
-
-                awardInfoList.push(awardInfo);
+                if (awardInfo.openNumber != '') {
+                    awardInfoList.push(awardInfo);
+                }
             }
         }
         return awardInfoList;
