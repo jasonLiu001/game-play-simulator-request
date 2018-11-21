@@ -72,8 +72,6 @@ export class Config {
     public static isInvestTableInitCompleted: boolean = true;
     //当前已经实际投注的期数
     public static currentInvestTotalCount: number = 0;
-    //开奖号更新计时器
-    public static awardTimer: any = null;
     //全局变量 程序运行时可变
     public static globalVariable: any = {
         last_Period: null, //上期期号 程序运行时初始化
