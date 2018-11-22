@@ -1,7 +1,7 @@
 import BlueBirdPromise = require('bluebird');
 import {InvestService} from "./invest/InvestService";
 import {ErrorService} from "./ErrorService";
-import {CONFIG_CONST} from "../config/Config";
+import {Config, CONFIG_CONST} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
@@ -82,5 +82,23 @@ export class AppServices {
             .catch((err) => {
                 ErrorService.appStartErrorHandler(log, err);
             });
+    }
+
+    /**
+     *
+     * 初始化app启动时各项配置
+     */
+    public static initAppStartConfig(): void {
+        Config.isInvestTotalTableInitCompleted = true;
+        Config.isInvestTableInitCompleted = true;
+        Config.currentInvestTotalCount = 0;
+        Config.globalVariable.last_Period = null;
+        Config.globalVariable.last_PrizeNumber = null;
+        Config.globalVariable.nextPeriodInvestTime = null;
+        Config.globalVariable.current_Peroid = null;
+        Config.investPlan.one.investNumbers = '';
+        Config.investPlan.two.investNumbers = '';
+        Config.investPlan.three.investNumbers = '';
+        Config.investPlan.four.investNumbers = '';
     }
 }
