@@ -64,3 +64,7 @@ node /root/github/game-play-simulator-request/node_modules/jasmine/bin/jasmine.j
 ## ts编译生成js的最终路径设置
 - 需要在`tsconfig.json`中的`outDir`属性指定输出路径
 - 因为`typescript`编译器不会自动拷贝非`ts`文件到输出路径，所以需要借助第三方工具，本项目中使用的是`grunt-ts`中的`copy`功能，所以在`Gruntfile.js`中的`copy`节点中的`dest`属性注意要和`tsconfig.json`中的`outDir`目录保持一致，才能正确的拷贝文件到对应的目录下
+
+## web站点开发时如何解决调用tomcat服务接口，提示跨域问题？
+- 默认nginx端口为80，自己电脑上可以有iis已经占有了80，修改成其他端口即可，修改server节点的listen对应的端口值；
+- 本地开发需要在本地安装nginx，和服务器上的nginx配置保持一致即可（端口可能不太一样，这个要注意）；
