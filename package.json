@@ -16,13 +16,12 @@
     "sequelize": "^4.37.7"
   },
   "scripts": {
-    "ts-test": "ts-node %NODE_DEBUG_OPTION% node_modules/jasmine/bin/jasmine ./spec/Server.Spec.ts",
+    "grunt": "grunt",
     "tsc": "tsc",
-    "dev": "ts-node %NODE_DEBUG_OPTION% ./src/Server.ts",
-    "test": "jasmine",
+    "jasmine": "jasmine",
+    "dev": "ts-node ./src/Server.ts",
     "test:login": "jasmine ./spec/services/platform/request/RequestLoginService.Spec.js",
     "send:notification": "jasmine ./spec/services/notification/NotificationService.Spec.js",
-    "grunt": "grunt",
     "linux:start": "npm run win:start",
     "win:start": "npm run grunt && cd dist && node ./Server.js"
   },
