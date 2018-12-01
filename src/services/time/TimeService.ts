@@ -246,6 +246,9 @@ export class TimeService {
      * 是否到达设置中的结束投注时间
      */
     public static isReachInvestEndTime(): boolean {
+        //0 不限制投注时间
+        if (AppSettings.investEndTime == '0') return false;
+
         let currentTime = new Date();
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11

@@ -355,7 +355,7 @@ export class LotteryDbService {
                                     key: 'investEndTime',
                                     value: '21:59:00',
                                     orderId: '4',
-                                    desc: '自动终止投注截止时间如21:59:00，优先级高于最大利润'
+                                    desc: '自动终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
                                 },
                                 {key: 'touZhuBeiShu', value: '1', orderId: '5', desc: '投注倍数'},
                                 {key: 'originAccountBalance', value: '5000', orderId: '6', desc: '账户初始余额'},
