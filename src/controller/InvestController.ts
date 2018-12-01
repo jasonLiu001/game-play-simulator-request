@@ -38,6 +38,7 @@ export class InvestController {
 
         LotteryDbService.getInvestByTableName(investTableName, period, planType)
             .then((investInfo: InvestInfo) => {
+                if (investInfo.status == 1) return Promise.reject(investInfo.period + "期已结束，投注失败");
                 //根据参数更改投注信息
                 investInfo.awardMode = awardMode;
                 investInfo.touZhuBeiShu = touZhuBeiShu;
