@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {InvestBase} from "../services/invest/InvestBase";
 import {InvestInfo} from "../models/db/InvestInfo";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {PlatformService} from "../services/platform/PlatformService";

@@ -21,11 +21,13 @@ export class AwardController {
             .then((award: AwardInfo) => {
                 let successMsg: string = "获取最新奖号信息成功";
                 jsonRes.success(successMsg, award);
+                log.info('%s 当前时间：%s', successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "获取奖号失败";
                 jsonRes.fail(errMsg);
+                log.error('%s 当前时间：%s', errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
                 return res.status(200).send(jsonRes);
             });
     }
@@ -43,11 +45,13 @@ export class AwardController {
             .then(() => {
                 let successMsg: string = "奖号更新成功";
                 jsonRes.success(successMsg);
+                log.info('%s 当前时间：%s', successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "奖号更新失败";
                 jsonRes.fail(errMsg);
+                log.error('%s 当前时间：%s', errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
                 return res.status(200).send(jsonRes);
             });
     }
