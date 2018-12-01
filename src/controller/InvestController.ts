@@ -8,8 +8,7 @@ import {PlatformService} from "../services/platform/PlatformService";
 import {DefaultRequest} from "../services/AppServices";
 import {ResponseJson} from "../models/ResponseJson";
 
-let investBase = new InvestBase(),
-    log4js = require('log4js'),
+let log4js = require('log4js'),
     log = log4js.getLogger('InvestController');
 
 class InvestControllerConfig {

@@ -28,6 +28,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
 app.use(express.static(__dirname + '/static'));
+//添加log4js到express
+app.use(log4js.connectLogger(log, {level: log4js.levels.DEBUG}));
 
 //register all routes
 app.use('/app', appRoutes);
