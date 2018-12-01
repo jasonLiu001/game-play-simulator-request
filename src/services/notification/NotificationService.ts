@@ -3,7 +3,7 @@ import {INotificationService} from "./INotificationService";
 import {LotteryDbService} from "../dbservices/ORMService";
 
 import moment  = require('moment');
-import {CONFIG_CONST} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {EmailSender} from "../email/EmailSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
@@ -27,6 +27,8 @@ class NotificationConfig {
     public static todayFirstRealInvestPeriod: string = null;
     //数据库中 达到利润预警值的投注期号 用于不重复发送通知邮件
     public static todayMaxOrMinProfitInvestPeriod: string = null;
+    //数据库中 当前投注的记录期号 用于不重复发送通知邮件
+    public static periodUsedByInvestNotification: string = null;
 }
 
 /**
@@ -115,8 +117,44 @@ export class NotificationService implements INotificationService {
                                 }
                             });
                     }, 10000);
+
+                    //上期投注提醒
+                    setTimeout(() => {
+                        this.startInvestNotification()
+                            .catch((err) => {
+                                if (err) {
+                                    log.error("上期投注预警邮件通知异常");
+                                    log.error(err);
+                                }
+                            });
+                    }, 10000);
                 });
         });
+    }
+
+    /**
+     *
+     * 投注时发送通知
+     */
+    public async startInvestNotification(): BlueBirdPromise<any> {
+        //当天
+        let today: string = moment().format("YYYY-MM-DD");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
+
+        if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
+
+        //已开奖投注 直接返回
+        if (historyData[0].status == 1) return BlueBirdPromise.resolve(false);
+
+        //不重复发送邮件
+        if (NotificationConfig.periodUsedByInvestNotification != historyData[0].period) {
+            NotificationConfig.periodUsedByInvestNotification = historyData[0].period;
+            let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
+            let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
+            return await EmailSender.sendEmail(emailTitle, emailContent);
+        }
+
+        return BlueBirdPromise.resolve(false);
     }
 
     /**
