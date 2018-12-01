@@ -30,15 +30,16 @@ export class InvestController {
         let investTableName: string = req.body.investTableName;//投注的表名
         let investNumbers: string = req.body.investNumbers;//投注号码
         let jsonRes: ResponseJson = new ResponseJson();
-        if (InvestControllerConfig.investPeriod == period) {
-            jsonRes.fail(period + "期已投注，勿重复投注");
-            return res.status(200).send(jsonRes);
-        }
 
         //当前能够投注的期号
         let currentPeriod: string = TimeService.getCurrentPeriodNumber(new Date());
         if (period != currentPeriod) {
             jsonRes.fail(period + "期已停止投注，投注失败");
+            return res.status(200).send(jsonRes);
+        }
+
+        if (InvestControllerConfig.investPeriod == period) {
+            jsonRes.fail(period + "期已投注，勿重复投注");
             return res.status(200).send(jsonRes);
         }
 
