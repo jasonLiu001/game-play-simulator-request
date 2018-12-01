@@ -23,9 +23,9 @@ export class InvestController {
      */
     public manualInvest(req: Request, res: Response): any {
         let period: string = req.body.period;
-        let planType: number = req.body.planType;
-        let awardMode: number = req.body.awardMode;//投注模式
-        let touZhuBeiShu: number = req.body.touZhuBeiShu;//投注倍数
+        let planType: number = Number(req.body.planType);
+        let awardMode: number = Number(req.body.awardMode);//投注模式
+        let touZhuBeiShu: number = Number(req.body.touZhuBeiShu);//投注倍数
         let investTableName: string = req.body.investTableName;//投注的表名
         let investNumbers: string = req.body.investNumbers;//投注号码
 
