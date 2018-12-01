@@ -35,20 +35,20 @@ export class InvestController {
         let currentPeriod: string = TimeService.getCurrentPeriodNumber(new Date());
         if (period != currentPeriod) {
             jsonRes.fail(period + "期已停止投注，投注失败");
-            log.error("手动投注失败，%s期已停止投注，当前时间：%s", period, moment().format('YYYY-MM-DD HH:mm:ss'));
+            log.error("手动投注失败，%s期已停止投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
             return res.status(200).send(jsonRes);
         }
 
         if (InvestControllerConfig.investPeriod == period) {
             jsonRes.fail(period + "期已投注，勿重复投注");
-            log.error("手动投注失败，%s期重复投注，当前时间：%s", period, moment().format('YYYY-MM-DD HH:mm:ss'));
+            log.error("手动投注失败，%s期重复投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
             return res.status(200).send(jsonRes);
         }
 
         LotteryDbService.getInvestByTableName(investTableName, period, planType)
             .then((investInfo: InvestInfo) => {
                 if (investInfo.status == 1) {
-                    log.error("手动投注失败，%s期已完成，不允许投注，当前时间：%s", period, moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
                     return Promise.reject(investInfo.period + "期已结束，投注失败");
                 }
                 //根据参数更改投注信息
