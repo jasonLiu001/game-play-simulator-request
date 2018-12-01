@@ -16,16 +16,15 @@ export class AwardController {
      * 获取奖号列表
      */
     public getLatestAwardInfo(req: Request, res: Response) {
+        let jsonRes: ResponseJson = new ResponseJson();
         awardKm28ComService.getAwardInfo()
             .then((award: AwardInfo) => {
                 let successMsg: string = "获取最新奖号信息成功";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.success(successMsg, award);
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "获取奖号失败";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.fail(errMsg);
                 return res.status(200).send(jsonRes);
             });
@@ -36,19 +35,18 @@ export class AwardController {
      * 更新奖号
      */
     public updateAward(req: Request, res: Response) {
+        let jsonRes: ResponseJson = new ResponseJson();
         awardKm28ComService.getAwardInfo()
             .then((award: AwardInfo) => {
                 return AwardService.saveOrUpdateAwardInfo(award);
             })
             .then(() => {
                 let successMsg: string = "奖号更新成功";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.success(successMsg);
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "奖号更新失败";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.fail(errMsg);
                 return res.status(200).send(jsonRes);
             });

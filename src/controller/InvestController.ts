@@ -7,6 +7,7 @@ import {LotteryDbService} from "../services/dbservices/ORMService";
 import {PlatformService} from "../services/platform/PlatformService";
 import {DefaultRequest} from "../services/AppServices";
 import {ResponseJson} from "../models/ResponseJson";
+import {TimeService} from "../services/time/TimeService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController');
@@ -28,10 +29,16 @@ export class InvestController {
         let touZhuBeiShu: number = Number(req.body.touZhuBeiShu);//投注倍数
         let investTableName: string = req.body.investTableName;//投注的表名
         let investNumbers: string = req.body.investNumbers;//投注号码
-
+        let jsonRes: ResponseJson = new ResponseJson();
         if (InvestControllerConfig.investPeriod == period) {
-            let jsonRes: ResponseJson = new ResponseJson();
             jsonRes.fail(period + "期已投注，勿重复投注");
+            return res.status(200).send(jsonRes);
+        }
+
+        //当前能够投注的期号
+        let currentPeriod: string = TimeService.getCurrentPeriodNumber(new Date());
+        if (period != currentPeriod) {
+            jsonRes.fail(period + "期已停止投注，投注失败");
             return res.status(200).send(jsonRes);
         }
 
@@ -46,7 +53,6 @@ export class InvestController {
             })
             .then(() => {
                 let successMsg: string = period + "期，一键投注成功";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.success(successMsg);
                 //投注成功 更新已投注期号 防止重复投注
                 InvestControllerConfig.investPeriod = period;
@@ -54,7 +60,6 @@ export class InvestController {
             })
             .catch((e) => {
                 let errMsg: string = period + "期，一键投注失败";
-                let jsonRes: ResponseJson = new ResponseJson();
                 jsonRes.fail(errMsg, e.message);
                 return res.status(200).send(jsonRes);
             });
