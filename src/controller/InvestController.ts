@@ -56,6 +56,7 @@ export class InvestController {
                 investInfo.awardMode = awardMode;
                 investInfo.touZhuBeiShu = touZhuBeiShu;
                 investInfo.investNumbers = investNumbers;
+                log.info("根据参数，调整倍数等信息，awardMode=%s,touZhuBeiShu=%s", investInfo.awardMode, investInfo.touZhuBeiShu);
                 return PlatformService.loginAndInvest(DefaultRequest.request, investInfo);
             })
             .then(() => {
