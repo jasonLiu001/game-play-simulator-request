@@ -28,6 +28,7 @@ export class InvestController {
         let awardMode: number = req.body.awardMode;//投注模式
         let touZhuBeiShu: number = req.body.touZhuBeiShu;//投注倍数
         let investTableName: string = req.body.investTableName;//投注的表名
+        let investNumbers: string = req.body.investNumbers;//投注号码
 
         if (InvestControllerConfig.investPeriod == period) {
             let jsonRes: ResponseJson = new ResponseJson();
@@ -40,6 +41,7 @@ export class InvestController {
                 //根据参数更改投注信息
                 investInfo.awardMode = awardMode;
                 investInfo.touZhuBeiShu = touZhuBeiShu;
+                investInfo.investNumbers = investNumbers;
                 return PlatformService.loginAndInvest(DefaultRequest.request, investInfo);
             })
             .then(() => {
