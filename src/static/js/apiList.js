@@ -1,5 +1,5 @@
 var servrContextPath = "/service";
 var apiList = {
-    findInvestTotalInfoList: servrContextPath + "/lottery/findInvestTotalInfoList",
+    findAllInvestTotalInfoList: servrContextPath + "/lottery/findAllInvestTotalInfoList",
     getInvestTotalInfoByPeriod: servrContextPath + "/lottery/getInvestTotalInfoByPeriod"
 };
