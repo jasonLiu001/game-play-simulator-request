@@ -68,14 +68,6 @@ export class InvestService extends InvestBase {
                     });
             })
             .then(() => {
-                if (AppSettings.investNotification) {//发送投注邮件通知
-                    let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-                    let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                    return EmailSender.sendEmail(emailTitle, emailContent);
-                }
-                return BlueBirdPromise.resolve(true);
-            })
-            .then(() => {
                 //当前期号
                 let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);

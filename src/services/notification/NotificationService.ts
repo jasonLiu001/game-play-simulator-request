@@ -94,8 +94,8 @@ export class NotificationService implements INotificationService {
                             });
                     }, 10000);
 
+                    //连错1期提醒
                     if (AppSettings.lastPeriodErrorInvestNotification) {
-                        //连错1期提醒
                         setTimeout(() => {
                             this.sendContinueWinOrLoseWarnEmail(1, false)
                                 .catch((err) => {
@@ -119,15 +119,17 @@ export class NotificationService implements INotificationService {
                     }, 10000);
 
                     //上期投注提醒
-                    setTimeout(() => {
-                        this.startInvestNotification()
-                            .catch((err) => {
-                                if (err) {
-                                    log.error("上期投注预警邮件通知异常");
-                                    log.error(err);
-                                }
-                            });
-                    }, 10000);
+                    if (AppSettings.investNotification) {
+                        setTimeout(() => {
+                            this.startInvestNotification()
+                                .catch((err) => {
+                                    if (err) {
+                                        log.error("上期投注预警邮件通知异常");
+                                        log.error(err);
+                                    }
+                                });
+                        }, 10000);
+                    }
                 });
         });
     }
