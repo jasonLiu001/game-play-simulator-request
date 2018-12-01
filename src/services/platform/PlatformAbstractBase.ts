@@ -140,7 +140,7 @@ export interface IPlatformLotteryService {
      *
      * 产生平台投注模式 元，角，分，厘
      */
-    getInvestMode(): any;
+    getInvestMode(awardMode: number): any;
 
     /**
      *
@@ -148,11 +148,12 @@ export interface IPlatformLotteryService {
      * @param request
      * @param token 没有则传null值
      * @param currentPeriod  投注期号
+     * @param awardMode 元角分模式
      * @param touZhuHaoMa  投注号码  逗号分隔  1,2,3,4
      * @param touZhuBeiShu 投注倍数
      * @param zhuShu 投注号码一共多少注
      */
-    investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any>;
+    investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): Promise<any>;
 
     /**
      *

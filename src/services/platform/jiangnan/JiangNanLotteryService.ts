@@ -16,9 +16,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 产生平台投注模式 元，角，分，厘
      */
-    public getInvestMode(): any {
+    public getInvestMode(awardMode: number): any {
         let mode = String(EnumAwardMode.feng);//默认为分模式
-        switch (CONFIG_CONST.awardMode) {
+        switch (awardMode) {
             case EnumAwardMode.yuan:
                 mode = String(EnumAwardMode.yuan);
                 break;
@@ -103,10 +103,10 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * {4} danZhuJinEDanWei  单注金额单位
      * {5} zhuShu 投注号码一共多少注
      */
-    private getInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
+    private getInvestTokenString(token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
-        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
-        let mode: string = this.getInvestMode();
+        log.info('当前投注单位：%s', awardMode);
+        let mode: string = this.getInvestMode(awardMode);
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu));
         return tokenStr;
     }
@@ -122,10 +122,10 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * {5} zhuShu 投注号码一共多少注
      * {6} currentNextPeriod 追号下一期
      */
-    private getMultiInvestTokenString(token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
+    private getMultiInvestTokenString(token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
         let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
-        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
-        let mode: string = this.getInvestMode();
+        log.info('当前投注单位：%s', awardMode);
+        let mode: string = this.getInvestMode(awardMode);
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
         return tokenStr;
     }
@@ -135,8 +135,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行追号投注操作
      */
-    public multiInvestMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
-        let investStr = this.getMultiInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
+    public multiInvestMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
+        let investStr = this.getMultiInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
@@ -147,8 +147,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
-        let investStr = this.getInvestTokenString(token, currentPeriod, touZhuHaoMa, touZhuBeiShu, zhuShu);
+    public investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
+        let investStr = this.getInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         }, {
@@ -184,7 +184,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     public invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.investPrepare(request)
             .then((token) => {
-                return this.investMock(request, token, investInfo.period, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
+                return this.investMock(request, token, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
             })
             .then((result) => {
                 if (result) {
@@ -228,7 +228,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
-                return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
+                return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
             });
     }
 }

@@ -13,10 +13,10 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 产生V博平台投注模式 元，角，分，厘
      */
-    public getInvestMode(): any {
+    public getInvestMode(awardMode: number): any {
         let mode = 'FEN';//默认为分
-        log.info('当前投注单位：%s', CONFIG_CONST.awardMode);
-        switch (CONFIG_CONST.awardMode) {
+        log.info('当前投注单位：%s', awardMode);
+        switch (awardMode) {
             case EnumAwardMode.yuan:
                 mode = 'YUAN';
                 break;
@@ -38,14 +38,14 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 执行后三投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
+    public investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
         let json = {
             betWay: 'NORMAL',
             datas: [
                 {
                     betRebatePoint: 0,
                     content: touZhuHaoMa,
-                    mode: this.getInvestMode(),
+                    mode: this.getInvestMode(awardMode),
                     multiple: Number(touZhuBeiShu),
                     playKindId: 29,
                     playTypeId: 31,
@@ -85,7 +85,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
     public invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/')
             .then((investInfo: InvestInfo) => {
-                return this.investMock(request, null, investInfo.period, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
+                return this.investMock(request, null, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
