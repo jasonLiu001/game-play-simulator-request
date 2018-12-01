@@ -22,7 +22,7 @@ export class InvestController {
      *
      * 根据计划执行一键投注
      */
-    public execute(req: Request, res: Response): any {
+    public manualInvest(req: Request, res: Response): any {
         let period: string = req.body.period;
         let planType: number = req.body.planType;
         let awardMode: number = req.body.awardMode;//投注模式
