@@ -976,7 +976,7 @@ export class LotteryDbService {
      *
      * 保存或更新设置
      */
-    public static saveOrUpdateSettingsInfo(settingsInfo: SettingsInfo): Promise<SettingsInfo> {
+    public static saveOrUpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
         return Setting.findOne(
             {
                 where: {key: settingsInfo.key},
@@ -1003,35 +1003,42 @@ export class LotteryDbService {
             });
     }
 
+    //endregion
+
+    //region 公共方法
     /**
      *
-     * 保存或更新设置
+     * 根据表名获取投注信息
+     * @param {string} tableName 表名
+     * @param {string} period 期号
+     * @param {number} planType 计划类型
      */
-    public static saveOrUpdate_UpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
-        return Setting.findOne(
-            {
-                where: {key: settingsInfo.key},
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return Setting.update(settingsInfo,
-                        {
-                            fields: ['value'],
-                            where: {
-                                key: settingsInfo.key
-                            }
-                        })
-                        .then(() => {
-                            return settingsInfo;
-                        });
-                } else {
-                    return Setting.create(settingsInfo)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
+    public static getInvestByTableName(tableName: string, period: string, planType: number): Promise<InvestInfo> {
+        if (tableName == CONST_INVEST_TABLE.tableName) {
+            return LotteryDbService.getInvestInfo(period, planType);
+        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+            return LotteryDbService.getInvestTotalInfo(period, planType);
+        } else {
+            return Promise.resolve(null);
+        }
+    }
+
+    /**
+     *
+     *  根据表名获取投注历史信息
+     * @param {string} tableName 表名
+     * @param {number} planType 计划类型
+     * @param {number} historyCount 查询记录格式
+     * @param {string} afterTime
+     */
+    public static getInvestHistoryByTableName(tableName: string, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+        if (tableName == CONST_INVEST_TABLE.tableName) {
+            return LotteryDbService.getInvestInfoHistory(planType, historyCount, afterTime);
+        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+            return LotteryDbService.getInvestTotalInfoHistory(planType, historyCount, afterTime);
+        } else {
+            return Promise.resolve([]);
+        }
     }
 
     //endregion

@@ -105,6 +105,7 @@ export class PlatformAbstractBase {
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + logoutUrl)
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
+                Promise.reject(e);
             });
     }
 }

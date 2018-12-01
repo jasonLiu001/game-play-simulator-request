@@ -31,7 +31,7 @@ export class ExtraInvestService {
                         .then(() => {
                             //更新停止投注的最大盈利值
                             CONFIG_CONST.maxAccountBalance = investInfo.currentAccountBalance + 1;
-                            return LotteryDbService.saveOrUpdate_UpdateSettingsInfo({
+                            return LotteryDbService.saveOrUpdateSettingsInfo({
                                 key: 'maxAccountBalance',
                                 value: String(CONFIG_CONST.maxAccountBalance)
                             })
