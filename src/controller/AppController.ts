@@ -20,11 +20,13 @@ export class AppController {
             //启动通知程序
             notificationService.start();
             let successJson: ResponseJson = new ResponseJson();
-            successJson.success('Success! App started.');
+            let msg: string = 'Success! App started.';
+            successJson.success(msg, msg);
             res.status(200).send(successJson);
         } else {
             let jsonRes: ResponseJson = new ResponseJson();
-            jsonRes.fail('Failed! App had already started.');
+            let errMsg: string = 'Failed! App had already started.';
+            jsonRes.fail(errMsg, errMsg);
             res.status(200).send(jsonRes);
         }
 
