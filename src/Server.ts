@@ -10,9 +10,14 @@ let app: express.Application = express();
 const PORT = 6080;
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('Server'),
+    path = require('path');
+log4js.configure(path.resolve(__dirname, '.', 'config/log4js.json'));
+
+//日志文件
+let log = log4js.getLogger('Server'),
     notificationService = new NotificationService();
 
+//api 路由配置
 let appRoutes = require("./routes/AppRoutes"),
     awardRoutes = require("./routes/AwardRoutes"),
     investRoutes = require("./routes/InvestRoutes");

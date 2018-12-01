@@ -5,16 +5,14 @@ import {Config, CONFIG_CONST} from "../config/Config";
 import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
-import {SettingsInfo, update_isRealInvest_to_real} from "../models/db/SettingsInfo";
+import {SettingsInfo} from "../models/db/SettingsInfo";
 import {SettingService} from "./settings/SettingService";
 import {AppSettings} from "../config/AppSettings";
 
-let Request = require('request'), path = require('path');
+let Request = require('request');
 
-let log4js = require('log4js');
-log4js.configure(path.resolve(__dirname, '..', 'config/log4js.json'));
-
-let log = log4js.getLogger('AppServices'),
+let log4js = require('log4js'),
+    log = log4js.getLogger('AppServices'),
     investService = new InvestService(),
     cookie = Request.jar(),
     request = Request.defaults(
