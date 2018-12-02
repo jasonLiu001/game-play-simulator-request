@@ -4,8 +4,6 @@ import BlueBirdPromise = require('bluebird');
 import {JiangNanLoginService} from "./jiangnan/JiangNanLoginService";
 import {JiangNanLotteryService} from "./jiangnan/JiangNanLotteryService";
 import moment  = require('moment');
-import {AppSettings} from "../../config/AppSettings";
-import {EmailSender} from "../email/EmailSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PlatformService'),
@@ -63,7 +61,7 @@ export class PlatformService {
                 log.info('登录结果...');
                 log.info(loginResult);
                 log.info('正在执行撤消 %s期投注...', cancelPeriod);
-                jiangNanLotteryService.cancelInvest(request, cancelPeriod);
+                return jiangNanLotteryService.cancelInvest(request, cancelPeriod);
             });
     }
 }
