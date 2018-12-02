@@ -162,4 +162,12 @@ export interface IPlatformLotteryService {
      * @param investInfo 投注记录实体
      */
     invest(request: any, investInfo: InvestInfo): Promise<any>;
+
+    /**
+     *
+     * 撤单入口方案
+     * @param request
+     * @param cacelPeriod  撤单的期号
+     */
+    cancelInvest(request: any, cacelPeriod: string): Promise<any>;
 }

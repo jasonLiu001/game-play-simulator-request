@@ -74,4 +74,28 @@ export class InvestController {
                 return res.status(200).send(jsonRes);
             });
     }
+
+    /**
+     *
+     * 一键撤销投注
+     */
+    public manualCancelInvest(req: Request, res: Response): any {
+        let period: string = req.body.period;
+        let jsonRes: ResponseJson = new ResponseJson();
+        log.info('手动一键撤单请求已收到，参数:period=%s', period);
+
+        PlatformService.cancelInvest(DefaultRequest.request, period)
+            .then((msg) => {
+                let successMsg: string = period + "期，一键撤单成功";
+                jsonRes.success(successMsg + " " + msg);
+                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = period + "期，一键撤单失败";
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                return res.status(200).send(jsonRes);
+            });
+    }
 }

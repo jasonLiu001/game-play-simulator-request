@@ -91,4 +91,14 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
                 ErrorService.appInvestErrorHandler(log, e);
             });
     }
+
+    /**
+     *
+     * 撤单
+     * @param request
+     * @param cancelPeriod 撤单期号
+     */
+    cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
+        return undefined;
+    }
 }

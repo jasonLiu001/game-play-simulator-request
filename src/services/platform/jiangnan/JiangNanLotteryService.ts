@@ -231,4 +231,116 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
             });
     }
+
+    /**
+     *
+     * 这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
+     * 获取投注历史 方法返回数据格式: {betRecordList:[],STATE:[],token_cd:''}
+     */
+    private getInvestRecordHistory(request: any): BlueBirdPromise<any> {
+        return new BlueBirdPromise((resolve, reject) => {
+            request.post(
+                {
+                    url: CONFIG_CONST.siteUrl + '/betRecord/getNewestBet.mvc',
+                    form: {
+                        gameType: 1
+                    },
+                    headers: {
+                        'Referer': CONFIG_CONST.siteUrl + '/pchome'
+                    }
+                }, (error, response, body) => {
+                    if (error) {
+                        log.error(error);
+                        reject(error);
+                    }
+
+                    try {
+                        let json: any = JSON.parse(body);
+                        //let betRecordList: Array<any> = json.data.betRecordList;
+                        //let token_cd: string = json.data.token_cd;
+                        resolve(json.data);
+                    } catch (e) {
+                        if (e) {
+                            log.error(e);
+                            reject(e);
+                        }
+                    }
+
+
+                }
+            );
+        });
+    }
+
+    /**
+     *
+     * 这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
+     * 撤单 方法返回数据格式：{code:'',data:'',msg:''}
+     */
+    private deleteInvestRecord(request: any, unique: string, token_cd: string): BlueBirdPromise<any> {
+        return new BlueBirdPromise((resolve, reject) => {
+            request.post(
+                {
+                    url: CONFIG_CONST.siteUrl + '/betRecord/delete.mvc',
+                    form: {
+                        unique: unique,
+                        token_cd: token_cd
+                    },
+                    headers: {
+                        'Referer': CONFIG_CONST.siteUrl + '/pchome'
+                    }
+                }, (error, response, body) => {
+                    if (error) {
+                        log.error(error);
+                        reject(error);
+                    }
+
+                    try {
+                        let json: any = JSON.parse(body);
+                        resolve(json);
+                    } catch (e) {
+                        if (e) {
+                            log.error(e);
+                            reject(e);
+                        }
+                    }
+
+
+                }
+            );
+        });
+    }
+
+    /**
+     *
+     * 撤单 首先获取投注历史，然后撤单 这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
+     * @param request
+     * @param cancelPeriod 撤单期号
+     */
+    cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
+        return this.getInvestRecordHistory(request)
+            .then((history: any) => {
+                let betRecordList: Array<any> = history.betRecordList;
+                let token_cd: string = history.token_cd;
+                //需要撤单的集合
+                let needDeletedOrderList: Array<any> = [];
+                for (let order of betRecordList) {
+                    if (order.state == 1 && order.issueno == cancelPeriod) {
+                        needDeletedOrderList.push(order);
+                    }
+                }
+
+                //处理批量撤单逻辑
+                let promiseArray: Array<BlueBirdPromise<any>> = [];
+                for (let o of needDeletedOrderList) {
+                    promiseArray.push(this.deleteInvestRecord(request, o.uniqueness, token_cd));
+                }
+                return BlueBirdPromise.all(promiseArray);
+            })
+            .then((array: Array<any>) => {
+                if (!array || array.length == 0) return BlueBirdPromise.reject('撤单操作失败');
+
+                return BlueBirdPromise.resolve(array[0].msg);
+            });
+    }
 }

@@ -49,4 +49,14 @@ export class PlatformService {
                     });
             });
     }
+
+    /**
+     *
+     * 撤单
+     * @param request
+     * @param cancelPeriod 撤单期号
+     */
+    public static async cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
+        return jiangNanLotteryService.cancelInvest(request, cancelPeriod);
+    }
 }
