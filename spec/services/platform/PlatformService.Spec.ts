@@ -1,6 +1,6 @@
 import "jasmine";
-import {DefaultRequest} from "../src/services/AppServices";
-import {PlatformService} from "../src/services/platform/PlatformService";
+import {PlatformService} from "../../../src/services/platform/PlatformService";
+import {DefaultRequest} from "../../../src/services/AppServices";
 
 describe('cancelInvest test', () => {
     beforeEach((done) => {
