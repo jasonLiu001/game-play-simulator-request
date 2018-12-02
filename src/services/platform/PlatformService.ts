@@ -59,8 +59,9 @@ export class PlatformService {
     public static async cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
         log.info('执行一键撤单，开始登录...');
         return jiangNanLoginService.login(request)
-            .then(() => {
-                log.info('登录成功...');
+            .then((loginResult) => {
+                log.info('登录结果...');
+                log.info(loginResult);
                 log.info('正在执行撤消 %s期投注...', cancelPeriod);
                 jiangNanLotteryService.cancelInvest(request, cancelPeriod);
             });
