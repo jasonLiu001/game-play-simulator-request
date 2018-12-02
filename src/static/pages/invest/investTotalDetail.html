@@ -48,10 +48,6 @@
             <span>数量：</span>
             <span>{{investTotalItem.investNumberCount}}</span>
         </div>
-        <div class="d-flex flex-row justify-content-between border border-top-0 border-left-0 border-right-0">
-            <span>购买号码：</span>
-            <textarea class="form-control" rows="10">{{investTotalItem.investNumbers}}</textarea>
-        </div>
         <alert-component :is-show="isShowAlert" :message="alertMessage"></alert-component>
         <input class="btn mt-1 mb-1 btn-outline-primary btn-block" @click="copyInvestNumbers(investTotalItem,$event)"
                type="button" value="复制正向号码">
