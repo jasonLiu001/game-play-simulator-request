@@ -7,4 +7,7 @@ let router: express.Router = express.Router(),
 //登录并执行投注
 router.post('/manualInvest', investController.manualInvest);
 
+//撤单
+router.post('/manualCancelInvest', investController.manualCancelInvest);
+
 module.exports = router;
