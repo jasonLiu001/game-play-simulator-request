@@ -21,13 +21,13 @@ export class AppController {
             //启动通知程序
             notificationService.start();
             let jsonRes: ResponseJson = new ResponseJson();
-            let msg: string = 'Success! App started.';
+            let msg: string = 'Use isUseLastAccountBalance? Success! App started.';
             jsonRes.success(msg, msg);
             log.info('%s 当前时间：%s', msg, moment().format('YYYY-MM-DD HH:mm:ss'));
             res.status(200).send(jsonRes);
         } else {
             let jsonRes: ResponseJson = new ResponseJson();
-            let errMsg: string = 'Failed! App had already started.';
+            let errMsg: string = 'Use isUseLastAccountBalance? Failed! App had already started.';
             jsonRes.fail(errMsg, errMsg);
             log.info('%s 当前时间：%s', errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
             res.status(200).send(jsonRes);
