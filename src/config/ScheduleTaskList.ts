@@ -20,7 +20,7 @@ export class ScheduleTaskList {
     };
     //预警通知计划任务
     public static notificationTaskEntity: CronScheduleModel = {
-        cronTimeStr: '*/2 * * * *',//每2分钟执行一次
+        cronTimeStr: '*/1 * * * *',//每1分钟执行一次
         cronSchedule: null//cron对象
     };
 

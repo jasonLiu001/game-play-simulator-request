@@ -60,7 +60,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 1000);
+                    }, 500);
 
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     //连错4期提醒
@@ -72,7 +72,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
                     //连错3期提醒
                     setTimeout(() => {
                         this.sendContinueWinOrLoseWarnEmail(3, false)
@@ -82,7 +82,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
                     //连错2期提醒
                     setTimeout(() => {
                         this.sendContinueWinOrLoseWarnEmail(2, false)
@@ -92,7 +92,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
 
                     //连错1期提醒
                     if (AppSettings.lastPeriodErrorInvestNotification) {
@@ -104,7 +104,7 @@ export class NotificationService implements INotificationService {
                                         log.error(err);
                                     }
                                 });
-                        }, 10000);
+                        }, 5000);
                     }
 
                     //最大最小利润预警
@@ -116,7 +116,7 @@ export class NotificationService implements INotificationService {
                                     log.error(err);
                                 }
                             });
-                    }, 10000);
+                    }, 5000);
 
                     //上期投注提醒
                     if (AppSettings.investNotification) {
@@ -128,7 +128,7 @@ export class NotificationService implements INotificationService {
                                         log.error(err);
                                     }
                                 });
-                        }, 10000);
+                        }, 5000);
                     }
                 });
         });
