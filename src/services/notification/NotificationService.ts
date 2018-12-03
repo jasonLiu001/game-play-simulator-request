@@ -153,6 +153,7 @@ export class NotificationService implements INotificationService {
             NotificationConfig.periodUsedByInvestNotification = historyData[0].period;
             let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
             let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
+            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
             return await EmailSender.sendEmail(emailTitle, emailContent);
         }
 
@@ -180,9 +181,11 @@ export class NotificationService implements INotificationService {
             NotificationConfig.todayMaxOrMinProfitInvestPeriod = historyData[0].period;
             if (currentAccountBalance <= AppSettings.minProfitNotification) {
                 let lowerTitle = "最低预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最低利润值点";
+                log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), lowerTitle);
                 return await EmailSender.sendEmail(lowerTitle, "已达最低预警利润值：" + AppSettings.minProfitNotification);
             } else if (currentAccountBalance >= AppSettings.maxProfitNotification) {
                 let higherTitle = "最高预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最高利润值点";
+                log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), higherTitle);
                 return await EmailSender.sendEmail(higherTitle, "已达最高预警利润值：" + AppSettings.maxProfitNotification);
             }
         }
@@ -202,8 +205,10 @@ export class NotificationService implements INotificationService {
         let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 亏损状态提醒';//通知邮件标题
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
+            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
             return await EmailSender.sendEmail(emailTitle, emailContent);
         } else if (yesterdayAccountBalance.minAccountBalance < parseFloat((CONFIG_CONST.originAccountBalance / 5).toFixed(2))) {//最小账户余额小于初始账号的1/5 亏损
+            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
             return await EmailSender.sendEmail(emailTitle, emailContent);
         }
         return BlueBirdPromise.resolve(true);
@@ -243,7 +248,9 @@ export class NotificationService implements INotificationService {
         if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && errorTotalTimes == firstErrorCount) {
             //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
             NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
-            return await EmailSender.sendEmail("当天" + today + "起始" + firstErrorCount + "条投注记录全部错误", today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买");
+            let subject: string = "当天" + today + "起始" + firstErrorCount + "条投注记录全部错误";
+            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), subject);
+            return await EmailSender.sendEmail(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买");
         }
 
         return BlueBirdPromise.resolve(true);
@@ -319,6 +326,7 @@ export class NotificationService implements INotificationService {
     private async sendWinOrLoseEmail(planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
+        log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
         return await EmailSender.sendEmail(emailTitle, emailContent);
     }
 }
