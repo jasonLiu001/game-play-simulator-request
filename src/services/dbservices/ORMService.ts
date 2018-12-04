@@ -1071,6 +1071,18 @@ export class LotteryDbService {
 
     /**
      *
+     * 批量保存推送信息
+     */
+    public static saveOrUpdateInvestPushInfoList(investPushList: Array<InvestPushInfo>): Promise<Array<InvestPushInfo>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let investPush of investPushList) {
+            promiseArray.push(LotteryDbService.saveOrUpdateInvestPushInfo(investPush));
+        }
+        return Promise.all(promiseArray);
+    }
+
+    /**
+     *
      * 获取特定数量历史记录
      * @param {number} historyCount
      */
@@ -1083,6 +1095,7 @@ export class LotteryDbService {
             raw: true
         });
     }
+
     //endregion
 
     //region 公共方法
