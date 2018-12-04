@@ -7,7 +7,6 @@ import {PlatformService} from "../services/platform/PlatformService";
 import {DefaultRequest} from "../services/AppServices";
 import {ResponseJson} from "../models/ResponseJson";
 import {TimeService} from "../services/time/TimeService";
-import {CONFIG_CONST} from "../config/Config";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController');

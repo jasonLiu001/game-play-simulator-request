@@ -13,6 +13,7 @@ import {CONST_PLAN_INVEST_NUMBERS_TABLE} from "../../models/db/CONST_PLAN_INVEST
 import {SettingsInfo, UpdateSettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
+import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -294,6 +295,39 @@ const Setting = sequelize.define('settings', {
 });
 
 /**
+ *
+ * 保存发送push的token
+ */
+const InvestPush = sequelize.define('invest_push', {
+    deviceToken: {//发送push的device token
+        type: Sequelize.STRING,
+        primaryKey: true
+    },
+    imei: {//设备号
+        type: Sequelize.STRING
+    },
+    pushPlatform: {//发送push的平台
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+    },
+    tokenExpireTime: {//token过期时间
+        type: Sequelize.DATE,
+        get: function () {
+            const createdTime = this.getDataValue('tokenExpireTime');
+            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+        }
+    },
+    createdTime: {//创建时间
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            const createdTime = this.getDataValue('createdTime');
+            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+        }
+    }
+});
+
+/**
  * 计划投注号码表
  */
 const Plan = sequelize.define('plan', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING));
@@ -471,6 +505,7 @@ export class LotteryDbService {
                 }
             });
     }
+
 
     /**
      *
@@ -1003,6 +1038,51 @@ export class LotteryDbService {
             });
     }
 
+    //endregion
+
+    //region Push推送表
+    /**
+     *
+     * 保存push信息
+     */
+    public static saveOrUpdateInvestPushInfo(investPush: InvestPushInfo): Promise<InvestPushInfo> {
+        return InvestPush.findOne(
+            {
+                where: {deviceToken: investPush.deviceToken},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return InvestPush.update(investPush,
+                        {
+                            where: {deviceToken: investPush.deviceToken},
+                        })
+                        .then(() => {
+                            return investPush;
+                        });
+                } else {
+                    return InvestPush.create(investPush)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
+    /**
+     *
+     * 获取特定数量历史记录
+     * @param {number} historyCount
+     */
+    public static getInvestPushInfoHistory(historyCount: number) {
+        return InvestPush.findAll({
+            limit: historyCount,
+            order: [
+                ['deviceToken', 'DESC']
+            ],
+            raw: true
+        });
+    }
     //endregion
 
     //region 公共方法

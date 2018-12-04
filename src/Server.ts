@@ -20,7 +20,8 @@ let log = log4js.getLogger('Server'),
 //api 路由配置
 let appRoutes = require("./routes/AppRoutes"),
     awardRoutes = require("./routes/AwardRoutes"),
-    investRoutes = require("./routes/InvestRoutes");
+    investRoutes = require("./routes/InvestRoutes"),
+    pushRoutes = require("./routes/PushRoutes");
 
 // support application/json type post data
 app.use(bodyParser.json());
@@ -35,6 +36,7 @@ app.use(log4js.connectLogger(log, {level: log4js.levels.DEBUG}));
 app.use('/app', appRoutes);
 app.use('/award', awardRoutes);
 app.use('/invest', investRoutes);
+app.use('/push', pushRoutes);
 
 //node-cron的格式可能和linux中crontab有区别，设置时请参考文档：https://www.npmjs.com/package/node-cron
 ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStartTaskEntity.cronTimeStr, () => {
