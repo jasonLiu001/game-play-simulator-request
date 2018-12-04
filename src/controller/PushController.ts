@@ -22,7 +22,7 @@ export class PushController {
             deviceToken: deviceToken,
             imei: imei,
             pushPlatform: pushPlatform,
-            tokenExpireTime: '',
+            tokenExpireTime: null,
             createdTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
 
