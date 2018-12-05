@@ -15,6 +15,7 @@ import {PlatformService} from "../platform/PlatformService";
 import {AppSettings} from "../../config/AppSettings";
 import {EmailSender} from "../email/EmailSender";
 import {SettingService} from "../settings/SettingService";
+import {PushService} from "../push/PushService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -71,7 +72,10 @@ export class InvestService extends InvestBase {
                 if (AppSettings.investNotification) {//发送投注邮件通知
                     let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
                     let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                    return EmailSender.sendEmail(emailTitle, emailContent);
+                    return PushService.send(emailTitle, emailContent)
+                        .then(() => {
+                            return EmailSender.sendEmail(emailTitle, emailContent);
+                        });
                 }
                 return BlueBirdPromise.resolve(true);
             })

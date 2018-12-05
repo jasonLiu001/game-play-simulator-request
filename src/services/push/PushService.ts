@@ -37,5 +37,11 @@ export class PushService {
                         log.info("服务器接口返回信息：%s", res);
                     });
             })
+            .catch((e) => {
+                if (e) {
+                    log.error("发送Push失败，当前时间：%s", moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error(e);
+                }
+            })
     }
 }
