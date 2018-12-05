@@ -5,7 +5,7 @@ import {XGPushModel} from "../../models/XGPushModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('CommonUtil'),
-    MD5 = require('crypto').createHash("md5");
+    crypto = require('crypto');
 
 /**
  *
@@ -43,8 +43,7 @@ export class CommonUtil {
             + "message={\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}"
             + "message_type=1timestamp=" + xGPushModel.timestamp + "c1369ba97745d6be140346593c161bc3";
         log.info("MD5加密前：%s", signContent);
-        MD5.update(signContent);
-        return MD5.digest('hex').toLowerCase();
+        return crypto.createHash("md5").update(signContent).digest('hex').toLowerCase();
     }
 
     /**
