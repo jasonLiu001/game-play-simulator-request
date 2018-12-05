@@ -6,5 +6,7 @@ let router: express.Router = express.Router(),
 
 //保存pushtoken
 router.post('/saveDeviceToken', pushController.saveDeviceToken);
+//发送push
+router.post('/sendPush', pushController.sendPush);
 
 module.exports = router;

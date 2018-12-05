@@ -1,9 +1,11 @@
 import _ = require('lodash');
 import BlueBirdPromise = require('bluebird');
 import {GlobalRequest} from "../../global/GlobalRequest";
+import {XGPushModel} from "../../models/XGPushModel";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('CommonUtil');
+    log = log4js.getLogger('CommonUtil'),
+    MD5 = require('crypto').createHash("md5");
 
 /**
  *
@@ -28,5 +30,28 @@ export class CommonUtil {
                     resolve(body);
                 });
         });
+    }
+
+    /**
+     *
+     * 产生推送签名
+     */
+    public static getPushSign(title: string, content: string, xGPushModel: XGPushModel): string {
+        let signContent: string = "GETopenapi.xg.qq.com/v2/push/single_deviceaccess_id" + xGPushModel.access_id
+            + "device_token=" + xGPushModel.device_token
+            + "message={\"content\": \"" + content + "\", \"title\": \"" + title + "\", \"vibrate\": 1}"
+            + "message_type=1timestamp=" + xGPushModel.timestamp + "c1369ba97745d6be140346593c161bc3";
+        MD5.update(signContent);
+        return MD5.digest('hex').toLowerCase();
+    }
+
+    /**
+     *
+     * 产生推送url
+     */
+    public static getPushSignUrl(title: string, content: string, xGPushModel: XGPushModel, sign: string): string {
+        return "http://openapi.xg.qq.com/v2/push/single_device?access_id="
+            + xGPushModel.access_id + "&timestamp=" + xGPushModel.timestamp + "&device_token=" + xGPushModel.device_token
+            + "&message_type=1&message={\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}&sign=" + sign;
     }
 }
