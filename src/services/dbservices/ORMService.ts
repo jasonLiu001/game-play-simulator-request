@@ -301,7 +301,8 @@ const Setting = sequelize.define('settings', {
 const InvestPush = sequelize.define('invest_push', {
     id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        primaryKey: true
     },
     deviceToken: {//发送push的device token
         type: Sequelize.STRING,
@@ -329,12 +330,6 @@ const InvestPush = sequelize.define('invest_push', {
             return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
         }
     }
-}, {
-    indexes: [// Create a unique index on email
-        {
-            unique: true,
-            fields: ['id']
-        }]
 });
 
 /**
