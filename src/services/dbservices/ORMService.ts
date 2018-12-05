@@ -299,6 +299,10 @@ const Setting = sequelize.define('settings', {
  * 保存发送push的token
  */
 const InvestPush = sequelize.define('invest_push', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true
+    },
     deviceToken: {//发送push的device token
         type: Sequelize.STRING,
         primaryKey: true
@@ -325,6 +329,12 @@ const InvestPush = sequelize.define('invest_push', {
             return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
         }
     }
+}, {
+    indexes: [// Create a unique index on email
+        {
+            unique: true,
+            fields: ['id']
+        }]
 });
 
 /**
@@ -1090,7 +1100,7 @@ export class LotteryDbService {
         return InvestPush.findAll({
             limit: historyCount,
             order: [
-                ['deviceToken', 'DESC']
+                ['id', 'DESC']
             ],
             raw: true
         });
