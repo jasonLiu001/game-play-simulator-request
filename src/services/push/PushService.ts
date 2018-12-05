@@ -32,7 +32,10 @@ export class PushService {
                 log.info("发送push需要的sign值=%s", xGPushModel.sign);
                 let pushUrl: string = CommonUtil.getPushSignUrl(title, content, xGPushModel, xGPushModel.sign);
                 log.info("push请求的url=%s", pushUrl);
-                return CommonUtil.httpGet(pushUrl);
+                return CommonUtil.httpGet(pushUrl)
+                    .then((res) => {
+                        log.info("服务器接口返回信息：%s", res);
+                    });
             })
     }
 }

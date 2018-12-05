@@ -26,8 +26,8 @@ export class AwardController {
             })
             .catch((e) => {
                 let errMsg: string = "获取奖号失败";
-                jsonRes.fail(errMsg);
-                log.error('%s 当前时间：%s', errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
@@ -50,8 +50,8 @@ export class AwardController {
             })
             .catch((e) => {
                 let errMsg: string = "奖号更新失败";
-                jsonRes.fail(errMsg);
-                log.error('%s 当前时间：%s', errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
                 return res.status(200).send(jsonRes);
             });
     }

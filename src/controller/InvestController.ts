@@ -68,7 +68,7 @@ export class InvestController {
             .catch((e) => {
                 let errMsg: string = period + "期，一键投注失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
@@ -92,7 +92,7 @@ export class InvestController {
             .catch((e) => {
                 let errMsg: string = period + "期，一键撤单失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
