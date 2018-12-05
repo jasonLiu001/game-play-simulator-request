@@ -1,11 +1,9 @@
 import _ = require('lodash');
 import BlueBirdPromise = require('bluebird');
-import {HttpRequestHeaders} from "../../models/EnumModel";
+import {GlobalRequest} from "../../global/GlobalRequest";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('CommonUtil'),
-    request = require('request'),
-    cheerio = require('cheerio');
+    log = log4js.getLogger('CommonUtil');
 
 /**
  *
@@ -14,23 +12,21 @@ let log4js = require('log4js'),
 export class CommonUtil {
     /**
      *
-     * 普通网络Get请求
+     *
+     * Http的Get请求
      */
-    get(dataUrl: string): BlueBirdPromise<any> {
-        return new BlueBirdPromise((resolve, reject) => {
-            request(
+    public static async httpGet(url: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            GlobalRequest.request.get(
                 {
-                    uri: dataUrl,
-                    headers: HttpRequestHeaders,
-                    method: 'GET'
+                    url: url
                 }, (error, response, body) => {
                     if (error) {
-                        log.error(error);
                         reject(error);
                     }
 
                     resolve(body);
                 });
-        })
+        });
     }
 }

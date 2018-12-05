@@ -2,34 +2,16 @@ import BlueBirdPromise = require('bluebird');
 import {InvestService} from "./invest/InvestService";
 import {ErrorService} from "./ErrorService";
 import {Config, CONFIG_CONST} from "../config/Config";
-import {HttpRequestHeaders} from "../models/EnumModel";
 import {LotteryDbService} from "./dbservices/ORMService";
 import {AwardService} from "./award/AwardService";
 import {SettingsInfo} from "../models/db/SettingsInfo";
 import {SettingService} from "./settings/SettingService";
 import {AppSettings} from "../config/AppSettings";
-
-let Request = require('request');
+import {GlobalRequest} from "../global/GlobalRequest";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AppServices'),
-    investService = new InvestService(),
-    cookie = Request.jar(),
-    request = Request.defaults(
-        {
-            jar: cookie,
-            timeout: CONFIG_CONST.autoCheckTimerInterval,
-            headers: HttpRequestHeaders,
-            strictSSL: false//解决:unable to verify the first certificat 参考https://github.com/request/request/issues/2505
-        });
-
-/**
- *
- * 导出Request对象
- */
-export class DefaultRequest {
-    public static request: any = request;
-}
+    investService = new InvestService();
 
 /**
  *
@@ -73,7 +55,7 @@ export class AppServices {
                     //投注前 首先获取参数配置信息
                     SettingService.getAndInitSettings()
                         .then(() => {
-                            return investService.executeAutoInvest(request);//执行投注
+                            return investService.executeAutoInvest(GlobalRequest.request);//执行投注
                         });
                 });
             })

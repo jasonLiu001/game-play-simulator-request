@@ -1,12 +1,11 @@
 import {Request, Response} from "express";
-import BlueBirdPromise = require('bluebird');
-import moment  = require('moment');
 import {InvestInfo} from "../models/db/InvestInfo";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {PlatformService} from "../services/platform/PlatformService";
-import {DefaultRequest} from "../services/AppServices";
 import {ResponseJson} from "../models/ResponseJson";
 import {TimeService} from "../services/time/TimeService";
+import {GlobalRequest} from "../global/GlobalRequest";
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController');
@@ -56,7 +55,7 @@ export class InvestController {
                 investInfo.touZhuBeiShu = touZhuBeiShu;
                 investInfo.investNumbers = investNumbers;
                 log.info("根据参数，调整倍数等信息，awardMode=%s,touZhuBeiShu=%s", investInfo.awardMode, investInfo.touZhuBeiShu);
-                return PlatformService.loginAndInvest(DefaultRequest.request, investInfo);
+                return PlatformService.loginAndInvest(GlobalRequest.request, investInfo);
             })
             .then(() => {
                 let successMsg: string = period + "期，一键投注成功";
@@ -83,7 +82,7 @@ export class InvestController {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('手动一键撤单请求已收到，参数:period=%s', period);
 
-        PlatformService.cancelInvest(DefaultRequest.request, period)
+        PlatformService.cancelInvest(GlobalRequest.request, period)
             .then((msg) => {
                 let successMsg: string = period + "期，一键撤单成功";
                 jsonRes.success(successMsg + " " + msg);

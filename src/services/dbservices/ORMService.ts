@@ -1091,7 +1091,7 @@ export class LotteryDbService {
      * 获取特定数量历史记录
      * @param {number} historyCount
      */
-    public static getInvestPushInfoHistory(historyCount: number) {
+    public static getInvestPushInfoHistory(historyCount: number): Promise<Array<any>> {
         return InvestPush.findAll({
             limit: historyCount,
             order: [
