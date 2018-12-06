@@ -39,7 +39,7 @@ export class CommonUtil {
      */
     public static getPushSign(title: string, content: string, xGPushModel: XGPushModel): string {
         let signContent: string = "GETopenapi.xg.qq.com/v2/push/single_deviceaccess_id=" + xGPushModel.access_id
-            + "device_token=" + xGPushModel.device_token
+            + "device_token=" + xGPushModel.device_token + "expire_time=" + xGPushModel.expire_time
             + "message={\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}"
             + "message_type=1timestamp=" + xGPushModel.timestamp + "c1369ba97745d6be140346593c161bc3";
         log.info("MD5加密前：%s", signContent);
@@ -55,6 +55,6 @@ export class CommonUtil {
     public static getPushSignUrl(title: string, content: string, xGPushModel: XGPushModel, sign: string): string {
         return "http://openapi.xg.qq.com/v2/push/single_device?access_id="
             + xGPushModel.access_id + "&timestamp=" + xGPushModel.timestamp + "&device_token=" + xGPushModel.device_token
-            + "&message_type=1&message=" + encodeURIComponent("{\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}") + "&sign=" + encodeURIComponent(sign);
+            + "&message_type=1&expire_time=" + xGPushModel.expire_time + "&message=" + encodeURIComponent("{\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}") + "&sign=" + encodeURIComponent(sign);
     }
 }

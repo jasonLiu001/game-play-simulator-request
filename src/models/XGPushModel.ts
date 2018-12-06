@@ -9,4 +9,5 @@ export class XGPushModel {
     message_type: number;
     message: string;
     sign: string;
+    expire_time: number;
 }

@@ -4,7 +4,7 @@ import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {ErrorService} from "../../ErrorService";
-import {EmailSender} from "../../email/EmailSender";
+import {NotificationSender} from "../../notification/NotificationSender";
 
 let path = require('path'),
     fs = require('fs'),
@@ -79,13 +79,13 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return EmailSender.sendEmail("登录异常", result)
+                        return NotificationSender.send("登录异常", result)
                             .then(() => {
                                 return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
                             });
                     }
                 } else {
-                    return EmailSender.sendEmail("登录异常", result)
+                    return NotificationSender.send("登录异常", result)
                         .then(() => {
                             return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
                         });
@@ -94,7 +94,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return EmailSender.sendEmail("登录异常", e.message);
+                return NotificationSender.send("登录异常", e.message);
             });
     }
 }

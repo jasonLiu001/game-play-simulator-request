@@ -3,7 +3,7 @@ import moment  = require('moment');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
-import {EmailSender} from "../email/EmailSender";
+import {NotificationSender} from "../notification/NotificationSender";
 import {PlatformService} from "../platform/PlatformService";
 import {SettingService} from "../settings/SettingService";
 
@@ -39,7 +39,7 @@ export class ExtraInvestService {
                             PlatformService.loginAndInvest(request, investInfo)
                                 .then(() => {
                                     let emailContent: string = "程序已忽略设置，自动投注，盈利目标从：" + investInfo.currentAccountBalance + " 更新为：" + CONFIG_CONST.maxAccountBalance;
-                                    return EmailSender.sendEmail(investInfo.period + ' 符合对错错条件', emailContent)
+                                    return NotificationSender.send(investInfo.period + ' 符合对错错条件', emailContent)
                                 });
                         });
 

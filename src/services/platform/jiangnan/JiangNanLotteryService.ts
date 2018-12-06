@@ -4,7 +4,7 @@ import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstract
 import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
-import {EmailSender} from "../../email/EmailSender";
+import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 import {LotteryDbService} from "../../dbservices/ORMService";
 
@@ -197,7 +197,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return EmailSender.sendEmail("购买异常", result)
+                        return NotificationSender.send("购买异常", result)
                             .then(() => {
                                 return result;
                             });
@@ -207,7 +207,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return EmailSender.sendEmail("购买异常", e.message);
+                return NotificationSender.send("购买异常", e.message);
             });
     }
 

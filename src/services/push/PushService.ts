@@ -25,7 +25,8 @@ export class PushService {
                     device_token: investPushInfo.deviceToken,
                     message_type: 1,
                     message: "{\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}",
-                    sign: ''
+                    sign: '',
+                    expire_time: 43200
                 };
 
                 xGPushModel.sign = CommonUtil.getPushSign(title, content, xGPushModel);//产生push签名
