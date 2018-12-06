@@ -72,12 +72,12 @@ export class InvestService extends InvestBase {
                 if (AppSettings.investNotification) {//发送投注邮件通知
                     let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
                     let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                    return PushService.send(emailTitle, emailContent)
-                        .then(() => {
-                            return EmailSender.sendEmail(emailTitle, emailContent);
-                        });
+                    let promiseArray: Array<BlueBirdPromise<any>> = [];
+                    promiseArray.push(PushService.send(emailTitle, emailContent));
+                    promiseArray.push(EmailSender.sendEmail(emailTitle, emailContent));
+                    return BlueBirdPromise.all(promiseArray);
                 }
-                return BlueBirdPromise.resolve(true);
+                return BlueBirdPromise.resolve([]);
             })
             .then(() => {
                 //当前期号

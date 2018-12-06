@@ -1,4 +1,4 @@
-import Promise = require('bluebird');
+import BlueBirdPromise = require('bluebird');
 import {EMAIL_CONFIG} from "../../config/Config";
 
 const nodemailer = require('nodemailer');
@@ -22,7 +22,7 @@ export class EmailSender {
      *
      * 发送邮件
      */
-    public static sendEmail(subject: string, htmlContent: string): Promise<any> {
+    public static sendEmail(subject: string, htmlContent: string): BlueBirdPromise<any> {
         // setup email data with unicode symbols
         let mailOptions = {
             from: EMAIL_CONFIG.from, // sender address
@@ -32,7 +32,7 @@ export class EmailSender {
             html: htmlContent // html body
         };
 
-        return new Promise((resolve, reject) => {
+        return new BlueBirdPromise((resolve, reject) => {
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     reject(error);
