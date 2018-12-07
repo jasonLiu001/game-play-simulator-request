@@ -1,6 +1,6 @@
 import BlueBirdPromise = require('bluebird');
-import {EMAIL_CONFIG} from "../../../config/Config";
-import {PushService} from "./PushService";
+import {EMAIL_CONFIG} from "../../config/Config";
+import {PushSender} from "./sender/PushSender";
 
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
@@ -34,7 +34,7 @@ export class NotificationSender {
         };
 
         let promiseArray: Array<BlueBirdPromise<any>> = [];
-        promiseArray.push(PushService.send(subject, htmlContent));
+        promiseArray.push(PushSender.send(subject, htmlContent));
         promiseArray.push(new BlueBirdPromise((resolve, reject) => {
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {

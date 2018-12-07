@@ -8,7 +8,7 @@ import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
-import {NotificationSender} from "../notification/sender/NotificationSender";
+import {NotificationSender} from "../notification/NotificationSender";
 import {SettingsInfo, update_isRealInvest_to_mock} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";

@@ -6,9 +6,9 @@ import {CommonUtil} from "../../common/CommonUtil";
 import {XGPushModel} from "../../../models/XGPushModel";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('PushService');
+    log = log4js.getLogger('PushSender');
 
-export class PushService {
+export class PushSender {
     /**
      *
      * 发送

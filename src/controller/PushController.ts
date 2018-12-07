@@ -4,7 +4,7 @@ import moment  = require('moment');
 import {ResponseJson} from "../models/ResponseJson";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
-import {PushService} from "../services/notification/sender/PushService";
+import {PushSender} from "../services/notification/sender/PushSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');
@@ -49,7 +49,7 @@ export class PushController {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('sendPush方法请求已收到，参数:title=%s,content=%s', title, content);
 
-        PushService.send(title, content)
+        PushSender.send(title, content)
             .then(() => {
                 let successMsg: string = "Push发送成功";
                 jsonRes.success(successMsg);

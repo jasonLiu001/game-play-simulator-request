@@ -3,7 +3,7 @@ import moment  = require('moment');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
-import {NotificationSender} from "../notification/sender/NotificationSender";
+import {NotificationSender} from "../notification/NotificationSender";
 import {PlatformService} from "../platform/PlatformService";
 import {SettingService} from "../settings/SettingService";
 
