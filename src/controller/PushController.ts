@@ -4,7 +4,7 @@ import moment  = require('moment');
 import {ResponseJson} from "../models/ResponseJson";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
-import {PushService} from "../services/push/PushService";
+import {PushService} from "../services/notification/sender/PushService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');

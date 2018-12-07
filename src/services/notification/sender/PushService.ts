@@ -1,9 +1,9 @@
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {LotteryDbService} from "../dbservices/ORMService";
-import {InvestPushInfo} from "../../models/db/InvestPushInfo";
-import {CommonUtil} from "../common/CommonUtil";
-import {XGPushModel} from "../../models/XGPushModel";
+import {LotteryDbService} from "../../dbservices/ORMService";
+import {InvestPushInfo} from "../../../models/db/InvestPushInfo";
+import {CommonUtil} from "../../common/CommonUtil";
+import {XGPushModel} from "../../../models/XGPushModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushService');

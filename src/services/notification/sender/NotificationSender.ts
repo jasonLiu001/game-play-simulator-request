@@ -1,6 +1,6 @@
 import BlueBirdPromise = require('bluebird');
 import {EMAIL_CONFIG} from "../../../config/Config";
-import {PushService} from "../../push/PushService";
+import {PushService} from "./PushService";
 
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
