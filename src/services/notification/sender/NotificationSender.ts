@@ -1,6 +1,6 @@
 import BlueBirdPromise = require('bluebird');
-import {EMAIL_CONFIG} from "../../config/Config";
-import {PushService} from "../push/PushService";
+import {EMAIL_CONFIG} from "../../../config/Config";
+import {PushService} from "../../push/PushService";
 
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
@@ -15,13 +15,13 @@ let log4js = require('log4js'),
 
 /**
  *
- * 发送邮件
+ * 发送提醒 push+邮件
  */
 export class NotificationSender {
 
     /**
      *
-     * 发送邮件
+     * 发送提醒 push+邮件
      */
     public static send(subject: string, htmlContent: string): BlueBirdPromise<any> {
         // setup email data with unicode symbols
@@ -33,23 +33,23 @@ export class NotificationSender {
             html: htmlContent // html body
         };
 
-        return PushService.send(subject, htmlContent)
-            .then(() => {
-                return new BlueBirdPromise((resolve, reject) => {
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            reject(error);
-                        }
-
-                        resolve(info);
-                    })
-                })
-            })
-            .catch((emailError) => {
-                if (emailError) {
-                    log.error("发送提醒邮失败");
-                    log.error(emailError);
+        let promiseArray: Array<BlueBirdPromise<any>> = [];
+        promiseArray.push(PushService.send(subject, htmlContent));
+        promiseArray.push(new BlueBirdPromise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    reject(error);
                 }
-            });
+
+                resolve(info);
+            })
+        }));
+
+        return BlueBirdPromise.all(promiseArray).catch((emailError) => {
+            if (emailError) {
+                log.error("提醒发送失败");
+                log.error(emailError);
+            }
+        });
     }
 }

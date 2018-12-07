@@ -4,7 +4,7 @@ import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstract
 import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
-import {NotificationSender} from "../../notification/NotificationSender";
+import {NotificationSender} from "../../notification/sender/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 import {LotteryDbService} from "../../dbservices/ORMService";
 

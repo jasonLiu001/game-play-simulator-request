@@ -12,7 +12,7 @@ import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {ExtraInvestService} from "./ExtraInvestService";
 import {PlatformService} from "../platform/PlatformService";
 import {AppSettings} from "../../config/AppSettings";
-import {NotificationSender} from "../notification/NotificationSender";
+import {NotificationSender} from "../notification/sender/NotificationSender";
 import {SettingService} from "../settings/SettingService";
 import BlueBirdPromise = require('bluebird');
 

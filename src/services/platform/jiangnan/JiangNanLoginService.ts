@@ -4,7 +4,7 @@ import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
 import {ErrorService} from "../../ErrorService";
-import {NotificationSender} from "../../notification/NotificationSender";
+import {NotificationSender} from "../../notification/sender/NotificationSender";
 
 let path = require('path'),
     fs = require('fs'),

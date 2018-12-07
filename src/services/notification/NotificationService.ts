@@ -3,7 +3,7 @@ import {LotteryDbService} from "../dbservices/ORMService";
 
 import moment  = require('moment');
 import {Config, CONFIG_CONST} from "../../config/Config";
-import {NotificationSender} from "./NotificationSender";
+import {NotificationSender} from "./sender/NotificationSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
