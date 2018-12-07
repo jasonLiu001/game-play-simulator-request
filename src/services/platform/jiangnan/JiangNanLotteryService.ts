@@ -1,4 +1,4 @@
-import {CONFIG_CONST} from "../../../config/Config";
+import {Config, CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import BlueBirdPromise = require('bluebird');
@@ -7,6 +7,8 @@ import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 import {LotteryDbService} from "../../dbservices/ORMService";
+import {SMSSender} from "../../notification/sender/SMSSender";
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
@@ -197,7 +199,10 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return NotificationSender.send("购买异常", result, NotificationType.PUSH_AND_SMS_AND_EMAIL)
+                        return NotificationSender.send("购买异常", result, NotificationType.PUSH_AND_EMAIL)
+                            .then(() => {
+                                return SMSSender.send("购买异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                            })
                             .then(() => {
                                 return result;
                             });
@@ -207,7 +212,10 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return NotificationSender.send("购买异常", e.message, NotificationType.PUSH_AND_SMS_AND_EMAIL);
+                return NotificationSender.send("购买异常", e.message, NotificationType.PUSH_AND_EMAIL)
+                    .then(() => {
+                        return SMSSender.send("购买异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                    });
             });
     }
 

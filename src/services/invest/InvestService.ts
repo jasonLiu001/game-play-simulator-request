@@ -16,6 +16,8 @@ import {NotificationSender} from "../notification/NotificationSender";
 import {SettingService} from "../settings/SettingService";
 import BlueBirdPromise = require('bluebird');
 import {NotificationType} from "../../models/EnumModel";
+import {EmailSender} from "../notification/sender/EmailSender";
+import {SMSSender} from "../notification/sender/SMSSender";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -72,7 +74,11 @@ export class InvestService extends InvestBase {
                 if (AppSettings.investNotification) {//发送投注邮件通知
                     let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
                     let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                    return NotificationSender.send(emailTitle, emailContent, NotificationType.PUSH_AND_SMS_AND_EMAIL);
+                    return NotificationSender.send(emailTitle, emailContent, NotificationType.PUSH_AND_EMAIL)
+                        .then(() => {
+                            return SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), "cnlands", 243600);
+                        });
+
                 }
                 return BlueBirdPromise.resolve(true);
             })

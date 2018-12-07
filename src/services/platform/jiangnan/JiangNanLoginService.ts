@@ -1,11 +1,13 @@
-import {CONFIG_CONST} from "../../../config/Config";
+import {Config, CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
 import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
 import Promise = require('bluebird');
+import moment  = require('moment');
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {NotificationType} from "../../../models/EnumModel";
+import {SMSSender} from "../../notification/sender/SMSSender";
 
 let path = require('path'),
     fs = require('fs'),
@@ -80,13 +82,20 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return NotificationSender.send("登录异常", result, NotificationType.PUSH_AND_SMS_AND_EMAIL)
+                        return NotificationSender.send("登录异常", result, NotificationType.PUSH_AND_EMAIL)
+                            .then(() => {
+                                return SMSSender.send("登录异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                            })
                             .then(() => {
                                 return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
                             });
+
                     }
                 } else {
-                    return NotificationSender.send("登录异常", result, NotificationType.PUSH_AND_SMS_AND_EMAIL)
+                    return NotificationSender.send("登录异常", result, NotificationType.PUSH_AND_EMAIL)
+                        .then(() => {
+                            return SMSSender.send("登录异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                        })
                         .then(() => {
                             return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
                         });
@@ -95,7 +104,10 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return NotificationSender.send("登录异常", e.message, NotificationType.PUSH_AND_SMS_AND_EMAIL);
+                return NotificationSender.send("登录异常", e.message, NotificationType.PUSH_AND_EMAIL)
+                    .then(() => {
+                        return SMSSender.send("登录异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                    });
             });
     }
 }
