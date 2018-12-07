@@ -5,6 +5,7 @@ import {ResponseJson} from "../models/ResponseJson";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
 import {PushSender} from "../services/notification/sender/PushSender";
+import {PushVendorType} from "../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');
@@ -24,6 +25,7 @@ export class PushController {
             imei: imei,
             pushPlatform: pushPlatform,
             tokenExpireTime: null,
+            pushVendorType: PushVendorType.TENCENT_XG,//Push厂商类型 默认为信鸽
             createdTime: moment().format('YYYY-MM-DD HH:mm:ss')
         };
 

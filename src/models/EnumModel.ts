@@ -57,3 +57,39 @@ export const HttpRequestHeaders = {
     'Origin': CONFIG_CONST.siteUrl,
     'Connection': 'keep-alive'
 };
+
+/**
+ *
+ * 厂商类型
+ */
+export const enum EnumVendorType {
+    /**
+     *
+     * 腾讯云短信服务
+     */
+    TencentSMS = 'TencentSMS',
+
+    /**
+     *
+     * 接收短信的用户手机号
+     */
+    UserPhone = 'UserPhone'
+}
+
+/**
+ *
+ * push厂商
+ */
+export const enum PushVendorType {
+    /**
+     *
+     * 华为
+     */
+    HUA_WEI = 'HUA_WEI',
+
+    /**
+     *
+     * 腾讯信鸽
+     */
+    TENCENT_XG = 'TENCENT_XG'
+}

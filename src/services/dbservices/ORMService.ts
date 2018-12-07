@@ -14,6 +14,8 @@ import {SettingsInfo, UpdateSettingsInfo} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
+import {VendorInfo} from "../../models/db/VendorInfo";
+import {EnumVendorType} from "../../models/EnumModel";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -289,8 +291,43 @@ const Setting = sequelize.define('settings', {
     value: {//参数值
         type: Sequelize.STRING
     },
-    desc: {
+    desc: {//参数说明
         type: Sequelize.STRING
+    }
+});
+
+/**
+ *
+ * 厂商
+ */
+const Vendor = sequelize.define('vendor', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    key: {//参数名称
+        type: Sequelize.STRING,
+    },
+    value: {//参数值
+        type: Sequelize.STRING,
+    },
+    desc: {//参数说明
+        type: Sequelize.STRING
+    },
+    orderId: {//排序id
+        type: Sequelize.INTEGER
+    },
+    type: {//类型
+        type: Sequelize.STRING
+    },
+    createdTime: {//创建时间
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        get: function () {
+            const createdTime = this.getDataValue('createdTime');
+            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+        }
     }
 });
 
@@ -314,6 +351,9 @@ const InvestPush = sequelize.define('invest_push', {
     pushPlatform: {//发送push的平台
         type: Sequelize.INTEGER,
         defaultValue: 1
+    },
+    pushVendorType: {//Push厂商类型
+        type: Sequelize.STRING
     },
     tokenExpireTime: {//token过期时间
         type: Sequelize.DATE,
@@ -1036,6 +1076,65 @@ export class LotteryDbService {
                         });
                 } else {
                     return Setting.create(settingsInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
+    //endregion
+
+    //region 厂商相关信息表
+    /**
+     *
+     * 获取所有厂商信息
+     */
+    public static getVendorInfoList(): Promise<Array<VendorInfo>> {
+        return Vendor.findAll({
+            order: [
+                ['orderId', 'ASC']
+            ],
+            raw: true
+        })
+    }
+
+    /**
+     *
+     * 获取厂商信息
+     * @param enumVendorType 枚举值 包括 腾讯短信服务(TencentSMS)
+     */
+    public static getVendorInfo(enumVendorType: EnumVendorType): Promise<VendorInfo> {
+        return Vendor.findOne({
+            where: {type: enumVendorType},
+            raw: true
+        });
+    }
+
+    /**
+     *
+     * 保存或者更新厂商信息
+     */
+    public static saveOrUpdateVendorInfo(vendorInfo: VendorInfo): Promise<VendorInfo> {
+        return Vendor.findOne(
+            {
+                where: {key: vendorInfo.key},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return Vendor.update(vendorInfo,
+                        {
+                            fields: ['value'],
+                            where: {
+                                key: vendorInfo.key
+                            }
+                        })
+                        .then(() => {
+                            return vendorInfo;
+                        });
+                } else {
+                    return Vendor.create(vendorInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });

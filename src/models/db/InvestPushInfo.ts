@@ -32,4 +32,10 @@ export class InvestPushInfo {
      * 记录创建时间
      */
     createdTime: string;
+
+    /**
+     *
+     * push厂商类型
+     */
+    pushVendorType: string;
 }
