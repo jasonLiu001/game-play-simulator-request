@@ -2,7 +2,7 @@ import {CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import BlueBirdPromise = require('bluebird');
-import {EnumAwardMode} from "../../../models/EnumModel";
+import {EnumAwardMode, NotificationType} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
@@ -197,7 +197,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return NotificationSender.send("购买异常", result)
+                        return NotificationSender.send("购买异常", result, NotificationType.PUSH_AND_SMS_AND_EMAIL)
                             .then(() => {
                                 return result;
                             });
@@ -207,7 +207,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return NotificationSender.send("购买异常", e.message);
+                return NotificationSender.send("购买异常", e.message, NotificationType.PUSH_AND_SMS_AND_EMAIL);
             });
     }
 

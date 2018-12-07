@@ -60,7 +60,7 @@ export const HttpRequestHeaders = {
 
 /**
  *
- * 厂商类型
+ * 厂商类型  表vendor中的类型
  */
 export const enum EnumVendorType {
     /**
@@ -78,9 +78,9 @@ export const enum EnumVendorType {
 
 /**
  *
- * push厂商
+ * push厂商 表invest_push中的类型
  */
-export const enum PushVendorType {
+export const enum EnumPushVendorType {
     /**
      *
      * 华为
@@ -92,4 +92,46 @@ export const enum PushVendorType {
      * 腾讯信鸽
      */
     TENCENT_XG = 'TENCENT_XG'
+}
+
+/**
+ *
+ * 发送的通知类型
+ */
+export const enum NotificationType {
+    /**
+     *
+     * push通知
+     */
+    PUSH = "push",
+
+    /**
+     *
+     * 短信通知
+     */
+    SMS = "sms",
+
+    /**
+     *
+     * 邮件通知
+     */
+    EMAIL = "email",
+
+    /**
+     *
+     * push和email通知
+     */
+    PUSH_AND_EMAIL = "push_and_email",
+
+    /**
+     *
+     * 短信和email通知
+     */
+    SMS_AND_EMAIL = "sms_and_email",
+
+    /**
+     *
+     * push sms email 通知
+     */
+    PUSH_AND_SMS_AND_EMAIL = ""
 }

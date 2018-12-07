@@ -1,49 +1,64 @@
 import BlueBirdPromise = require('bluebird');
-import {EMAIL_CONFIG} from "../../config/Config";
 import {PushSender} from "./sender/PushSender";
-
-const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-    host: EMAIL_CONFIG.host,
-    port: EMAIL_CONFIG.host,
-    secure: EMAIL_CONFIG.secure,
-    auth: EMAIL_CONFIG.auth
-});
+import {EmailSender} from "./sender/EmailSender";
+import {SMSSender} from "./sender/SMSSender";
+import {NotificationType} from "../../models/EnumModel";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('NotificationSender');
 
 /**
  *
- * 发送提醒 push+邮件
+ * 发送提醒 多种方式
  */
 export class NotificationSender {
 
     /**
      *
-     * 发送提醒 push+邮件
+     * 发送提醒 多种方式
      */
-    public static send(subject: string, htmlContent: string): BlueBirdPromise<any> {
-        // setup email data with unicode symbols
-        let mailOptions = {
-            from: EMAIL_CONFIG.from, // sender address
-            to: EMAIL_CONFIG.to, // list of receivers
-            subject: subject, // Subject line
-            // text: 'Hello world?', // plain text body
-            html: htmlContent // html body
-        };
+    public static send(title: string, content: string, notificationType: NotificationType): BlueBirdPromise<any> {
 
         let promiseArray: Array<BlueBirdPromise<any>> = [];
-        promiseArray.push(PushSender.send(subject, htmlContent));
-        promiseArray.push(new BlueBirdPromise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    reject(error);
-                }
 
-                resolve(info);
-            })
-        }));
+        switch (notificationType) {
+            case NotificationType.EMAIL:
+                //发送e-mail
+                promiseArray.push(EmailSender.send(title, content));
+                break;
+            case NotificationType.PUSH:
+                //发送push
+                promiseArray.push(PushSender.send(title, content));
+                break;
+            case NotificationType.PUSH_AND_EMAIL:
+                //发送push
+                promiseArray.push(PushSender.send(title, content));
+                //发送e-mail
+                promiseArray.push(EmailSender.send(title, content));
+                break;
+            case NotificationType.SMS:
+                //发送短信
+                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
+                break;
+            case NotificationType.SMS_AND_EMAIL:
+                //发送短信
+                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
+                //发送e-mail
+                promiseArray.push(EmailSender.send(title, content));
+                break;
+            case NotificationType.PUSH_AND_SMS_AND_EMAIL:
+                //发送push
+                promiseArray.push(PushSender.send(title, content));
+                //发送短信
+                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
+                //发送e-mail
+                promiseArray.push(EmailSender.send(title, content));
+                break;
+            default:
+                //发送e-mail
+                promiseArray.push(EmailSender.send(title, content));
+                break;
+        }
 
         return BlueBirdPromise.all(promiseArray).catch((emailError) => {
             if (emailError) {

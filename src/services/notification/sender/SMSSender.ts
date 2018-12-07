@@ -54,6 +54,12 @@ export class SMSSender {
                             }
                         });  // 签名参数未提供或者为空时，会使用默认签名发送短信
                 })
+            })
+            .catch((e) => {
+                if (e) {
+                    log.error("发送短信失败，当前时间：%s", moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error(e);
+                }
             });
     }
 }

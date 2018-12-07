@@ -14,6 +14,7 @@ import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
+import {NotificationType} from "../../models/EnumModel";
 
 
 let log4js = require('log4js'),
@@ -116,7 +117,7 @@ export class InvestBase {
             if (!investInfoList || investInfoList.length === 0) return BlueBirdPromise.reject(timeReachMessage);
 
             //发送 购买结束提醒
-            let sendEmailResult: any = await NotificationSender.send("购买完成，当前账号余额:" + investInfoList[0].currentAccountBalance, timeReachMessage);
+            let sendEmailResult: any = await NotificationSender.send("购买完成，当前账号余额:" + investInfoList[0].currentAccountBalance, timeReachMessage, NotificationType.PUSH_AND_EMAIL);
 
             //终止当前的promise链
             return BlueBirdPromise.reject(timeReachMessage);
@@ -146,7 +147,7 @@ export class InvestBase {
                 let mockResult: any = await SettingService.switchToMockInvest();
                 log.error(winMessage);
                 //发送盈利提醒
-                return await NotificationSender.send("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage);
+                return await NotificationSender.send("达到目标金额:" + CONFIG_CONST.maxAccountBalance, winMessage, NotificationType.PUSH_AND_EMAIL);
 
             }
         } else if (currentAccountBalance <= CONFIG_CONST.minAccountBalance) {
@@ -156,7 +157,7 @@ export class InvestBase {
                 let mockResult: any = await SettingService.switchToMockInvest();
                 log.error(loseMessage);
                 //发送亏损提醒
-                return await NotificationSender.send("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage)
+                return await NotificationSender.send("达到最低限额:" + CONFIG_CONST.minAccountBalance, loseMessage, NotificationType.PUSH_AND_EMAIL)
             }
         }
         return BlueBirdPromise.resolve(true);
@@ -196,7 +197,7 @@ export class InvestBase {
                 //提醒邮件
                 let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
                 //发送邮件提醒
-                return NotificationSender.send("余额:" + lastInvestInfo.currentAccountBalance + "连续购买前", warnMessage);
+                return NotificationSender.send("余额:" + lastInvestInfo.currentAccountBalance + "连续购买前", warnMessage, NotificationType.PUSH_AND_EMAIL);
             }).then(() => {
                 return BlueBirdPromise.resolve(true);
             });
