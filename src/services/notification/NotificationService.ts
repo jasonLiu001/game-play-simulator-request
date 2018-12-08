@@ -12,6 +12,7 @@ import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import cron = require('node-cron');
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
+import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 
 
 let log4js = require('log4js'),
@@ -54,7 +55,7 @@ export class NotificationService {
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     setTimeout(() => {
                         //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
-                        this.sendTodayFirstErrorWarnEmail(1)
+                        this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
                             .catch((err) => {
                                 if (err) {
                                     log.error("当天第1期错误提醒邮件通知异常");
@@ -66,7 +67,7 @@ export class NotificationService {
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     //连错4期提醒
                     setTimeout(() => {
-                        this.sendContinueWinOrLoseWarnEmail(4, false)
+                        this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 4, false)
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错4期提醒邮件通知异常");
@@ -76,7 +77,7 @@ export class NotificationService {
                     }, 200);
                     //连错3期提醒
                     setTimeout(() => {
-                        this.sendContinueWinOrLoseWarnEmail(3, false)
+                        this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 3, false)
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错3期提醒邮件通知异常");
@@ -86,7 +87,7 @@ export class NotificationService {
                     }, 300);
                     //连错2期提醒
                     setTimeout(() => {
-                        this.sendContinueWinOrLoseWarnEmail(2, false)
+                        this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错2期提醒邮件通知异常");
@@ -98,7 +99,7 @@ export class NotificationService {
                     //连错1期提醒
                     if (AppSettings.lastPeriodErrorInvestNotification) {
                         setTimeout(() => {
-                            this.sendContinueWinOrLoseWarnEmail(1, false)
+                            this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 1, false)
                                 .catch((err) => {
                                     if (err) {
                                         log.error("连错1期提醒邮件通知异常");
@@ -110,7 +111,7 @@ export class NotificationService {
 
                     //最大最小利润预警
                     setTimeout(() => {
-                        this.sendMaxOrMinProfitNotification()
+                        this.sendMaxOrMinProfitNotification(CONST_INVEST_TABLE.tableName)
                             .catch((err) => {
                                 if (err) {
                                     log.error("最大最小利润预警邮件通知异常");
@@ -126,7 +127,7 @@ export class NotificationService {
      *
      * 投注时发送通知
      */
-    public async startInvestNotification(): BlueBirdPromise<any> {
+    public async startInvestNotification(tableName: string): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
@@ -152,7 +153,7 @@ export class NotificationService {
      *
      * 达到指定利润发送预警邮件
      */
-    public async sendMaxOrMinProfitNotification(): BlueBirdPromise<any> {
+    public async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
@@ -208,16 +209,16 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(maxWinOrLoseCount: number, isWin: boolean): BlueBirdPromise<any> {
+    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
-        return await  this.continueWinOrLose(CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin);
+        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin);
     }
 
     /**
      *
      * 当前10:00:00后前几期错误 是邮件提醒
      */
-    public async sendTodayFirstErrorWarnEmail(firstErrorCount: number): BlueBirdPromise<any> {
+    public async sendTodayFirstErrorWarnEmail(tableName: string, firstErrorCount: number): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " 10:00:00");
@@ -250,12 +251,13 @@ export class NotificationService {
     /**
      *
      * 连续中奖特定期数提醒
+     * @param tableName
      * @param {number} planType
      * @param maxWinOrLoseCount
      * @param isWin
      * @param afterTime 特定时间之后
      */
-    private async continueWinOrLose(planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         //方案  最新的投注记录
@@ -298,7 +300,7 @@ export class NotificationService {
             if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
                 //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                 NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
-                return await this.sendWinOrLoseEmail(planType, continueMaxWinOrLoseTimes, isWin);
+                return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
             }
 
         }
@@ -309,18 +311,19 @@ export class NotificationService {
     /**
      *
      * 连中或者连错数量
+     * @param tableName
      * @param planType
      * @param {number} count
      * @param isWin
      * @returns {Bluebird<any>}
      */
-    private async sendWinOrLoseEmail(planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
+    private async sendWinOrLoseEmail(tableName: string, planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
         return NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL)
             .then(() => {
-                return SMSSender.send("Invest表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(count), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR);
+                return SMSSender.send(tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(count), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR);
             });
     }
 }
