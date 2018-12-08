@@ -64,6 +64,16 @@ var utilsMixin = {
                             backgroundColor: '#283b56'
                         }
                     },
+                    formatter: function (params) {//添加点击事件 自定义tooltip
+                        let html = '';
+                        if (params.length > 0) {
+                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
+                            html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
+                            html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
+                            html += '</div>';
+                        }
+                        return html;
+                    },
                     confine: true,//限制在图表内
                     enterable: true//鼠标可以进入提示层点击
                 },
@@ -98,9 +108,6 @@ var utilsMixin = {
 
                 // 基于准备好的dom，初始化echarts实例
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
-                myChart.on('click', function (r) {
-                    console.log(r);
-                });
                 let chartOption = $.extend(true, {}, option, {title: {text: chartName}});
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(chartOption);
