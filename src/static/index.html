@@ -2,65 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>方案</title>
+    <title>图表列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0, minimal-ui">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon"/>
     <script src="libs/jquery-3.2.1.js"></script>
 </head>
 <body>
-<!--Step:1 为ECharts准备一个具备大小（宽高）的Dom-->
-<div id="main" style="width: 600px;height:400px;"></div>
-<!--Step:2 引入echarts.js-->
-<script src="libs/echarts.common.min.js"></script>
-<script type="text/javascript">
-    var contextPath = "/service";
-    var apiList = {
-        findInvestInfoList: contextPath + "/lottery/findInvestInfoList?pageIndex=1&pageSize=20&planType=1"
-    };
-
-    // 指定图表的配置项和数据
-    var option = {
-        title: {
-            text: 'Plan_01'
-        },
-        tooltip: {},
-        legend: {
-            data: ['Echarts']
-        },
-        xAxis: {
-            type: 'category',
-            data: []
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: []
-    };
-
-    $.post(apiList.findInvestInfoList, function (res) {
-        var data = res.data;
-        var periods = [];
-        var winMoneys = [];
-        for (var i = data.length - 1; i >= 0; i--) {
-            var item = data[i];
-            periods.push(item.period);
-            winMoneys.push(item.winMoney);
-        }
-        option.xAxis.data = periods;
-        option.series.push({
-            type: 'line',
-            data: winMoneys
-        });
-
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-
-    });
-</script>
+<div class="container-fluid">
+    <div style="margin-top: 300px;display: flex;flex-direction:column;justify-content: center;">
+        <a class="btn btn-primary" href="pages/echarts/investCharts.html">InvestTable</a>
+        <a class="btn btn-primary mt-1" href="pages/echarts/investTotalCharts.html">InvestTotalTable</a>
+    </div>
+</div>
 </body>
 </html>
