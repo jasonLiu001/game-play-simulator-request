@@ -10,7 +10,8 @@ import {SettingService} from "../settings/SettingService";
 import {TimeService} from "../time/TimeService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import cron = require('node-cron');
-import {EnumNotificationType} from "../../models/EnumModel";
+import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
+import {SMSSender} from "./sender/SMSSender";
 
 
 let log4js = require('log4js'),
@@ -237,7 +238,10 @@ export class NotificationService {
             NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
             let subject: string = "当天" + today + "起始" + firstErrorCount + "条投注记录全部错误";
             log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), subject);
-            return await NotificationSender.send(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买", EnumNotificationType.PUSH_AND_EMAIL);
+            return NotificationSender.send(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买", EnumNotificationType.PUSH_AND_EMAIL)
+                .then(() => {
+                    return SMSSender.send("当天第1次购买错误", String(CONFIG_CONST.currentSelectedInvestPlanType), "1", EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR);
+                });
         }
 
         return BlueBirdPromise.resolve(true);
@@ -314,6 +318,9 @@ export class NotificationService {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-        return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL);
+        return NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL)
+            .then(() => {
+                return SMSSender.send("Invest表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(count), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR);
+            });
     }
 }

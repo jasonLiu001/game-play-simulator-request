@@ -147,5 +147,11 @@ export const enum EnumSMSTemplateType {
      *
      * 真实投注购买失败短信正文模板id
      */
-    REAL_INVEST_EXCEPTION = 243708
+    REAL_INVEST_EXCEPTION = 243708,
+
+    /**
+     *
+     * 连续购买错误短信正文模板id
+     */
+    CONTINUE_INVEST_ERROR = 243895
 }
