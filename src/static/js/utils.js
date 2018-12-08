@@ -56,7 +56,15 @@ var utilsMixin = {
                 title: {
                     text: ''
                 },
-                tooltip: {},
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#283b56'
+                        }
+                    }
+                },
                 legend: {
                     data: ['Echarts']
                 },
