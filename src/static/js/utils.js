@@ -45,6 +45,52 @@ var utilsMixin = {
                 }
             }
             return totalArray;
+        },
+        /**
+         *
+         * 初始投注表
+         */
+        initInvestInfoCharts(url, domElement, chartName) {
+            // 指定图表的配置项和数据
+            let option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {},
+                legend: {
+                    data: ['Echarts']
+                },
+                xAxis: {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: []
+            };
+
+            axios.post(url).then((res) => {
+                let data = res.data.data;
+                let periods = [];
+                let winMoneys = [];
+                for (let i = data.length - 1; i >= 0; i--) {
+                    let item = data[i];
+                    periods.push(item.period);
+                    winMoneys.push(item.winMoney);
+                }
+                option.xAxis.data = periods;
+                option.series.push({
+                    type: 'line',
+                    data: winMoneys
+                });
+
+                // 基于准备好的dom，初始化echarts实例
+                let myChart = echarts.init(document.getElementById(domElement));
+                let chartOption = $.extend(true, {}, option, {title: {text: chartName}});
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(chartOption);
+            });
         }
     }
 };

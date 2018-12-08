@@ -1,14 +1,14 @@
 var app = new Vue({
     el: '#app',
-    data: function () {
+    data() {
         return {};
     },
+    mixins: [utilsMixin],
     methods: {},
-    created: function () {
-        var self = this;
-    },
-    mounted: function () {
+    created() {
         let self = this;
-
+    },
+    mounted() {
+        let self = this;
     }
 });
