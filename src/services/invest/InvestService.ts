@@ -75,7 +75,7 @@ export class InvestService extends InvestBase {
                     let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
                     return NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL)
                         .then(() => {
-                            return SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST);
+                            return SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST);
                         });
 
                 }

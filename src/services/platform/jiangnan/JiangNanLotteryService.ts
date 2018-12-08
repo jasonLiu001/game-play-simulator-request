@@ -201,7 +201,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     if (jsonResult.code != 200 || jsonParseError) {
                         return NotificationSender.send("购买异常", result, EnumNotificationType.PUSH_AND_EMAIL)
                             .then(() => {
-                                return SMSSender.send("购买异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
+                                return SMSSender.send("购买异常", moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
                             })
                             .then(() => {
                                 return result;
@@ -214,7 +214,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 ErrorService.appInvestErrorHandler(log, e);
                 return NotificationSender.send("购买异常", e.message, EnumNotificationType.PUSH_AND_EMAIL)
                     .then(() => {
-                        return SMSSender.send("购买异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
+                        return SMSSender.send("购买异常", moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
                     });
             });
     }

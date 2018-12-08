@@ -84,7 +84,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                     if (jsonResult.code != 200 || jsonParseError) {
                         return NotificationSender.send("登录异常", result, EnumNotificationType.PUSH_AND_EMAIL)
                             .then(() => {
-                                return SMSSender.send("登录异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
+                                return SMSSender.send("登录异常", moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
                             })
                             .then(() => {
                                 return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
@@ -94,7 +94,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                 } else {
                     return NotificationSender.send("登录异常", result, EnumNotificationType.PUSH_AND_EMAIL)
                         .then(() => {
-                            return SMSSender.send("登录异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
+                            return SMSSender.send("登录异常", moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
                         })
                         .then(() => {
                             return result;//这里必须有返回值，不能直接用sendEmail方法的返回值，因为后续有判断
@@ -106,7 +106,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
                 ErrorService.appInvestErrorHandler(log, e);
                 return NotificationSender.send("登录异常", e.message, EnumNotificationType.PUSH_AND_EMAIL)
                     .then(() => {
-                        return SMSSender.send("登录异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
+                        return SMSSender.send("登录异常", moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.LOGIN_EXCEPTION);
                     });
             });
     }
