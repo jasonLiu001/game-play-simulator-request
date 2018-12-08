@@ -1,13 +1,14 @@
 import "jasmine";
 import {SMSSender} from "../../../../src/services/notification/sender/SMSSender";
+import {EnumSMSSignType, EnumSMSTemplateType} from "../../../../src/models/EnumModel";
 
-describe('cancelInvest test', () => {
+describe('invest method test', () => {
     beforeEach((done) => {
         done();
     });
 
-    it('cancelInvest should be work', (done) => {
-        SMSSender.send("20181207-038", "12:12:00", "cnlands", 243148)
+    it('send method should be work', (done) => {
+        SMSSender.send("20181207-038", "12:12:00", EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST)
             .then((res) => {
                 console.log(res);
                 done();

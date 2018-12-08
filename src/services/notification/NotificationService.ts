@@ -10,7 +10,7 @@ import {SettingService} from "../settings/SettingService";
 import {TimeService} from "../time/TimeService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import cron = require('node-cron');
-import {NotificationType} from "../../models/EnumModel";
+import {EnumNotificationType} from "../../models/EnumModel";
 
 
 let log4js = require('log4js'),
@@ -154,7 +154,7 @@ export class NotificationService {
             let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
             let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
             log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-            return await NotificationSender.send(emailTitle, emailContent, NotificationType.EMAIL);
+            return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
         }
 
         return BlueBirdPromise.resolve(false);
@@ -182,11 +182,11 @@ export class NotificationService {
             if (currentAccountBalance <= AppSettings.minProfitNotification) {
                 let lowerTitle = "最低预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最低利润值点";
                 log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), lowerTitle);
-                return await NotificationSender.send(lowerTitle, "已达最低预警利润值：" + AppSettings.minProfitNotification, NotificationType.PUSH_AND_EMAIL);
+                return await NotificationSender.send(lowerTitle, "已达最低预警利润值：" + AppSettings.minProfitNotification, EnumNotificationType.PUSH_AND_EMAIL);
             } else if (currentAccountBalance >= AppSettings.maxProfitNotification) {
                 let higherTitle = "最高预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最高利润值点";
                 log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), higherTitle);
-                return await NotificationSender.send(higherTitle, "已达最高预警利润值：" + AppSettings.maxProfitNotification, NotificationType.PUSH_AND_EMAIL);
+                return await NotificationSender.send(higherTitle, "已达最高预警利润值：" + AppSettings.maxProfitNotification, EnumNotificationType.PUSH_AND_EMAIL);
             }
         }
 
@@ -206,10 +206,10 @@ export class NotificationService {
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
             log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-            return await NotificationSender.send(emailTitle, emailContent, NotificationType.EMAIL);
+            return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
         } else if (yesterdayAccountBalance.minAccountBalance < parseFloat((CONFIG_CONST.originAccountBalance / 5).toFixed(2))) {//最小账户余额小于初始账号的1/5 亏损
             log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-            return await NotificationSender.send(emailTitle, emailContent, NotificationType.EMAIL);
+            return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
         }
         return BlueBirdPromise.resolve(true);
     }
@@ -250,7 +250,7 @@ export class NotificationService {
             NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
             let subject: string = "当天" + today + "起始" + firstErrorCount + "条投注记录全部错误";
             log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), subject);
-            return await NotificationSender.send(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买", NotificationType.PUSH_AND_EMAIL);
+            return await NotificationSender.send(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买", EnumNotificationType.PUSH_AND_EMAIL);
         }
 
         return BlueBirdPromise.resolve(true);
@@ -327,6 +327,6 @@ export class NotificationService {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-        return await NotificationSender.send(emailTitle, emailContent, NotificationType.PUSH_AND_EMAIL);
+        return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL);
     }
 }

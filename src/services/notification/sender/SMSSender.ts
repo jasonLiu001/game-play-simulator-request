@@ -1,7 +1,7 @@
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 import {LotteryDbService} from "../../dbservices/ORMService";
-import {EnumVendorType} from "../../../models/EnumModel";
+import {EnumSMSTemplateType, EnumVendorType} from "../../../models/EnumModel";
 import {VendorInfo} from "../../../models/db/VendorInfo";
 import {CONFIG_CONST} from "../../../config/Config";
 
@@ -22,7 +22,7 @@ export class SMSSender {
      * @param smsSign 签名 短信签名 NOTE: 这里的签名只是示例，请使用真实的已申请的签名, 签名参数使用的是`签名内容`，而不是`签名ID`
      * @param templateId 短信模板ID，需要在短信应用中申请  NOTE: 这里的模板ID`7839`只是一个示例，真实的模板ID需要在短信控制台中申请
      */
-    public static async send(templateVar1: string, templateVar2: string, smsSign: string, templateId: number): BlueBirdPromise<any> {
+    public static async send(templateVar1: string, templateVar2: string, smsSign: string, templateId: EnumSMSTemplateType): BlueBirdPromise<any> {
         //数组具体的元素个数和模板中变量个数必须一致，例如事例中templateId:5678对应一个变量，参数数组中元素个数也必须是一个
         let params = [templateVar1, templateVar2, CONFIG_CONST.currentSelectedInvestPlanType];
 

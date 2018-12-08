@@ -98,7 +98,7 @@ export const enum EnumPushVendorType {
  *
  * 发送的通知类型
  */
-export const enum NotificationType {
+export const enum EnumNotificationType {
     /**
      *
      * push通知
@@ -116,4 +116,36 @@ export const enum NotificationType {
      * push和email通知
      */
     PUSH_AND_EMAIL = "push_and_email"
+}
+
+/**
+ *
+ * 短信模板签名类型
+ */
+export const enum EnumSMSSignType {
+    cnlands = "cnlands"
+}
+
+/**
+ *
+ * 短信模板类型
+ */
+export const enum EnumSMSTemplateType {
+    /**
+     *
+     * 投注提醒短信正文模板id
+     */
+    RECOMMEND_INVEST = 243707,
+
+    /**
+     *
+     * 登录异常短信正文模板id
+     */
+    LOGIN_EXCEPTION = 243709,
+
+    /**
+     *
+     * 真实投注购买失败短信正文模板id
+     */
+    REAL_INVEST_EXCEPTION = 243708
 }

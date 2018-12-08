@@ -2,7 +2,7 @@ import {Config, CONFIG_CONST} from "../../../config/Config";
 import {TimeService} from "../../time/TimeService";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import BlueBirdPromise = require('bluebird');
-import {EnumAwardMode, NotificationType} from "../../../models/EnumModel";
+import {EnumAwardMode, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
@@ -199,9 +199,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                     }
 
                     if (jsonResult.code != 200 || jsonParseError) {
-                        return NotificationSender.send("购买异常", result, NotificationType.PUSH_AND_EMAIL)
+                        return NotificationSender.send("购买异常", result, EnumNotificationType.PUSH_AND_EMAIL)
                             .then(() => {
-                                return SMSSender.send("购买异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                                return SMSSender.send("购买异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
                             })
                             .then(() => {
                                 return result;
@@ -212,9 +212,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
             })
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);
-                return NotificationSender.send("购买异常", e.message, NotificationType.PUSH_AND_EMAIL)
+                return NotificationSender.send("购买异常", e.message, EnumNotificationType.PUSH_AND_EMAIL)
                     .then(() => {
-                        return SMSSender.send("购买异常", moment().format('HH:mm:ss'), "cnlands", 243600);
+                        return SMSSender.send("购买异常", moment().format('HH:mm:ss'), EnumSMSSignType.cnlands, EnumSMSTemplateType.REAL_INVEST_EXCEPTION);
                     });
             });
     }
