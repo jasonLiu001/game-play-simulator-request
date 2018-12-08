@@ -50,23 +50,26 @@ var utilsMixin = {
          *
          * 初始投注表
          */
-        initInvestInfoCharts(url, domElement, chartName) {
+        initInvestInfoCharts(url, domElement, dataTableName, planType, chartName) {
             // 指定图表的配置项和数据
             let option = {
                 title: {
                     text: ''
                 },
-                tooltip: {
+                tooltip: {//显示提示层
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross',
                         label: {
                             backgroundColor: '#283b56'
                         }
-                    }
+                    },
+                    confine: true,//限制在图表内
+                    enterable: true//鼠标可以进入提示层点击
                 },
                 legend: {
-                    data: ['Echarts']
+                    top: 'bottom',
+                    data: ['利润']
                 },
                 xAxis: {
                     type: 'category',
@@ -94,7 +97,10 @@ var utilsMixin = {
                 });
 
                 // 基于准备好的dom，初始化echarts实例
-                let myChart = echarts.init(document.getElementById(domElement));
+                let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
+                myChart.on('click', function (r) {
+                    console.log(r);
+                });
                 let chartOption = $.extend(true, {}, option, {title: {text: chartName}});
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(chartOption);
