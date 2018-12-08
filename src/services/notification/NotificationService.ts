@@ -117,19 +117,6 @@ export class NotificationService {
                                 }
                             });
                     }, 600);
-
-                    //上期投注提醒
-                    if (AppSettings.investNotification) {
-                        setTimeout(() => {
-                            this.startInvestNotification()
-                                .catch((err) => {
-                                    if (err) {
-                                        log.error("上期投注预警邮件通知异常");
-                                        log.error(err);
-                                    }
-                                });
-                        }, 700);
-                    }
                 });
         });
     }

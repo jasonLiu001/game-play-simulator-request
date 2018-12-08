@@ -16,7 +16,6 @@ import {NotificationSender} from "../notification/NotificationSender";
 import {SettingService} from "../settings/SettingService";
 import BlueBirdPromise = require('bluebird');
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
-import {EmailSender} from "../notification/sender/EmailSender";
 import {SMSSender} from "../notification/sender/SMSSender";
 
 let log4js = require('log4js'),
