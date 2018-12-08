@@ -107,12 +107,6 @@ export const enum NotificationType {
 
     /**
      *
-     * 短信通知
-     */
-    SMS = "sms",
-
-    /**
-     *
      * 邮件通知
      */
     EMAIL = "email",
@@ -121,17 +115,5 @@ export const enum NotificationType {
      *
      * push和email通知
      */
-    PUSH_AND_EMAIL = "push_and_email",
-
-    /**
-     *
-     * 短信和email通知
-     */
-    SMS_AND_EMAIL = "sms_and_email",
-
-    /**
-     *
-     * push sms email 通知
-     */
-    PUSH_AND_SMS_AND_EMAIL = ""
+    PUSH_AND_EMAIL = "push_and_email"
 }

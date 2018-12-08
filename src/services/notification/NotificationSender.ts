@@ -36,24 +36,6 @@ export class NotificationSender {
                 //发送e-mail
                 promiseArray.push(EmailSender.send(title, content));
                 break;
-            case NotificationType.SMS:
-                //发送短信
-                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
-                break;
-            case NotificationType.SMS_AND_EMAIL:
-                //发送短信
-                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
-                //发送e-mail
-                promiseArray.push(EmailSender.send(title, content));
-                break;
-            case NotificationType.PUSH_AND_SMS_AND_EMAIL:
-                //发送push
-                promiseArray.push(PushSender.send(title, content));
-                //发送短信
-                promiseArray.push(SMSSender.send(title, content, "cnlands", 243600));
-                //发送e-mail
-                promiseArray.push(EmailSender.send(title, content));
-                break;
             default:
                 //发送e-mail
                 promiseArray.push(EmailSender.send(title, content));
