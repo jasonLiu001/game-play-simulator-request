@@ -1,4 +1,47 @@
 var utilsMixin = {
+    data() {//这里的data写成方法，不是属性，要特别注意
+        return {
+            chartDefaultOption: {//图表的公共配置
+                title: {
+                    text: ''
+                },
+                tooltip: {//显示提示层
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        snap: true,//鼠标移动自动吸附数据点
+                        label: {
+                            backgroundColor: '#283b56'
+                        }
+                    },
+                    formatter: function (params) {//添加点击事件 需要自定义tooltip
+                        let html = '';
+                        if (params.length > 0) {
+                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
+                            html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
+                            html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
+                            html += '</div>';
+                        }
+                        return html;
+                    },
+                    confine: true,//限制在图表内
+                    enterable: true//鼠标可以进入提示层点击
+                },
+                legend: {
+                    top: 'bottom',
+                    data: ['利润']
+                },
+                xAxis: {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: []
+            }
+        };
+    },
     methods: {
         getUrlParameterByName(name, url) {
             if (!url) url = window.location.href;
@@ -61,53 +104,16 @@ var utilsMixin = {
                     periods.push(item.period);
                     winMoneys.push(item.winMoney);
                 }
-                console.log(myChart.getDom());
 
+                //复制一个新option
+                let chartOption = $.extend(true, {}, this.chartDefaultOption);
+                chartOption.xAxis.data = periods;
+                chartOption.series.push({
+                    type: 'line',
+                    data: winMoneys
+                });
                 //更新图表显示
-                myChart.setOption({
-                    title: {
-                        text: ''
-                    },
-                    tooltip: {//显示提示层
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'cross',
-                            snap: true,//鼠标移动自动吸附数据点
-                            label: {
-                                backgroundColor: '#283b56'
-                            }
-                        },
-                        formatter: function (params) {//添加点击事件 需要自定义tooltip
-                            let html = '';
-                            if (params.length > 0) {
-                                let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
-                                html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
-                                html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
-                                html += '</div>';
-                            }
-                            return html;
-                        },
-                        confine: true,//限制在图表内
-                        enterable: true//鼠标可以进入提示层点击
-                    },
-                    legend: {
-                        top: 'bottom',
-                        data: ['利润']
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: periods
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [
-                        {
-                            type: 'line',
-                            data: winMoneys
-                        }
-                    ]
-                }, true);
+                myChart.setOption(chartOption, true);
                 myChart.hideLoading();
             });
         },
@@ -116,46 +122,6 @@ var utilsMixin = {
          * 初始投注表
          */
         initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
-            // 指定图表的配置项和数据
-            let option = {
-                title: {
-                    text: ''
-                },
-                tooltip: {//显示提示层
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross',
-                        snap: true,//鼠标移动自动吸附数据点
-                        label: {
-                            backgroundColor: '#283b56'
-                        }
-                    },
-                    formatter: function (params) {//添加点击事件 需要自定义tooltip
-                        let html = '';
-                        if (params.length > 0) {
-                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
-                            html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
-                            html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
-                            html += '</div>';
-                        }
-                        return html;
-                    },
-                    confine: true,//限制在图表内
-                    enterable: true//鼠标可以进入提示层点击
-                },
-                legend: {
-                    top: 'bottom',
-                    data: ['利润']
-                },
-                xAxis: {
-                    type: 'category',
-                    data: []
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: []
-            };
             // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {
                 let data = res.data.data;
@@ -166,14 +132,15 @@ var utilsMixin = {
                     periods.push(item.period);
                     winMoneys.push(item.winMoney);
                 }
-                option.xAxis.data = periods;
-                option.series.push({
+
+
+                let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
+                let chartOption = $.extend(true, {}, this.chartDefaultOption, {title: {text: chartName}});
+                chartOption.xAxis.data = periods;
+                chartOption.series.push({
                     type: 'line',
                     data: winMoneys
                 });
-
-                let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
-                let chartOption = $.extend(true, {}, option, {title: {text: chartName}});
                 myChart.showLoading();
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(chartOption);
