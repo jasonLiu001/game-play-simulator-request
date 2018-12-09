@@ -60,11 +60,12 @@ var utilsMixin = {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross',
+                        snap: true,//鼠标移动自动吸附数据点
                         label: {
                             backgroundColor: '#283b56'
                         }
                     },
-                    formatter: function (params) {//添加点击事件 自定义tooltip
+                    formatter: function (params) {//添加点击事件 需要自定义tooltip
                         let html = '';
                         if (params.length > 0) {
                             let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
