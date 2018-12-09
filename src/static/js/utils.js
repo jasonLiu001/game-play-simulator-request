@@ -98,6 +98,16 @@ var utilsMixin = {
             this.planType = planType;
             myChart.showLoading();
             axios.post(url).then((res) => {
+                //复制一个新option
+                let chartOption = $.extend(true, {}, this.chartDefaultOption);
+
+                if (!res.data) { //无数据
+                    //更新图表显示
+                    myChart.setOption(chartOption, true);
+                    myChart.hideLoading();
+                    return;
+                }
+
                 let data = res.data.data;
                 let periods = [];
                 let winMoneys = [];
@@ -107,8 +117,6 @@ var utilsMixin = {
                     winMoneys.push(item.winMoney);
                 }
 
-                //复制一个新option
-                let chartOption = $.extend(true, {}, this.chartDefaultOption);
                 chartOption.xAxis.data = periods;
                 chartOption.series.push({
                     type: 'line',
