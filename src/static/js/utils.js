@@ -61,15 +61,53 @@ var utilsMixin = {
                     periods.push(item.period);
                     winMoneys.push(item.winMoney);
                 }
-                let option = myChart.getOption();
+                console.log(myChart.getDom());
 
-                option.xAxis.data = periods;
-                option.series = [];//清空旧数据
-                option.series.push({
-                    type: 'line',
-                    data: winMoneys
-                });
-                myChart.setOption(option);
+                //更新图表显示
+                myChart.setOption({
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {//显示提示层
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            snap: true,//鼠标移动自动吸附数据点
+                            label: {
+                                backgroundColor: '#283b56'
+                            }
+                        },
+                        formatter: function (params) {//添加点击事件 需要自定义tooltip
+                            let html = '';
+                            if (params.length > 0) {
+                                let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
+                                html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
+                                html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
+                                html += '</div>';
+                            }
+                            return html;
+                        },
+                        confine: true,//限制在图表内
+                        enterable: true//鼠标可以进入提示层点击
+                    },
+                    legend: {
+                        top: 'bottom',
+                        data: ['利润']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: periods
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            type: 'line',
+                            data: winMoneys
+                        }
+                    ]
+                }, true);
                 myChart.hideLoading();
             });
         },

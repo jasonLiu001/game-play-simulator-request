@@ -21,10 +21,6 @@ var app = new Vue({
             this.updateInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 1), this.plan01_chart);
             this.updateInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 2), this.plan02_chart);
             this.updateInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 3), this.plan03_chart);
-
-            console.log(this.createTime);
-            //当前选择的日期
-            console.log(this.pageSize);
         }
     },
     created() {
