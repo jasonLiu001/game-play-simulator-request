@@ -5,10 +5,13 @@
     <title>Invest图表展示</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0, minimal-ui">
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../../css/datepicker.min.css"/>
     <link rel="icon" href="../../favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="../../libs/echarts.common.min.js"></script>
     <script type="text/javascript" src="../../libs/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="../../libs/datepicker.min.js"></script>
+    <script type="text/javascript" src="../../libs/i18n/datepicker.zh.js"></script>
     <script type="text/javascript" src="../../libs/vue.js"></script>
     <script type="text/javascript" src="../../libs/axios.min.js"></script>
     <script type="text/javascript" src="../../js/apiList.js"></script>
@@ -17,6 +20,18 @@
 </head>
 <body>
 <div class="container-fluid" id="app">
+    <div class="d-flex flex-column mt-3 p-1">
+        <div>
+            <label>查询时间：</label>
+            <input type='text' id="datepicker" placeholder="请选择查询日期" class='form-control datepicker-here' data-language='zh'
+                   data-timepicker="true"/>
+        </div>
+        <div>
+            <label>记录个数：</label>
+
+        </div>
+        <button class="mt-1 btn btn-primary">查询</button>
+    </div>
     <div id="plan_01" style="height:400px;"></div>
     <div id="plan_02" style="height:400px;"></div>
     <div id="plan_03" style="height:400px;"></div>

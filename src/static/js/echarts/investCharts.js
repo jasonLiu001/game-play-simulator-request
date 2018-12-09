@@ -6,6 +6,9 @@ var app = new Vue({
     mixins: [utilsMixin],
     methods: {},
     created() {
+        //日期控件初始化
+        $('#datepicker').datepicker();
+
         //初始化图表
         this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', 1), 'plan_01', 'invest', 1, 'Invest_01');
         this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', 2), 'plan_02', 'invest', 2, 'Invest_02');
