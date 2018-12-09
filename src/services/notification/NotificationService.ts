@@ -23,6 +23,8 @@ let log4js = require('log4js'),
  * 通知配置类
  */
 class NotificationConfig {
+    //暂时停用无用通知
+    public static disableUnusedNotifiction = true;
     //数据库中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
     public static lastedRealInvestPeriod: string = null;
     //数据库中 当天第一条记录的投注期号 用于不重复发送通知邮件
@@ -52,17 +54,20 @@ export class NotificationService {
 
             SettingService.getAndInitSettings()
                 .then(() => {
-                    //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
-                    setTimeout(() => {
-                        //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
-                        this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
-                            .catch((err) => {
-                                if (err) {
-                                    log.error("当天第1期错误提醒邮件通知异常");
-                                    log.error(err);
-                                }
-                            });
-                    }, 100);
+                    if (!NotificationConfig.disableUnusedNotifiction) {//暂时屏蔽无用通知
+                        //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
+                        setTimeout(() => {
+                            //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
+                            this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
+                                .catch((err) => {
+                                    if (err) {
+                                        log.error("当天第1期错误提醒邮件通知异常");
+                                        log.error(err);
+                                    }
+                                });
+                        }, 100);
+                    }
+
 
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     //连错4期提醒
@@ -119,6 +124,21 @@ export class NotificationService {
                                 }
                             });
                     }, 600);
+
+                    if (!NotificationConfig.disableUnusedNotifiction) {//暂时屏蔽无用通知
+                        //上期投注提醒
+                        if (AppSettings.investNotification) {
+                            setTimeout(() => {
+                                this.startInvestNotification(CONST_INVEST_TABLE.tableName)
+                                    .catch((err) => {
+                                        if (err) {
+                                            log.error("上期投注预警邮件通知异常");
+                                            log.error(err);
+                                        }
+                                    });
+                            }, 700);
+                        }
+                    }
                 });
         });
     }
