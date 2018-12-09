@@ -101,7 +101,7 @@ var utilsMixin = {
                 //复制一个新option
                 let chartOption = $.extend(true, {}, this.chartDefaultOption);
 
-                if (!res.data) { //无数据
+                if (!res.data.data) { //无数据
                     //更新图表显示
                     myChart.setOption(chartOption, true);
                     myChart.hideLoading();
