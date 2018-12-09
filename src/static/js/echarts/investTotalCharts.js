@@ -1,10 +1,25 @@
 var app = new Vue({
     el: '#app',
     data() {
-        return {};
+        return {
+            createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            pageSize: 20
+        };
     },
     mixins: [utilsMixin],
-    methods: {},
+    methods: {
+        btnQueryClickHandler(event) {
+            //日期
+            let picker = $('#datepicker').data('datepicker');
+            let selectedDateArray = picker.selectedDates;
+            if (selectedDateArray.length >= 0) {
+                this.createTime = moment(selectedDateArray[0]).format('YYYY-MM-DD HH:mm:ss');
+            }
+            console.log(this.createTime);
+            //当前选择的日期
+            console.log(this.pageSize);
+        }
+    },
     created() {
         //日期控件初始化
         $('#datepicker').datepicker();
