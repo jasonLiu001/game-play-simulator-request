@@ -58,8 +58,12 @@ export class NotificationService {
                     if (!NotificationConfig.disableUnusedNotifiction) {//暂时屏蔽无用通知
                         //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                         setTimeout(() => {
+                            log.info("开始检查当天第1期错误情况...");
                             //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
                             this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
+                                .then(() => {
+                                    log.info("当天第1期错误情况检查完成");
+                                })
                                 .catch((err) => {
                                     if (err) {
                                         log.error("当天第1期错误提醒邮件通知异常");
@@ -73,7 +77,11 @@ export class NotificationService {
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     //连错4期提醒
                     setTimeout(() => {
+                        log.info("开始检查是否存在连错4期...");
                         this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 4, false)
+                            .then(() => {
+                                log.info("是否存在连错4期检查完成");
+                            })
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错4期提醒邮件通知异常");
@@ -83,7 +91,11 @@ export class NotificationService {
                     }, 200);
                     //连错3期提醒
                     setTimeout(() => {
+                        log.info("开始检查是否存在连错3期...");
                         this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 3, false)
+                            .then(() => {
+                                log.info("是否存在连错3期检查完成");
+                            })
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错3期提醒邮件通知异常");
@@ -93,7 +105,11 @@ export class NotificationService {
                     }, 300);
                     //连错2期提醒
                     setTimeout(() => {
+                        log.info("开始检查是否存在连错2期...");
                         this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
+                            .then(() => {
+                                log.info("是否存在连错2期检查完成");
+                            })
                             .catch((err) => {
                                 if (err) {
                                     log.error("连错2期提醒邮件通知异常");
@@ -104,8 +120,12 @@ export class NotificationService {
 
                     //连错1期提醒
                     if (AppSettings.lastPeriodErrorInvestNotification) {
+                        log.info("开始检查是否存在连错1期...");
                         setTimeout(() => {
                             this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 1, false)
+                                .then(() => {
+                                    log.info("是否存在连错1期检查完成");
+                                })
                                 .catch((err) => {
                                     if (err) {
                                         log.error("连错1期提醒邮件通知异常");
@@ -117,7 +137,11 @@ export class NotificationService {
 
                     //最大最小利润预警
                     setTimeout(() => {
+                        log.info("开始检查最大最小利润情况...");
                         this.sendMaxOrMinProfitNotification(CONST_INVEST_TABLE.tableName)
+                            .then(() => {
+                                log.info("最大最小利润检查完成");
+                            })
                             .catch((err) => {
                                 if (err) {
                                     log.error("最大最小利润预警邮件通知异常");
@@ -129,8 +153,12 @@ export class NotificationService {
                     if (!NotificationConfig.disableUnusedNotifiction) {//暂时屏蔽无用通知
                         //上期投注提醒
                         if (AppSettings.investNotification) {
+                            log.info("开始检查上期投注是否存在错误...");
                             setTimeout(() => {
                                 this.startInvestNotification(CONST_INVEST_TABLE.tableName)
+                                    .then(() => {
+                                        log.info("上期投注是否存在错误检查完成");
+                                    })
                                     .catch((err) => {
                                         if (err) {
                                             log.error("上期投注预警邮件通知异常");
@@ -140,6 +168,9 @@ export class NotificationService {
                             }, 700);
                         }
                     }
+                })
+                .then(() => {
+                    log.info("通知任务，检查所有通知结束，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
                 });
         });
     }
