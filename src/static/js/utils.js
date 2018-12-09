@@ -119,7 +119,7 @@ var utilsMixin = {
         },
         /**
          *
-         * 初始投注表
+         * 初始投注图表显示
          */
         initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
             // 基于准备好的dom，初始化echarts实例
