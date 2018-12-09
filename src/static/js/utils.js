@@ -48,9 +48,36 @@ var utilsMixin = {
         },
         /**
          *
+         * 更新图表显示
+         */
+        updateInvestInfoCharts(url, myChart) {
+            myChart.showLoading();
+            axios.post(url).then((res) => {
+                let data = res.data.data;
+                let periods = [];
+                let winMoneys = [];
+                for (let i = data.length - 1; i >= 0; i--) {
+                    let item = data[i];
+                    periods.push(item.period);
+                    winMoneys.push(item.winMoney);
+                }
+                let option = myChart.getOption();
+
+                option.xAxis.data = periods;
+                option.series = [];//清空旧数据
+                option.series.push({
+                    type: 'line',
+                    data: winMoneys
+                });
+                myChart.setOption(option);
+                myChart.hideLoading();
+            });
+        },
+        /**
+         *
          * 初始投注表
          */
-        initInvestInfoCharts(url, domElement, dataTableName, planType, chartName) {
+        initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
             // 指定图表的配置项和数据
             let option = {
                 title: {
@@ -91,7 +118,7 @@ var utilsMixin = {
                 },
                 series: []
             };
-
+            // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {
                 let data = res.data.data;
                 let periods = [];
@@ -107,11 +134,13 @@ var utilsMixin = {
                     data: winMoneys
                 });
 
-                // 基于准备好的dom，初始化echarts实例
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
                 let chartOption = $.extend(true, {}, option, {title: {text: chartName}});
+                myChart.showLoading();
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(chartOption);
+                myChart.hideLoading();
+                if (successCallback && typeof successCallback === 'function') successCallback(myChart);
             });
         }
     }
