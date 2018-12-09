@@ -1,7 +1,6 @@
 var utilsMixin = {
     data() {//这里的data写成方法，不是属性，要特别注意
         return {
-            planType: '',
             chartDefaultOption: {//图表的公共配置
                 title: {
                     text: ''
@@ -15,15 +14,7 @@ var utilsMixin = {
                             backgroundColor: '#283b56'
                         }
                     },
-                    formatter: function (params) {//添加点击事件 需要自定义tooltip
-                        let html = '';
-                        if (params.length > 0) {
-                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + this.planType;
-                            html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
-                            html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
-                            html += '</div>';
-                        }
-                        return html;
+                    formatter: function (params) {
                     },
                     confine: true,//限制在图表内
                     enterable: true//鼠标可以进入提示层点击
@@ -90,12 +81,22 @@ var utilsMixin = {
             }
             return totalArray;
         },
+        tooltipFormatter(params, planType) {
+            let html = '';
+            if (params.length > 0) {
+                let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
+                html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
+                html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
+                html += '</div>';
+            }
+            return html;
+        },
         /**
          *
          * 更新图表显示
          */
         updateInvestInfoCharts(url, planType, myChart) {
-            this.planType = planType;
+            let self = this;
             myChart.showLoading();
             axios.post(url).then((res) => {
                 //复制一个新option
@@ -116,7 +117,9 @@ var utilsMixin = {
                     periods.push(item.period);
                     winMoneys.push(item.winMoney);
                 }
-
+                chartOption.tooltip.formatter = function (params) {
+                    return self.tooltipFormatter(params, planType);
+                };
                 chartOption.xAxis.data = periods;
                 chartOption.series.push({
                     type: 'line',
@@ -132,7 +135,7 @@ var utilsMixin = {
          * 初始投注图表显示
          */
         initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
-            this.planType = planType;
+            let self = this;
             // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {
                 let data = res.data.data;
@@ -147,6 +150,9 @@ var utilsMixin = {
 
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
                 let chartOption = $.extend(true, {}, this.chartDefaultOption, {title: {text: chartName}});
+                chartOption.tooltip.formatter = function (params) {
+                    return self.tooltipFormatter(params, planType);
+                };
                 chartOption.xAxis.data = periods;
                 chartOption.series.push({
                     type: 'line',
