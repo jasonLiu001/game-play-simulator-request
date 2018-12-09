@@ -1,6 +1,7 @@
 var utilsMixin = {
     data() {//这里的data写成方法，不是属性，要特别注意
         return {
+            planType: '',
             chartDefaultOption: {//图表的公共配置
                 title: {
                     text: ''
@@ -17,7 +18,7 @@ var utilsMixin = {
                     formatter: function (params) {//添加点击事件 需要自定义tooltip
                         let html = '';
                         if (params.length > 0) {
-                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + planType;
+                            let hrefUrl = "../invest/investTotalDetail.html?period=" + params[0].axisValue + "&planType=" + this.planType;
                             html += '<div onclick="javascript:window.open(\'' + hrefUrl + '\')">';
                             html += params[0].axisValue + '<br/>' + params[0].marker + params[0].data + '<br/>';
                             html += '</div>';
@@ -93,7 +94,8 @@ var utilsMixin = {
          *
          * 更新图表显示
          */
-        updateInvestInfoCharts(url, myChart) {
+        updateInvestInfoCharts(url, planType, myChart) {
+            this.planType = planType;
             myChart.showLoading();
             axios.post(url).then((res) => {
                 let data = res.data.data;
@@ -122,6 +124,7 @@ var utilsMixin = {
          * 初始投注图表显示
          */
         initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
+            this.planType = planType;
             // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {
                 let data = res.data.data;
