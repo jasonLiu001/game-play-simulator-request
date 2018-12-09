@@ -52,6 +52,7 @@ export class NotificationService {
             //首先判断时间是否在设置的时间内 不在投注时间内直接返回
             if (TimeService.isInStopInvestTime() || TimeService.isReachInvestEndTime()) return;
 
+            log.info("通知任务，同步程序设置，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
             SettingService.getAndInitSettings()
                 .then(() => {
                     if (!NotificationConfig.disableUnusedNotifiction) {//暂时屏蔽无用通知
