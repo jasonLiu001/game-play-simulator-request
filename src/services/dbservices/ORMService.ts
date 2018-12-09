@@ -476,13 +476,13 @@ export class LotteryDbService {
                                     key: 'investNotification',
                                     value: '0',
                                     orderId: '16',
-                                    desc: '每期投注都进行邮件提醒，模拟+真实下都有效'
+                                    desc: '投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'lastPeriodErrorInvestNotification',
                                     value: '0',
                                     orderId: '17',
-                                    desc: '上期错误进行邮件提醒，模拟+真实下都有效'
+                                    desc: '上期错误错误提醒，遇到错误进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'siteUrl',
