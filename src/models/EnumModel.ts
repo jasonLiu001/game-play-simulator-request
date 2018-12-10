@@ -153,5 +153,5 @@ export const enum EnumSMSTemplateType {
      *
      * 连续购买错误短信正文模板id
      */
-    CONTINUE_INVEST_ERROR = 243895
+    CONTINUE_INVEST_ERROR = 244320
 }
