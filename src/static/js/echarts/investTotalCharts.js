@@ -3,7 +3,7 @@ var app = new Vue({
     data() {
         return {
             createTime: moment().format('YYYY-MM-DD'),
-            pageSize: 20,
+            pageSize: 120,
             plan01_chart: null,
             plan02_chart: null,
             plan03_chart: null
@@ -30,13 +30,13 @@ var app = new Vue({
         $('#datepicker').datepicker();
 
         //初始化图表
-        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', 120).replace('{1}', 1).replace('{2}', ''), 'plan_01', 'invest_total', 1, 'InvestTotal_01', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.createTime), 'plan_01', 'invest_total', 1, 'InvestTotal_01', (myChart) => {
             self.plan01_chart = myChart;
         });
-        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', 120).replace('{1}', 2).replace('{2}', ''), 'plan_02', 'invest_total', 2, 'InvestTotal_02', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.createTime), 'plan_02', 'invest_total', 2, 'InvestTotal_02', (myChart) => {
             self.plan02_chart = myChart;
         });
-        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', 120).replace('{1}', 3).replace('{2}', ''), 'plan_03', 'invest_total', 3, 'InvestTotal_03', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestTotalInfoList.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.createTime), 'plan_03', 'invest_total', 3, 'InvestTotal_03', (myChart) => {
             self.plan03_chart = myChart;
         });
     },

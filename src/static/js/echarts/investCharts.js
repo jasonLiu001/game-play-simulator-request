@@ -29,13 +29,13 @@ var app = new Vue({
         $('#datepicker').datepicker();
 
         //初始化图表
-        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', 20).replace('{1}', 1).replace('{2}', ''), 'plan_01', 'invest', 1, 'Invest_01', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.createTime), 'plan_01', 'invest', 1, 'Invest_01', (myChart) => {
             self.plan01_chart = myChart;
         });
-        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', 20).replace('{1}', 2).replace('{2}', ''), 'plan_02', 'invest', 2, 'Invest_02', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.createTime), 'plan_02', 'invest', 2, 'Invest_02', (myChart) => {
             self.plan02_chart = myChart;
         });
-        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', 20).replace('{1}', 3).replace('{2}', ''), 'plan_03', 'invest', 3, 'Invest_03', (myChart) => {
+        this.initInvestInfoCharts(apiList.findInvestInfoList.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.createTime), 'plan_03', 'invest', 3, 'Invest_03', (myChart) => {
             self.plan03_chart = myChart;
         });
     },
