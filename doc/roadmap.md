@@ -2,7 +2,7 @@
 
 xml格式
 
-1. `http://kaijiang.500.com/static/public/ssc/xml/qihaoxml/20181001.xml?_A=SRZANHID1538363085068`【有历史数据】
+1. `http://kaijiang.500.com/static/public/ssc/xml/qihaoxml/20181001.xml?_A=SRZANHID1538363085068`【有历史数据，有缓存，数据全】
 
 JSON格式
 
