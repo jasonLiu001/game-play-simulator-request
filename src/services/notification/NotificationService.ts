@@ -342,8 +342,10 @@ export class NotificationService {
 
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
             if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
+                log.info('检查到连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
                 //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                 NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
+                log.info('开始发送，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
                 return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
             }
 
