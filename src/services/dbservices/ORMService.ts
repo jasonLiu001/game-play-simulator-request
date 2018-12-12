@@ -722,11 +722,11 @@ export class LotteryDbService {
     /**
      *
      * 根据状态获取投注信息
-     * SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status =1  order by a.period desc LIMIT 0,120
+     * SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status =1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " order by a.period desc LIMIT 0,120";
+        let sql = "SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + "  AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
         ////这里的表关联暂时无法使用
@@ -842,11 +842,11 @@ export class LotteryDbService {
     /**
      *
      * 根据状态获取投注信息
-     * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 order by a.period desc LIMIT 0,120
+     * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
     public static getInvestTotalInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " order by a.period desc LIMIT 0,120";
+        let sql = "SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
         ////这里的表关联暂时无法使用
@@ -931,11 +931,11 @@ export class LotteryDbService {
     /**
      *
      * 根据状态获取投注计划结果
-     * SELECT r.*, a.openNumber FROM plan_result AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status = 1  order by a.period DESC LIMIT 0,120
+     * SELECT r.*, a.openNumber FROM plan_result AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status = 1 AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
     public static getPlanResultInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT r.*, a.openNumber FROM plan_result AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status =" + status + "  order by a.period DESC LIMIT 0,120";
+        let sql = "SELECT r.*, a.openNumber FROM plan_result AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status =" + status + " AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
     }
 
@@ -1045,11 +1045,11 @@ export class LotteryDbService {
     /**
      *
      * 根据状态获取投注号码
-     * SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status = 1  order by a.period DESC LIMIT 0,120
+     * SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status = 1 AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
     public static getPlanInvestNumbersInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status =" + status + "  order by a.period DESC LIMIT 0,120";
+        let sql = "SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status =" + status + " AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
     }
 
