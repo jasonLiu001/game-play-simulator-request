@@ -13,6 +13,7 @@ import cron = require('node-cron');
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
+import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 
 
 let log4js = require('log4js'),
@@ -59,15 +60,28 @@ export class NotificationService {
                     //暂时屏蔽无用通知
                     if (NotificationConfig.disableUnusedNotifiction) return BlueBirdPromise.resolve();
 
-                    log.info("开始检查当天第1期错误情况...");
+                    log.info("开始检查【invest】表当天第1期错误情况...");
                     //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
                     return this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
                         .then(() => {
-                            log.info("当天第1期错误情况检查完成");
+                            log.info("【invest】表 当天第1期错误情况检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("当天第1期错误提醒邮件通知异常");
+                                log.error("【invest】表 当天第1期错误提醒邮件通知异常");
+                                log.error(err);
+                            }
+                        });
+                })
+                .then(() => {
+                    log.info("开始检查【invest_total】表是否存在连错2期...");
+                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, false)
+                        .then(() => {
+                            log.info("【invest_total】表是否存在连错2期检查完成");
+                        })
+                        .catch((err) => {
+                            if (err) {
+                                log.error("【invest_total】表 连错2期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
@@ -75,42 +89,42 @@ export class NotificationService {
                 .then(() => {
                     //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                     //连错4期提醒
-                    log.info("开始检查是否存在连错4期...");
+                    log.info("开始检查【invest】表是否存在连错4期...");
                     return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 4, false)
                         .then(() => {
-                            log.info("是否存在连错4期检查完成");
+                            log.info("【invest】表是否存在连错4期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("连错4期提醒邮件通知异常");
+                                log.error("【invest】表 连错4期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
                 })
                 .then(() => {
                     //连错3期提醒
-                    log.info("开始检查是否存在连错3期...");
+                    log.info("开始检查【invest】表是否存在连错3期...");
                     return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 3, false)
                         .then(() => {
                             log.info("是否存在连错3期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("连错3期提醒邮件通知异常");
+                                log.error("【invest】表 连错3期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
                 })
                 .then(() => {
                     //连错2期提醒
-                    log.info("开始检查是否存在连错2期...");
+                    log.info("开始检查【invest】表是否存在连错2期...");
                     return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
                         .then(() => {
-                            log.info("是否存在连错2期检查完成");
+                            log.info("【invest】表是否存在连错2期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("连错2期提醒邮件通知异常");
+                                log.error("【invest】表 连错2期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
@@ -118,28 +132,28 @@ export class NotificationService {
                 .then(() => {
                     //连错1期提醒
                     if (!AppSettings.lastPeriodErrorInvestNotification) return BlueBirdPromise.resolve();
-                    log.info("开始检查是否存在连错1期...");
+                    log.info("开始检查【invest】表是否存在连错1期...");
                     return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 1, false)
                         .then(() => {
-                            log.info("是否存在连错1期检查完成");
+                            log.info("【invest】表是否存在连错1期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("连错1期提醒邮件通知异常");
+                                log.error("【invest】表 连错1期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
                 })
                 .then(() => {
                     //最大最小利润预警
-                    log.info("开始检查最大最小利润情况...");
+                    log.info("开始检查【invest】表最大最小利润情况...");
                     return this.sendMaxOrMinProfitNotification(CONST_INVEST_TABLE.tableName)
                         .then(() => {
-                            log.info("最大最小利润检查完成");
+                            log.info("【invest】表最大最小利润检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("最大最小利润预警邮件通知异常");
+                                log.error("【invest】表 最大最小利润预警邮件通知异常");
                                 log.error(err);
                             }
                         });
@@ -149,14 +163,14 @@ export class NotificationService {
                     if (NotificationConfig.disableUnusedNotifiction) return BlueBirdPromise.resolve();
                     if (!AppSettings.investNotification) return BlueBirdPromise.resolve();
 
-                    log.info("开始检查上期投注是否存在错误...");
+                    log.info("开始检查【invest】表上期投注是否存在错误...");
                     return this.startInvestNotification(CONST_INVEST_TABLE.tableName)
                         .then(() => {
-                            log.info("上期投注是否存在错误检查完成");
+                            log.info("【invest】表上期投注是否存在错误检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("上期投注预警邮件通知异常");
+                                log.error("【invest】表 上期投注预警邮件通知异常");
                                 log.error(err);
                             }
                         });
@@ -304,8 +318,13 @@ export class NotificationService {
     private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
-        //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
+        let historyData: Array<InvestInfo>;
+        if (tableName == CONST_INVEST_TABLE.tableName) {
+            //方案  最新的投注记录
+            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
+        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
+        }
 
         //数量不足 不发送邮件通知
         if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(true);
@@ -342,10 +361,10 @@ export class NotificationService {
 
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
             if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
-                log.info('检查到连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                log.info('检查【%s】表，存在连 %s %s 期的记录', tableName, isWin ? '中' : '错', continueMaxWinOrLoseTimes);
                 //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                 NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
-                log.info('开始发送，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                log.info('开始发送，【%s】表，连 %s %s 期提醒', tableName, isWin ? '中' : '错', continueMaxWinOrLoseTimes);
                 return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
             }
 
@@ -365,7 +384,7 @@ export class NotificationService {
      */
     private async sendWinOrLoseEmail(tableName: string, planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
-        let emailContent = "【Invest】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
+        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
         log.info("当前时间：%s %s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle, emailContent);
         let promiseArray: Array<BlueBirdPromise<any>> = [];
         promiseArray.push(SMSSender.send(tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(count), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
