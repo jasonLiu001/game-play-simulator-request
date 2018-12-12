@@ -26,8 +26,10 @@ let log4js = require('log4js'),
 class NotificationConfig {
     //暂时停用无用通知
     public static disableUnusedNotifiction = true;
-    //数据库中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
-    public static lastedRealInvestPeriod: string = null;
+    //invest数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
+    public static invest_lastedRealInvestPeriod: string = null;
+    //invest_total数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
+    public static investTotal_lastedRealInvestPeriod: string = null;
     //数据库中 当天第一条记录的投注期号 用于不重复发送通知邮件
     public static todayFirstRealInvestPeriod: string = null;
     //数据库中 达到利润预警值的投注期号 用于不重复发送通知邮件
@@ -360,14 +362,23 @@ export class NotificationService {
         }
 
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount) {
-            if (NotificationConfig.lastedRealInvestPeriod != historyData[0].period) {
-                log.info('检查【%s】表，存在连 %s %s 期的记录', tableName, isWin ? '中' : '错', continueMaxWinOrLoseTimes);
-                //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
-                NotificationConfig.lastedRealInvestPeriod = historyData[0].period;
-                log.info('开始发送，【%s】表，连 %s %s 期提醒', tableName, isWin ? '中' : '错', continueMaxWinOrLoseTimes);
-                return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
+            if (tableName === CONST_INVEST_TABLE.tableName) {
+                if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
+                    log.info('检查【invest】表，存在连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
+                    NotificationConfig.invest_lastedRealInvestPeriod = historyData[0].period;
+                    log.info('开始发送，【invest】表，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
+                }
+            } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+                if (NotificationConfig.investTotal_lastedRealInvestPeriod != historyData[0].period) {
+                    log.info('检查【invest_total】表，存在连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
+                    NotificationConfig.investTotal_lastedRealInvestPeriod = historyData[0].period;
+                    log.info('开始发送，【invest_total】表，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
+                }
             }
-
         }
 
         return BlueBirdPromise.resolve([]);
