@@ -153,128 +153,160 @@ const Award = sequelize.define('award', {
  * 投注记录表
  */
 const Invest = sequelize.define('invest', {
-    period: {//期号
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    planType: {//方案类型
-        type: Sequelize.INTEGER,
-        primaryKey: true
-    },
-    investNumbers: {//投注号码
-        type: Sequelize.TEXT
-    },
-    investNumberCount: {//投注号码总注数
-        type: Sequelize.INTEGER
-    },
-    currentAccountBalance: {//当前账户余额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    originAccountBalance: {//初始账户余额
-        type: Sequelize.DECIMAL(10, 2),
-        defaultValue: 1000
-    },
-    awardMode: {//元、角、分、厘 模式
-        type: Sequelize.INTEGER
-    },
-    touZhuBeiShu: {//投注倍数
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    isUseReverseInvestNumbers: {//是否取相反的号码投注
-        type: Sequelize.INTEGER,
-        defaultValue: 0
-    },
-    winMoney: {//盈利金额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    status: {//是否开奖标识
-        type: Sequelize.INTEGER
-    },
-    isWin: {//是否中奖标识
-        type: Sequelize.INTEGER
-    },
-    investTime: {//投注日期和时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            const investTime = this.getDataValue('investTime');
-            return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+        period: {//期号
+            type: Sequelize.STRING,
+            primaryKey: true
+        },
+        planType: {//方案类型
+            type: Sequelize.INTEGER,
+            primaryKey: true
+        },
+        investNumbers: {//投注号码
+            type: Sequelize.TEXT
+        },
+        investNumberCount: {//投注号码总注数
+            type: Sequelize.INTEGER
+        },
+        currentAccountBalance: {//当前账户余额
+            type: Sequelize.DECIMAL(10, 2)
+        },
+        originAccountBalance: {//初始账户余额
+            type: Sequelize.DECIMAL(10, 2),
+            defaultValue: 1000
+        },
+        awardMode: {//元、角、分、厘 模式
+            type: Sequelize.INTEGER
+        },
+        touZhuBeiShu: {//投注倍数
+            type: Sequelize.INTEGER,
+            defaultValue: 1
+        },
+        isUseReverseInvestNumbers: {//是否取相反的号码投注
+            type: Sequelize.INTEGER,
+            defaultValue: 0
+        },
+        winMoney: {//盈利金额
+            type: Sequelize.DECIMAL(10, 2)
+        },
+        status: {//是否开奖标识
+            type: Sequelize.INTEGER
+        },
+        isWin: {//是否中奖标识
+            type: Sequelize.INTEGER
+        },
+        investTime: {//投注日期和时间
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW,
+            get: function () {
+                const investTime = this.getDataValue('investTime');
+                return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+        },
+        investDate: {//投注日期
+            type: Sequelize.STRING,
+            defaultValue: moment().format('YYYY-MM-DD')
+        },
+        investTimestamp: {//投注时间
+            type: Sequelize.STRING,
+            defaultValue: moment().format('HH:mm:ss')
         }
     },
-    investDate: {//投注日期
-        type: Sequelize.STRING,
-        defaultValue: moment().format('YYYY-MM-DD')
-    },
-    investTimestamp: {//投注时间
-        type: Sequelize.STRING,
-        defaultValue: moment().format('HH:mm:ss')
-    }
-});
+    {
+        indexes: [
+            {
+                name: 'ix_investTimestamp',
+                fields: ['investTimestamp']
+            },
+            {
+                name: 'ix_investDate',
+                fields: ['investDate']
+            },
+            {
+                name: 'ix_investTime',
+                fields: ['investTime']
+            }
+        ]
+    });
 
 /**
  *
  * 记录每个计划全天所有投注记录
  */
 const InvestTotal = sequelize.define('invest_total', {
-    period: {//期号
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    planType: {//方案类型
-        type: Sequelize.INTEGER,
-        primaryKey: true
-    },
-    investNumbers: {//投注号码
-        type: Sequelize.TEXT
-    },
-    investNumberCount: {//投注号码总注数
-        type: Sequelize.INTEGER
-    },
-    currentAccountBalance: {//当前账户余额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    originAccountBalance: {//初始账户余额
-        type: Sequelize.DECIMAL(10, 2),
-        defaultValue: 1000
-    },
-    awardMode: {//元、角、分、厘 模式
-        type: Sequelize.INTEGER
-    },
-    touZhuBeiShu: {//投注倍数
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    isUseReverseInvestNumbers: {//是否取相反的号码投注
-        type: Sequelize.INTEGER,
-        defaultValue: 0
-    },
-    winMoney: {//盈利金额
-        type: Sequelize.DECIMAL(10, 2)
-    },
-    status: {//是否开奖标识
-        type: Sequelize.INTEGER
-    },
-    isWin: {//是否中奖标识
-        type: Sequelize.INTEGER
-    },
-    investTime: {//投注日期和时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            const investTime = this.getDataValue('investTime');
-            return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+        period: {//期号
+            type: Sequelize.STRING,
+            primaryKey: true
+        },
+        planType: {//方案类型
+            type: Sequelize.INTEGER,
+            primaryKey: true
+        },
+        investNumbers: {//投注号码
+            type: Sequelize.TEXT
+        },
+        investNumberCount: {//投注号码总注数
+            type: Sequelize.INTEGER
+        },
+        currentAccountBalance: {//当前账户余额
+            type: Sequelize.DECIMAL(10, 2)
+        },
+        originAccountBalance: {//初始账户余额
+            type: Sequelize.DECIMAL(10, 2),
+            defaultValue: 1000
+        },
+        awardMode: {//元、角、分、厘 模式
+            type: Sequelize.INTEGER
+        },
+        touZhuBeiShu: {//投注倍数
+            type: Sequelize.INTEGER,
+            defaultValue: 1
+        },
+        isUseReverseInvestNumbers: {//是否取相反的号码投注
+            type: Sequelize.INTEGER,
+            defaultValue: 0
+        },
+        winMoney: {//盈利金额
+            type: Sequelize.DECIMAL(10, 2)
+        },
+        status: {//是否开奖标识
+            type: Sequelize.INTEGER
+        },
+        isWin: {//是否中奖标识
+            type: Sequelize.INTEGER
+        },
+        investTime: {//投注日期和时间
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW,
+            get: function () {
+                const investTime = this.getDataValue('investTime');
+                return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+        },
+        investDate: {//投注日期
+            type: Sequelize.STRING,
+            defaultValue: moment().format('YYYY-MM-DD')
+        },
+        investTimestamp: {//投注时间
+            type: Sequelize.STRING,
+            defaultValue: moment().format('HH:mm:ss')
         }
     },
-    investDate: {//投注日期
-        type: Sequelize.STRING,
-        defaultValue: moment().format('YYYY-MM-DD')
-    },
-    investTimestamp: {//投注时间
-        type: Sequelize.STRING,
-        defaultValue: moment().format('HH:mm:ss')
-    }
-});
+    {
+        indexes: [
+            {
+                name: 'ix_investTimestamp',
+                fields: ['investTimestamp']
+            },
+            {
+                name: 'ix_investDate',
+                fields: ['investDate']
+            },
+            {
+                name: 'ix_investTime',
+                fields: ['investTime']
+            }
+        ]
+    });
 
 /**
  *
