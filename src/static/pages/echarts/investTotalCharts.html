@@ -23,10 +23,16 @@
 <div class="container-fluid" id="app">
     <div class="p-1 mt-1">
         <div class="form-group">
-            <label>查询时间：</label>
-            <input type='text' id="datepicker" placeholder="请选择查询日期" class='form-control datepicker-here'
+            <label>开始时间：</label>
+            <input type='text' id="starttime_datepicker" placeholder="请选择开始日期" class='form-control datepicker-here'
                    data-language='zh'
-                   data-timepicker="false" v-model="createTime"/>
+                   data-timepicker="true" v-model="startTime"/>
+        </div>
+        <div class="form-group">
+            <label>结束时间：</label>
+            <input type='text' id="endtime_datepicker" placeholder="请选择结束日期" class='form-control datepicker-here'
+                   data-language='zh'
+                   data-timepicker="true" v-model="endTime"/>
         </div>
         <div class="form-group">
             <label>记录个数：</label>
