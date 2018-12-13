@@ -4,6 +4,7 @@ var app = new Vue({
         return {
             dataUrl: '',//接口数据url
             yAxisDataType: '',//y轴数据类型
+            chartType: '',//图表类型
             startTime: moment().format('YYYY-MM-DD'),
             endTime: moment().format('YYYY-MM-DD'),
             pageSize: 20,
@@ -15,6 +16,7 @@ var app = new Vue({
     mixins: [utilsMixin],
     methods: {
         btnQueryClickHandler(event) {
+            let self = this;
             //开始日期
             let startTime_datePicker = $('#starttime_datepicker').data('datepicker');
             //结束时间
@@ -27,9 +29,20 @@ var app = new Vue({
             if (endDateArray.length >= 0) {
                 this.endTime = moment(endDateArray[0]).format('YYYY-MM-DD');
             }
-            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType, this.plan01_chart);
-            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.yAxisDataType, this.plan02_chart);
-            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.yAxisDataType, this.plan03_chart);
+
+            //根据图表类型显示数据
+            switch (this.chartType) {
+                case self.chartViewType.line://初始化线性图表
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType, this.plan01_chart);
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.yAxisDataType, this.plan02_chart);
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.yAxisDataType, this.plan03_chart);
+                    break;
+                case self.chartViewType.pillar://初始化柱状图表
+                    self.updatePillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType, this.plan01_chart);
+                    self.updatePillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.yAxisDataType, this.plan02_chart);
+                    self.updatePillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.yAxisDataType, this.plan03_chart);
+                    break;
+            }
         }
     },
     created() {
@@ -43,6 +56,8 @@ var app = new Vue({
         let apiName = this.getUrlParameterByName('apiName');
         //y轴显示的数据类型
         this.yAxisDataType = this.getUrlParameterByName('yAxisDataType');
+        //图表类型
+        this.chartType = this.getUrlParameterByName('chartType');
         switch (apiName) {
             case 'findInvestInfoList':
                 this.dataUrl = apiList.findInvestInfoList;
@@ -52,16 +67,31 @@ var app = new Vue({
                 break;
         }
 
-        //初始化线性图表
-        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
-            self.plan01_chart = myChart;
-        });
-        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
-            self.plan02_chart = myChart;
-        });
-        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType, (myChart) => {
-            self.plan03_chart = myChart;
-        });
+        //根据图表类型显示数据
+        switch (this.chartType) {
+            case self.chartViewType.line://初始化线性图表
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
+                    self.plan01_chart = myChart;
+                });
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
+                    self.plan02_chart = myChart;
+                });
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType, (myChart) => {
+                    self.plan03_chart = myChart;
+                });
+                break;
+            case self.chartViewType.pillar://初始化柱状图表
+                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
+                    self.plan01_chart = myChart;
+                });
+                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
+                    self.plan02_chart = myChart;
+                });
+                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType, (myChart) => {
+                    self.plan03_chart = myChart;
+                });
+                break;
+        }
     },
     mounted() {
         let self = this;
