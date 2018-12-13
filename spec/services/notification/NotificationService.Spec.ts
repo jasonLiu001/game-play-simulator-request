@@ -15,6 +15,12 @@ describe('cancelInvest test', () => {
             .then((result) => {
                 if (result) console.log(result);
                 done();
+            })
+            .catch((error) => {
+                if (error) {
+                    console.log(error);
+                }
+                done();
             });
     }, 60000);
 

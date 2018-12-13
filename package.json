@@ -22,7 +22,7 @@
     "jasmine": "jasmine",
     "dev": "ts-node ./src/Server.ts",
     "test:login": "jasmine ./spec/services/platform/request/RequestLoginService.Spec.js",
-    "send:notification": "ts-node ./spec/services/notification/NotificationService.Spec.ts",
+    "send:notification": "node --require ts-node/register node_modules/jasmine/bin/jasmine.js ./spec/services/notification/NotificationService.Spec.ts",
     "linux:start": "npm run win:start",
     "win:start": "npm run grunt && cd dist && node ./Server.js"
   },
