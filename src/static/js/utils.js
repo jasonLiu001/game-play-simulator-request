@@ -1,7 +1,7 @@
 var utilsMixin = {
     data() {//这里的data写成方法，不是属性，要特别注意
         return {
-            yAxisDataType: {//y轴显示图表类型
+            lineChartYAxisDataType: {//y轴显示图表类型
                 winMoney: 'winMoney',
                 currentAccountBalance: 'currentAccountBalance'
             },
@@ -115,11 +115,20 @@ var utilsMixin = {
 
                 let data = res.data.data;
                 let periods = [];
-                let winMoneys = [];
+                //y轴数据
+                let yData = [];
                 for (let i = data.length - 1; i >= 0; i--) {
                     let item = data[i];
                     periods.push(item.period);
-                    winMoneys.push(item.winMoney);
+                    switch (yAxisDataType) {
+                        case self.lineChartYAxisDataType.winMoney:
+                            yData.push(item.winMoney);
+                            break;
+                        case self.lineChartYAxisDataType.currentAccountBalance:
+                            yData.push(item.currentAccountBalance);
+                            break;
+                    }
+
                 }
                 chartOption.tooltip.formatter = function (params) {
                     return self.tooltipFormatter(params, planType);
@@ -127,7 +136,7 @@ var utilsMixin = {
                 chartOption.xAxis.data = periods;
                 chartOption.series.push({
                     type: 'line',
-                    data: winMoneys
+                    data: yData
                 });
                 //更新图表显示
                 myChart.setOption(chartOption, true);
@@ -144,13 +153,19 @@ var utilsMixin = {
             axios.post(url).then((res) => {
                 let data = res.data.data;
                 let periods = [];
-                let winMoneys = [];
+                let yData = [];
                 for (let i = data.length - 1; i >= 0; i--) {
                     let item = data[i];
                     periods.push(item.period);
-                    winMoneys.push(item.winMoney);
+                    switch (yAxisDataType) {
+                        case self.lineChartYAxisDataType.winMoney:
+                            yData.push(item.winMoney);
+                            break;
+                        case self.lineChartYAxisDataType.currentAccountBalance:
+                            yData.push(item.currentAccountBalance);
+                            break;
+                    }
                 }
-
 
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
                 let chartOption = $.extend(true, {}, this.lineChartDefaultOption, {title: {text: chartName}});
@@ -160,7 +175,7 @@ var utilsMixin = {
                 chartOption.xAxis.data = periods;
                 chartOption.series.push({
                     type: 'line',
-                    data: winMoneys
+                    data: yData
                 });
                 myChart.showLoading();
                 // 使用刚指定的配置项和数据显示图表。
