@@ -5,8 +5,8 @@ var app = new Vue({
             dataUrl: '',//接口数据url
             yAxisDataType: '',//y轴数据类型
             chartType: '',//图表类型
-            startTime: moment().format('YYYY-MM-DD'),
-            endTime: moment().format('YYYY-MM-DD'),
+            startTime: moment().format('YYYY-MM-DD') + ' 10:00',
+            endTime: moment().add(1, 'days').format('YYYY-MM-DD')+' 02:00',
             pageSize: 20,
             plan01_chart: null,
             plan02_chart: null,
@@ -23,11 +23,11 @@ var app = new Vue({
             let endTime_datePicker = $('#endtime_datepicker').data('datepicker');
             let startDateArray = startTime_datePicker.selectedDates;
             let endDateArray = endTime_datePicker.selectedDates;
-            if (startDateArray.length >= 0) {
-                this.startTime = moment(startDateArray[0]).format('YYYY-MM-DD');
+            if (startDateArray.length > 0) {
+                this.startTime = moment(startDateArray[0]).format('YYYY-MM-DD HH:mm');
             }
-            if (endDateArray.length >= 0) {
-                this.endTime = moment(endDateArray[0]).format('YYYY-MM-DD');
+            if (endDateArray.length > 0) {
+                this.endTime = moment(endDateArray[0]).format('YYYY-MM-DD HH:mm');
             }
 
             //根据图表类型显示数据
