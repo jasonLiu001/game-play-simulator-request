@@ -1,7 +1,10 @@
 var utilsMixin = {
     data() {//这里的data写成方法，不是属性，要特别注意
         return {
-            //折线图表
+            yAxisDataType: {//y轴显示图表类型
+                winMoney: 'winMoney',
+                currentAccountBalance: 'currentAccountBalance'
+            },
             lineChartDefaultOption: {//图表的公共配置
                 title: {
                     text: ''
@@ -96,7 +99,7 @@ var utilsMixin = {
          *
          * 更新图表显示
          */
-        updateInvestInfoCharts(url, planType, myChart) {
+        updateLineCharts(url, planType, yAxisDataType, myChart) {
             let self = this;
             myChart.showLoading();
             axios.post(url).then((res) => {
@@ -135,7 +138,7 @@ var utilsMixin = {
          *
          * 初始投注图表显示
          */
-        initInvestInfoCharts(url, domElement, dataTableName, planType, chartName, successCallback) {
+        initLineCharts(url, domElement, dataTableName, planType, chartName, yAxisDataType, successCallback) {
             let self = this;
             // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {

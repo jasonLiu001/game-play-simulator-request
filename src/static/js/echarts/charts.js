@@ -26,9 +26,9 @@ var app = new Vue({
             if (endDateArray.length >= 0) {
                 this.endTime = moment(endDateArray[0]).format('YYYY-MM-DD');
             }
-            this.updateInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.plan01_chart);
-            this.updateInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.plan02_chart);
-            this.updateInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.plan03_chart);
+            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType.winMoney, this.plan01_chart);
+            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.yAxisDataType.winMoney, this.plan02_chart);
+            this.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.yAxisDataType.winMoney, this.plan03_chart);
         }
     },
     created() {
@@ -49,14 +49,14 @@ var app = new Vue({
                 break;
         }
 
-        //初始化图表
-        this.initInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', (myChart) => {
+        //初始化线性图表
+        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType.winMoney, (myChart) => {
             self.plan01_chart = myChart;
         });
-        this.initInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', (myChart) => {
+        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType.winMoney, (myChart) => {
             self.plan02_chart = myChart;
         });
-        this.initInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', (myChart) => {
+        this.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType.winMoney, (myChart) => {
             self.plan03_chart = myChart;
         });
     },
