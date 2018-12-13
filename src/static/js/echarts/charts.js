@@ -52,7 +52,7 @@ var app = new Vue({
         $('#starttime_datepicker').datepicker();
         //结束日期初始化
         $('#endtime_datepicker').datepicker();
-
+        //调用api接口名称
         let apiName = this.getUrlParameterByName('apiName');
         //y轴显示的数据类型
         this.yAxisDataType = this.getUrlParameterByName('yAxisDataType');
