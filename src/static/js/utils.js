@@ -1,7 +1,8 @@
 var utilsMixin = {
     data() {//这里的data写成方法，不是属性，要特别注意
         return {
-            chartDefaultOption: {//图表的公共配置
+            //折线图表
+            lineChartDefaultOption: {//图表的公共配置
                 title: {
                     text: ''
                 },
@@ -100,7 +101,7 @@ var utilsMixin = {
             myChart.showLoading();
             axios.post(url).then((res) => {
                 //复制一个新option
-                let chartOption = $.extend(true, {}, this.chartDefaultOption);
+                let chartOption = $.extend(true, {}, this.lineChartDefaultOption);
 
                 if (!res.data.data) { //无数据
                     //更新图表显示
@@ -149,7 +150,7 @@ var utilsMixin = {
 
 
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
-                let chartOption = $.extend(true, {}, this.chartDefaultOption, {title: {text: chartName}});
+                let chartOption = $.extend(true, {}, this.lineChartDefaultOption, {title: {text: chartName}});
                 chartOption.tooltip.formatter = function (params) {
                     return self.tooltipFormatter(params, planType);
                 };

@@ -33,7 +33,13 @@ var app = new Vue({
     },
     created() {
         let self = this;
-        let apiName = this.getUrlParameterByName('api');
+
+        //开始日期初始化
+        $('#starttime_datepicker').datepicker();
+        //结束日期初始化
+        $('#endtime_datepicker').datepicker();
+
+        let apiName = this.getUrlParameterByName('apiName');
         switch (apiName) {
             case 'findInvestInfoList':
                 this.dataUrl = apiList.findInvestInfoList;
@@ -42,11 +48,6 @@ var app = new Vue({
                 this.dataUrl = apiList.findInvestTotalInfoList;
                 break;
         }
-
-        //开始日期初始化
-        $('#starttime_datepicker').datepicker();
-        //结束日期初始化
-        $('#endtime_datepicker').datepicker();
 
         //初始化图表
         this.initInvestInfoCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', (myChart) => {
