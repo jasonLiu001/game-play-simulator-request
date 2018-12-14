@@ -89,7 +89,7 @@ export class NotificationService {
                         .then((result) => {
                             if (result) {
                                 log.info("【invest_total】表，存在连错5期+1期中情况，开始发送通知邮件");
-                                return this.sendWinOrLoseEmail(CONST_INVEST_TOTAL_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, 6, false);
+                                return this.sendWinOrLoseEmail(CONST_INVEST_TOTAL_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, 5, false);
                             } else {
                                 log.info("【invest_total】表，不存在连错5期+1期中情况，检查完成");
                             }
@@ -115,7 +115,7 @@ export class NotificationService {
                         .then((result) => {
                             if (result) {
                                 log.info("【invest_total】表，存在连中5期+1期错情况，开始发送通知邮件");
-                                return this.sendWinOrLoseEmail(CONST_INVEST_TOTAL_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, 6, true);
+                                return this.sendWinOrLoseEmail(CONST_INVEST_TOTAL_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, 5, true);
                             } else {
                                 log.info("【invest_total】表，不存在连中5期+1期错情况，检查完成");
                             }
