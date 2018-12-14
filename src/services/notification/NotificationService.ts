@@ -364,6 +364,7 @@ export class NotificationService {
      * @param maxWinOrLoseCount
      * @param isWin
      * @param afterTime 特定时间之后
+     * @return 返回值为 1：存在 -1:不存在
      */
     public async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //当天
@@ -377,7 +378,7 @@ export class NotificationService {
         }
 
         //数量不足 不发送邮件通知
-        if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(true);
+        if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(false);
 
         let currentTime = new Date();
         let year = currentTime.getFullYear();
@@ -390,7 +391,7 @@ export class NotificationService {
             thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
         }
         //当天22:00以后停止发送邮件通知
-        if (currentTime > thirdTime) return BlueBirdPromise.resolve(true);
+        if (currentTime > thirdTime) return BlueBirdPromise.resolve(false);
 
         //判断最新的1期是否是正在进行中 如果不判断 因为最新一期开奖和上期投注的间隔非常短，通知任务2分钟检查一次，无法检查到就已经投注了
         let latestInvestInfo: InvestInfo = historyData[0];
@@ -446,9 +447,8 @@ export class NotificationService {
      * @param planType
      * @param {number} count
      * @param isWin
-     * @returns {Bluebird<any>}
      */
-    private async sendWinOrLoseEmail(tableName: string, planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
+    public async sendWinOrLoseEmail(tableName: string, planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
         log.info('检查【%s】表，存在连 %s %s 期的记录', tableName, isWin ? '中' : '错', count);
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
         let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
