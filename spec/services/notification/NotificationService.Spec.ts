@@ -25,7 +25,7 @@ describe('cancelInvest test', () => {
     }, 60000);
 
     xit('cancelInvest should be work', (done) => {
-        notificationService.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, false)
+        notificationService.checkContinueWinOrLose(CONST_INVEST_TOTAL_TABLE.tableName, 2, false)
             .then((res) => {
                 console.log(res);
                 done();
