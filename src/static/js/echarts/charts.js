@@ -17,18 +17,17 @@ var app = new Vue({
     methods: {
         btnQueryClickHandler(event) {
             let self = this;
-            //开始日期
-            let startTime_datePicker = $('#starttime_datepicker').data('datepicker');
-            //结束时间
-            let endTime_datePicker = $('#endtime_datepicker').data('datepicker');
-            let startDateArray = startTime_datePicker.selectedDates;
-            let endDateArray = endTime_datePicker.selectedDates;
-            if (startDateArray.length > 0) {
-                this.startTime = moment(startDateArray[0]).format('YYYY-MM-DD HH:mm');
+            if (this.startTime === '') {
+                this.startTime = moment().format('YYYY-MM-DD') + ' 10:00'
+            } else {
+                this.startTime = moment(this.startTime).format('YYYY-MM-DD HH:mm')
             }
-            if (endDateArray.length > 0) {
-                this.endTime = moment(endDateArray[0]).format('YYYY-MM-DD HH:mm');
+            if (this.endTime === '') {
+                this.endTime = moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00'
+            } else {
+                this.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm')
             }
+
 
             //根据图表类型显示数据
             switch (this.chartType) {
@@ -48,10 +47,6 @@ var app = new Vue({
     created() {
         let self = this;
 
-        //开始日期初始化
-        $('#starttime_datepicker').datepicker();
-        //结束日期初始化
-        $('#endtime_datepicker').datepicker();
         //调用api接口名称
         let apiName = this.getUrlParameterByName('apiName');
         //y轴显示的数据类型
