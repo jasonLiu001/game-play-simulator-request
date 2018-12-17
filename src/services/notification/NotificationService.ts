@@ -282,9 +282,9 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
-        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestWinOrLoseCount, afterTime);
+        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount, afterTime);
     }
 
     /**
