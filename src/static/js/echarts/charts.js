@@ -10,7 +10,8 @@ var app = new Vue({
             pageSize: 20,
             plan01_chart: null,
             plan02_chart: null,
-            plan03_chart: null
+            plan03_chart: null,
+            chart_defalut_width: ''//默认图表宽度
         };
     },
     mixins: [utilsMixin],
@@ -26,6 +27,32 @@ var app = new Vue({
                 this.endTime = moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00'
             } else {
                 this.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm')
+            }
+
+            //如果是手机端 需要根据数据记录量 自动调整图表宽度
+            if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+                switch (this.pageSize) {
+                    case '20':
+                        this.plan01_chart.resize({width: this.chart_defalut_width + 'px'});
+                        this.plan02_chart.resize({width: this.chart_defalut_width + 'px'});
+                        this.plan03_chart.resize({width: this.chart_defalut_width + 'px'});
+                        break;
+                    case '50':
+                        this.plan01_chart.resize({width: '600px'});
+                        this.plan02_chart.resize({width: '600px'});
+                        this.plan03_chart.resize({width: '600px'});
+                        break;
+                    case '90':
+                        this.plan01_chart.resize({width: '900px'});
+                        this.plan02_chart.resize({width: '900px'});
+                        this.plan03_chart.resize({width: '900px'});
+                        break;
+                    case '120':
+                        this.plan01_chart.resize({width: '1100px'});
+                        this.plan02_chart.resize({width: '1100px'});
+                        this.plan03_chart.resize({width: '1100px'});
+                        break;
+                }
             }
 
 
@@ -67,6 +94,7 @@ var app = new Vue({
             case self.chartViewType.line://初始化线性图表
                 self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
                     self.plan01_chart = myChart;
+                    this.chart_defalut_width = myChart.getWidth();//保存chart第一次初始化宽度
                 });
                 self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
                     self.plan02_chart = myChart;
