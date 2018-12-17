@@ -77,7 +77,7 @@ export class NotificationService {
                 })
                 .then(() => {
                     log.info("开始检查【invest_total】表是否存在连错5期...");
-                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, false)
+                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, false, 1)
                         .then(() => {
                             log.info("【invest_total】表是否存在连错5期检查完成");
                         })
@@ -90,7 +90,7 @@ export class NotificationService {
                 })
                 .then(() => {
                     log.info("开始检查【invest_total】表是否存在连中5期...");
-                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, true)
+                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, true, 1)
                         .then(() => {
                             log.info("【invest_total】表是否存在连中5期检查完成");
                         })
@@ -282,9 +282,9 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean): BlueBirdPromise<any> {
+    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
-        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin);
+        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestWinOrLoseCount, afterTime);
     }
 
     /**
@@ -328,17 +328,18 @@ export class NotificationService {
      * @param {number} planType
      * @param maxWinOrLoseCount
      * @param isWin
+     * @param latestOppositeWinOrLoseCount 最近盈利或者输的期数
      * @param afterTime 特定时间之后
      */
-    private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo>;
         if (tableName == CONST_INVEST_TABLE.tableName) {
             //方案  最新的投注记录
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
+            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount, today + " " + afterTime);
         } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount, today + " " + afterTime);
+            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount, today + " " + afterTime);
         }
 
         //数量不足 不发送邮件通知
@@ -367,6 +368,32 @@ export class NotificationService {
             historyData.pop();
         }
 
+        //连中或连错相反 判断
+        let latestOppositeCount: number = 0;
+        if (latestOppositeWinOrLoseCount > 0) {//如果另外指定判断条件
+            //保存另外的判断记录
+            let latestInvestItems: Array<InvestInfo> = [];
+            for (let i: number = 0; i < latestOppositeWinOrLoseCount; i++) {
+                let removedItem: InvestInfo = historyData.shift();
+                latestInvestItems.push(removedItem);
+            }
+            //判断连错或连中期数
+            for (let investItem of latestInvestItems) {
+                if (investItem.status == 1) {
+                    if (isWin) {//取反判断 连中或者连错期数
+                        if (investItem.isWin == 0) {
+                            latestOppositeCount++;
+                        }
+                    } else {//取反判断 连中或者连错期数
+                        if (investItem.isWin == 1) {
+                            latestOppositeCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+
         //连中或连错
         let continueMaxWinOrLoseTimes: number = 0;
         for (let investItem of historyData) {
@@ -385,21 +412,21 @@ export class NotificationService {
         }
 
         //这里的maxWinOrLoseCount需要减1操作，和数组元素个数保持一致
-        if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1) {
+        if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1 && latestOppositeCount == latestOppositeWinOrLoseCount) {
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
-                    log.info('检查【invest】表，存在连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    log.info('检查【invest】表，存在连 %s %s 期  最新连 %s %s 期 的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.invest_lastedRealInvestPeriod = historyData[0].period;
-                    log.info('开始发送，【invest】表，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    log.info('开始发送，【invest】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
                 }
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
                 if (NotificationConfig.investTotal_lastedRealInvestPeriod != historyData[0].period) {
-                    log.info('检查【invest_total】表，存在连 %s %s 期的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    log.info('检查【invest_total】表，存在连 %s %s 期 最新连 %s %s 期 的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.investTotal_lastedRealInvestPeriod = historyData[0].period;
-                    log.info('开始发送，【invest_total】表，连 %s %s 期提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes);
+                    log.info('开始发送，【invest_total】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
                 }
             }
@@ -413,16 +440,16 @@ export class NotificationService {
      * 连中或者连错数量
      * @param tableName
      * @param planType
-     * @param {number} count
+     * @param {number} maxWinOrLoseCount
      * @param isWin
-     * @returns {Bluebird<any>}
+     * @param latestOppositeWinOrLoseCount
      */
-    private async sendWinOrLoseEmail(tableName: string, planType: number, count: number, isWin: boolean): BlueBirdPromise<any> {
-        let emailTitle = "连" + (isWin ? "中" : "错") + "【" + count + "】期提醒";
-        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + count + "】期";
+    private async sendWinOrLoseEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0,): BlueBirdPromise<any> {
+        let emailTitle = "连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 + 连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + " 】期 提醒";
+        let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 最新连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + "】期";
         log.info("当前时间：%s %s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle, emailContent);
         let promiseArray: Array<BlueBirdPromise<any>> = [];
-        promiseArray.push(SMSSender.send(tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(count), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
+        promiseArray.push(SMSSender.send(tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(maxWinOrLoseCount), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
         return BlueBirdPromise.all(promiseArray);
     }
