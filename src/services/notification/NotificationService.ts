@@ -1,15 +1,15 @@
 import BlueBirdPromise = require('bluebird');
-import {LotteryDbService} from "../dbservices/ORMService";
 
 import moment  = require('moment');
-import {Config, CONFIG_CONST} from "../../config/Config";
+import cron = require('node-cron');
+import {LotteryDbService} from "../dbservices/ORMService";
+import {CONFIG_CONST} from "../../config/Config";
 import {NotificationSender} from "./NotificationSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 import {TimeService} from "../time/TimeService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
-import cron = require('node-cron');
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
@@ -24,18 +24,12 @@ let log4js = require('log4js'),
  * 通知配置类
  */
 class NotificationConfig {
-    //暂时停用无用通知
-    public static disableUnusedNotifiction = true;
     //invest数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
     public static invest_lastedRealInvestPeriod: string = null;
     //invest_total数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
     public static investTotal_lastedRealInvestPeriod: string = null;
-    //数据库中 当天第一条记录的投注期号 用于不重复发送通知邮件
-    public static todayFirstRealInvestPeriod: string = null;
     //数据库中 达到利润预警值的投注期号 用于不重复发送通知邮件
     public static todayMaxOrMinProfitInvestPeriod: string = null;
-    //数据库中 当前投注的记录期号 用于不重复发送通知邮件
-    public static periodUsedByInvestNotification: string = null;
 }
 
 /**
@@ -57,24 +51,6 @@ export class NotificationService {
 
             log.info("通知任务，正在同步程序设置，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
             SettingService.getAndInitSettings()
-                .then(() => {
-                    log.info("通知任务，同步程序设置完成");
-                    //暂时屏蔽无用通知
-                    if (NotificationConfig.disableUnusedNotifiction) return BlueBirdPromise.resolve();
-
-                    log.info("开始检查【invest】表当天第1期错误情况...");
-                    //当天第1期错误提醒 为什么把这个单独写成方法 没有和连错合并，上期错的情况太多会不停的发送邮件
-                    return this.sendTodayFirstErrorWarnEmail(CONST_INVEST_TABLE.tableName, 1)
-                        .then(() => {
-                            log.info("【invest】表 当天第1期错误情况检查完成");
-                        })
-                        .catch((err) => {
-                            if (err) {
-                                log.error("【invest】表 当天第1期错误提醒邮件通知异常");
-                                log.error(err);
-                            }
-                        });
-                })
                 .then(() => {
                     log.info("开始检查【invest_total】表是否存在连错4期...");
                     return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, false)
@@ -174,52 +150,9 @@ export class NotificationService {
                         });
                 })
                 .then(() => {
-                    //上期投注提醒  暂时屏蔽无用通知
-                    if (NotificationConfig.disableUnusedNotifiction) return BlueBirdPromise.resolve();
-                    if (!AppSettings.investNotification) return BlueBirdPromise.resolve();
-
-                    log.info("开始检查【invest】表上期投注是否存在错误...");
-                    return this.startInvestNotification(CONST_INVEST_TABLE.tableName)
-                        .then(() => {
-                            log.info("【invest】表上期投注是否存在错误检查完成");
-                        })
-                        .catch((err) => {
-                            if (err) {
-                                log.error("【invest】表 上期投注预警邮件通知异常");
-                                log.error(err);
-                            }
-                        });
-                })
-                .then(() => {
                     log.info("通知任务，检查所有通知结束，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
                 });
         });
-    }
-
-    /**
-     *
-     * 投注时发送通知
-     */
-    public async startInvestNotification(tableName: string): BlueBirdPromise<any> {
-        //当天
-        let today: string = moment().format("YYYY-MM-DD");
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
-
-        if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
-
-        //已开奖投注 直接返回
-        if (historyData[0].status == 1) return BlueBirdPromise.resolve(false);
-
-        //不重复发送邮件
-        if (NotificationConfig.periodUsedByInvestNotification != historyData[0].period) {
-            NotificationConfig.periodUsedByInvestNotification = historyData[0].period;
-            let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-            let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
-            return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
-        }
-
-        return BlueBirdPromise.resolve(false);
     }
 
     /**
@@ -285,40 +218,6 @@ export class NotificationService {
     public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
         return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount, afterTime);
-    }
-
-    /**
-     *
-     * 当前10:00:00后前几期错误 是邮件提醒
-     */
-    public async sendTodayFirstErrorWarnEmail(tableName: string, firstErrorCount: number): BlueBirdPromise<any> {
-        //当天
-        let today: string = moment().format("YYYY-MM-DD");
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 120, today + " 10:00:00");
-        if (historyData.length == 0) return BlueBirdPromise.resolve(true);
-
-        let errorTotalTimes: number = 0;
-        for (let i = 1; i <= firstErrorCount; i++) {
-            let investItem: InvestInfo = historyData[historyData.length - i];
-            if (investItem.status == 1 && investItem.isWin == 0) {
-                errorTotalTimes++;
-            }
-        }
-
-        //当天第1条投注记录
-        let todayFirstInvestItem: InvestInfo = historyData[historyData.length - 1];
-        if (NotificationConfig.todayFirstRealInvestPeriod != todayFirstInvestItem.period && errorTotalTimes == firstErrorCount) {
-            //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
-            NotificationConfig.todayFirstRealInvestPeriod = todayFirstInvestItem.period;
-            let subject: string = "当天" + today + "起始" + firstErrorCount + "条投注记录全部错误";
-            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), subject);
-            let promiseArray: Array<BlueBirdPromise<any>> = [];
-            promiseArray.push(SMSSender.send("当天第1次购买错误", String(CONFIG_CONST.currentSelectedInvestPlanType), "1", EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
-            promiseArray.push(NotificationSender.send(subject, today + "起始" + firstErrorCount + "次投注中有" + errorTotalTimes + "次错误，可考虑购买", EnumNotificationType.PUSH_AND_EMAIL));
-            return BlueBirdPromise.all(promiseArray);
-        }
-
-        return BlueBirdPromise.resolve([]);
     }
 
     /**
