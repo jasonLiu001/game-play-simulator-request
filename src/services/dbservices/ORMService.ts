@@ -320,6 +320,9 @@ const Setting = sequelize.define('settings', {
     value: {//参数值
         type: Sequelize.STRING
     },
+    group: {//分组名称
+        type: Sequelize.STRING
+    },
     desc: {//参数说明
         type: Sequelize.STRING
     }
@@ -446,77 +449,112 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             return Setting.bulkCreate([
-                                {key: 'isRealInvest', value: '0', orderId: '1', desc: '开启真实投注模式 1:真实 0:模拟'},
+                                {
+                                    key: 'isRealInvest',
+                                    value: '0',
+                                    orderId: '1',
+                                    group: 'system',
+                                    desc: '开启真实投注模式 1:真实 0:模拟'
+                                },
                                 {
                                     key: 'isStopCheckLastPrizeNumber',
                                     value: '0',
                                     orderId: '2',
+                                    group: 'system',
                                     desc: '停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
                                 },
                                 {
                                     key: 'enableRealInvestWhenProgramStart',
                                     value: '0',
                                     orderId: '3',
+                                    group: 'system',
                                     desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
                                 },
                                 {
                                     key: 'investEndTime',
                                     value: '21:59:00',
                                     orderId: '4',
+                                    group: 'system',
                                     desc: '自动终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
                                 },
-                                {key: 'touZhuBeiShu', value: '1', orderId: '5', desc: '投注倍数'},
-                                {key: 'originAccountBalance', value: '5000', orderId: '6', desc: '账户初始余额'},
-                                {key: 'maxAccountBalance', value: '5100', orderId: '7', desc: '当天最大盈利目标金额'},
-                                {key: 'minAccountBalance', value: '0', orderId: '8', desc: '当天最大亏损金额'},
-                                {key: 'awardMode', value: '10', orderId: '9', desc: '元、角、分、厘模式'},
-                                {key: 'currentSelectedInvestPlanType', value: '1', orderId: '10', desc: '当前选择的投注方案类型'},
+                                {key: 'touZhuBeiShu', value: '1', orderId: '5', group: 'system', desc: '投注倍数'},
+                                {
+                                    key: 'originAccountBalance',
+                                    value: '5000',
+                                    orderId: '6',
+                                    group: 'system',
+                                    desc: '账户初始余额'
+                                },
+                                {
+                                    key: 'maxAccountBalance',
+                                    value: '5100',
+                                    orderId: '7',
+                                    group: 'system',
+                                    desc: '当天最大盈利目标金额'
+                                },
+                                {key: 'minAccountBalance', value: '0', orderId: '8', group: 'system', desc: '当天最大亏损金额'},
+                                {key: 'awardMode', value: '10', orderId: '9', group: 'system', desc: '元、角、分、厘模式'},
+                                {
+                                    key: 'currentSelectedInvestPlanType',
+                                    value: '1',
+                                    orderId: '10',
+                                    group: 'system',
+                                    desc: '当前选择的投注方案类型'
+                                },
                                 {
                                     key: 'isUseLastAccountBalance',
                                     value: '0',
                                     orderId: '11',
+                                    group: 'system',
                                     desc: '每次程序启动时初始余额自动设置为上期余额，当天【重启程序】时需要开启此项'
                                 },
                                 {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '12',
+                                    group: 'system',
                                     desc: '遇【对错错】进入真实投注，直到盈利转模拟，不受最大盈利约束 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
                                     value: '0',
                                     orderId: '13',
+                                    group: 'system',
                                     desc: '使用相反的号码投注'
                                 },
                                 {
                                     key: 'maxProfitNotification',
                                     value: '0',
                                     orderId: '14',
+                                    group: 'notification',
                                     desc: '启用最高利润邮件预警，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
                                     orderId: '15',
+                                    group: 'notification',
                                     desc: '启用最低利润邮件预警，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'investNotification',
                                     value: '0',
                                     orderId: '16',
+                                    group: 'notification',
                                     desc: '投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'lastPeriodErrorInvestNotification',
                                     value: '0',
                                     orderId: '17',
+                                    group: 'notification',
                                     desc: '上期错误错误提醒，遇到错误进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'siteUrl',
                                     value: 'https://123.jn704.com',
                                     orderId: '18',
+                                    group: 'system',
                                     desc: '网站首页地址'
                                 }
                             ]);
