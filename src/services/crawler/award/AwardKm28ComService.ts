@@ -35,7 +35,7 @@ export class AwardKm28ComService implements IAwardCrawler {
 
                     try {
 
-                        let awardInfo = this.htmlBodyHandler(body, updateStatus);
+                        let awardInfo: AwardInfo = this.htmlBodyHandler(body, updateStatus);
                         log.info('%s 期开奖号码为：%s', awardInfo.period, awardInfo.openNumber);
 
                         resolve(awardInfo);
