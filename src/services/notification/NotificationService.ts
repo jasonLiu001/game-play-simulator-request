@@ -76,27 +76,27 @@ export class NotificationService {
                         });
                 })
                 .then(() => {
-                    log.info("开始检查【invest_total】表是否存在连错5期...");
-                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, false, 1)
+                    log.info("开始检查【invest_total】表是否存在连错4期...");
+                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, false)
                         .then(() => {
-                            log.info("【invest_total】表是否存在连错5期检查完成");
+                            log.info("【invest_total】表是否存在连错4期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("【invest_total】表 连错5期提醒邮件通知异常");
+                                log.error("【invest_total】表 连错4期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
                 })
                 .then(() => {
-                    log.info("开始检查【invest_total】表是否存在连中5期...");
-                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 6, true, 1)
+                    log.info("开始检查【invest_total】表是否存在连中4期...");
+                    return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, true)
                         .then(() => {
-                            log.info("【invest_total】表是否存在连中5期检查完成");
+                            log.info("【invest_total】表是否存在连中4期检查完成");
                         })
                         .catch((err) => {
                             if (err) {
-                                log.error("【invest_total】表 连中5期提醒邮件通知异常");
+                                log.error("【invest_total】表 连中4期提醒邮件通知异常");
                                 log.error(err);
                             }
                         });
