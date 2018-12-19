@@ -34,7 +34,7 @@ export class AwardController {
 
     /**
      *
-     * 更新奖号
+     * 更新奖号 这个方法只更新最新的开奖信息，没有根据期号来更新
      */
     public updateAward(req: Request, res: Response) {
         let jsonRes: ResponseJson = new ResponseJson();
