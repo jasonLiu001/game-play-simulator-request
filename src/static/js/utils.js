@@ -3,7 +3,8 @@ var utilsMixin = {
         return {
             chartYAxisDataType: {//y轴显示图表类型
                 winMoney: 'winMoney',
-                currentAccountBalance: 'currentAccountBalance'
+                currentAccountBalance: 'currentAccountBalance',
+                correctAndWrongCount: 'correctAndWrongCount'
             },
             chartViewType: {//图表类型
                 line: 'line',
@@ -44,23 +45,19 @@ var utilsMixin = {
                 title: {
                     text: ''
                 },
-                tooltip: {//显示提示层
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross',
-                        snap: true,//鼠标移动自动吸附数据点
-                        label: {
-                            backgroundColor: '#283b56'
-                        }
-                    },
-                    formatter: function (params) {
-                    },
-                    confine: true,//限制在图表内
-                    enterable: true//鼠标可以进入提示层点击
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataView: {show: true, readOnly: false},
+                        magicType: {show: true, type: ['line', 'bar']},
+                        restore: {show: true},
+                        saveAsImage: {show: true}
+                    }
                 },
+                calculable: true,
                 legend: {
                     top: 'bottom',
-                    data: ['利润']
+                    data: ['正确错误次数']
                 },
                 xAxis: {
                     type: 'category',
@@ -246,11 +243,8 @@ var utilsMixin = {
                     let item = data[i];
                     periods.push(item.period);
                     switch (yAxisDataType) {
-                        case self.chartYAxisDataType.winMoney:
+                        case self.chartYAxisDataType.correctAndWrongCount:
                             yData.push(item.winMoney);
-                            break;
-                        case self.chartYAxisDataType.currentAccountBalance:
-                            yData.push(item.currentAccountBalance);
                             break;
                     }
 
@@ -277,30 +271,31 @@ var utilsMixin = {
             // 基于准备好的dom，初始化echarts实例
             axios.post(url).then((res) => {
                 let data = res.data.data;
-                let periods = [];
-                let yData = [];
+                let correctOrWrongCount = [];
+                let correctCount = [];
+                let inCorrectCount = [];
                 for (let i = data.length - 1; i >= 0; i--) {
                     let item = data[i];
-                    periods.push(item.period);
+                    correctOrWrongCount.push(item.period);
                     switch (yAxisDataType) {
-                        case self.chartYAxisDataType.winMoney:
-                            yData.push(item.winMoney);
-                            break;
-                        case self.chartYAxisDataType.currentAccountBalance:
-                            yData.push(item.currentAccountBalance);
+                        case self.chartYAxisDataType.correctAndWrongCount:
+                            correctCount.push(item.winMoney);
                             break;
                     }
                 }
 
                 let myChart = echarts.init(document.getElementById(domElement), planType === 2 ? 'dark' : 'light');
                 let chartOption = $.extend(true, {}, this.pillarChartDefaultOption, {title: {text: chartName}});
-                chartOption.tooltip.formatter = function (params) {
-                    return self.tooltipFormatter(params, planType);
-                };
-                chartOption.xAxis.data = periods;
+
+                switch (yAxisDataType) {
+                    case self.chartYAxisDataType.correctAndWrongCount:
+                        chartOption.xAxis.data = ['正确', '错误'];
+                        break;
+                }
+
                 chartOption.series.push({
                     type: 'line',
-                    data: yData
+                    data: correctCount
                 });
                 myChart.showLoading();
                 // 使用刚指定的配置项和数据显示图表。

@@ -87,6 +87,9 @@ var app = new Vue({
             case 'findInvestTotalInfoList':
                 this.dataUrl = apiList.findInvestTotalInfoList;
                 break;
+            case 'getTotalCorrectAndWrongCount':
+                this.dataUrl = apiList.getTotalCorrectAndWrongCount;
+                break;
         }
 
         //根据图表类型显示数据
@@ -104,15 +107,15 @@ var app = new Vue({
                 });
                 break;
             case self.chartViewType.pillar://初始化柱状图表
-                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
-                    self.plan01_chart = myChart;
-                });
-                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
-                    self.plan02_chart = myChart;
-                });
-                self.initPillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType, (myChart) => {
-                    self.plan03_chart = myChart;
-                });
+                let url;
+                if (apiName === 'getTotalCorrectAndWrongCount') {
+                    url = this.dataUrl.replace('{0}', this.startTime).replace('{1}', this.endTime);
+                    // self.initPillarCharts(url, 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
+                    //     self.plan01_chart = myChart;
+                    // });
+                } else {
+                    url = this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime);
+                }
                 break;
         }
     },
