@@ -8,7 +8,7 @@ describe("ExtraInvestService Test", () => {
     });
 
     it("investWhenFindTwoErrorInThree test", (done) => {
-        extraInvestService.investWhenFindTwoErrorInThree(1, 3)
+        extraInvestService.investWhenFindTwoErrorInThree(1, 4)
             .then((result) => {
                 console.log(result);
                 done();

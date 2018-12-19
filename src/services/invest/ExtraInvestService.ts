@@ -24,7 +24,7 @@ export class ExtraInvestService {
      */
     public executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         //首先判断是否满足特定的投注形态 不受当天最高盈利限制
-        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 3)
+        return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 4)
             .then((isCanInvest) => {
                 if (isCanInvest) {//满足特定的投注形态 自动进入真实投注
                     log.info('忽略设置，自动启用正式投注...');
@@ -65,7 +65,16 @@ export class ExtraInvestService {
         //数量不足 直接返回
         if (historyData.length < historyCount) return BlueBirdPromise.resolve(false);
 
-        //连错数量
+        let latestInvestInfo: InvestInfo = historyData[0];
+        if (latestInvestInfo.status === 0) {//进行中
+            //移除进行中的这一期 删除数组的第一个元素
+            historyData.shift();
+        } else if (latestInvestInfo.status === 1) {//已完成
+            //删除数组的最后一个元素
+            historyData.pop();
+        }
+
+        //连错数量 historyData最终的数量为3个
         let continueLoseTimes: number = 0;
         for (let investItem of historyData) {
             if (investItem.status == 1 && investItem.isWin == 0) {
@@ -73,8 +82,8 @@ export class ExtraInvestService {
             }
         }
 
-        //没有连错直接返回
-        if (continueLoseTimes < historyCount - 1) return BlueBirdPromise.resolve(false);
+        //没有连错直接返回 3期中不存在2错 则返回
+        if (continueLoseTimes < historyCount - 2) return BlueBirdPromise.resolve(false);
 
         //三条记录中的第1条
         let firstRecord: InvestInfo = historyData[historyData.length - 1];
