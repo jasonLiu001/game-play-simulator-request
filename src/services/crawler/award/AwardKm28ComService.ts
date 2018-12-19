@@ -55,7 +55,7 @@ export class AwardKm28ComService implements IAwardCrawler {
      */
     private htmlBodyHandler(body: string, updateStatus: number): AwardInfo {
         let awardInfoList: Array<AwardInfo> = this.getAwardInfoList(body, updateStatus);
-        return awardInfoList[0];
+        return awardInfoList.slice(awardInfoList.length - 1)[0];
     }
 
     /**
@@ -82,15 +82,26 @@ export class AwardKm28ComService implements IAwardCrawler {
                 let openTime: string = columns.eq(1).html();
                 let openNumber: string = columns.eq(2).html().replace(/ /g, '');
 
-                if (period.length == 2) {
-                    period = openDateArr[1].replace(/-/g, '') + "-0" + period;
+                //这个网站的期号处理和其他网站有区别，需要特别处理，多加了一位
+                let formatPeriod: number = Number(period);
+                let resultPeriod: number = formatPeriod - 1;
+                if (resultPeriod == 0) {
+                    resultPeriod = 120;
+                }
+
+                if (String(resultPeriod).length == 1) {
+                    period = openDateArr[1].replace(/-/g, '') + "-00" + String(resultPeriod);
+                } else if (String(resultPeriod).length == 2) {
+                    period = openDateArr[1].replace(/-/g, '') + "-0" + String(resultPeriod);
+                } else if (String(resultPeriod).length == 3) {
+                    period = openDateArr[1].replace(/-/g, '') + "-" + String(resultPeriod);
                 }
 
                 openTime = openDateArr[1] + " " + openTime + ":00";
                 let awardInfo: AwardInfo = {
-                    openNumber: period,
+                    openNumber: openNumber,
                     openTime: openTime,
-                    period: openNumber,
+                    period: period,
                     createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
                     updateStatus: updateStatus//自动更新
                 };
