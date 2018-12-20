@@ -85,11 +85,12 @@ export class AwardKm28ComService implements IAwardCrawler {
                 //这个网站的期号处理和其他网站有区别，需要特别处理，多加了一位
                 let formatPeriod: number = Number(period);
                 let resultPeriod: number = formatPeriod - 1;
-                if (resultPeriod == 0) {
-                    resultPeriod = 120;
-                }
 
-                if (String(resultPeriod).length == 1) {
+                if (resultPeriod == 0) {//单独处理这个特殊情况 120的期号，肯定上前一天的时间，因为更新发生在下一天
+                    resultPeriod = 120;
+                    period = moment(openDateArr[1].replace(/-/g, '')).subtract(1, 'days').format('YYYYMMDD') + "-" + String(resultPeriod);
+                }
+                else if (String(resultPeriod).length == 1) {
                     period = openDateArr[1].replace(/-/g, '') + "-00" + String(resultPeriod);
                 } else if (String(resultPeriod).length == 2) {
                     period = openDateArr[1].replace(/-/g, '') + "-0" + String(resultPeriod);

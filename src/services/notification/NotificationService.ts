@@ -357,11 +357,11 @@ export class NotificationService {
      * @param latestOppositeWinOrLoseCount
      */
     private async sendWinOrLoseEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0,): BlueBirdPromise<any> {
-        let emailTitle = "连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 + 连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + " 】期 提醒";
+        let emailTitle = "连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 + 连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + "】期 提醒";
         let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 最新连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + "】期";
         log.info("当前时间：%s %s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle, emailContent);
         let promiseArray: Array<BlueBirdPromise<any>> = [];
-        promiseArray.push(SMSSender.send(tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(maxWinOrLoseCount), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
+        promiseArray.push(SMSSender.send(tableName == CONST_INVEST_TOTAL_TABLE.tableName ? 'total' : tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), String(maxWinOrLoseCount), EnumSMSSignType.cnlands, EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
         return BlueBirdPromise.all(promiseArray);
     }
