@@ -5,7 +5,7 @@ var app = new Vue({
             dataUrl: '',//接口数据url
             yAxisDataType: '',//y轴数据类型
             chartType: '',//图表类型
-            startTime: moment().format('YYYY-MM-DD') + ' 10:00',
+            startTime: moment().format('YYYY-MM-DD') + ' 09:50',
             endTime: moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00',
             pageSize: 20,
             plan01_chart: null,
@@ -19,7 +19,7 @@ var app = new Vue({
         btnQueryClickHandler(event) {
             let self = this;
             if (this.startTime === '') {
-                this.startTime = moment().format('YYYY-MM-DD') + ' 10:00'
+                this.startTime = moment().format('YYYY-MM-DD') + ' 09:50'
             } else {
                 this.startTime = moment(this.startTime).format('YYYY-MM-DD HH:mm')
             }
