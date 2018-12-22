@@ -128,7 +128,7 @@ export const enum EnumSMSSignType {
 
 /**
  *
- * 短信模板类型
+ * 腾讯云 对应 短信模板类型
  */
 export const enum EnumSMSTemplateType {
     /**
@@ -153,5 +153,11 @@ export const enum EnumSMSTemplateType {
      *
      * 连续购买错误短信正文模板id
      */
-    CONTINUE_INVEST_ERROR = 244320
+    CONTINUE_INVEST_ERROR = 244320,
+
+    /**
+     *
+     * 连续购买正确短信正文模板id
+     */
+    CONTINUE_INVEST_CORRECT = 253110
 }

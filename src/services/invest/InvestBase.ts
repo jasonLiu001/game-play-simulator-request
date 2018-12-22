@@ -2,24 +2,25 @@ import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import BlueBirdPromise = require('bluebird');
 import {TimeService} from "../time/TimeService";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
-import moment  = require('moment');
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {NotificationSender} from "../notification/NotificationSender";
-import {SettingsInfo, update_isRealInvest_to_mock} from "../../models/db/SettingsInfo";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 import {EnumNotificationType} from "../../models/EnumModel";
+import {NotificationService} from "../notification/NotificationService";
+import BlueBirdPromise = require('bluebird');
+import moment  = require('moment');
 
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestBase'),
-    numberService = new NumberService();
+    numberService = new NumberService(),
+    notificationService = new NotificationService();
 
 /**
  *
@@ -211,6 +212,12 @@ export class InvestBase {
     public doCheck(): BlueBirdPromise<boolean> {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime()
+            .then(() => {
+                if (TimeService.isReachInvestEndTime()) return BlueBirdPromise.resolve();
+
+                //检查正确期数是否满足特定条件
+                return notificationService.checkAndSendNotification();
+            })
             .then(() => {
                 //检查当前的最大盈利金额
                 return this.checkMaxWinMoney();
