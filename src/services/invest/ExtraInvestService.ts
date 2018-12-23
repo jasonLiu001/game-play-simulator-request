@@ -56,11 +56,9 @@ export class ExtraInvestService {
      * @param historyCount 需要取的历史奖号数量
      * @param afterTime 取历史奖号的开始时间，默认是当天10点以后
      */
-    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number, afterTime: string = '10:00:00'): BlueBirdPromise<boolean> {
-        //当天
-        let today: string = moment().format("YYYY-MM-DD");
+    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number): BlueBirdPromise<boolean> {
         //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, historyCount, today + " " + afterTime);
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, historyCount,);
 
         //数量不足 直接返回
         if (historyData.length < historyCount) return BlueBirdPromise.resolve(false);
