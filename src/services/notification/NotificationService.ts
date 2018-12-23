@@ -305,6 +305,8 @@ export class NotificationService {
                     NotificationConfig.invest_lastedRealInvestPeriod = historyData[0].period;
                     log.info('发送预警通知，【invest】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
+                } else {
+                    log.info('预警通知已发送，无需重复发送');
                 }
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
                 if (NotificationConfig.investTotal_lastedRealInvestPeriod != historyData[0].period) {
@@ -312,6 +314,8 @@ export class NotificationService {
                     NotificationConfig.investTotal_lastedRealInvestPeriod = historyData[0].period;
                     log.info('发送预警通知，【invest_total】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
+                } else {
+                    log.info('预警通知已发送，无需重复发送');
                 }
             }
         } else {
