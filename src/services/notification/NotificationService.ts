@@ -169,7 +169,7 @@ export class NotificationService {
     public async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 10:00:00");
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1, today + " 09:50:00");
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
         //未开奖直接返回
@@ -222,7 +222,7 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '09:50:00'): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
         return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount, afterTime);
     }
@@ -237,7 +237,7 @@ export class NotificationService {
      * @param latestOppositeWinOrLoseCount 最近盈利或者输的期数
      * @param afterTime 特定时间之后
      */
-    private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '10:00:00'): BlueBirdPromise<any> {
+    private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0, afterTime: string = '09:50:00'): BlueBirdPromise<any> {
         //当天
         let today: string = moment().format("YYYY-MM-DD");
         let historyData: Array<InvestInfo>;
