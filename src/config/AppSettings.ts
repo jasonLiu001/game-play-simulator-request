@@ -19,8 +19,6 @@ export class AppSettings {
     public static investEndTime: string = "21:59:00";
     //程序启动时 自动开启真实投注
     public static enableRealInvestWhenProgramStart: boolean = false;
-    //停用对上期的开奖号码的形态的检查，允许每期都可以进行投注
-    public static isStopCheckLastPrizeNumber: boolean = false;
     //上期错误进行邮件提醒，模拟+真实下都有效
     public static lastPeriodErrorInvestNotification: boolean = false;
 }

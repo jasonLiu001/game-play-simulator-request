@@ -224,10 +224,8 @@ export class InvestBase {
                 return this.checkMaxWinMoney();
             })
             .then(() => {
-                if (!AppSettings.isStopCheckLastPrizeNumber) {
-                    //检查开奖号码是否满足投注条件
-                    return this.checkLastPrizeNumberValidation();
-                }
+                //检查开奖号码是否满足投注条件
+                return this.checkLastPrizeNumberValidation();
             })
             .then(() => {
                 //检查数据库中是否存在的已开奖的期数个数
