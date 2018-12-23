@@ -62,9 +62,6 @@ export class NotificationService {
             .then(() => {
                 log.info("开始检查【invest_total】表是否存在连错4期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, false)
-                    .then(() => {
-                        log.info("【invest_total】表是否存在连错4期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 连错4期提醒邮件通知异常");
@@ -75,9 +72,6 @@ export class NotificationService {
             .then(() => {
                 log.info("开始检查【invest_total】表是否存在连中4期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, true)
-                    .then(() => {
-                        log.info("【invest_total】表是否存在连中4期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 连中4期提醒邮件通知异常");
@@ -90,9 +84,6 @@ export class NotificationService {
                 //连错4期提醒
                 log.info("开始检查【invest】表是否存在连错4期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 5, false)
-                    .then(() => {
-                        log.info("【invest】表是否存在连错4期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错4期提醒邮件通知异常");
@@ -104,9 +95,6 @@ export class NotificationService {
                 //连错3期提醒
                 log.info("开始检查【invest】表是否存在连错3期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 4, false)
-                    .then(() => {
-                        log.info("是否存在连错3期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错3期提醒邮件通知异常");
@@ -118,9 +106,6 @@ export class NotificationService {
                 //连错2期提醒
                 log.info("开始检查【invest】表是否存在连错2期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 3, false)
-                    .then(() => {
-                        log.info("【invest】表是否存在连错2期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错2期提醒邮件通知异常");
@@ -133,9 +118,6 @@ export class NotificationService {
                 if (!AppSettings.lastPeriodErrorInvestNotification) return BlueBirdPromise.resolve();
                 log.info("开始检查【invest】表是否存在连错1期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
-                    .then(() => {
-                        log.info("【invest】表是否存在连错1期检查完成");
-                    })
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错1期提醒邮件通知异常");
@@ -312,11 +294,13 @@ export class NotificationService {
 
         }
 
+        let winOrLoseString: string = isWin ? "中" : "错";
+        log.info('【%s】表 连【%s】【%s】期，检查结果如下：', tableName, winOrLoseString, maxWinOrLoseCount - 1);
         //这里的maxWinOrLoseCount需要减1操作，和数组元素个数保持一致
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1 && latestOppositeCount == latestOppositeWinOrLoseCount) {
+            log.info('存在连【%s】【%s】期记录，当前连【%s】【%s】期，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, winOrLoseString, continueMaxWinOrLoseTimes, moment().format("YYYY-MM-DD HH:mm:ss"));
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
-                    log.info('检查【invest】表，存在连 %s %s 期  最新连 %s %s 期 的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.invest_lastedRealInvestPeriod = historyData[0].period;
                     log.info('开始发送，【invest】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
@@ -324,7 +308,6 @@ export class NotificationService {
                 }
             } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
                 if (NotificationConfig.investTotal_lastedRealInvestPeriod != historyData[0].period) {
-                    log.info('检查【invest_total】表，存在连 %s %s 期 最新连 %s %s 期 的记录', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.investTotal_lastedRealInvestPeriod = historyData[0].period;
                     log.info('开始发送，【invest_total】表，连 %s %s 期 最新连 %s %s 期 提醒', isWin ? '中' : '错', continueMaxWinOrLoseTimes, !isWin ? '中' : '错', latestOppositeWinOrLoseCount);
@@ -332,7 +315,7 @@ export class NotificationService {
                 }
             }
         } else {
-            log.info('【%s】表 连【%s】 检查完成，不存在连【%s】记录，当前时间：%s', tableName, isWin ? "中" : "错", isWin ? "中" : "错", moment().format("YYYY-MM-DD HH:mm:ss"));
+            log.info('不存在连【%s】【%s】期记录，当前连【%s】【%s】期，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, winOrLoseString, continueMaxWinOrLoseTimes, moment().format("YYYY-MM-DD HH:mm:ss"));
         }
 
         return BlueBirdPromise.resolve([]);
