@@ -548,7 +548,7 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '17',
                                     group: 'notification',
-                                    desc: '上期错误错误提醒，遇到错误进行邮件提醒，模拟+真实下都有效'
+                                    desc: '上期错误提醒，遇到错误进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'siteUrl',
