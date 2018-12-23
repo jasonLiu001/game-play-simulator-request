@@ -73,19 +73,6 @@ export class NotificationService {
                     });
             })
             .then(() => {
-                log.info("开始检查【invest_total】表是否存在连错2期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 3, false)
-                    .then(() => {
-                        log.info("【invest_total】表是否存在连错2期检查完成");
-                    })
-                    .catch((err) => {
-                        if (err) {
-                            log.error("【invest_total】表 连错2期提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            })
-            .then(() => {
                 log.info("开始检查【invest_total】表是否存在连中4期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, true)
                     .then(() => {
