@@ -298,7 +298,7 @@ export class NotificationService {
         log.info('【%s】表 连【%s】【%s】期，检查结果如下：', tableName, winOrLoseString, maxWinOrLoseCount - 1);
         //这里的maxWinOrLoseCount需要减1操作，和数组元素个数保持一致
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1 && latestOppositeCount == latestOppositeWinOrLoseCount) {
-            log.info('存在连【%s】【%s】期记录，当前连【%s】【%s】期，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, winOrLoseString, continueMaxWinOrLoseTimes, moment().format("YYYY-MM-DD HH:mm:ss"));
+            log.info('存在连【%s】【%s】期记录，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, moment().format("YYYY-MM-DD HH:mm:ss"));
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
@@ -315,7 +315,7 @@ export class NotificationService {
                 }
             }
         } else {
-            log.info('不存在连【%s】【%s】期记录，当前连【%s】【%s】期，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, winOrLoseString, continueMaxWinOrLoseTimes, moment().format("YYYY-MM-DD HH:mm:ss"));
+            log.info('不存在连【%s】【%s】期记录，当前【%s】期里，存在【%s】期【%s】，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, maxWinOrLoseCount - 1, continueMaxWinOrLoseTimes, winOrLoseString, moment().format("YYYY-MM-DD HH:mm:ss"));
         }
 
         return BlueBirdPromise.resolve([]);
