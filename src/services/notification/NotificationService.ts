@@ -331,6 +331,8 @@ export class NotificationService {
                     return await this.sendWinOrLoseEmail(tableName, planType, continueMaxWinOrLoseTimes, isWin);
                 }
             }
+        } else {
+            log.info('【%s】表 连【%s】 检查完成，不存在连【%s】记录，当前时间：%s', tableName, isWin ? "中" : "错", isWin ? "中" : "错", moment().format("YYYY-MM-DD HH:mm:ss"));
         }
 
         return BlueBirdPromise.resolve([]);
