@@ -15,8 +15,8 @@ export class AppSettings {
     public static minProfitNotification: number = 4500;
     //最高利润预警
     public static maxProfitNotification: number = 7000;
-    //自动投注截止时间
-    public static investEndTime: string = "21:59:00";
+    //真实投注截止时间
+    public static realInvestEndTime: string = "21:59:00";
     //程序启动时 自动开启真实投注
     public static enableRealInvestWhenProgramStart: boolean = false;
     //上期错误进行邮件提醒，模拟+真实下都有效

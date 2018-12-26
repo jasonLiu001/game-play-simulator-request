@@ -47,8 +47,8 @@ export class SettingService {
                 AppSettings.maxProfitNotification = Number(item.value);
             } else if (item.key === 'siteUrl') {
                 CONFIG_CONST.siteUrl = item.value;
-            } else if (item.key === 'investEndTime') {
-                AppSettings.investEndTime = item.value;
+            } else if (item.key === 'realInvestEndTime') {
+                AppSettings.realInvestEndTime = item.value;
             } else if (item.key === 'isEnableInvestInMock') {
                 AppSettings.isEnableInvestInMock = Number(item.value) === 1;
             } else if (item.key === 'investTableBuyNotification') {

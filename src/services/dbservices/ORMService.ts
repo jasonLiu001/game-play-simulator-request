@@ -464,11 +464,11 @@ export class LotteryDbService {
                                     desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
                                 },
                                 {
-                                    key: 'investEndTime',
+                                    key: 'realInvestEndTime',
                                     value: '21:59:00',
                                     orderId: '3',
                                     group: 'system',
-                                    desc: '自动终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
+                                    desc: '真实投注终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
                                 },
                                 {
                                     key: 'touZhuBeiShu',

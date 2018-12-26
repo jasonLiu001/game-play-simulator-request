@@ -234,7 +234,7 @@ export class NotificationService {
         let day = currentTime.getDate();
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
-        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
+        let investEndTimeArr: Array<string> = AppSettings.realInvestEndTime.split(':');
         if (investEndTimeArr.length == 3) {
             thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
         }

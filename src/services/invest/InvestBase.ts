@@ -109,7 +109,7 @@ export class InvestBase {
 
         //当天22:00以后自动切换到模拟投注
         if (CONFIG_CONST.isRealInvest && TimeService.isReachInvestEndTime()) {
-            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天" + AppSettings.investEndTime + "以后，自动启动模拟投注";
+            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天" + AppSettings.realInvestEndTime + "以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
             let mockResult: any = await SettingService.switchToMockInvest();

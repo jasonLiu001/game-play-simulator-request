@@ -247,7 +247,7 @@ export class TimeService {
      */
     public static isReachInvestEndTime(): boolean {
         //0 不限制投注时间
-        if (AppSettings.investEndTime == '0') return false;
+        if (AppSettings.realInvestEndTime == '0') return false;
 
         let currentTime = new Date();
         let year = currentTime.getFullYear();
@@ -255,7 +255,7 @@ export class TimeService {
         let day = currentTime.getDate();
         //当天的21:59
         let thirdTime = new Date(year, month, day, 21, 59, 0);
-        let investEndTimeArr: Array<string> = AppSettings.investEndTime.split(':');
+        let investEndTimeArr: Array<string> = AppSettings.realInvestEndTime.split(':');
         if (investEndTimeArr.length == 3) {
             thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
         }
