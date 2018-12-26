@@ -53,6 +53,8 @@ export class SettingService {
                 AppSettings.isEnableInvestInMock = Number(item.value) === 1;
             } else if (item.key === 'investTableBuyNotification') {
                 AppSettings.investTableBuyNotification = Number(item.value) === 1;
+            } else if (item.key === 'totalTableBuyNotification') {
+                AppSettings.totalTableBuyNotification = Number(item.value) === 1;
             } else if (item.key === 'lastPeriodErrorInvestNotification') {
                 AppSettings.lastPeriodErrorInvestNotification = Number(item.value) === 1;
             }

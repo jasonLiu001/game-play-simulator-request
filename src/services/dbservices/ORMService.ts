@@ -552,7 +552,7 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '15',
                                     group: 'notification',
-                                    desc: '投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
+                                    desc: 'invest表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'lastPeriodErrorInvestNotification',
@@ -567,6 +567,13 @@ export class LotteryDbService {
                                     orderId: '17',
                                     group: 'system',
                                     desc: '网站首页地址'
+                                },
+                                {
+                                    key: 'totalTableBuyNotification',
+                                    value: '0',
+                                    orderId: '18',
+                                    group: 'notification',
+                                    desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 }
                             ]);
                         } else {
