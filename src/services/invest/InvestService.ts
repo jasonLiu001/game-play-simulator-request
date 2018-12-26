@@ -47,7 +47,7 @@ export class InvestService extends InvestBase {
                         //表invest_total第一次初始化完毕 重置标识
                         if (Config.isInvestTotalTableInitCompleted) Config.isInvestTotalTableInitCompleted = false;
 
-                        if (AppSettings.investTableBuyNotification) {//发送invest_total表 投注提醒通知
+                        if (AppSettings.totalTableBuyNotification) {//发送invest_total表 投注提醒通知
                             let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
                             let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
                             let promiseArray: Array<BlueBirdPromise<any>> = [];
