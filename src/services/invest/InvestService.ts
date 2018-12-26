@@ -17,11 +17,13 @@ import {SettingService} from "../settings/SettingService";
 import BlueBirdPromise = require('bluebird');
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "../notification/sender/SMSSender";
+import {NotificationService} from "../notification/NotificationService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     numberService = new NumberService(),
-    extraInvestService = new ExtraInvestService();
+    extraInvestService = new ExtraInvestService(),
+    notificationService = new NotificationService();
 
 export class InvestService extends InvestBase {
 
@@ -47,14 +49,8 @@ export class InvestService extends InvestBase {
                         //表invest_total第一次初始化完毕 重置标识
                         if (Config.isInvestTotalTableInitCompleted) Config.isInvestTotalTableInitCompleted = false;
 
-                        if (AppSettings.totalTableBuyNotification) {//发送invest_total表 投注提醒通知
-                            let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-                            let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                            let promiseArray: Array<BlueBirdPromise<any>> = [];
-                            promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
-                            promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
-                            return BlueBirdPromise.all(promiseArray);
-                        }
+                        //发送invest_total表 投注提醒通知
+                        if (AppSettings.totalTableBuyNotification) return notificationService.sendBuyNumberNotification();
                     });
             })
             .then(() => {
@@ -77,14 +73,8 @@ export class InvestService extends InvestBase {
                         //表invest第一次初始化完毕 重置标识
                         if (Config.isInvestTableInitCompleted) Config.isInvestTableInitCompleted = false;
 
-                        if (AppSettings.investTableBuyNotification) {//发送invest表 投注提醒通知
-                            let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-                            let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                            let promiseArray: Array<BlueBirdPromise<any>> = [];
-                            promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
-                            promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
-                            return BlueBirdPromise.all(promiseArray);
-                        }
+                        //发送invest表 投注提醒通知
+                        if (AppSettings.investTableBuyNotification) return notificationService.sendBuyNumberNotification();
                     });
             })
             .then(() => {

@@ -3,7 +3,7 @@ import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 import cron = require('node-cron');
 import {LotteryDbService} from "../dbservices/ORMService";
-import {CONFIG_CONST} from "../../config/Config";
+import {Config, CONFIG_CONST} from "../../config/Config";
 import {NotificationSender} from "./NotificationSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
@@ -347,6 +347,19 @@ export class NotificationService {
         }
 
         promiseArray.push(SMSSender.send(tableName == CONST_INVEST_TOTAL_TABLE.tableName ? 'total表' : tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), templateVar3, EnumSMSSignType.cnlands, isWin ? EnumSMSTemplateType.CONTINUE_INVEST_CORRECT : EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
+        promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
+        return BlueBirdPromise.all(promiseArray);
+    }
+
+    /**
+     *
+     * 发送购买提醒
+     */
+    public async sendBuyNumberNotification(): BlueBirdPromise<any> {
+        let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
+        let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
+        let promiseArray: Array<BlueBirdPromise<any>> = [];
+        promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
         return BlueBirdPromise.all(promiseArray);
     }
