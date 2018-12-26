@@ -10,7 +10,7 @@ export class AppSettings {
     //是否用相反的投注号码进行投注
     public static isUseReverseInvestNumbers: boolean = false;
     //是否开启invest投注提醒
-    public static investTableNotification: boolean = false;
+    public static investTableBuyNotification: boolean = false;
     //最低利润预警值
     public static minProfitNotification: number = 4500;
     //最高利润预警

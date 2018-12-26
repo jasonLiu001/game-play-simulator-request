@@ -548,7 +548,7 @@ export class LotteryDbService {
                                     desc: '启用最低利润邮件预警，模拟+真实下都有效'
                                 },
                                 {
-                                    key: 'investTableNotification',
+                                    key: 'investTableBuyNotification',
                                     value: '0',
                                     orderId: '15',
                                     group: 'notification',
