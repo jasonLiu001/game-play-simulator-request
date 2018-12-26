@@ -51,8 +51,8 @@ export class SettingService {
                 AppSettings.investEndTime = item.value;
             } else if (item.key === 'isEnableInvestInMock') {
                 AppSettings.isEnableInvestInMock = Number(item.value) === 1;
-            } else if (item.key === 'investNotification') {
-                AppSettings.investNotification = Number(item.value) === 1;
+            } else if (item.key === 'investTableNotification') {
+                AppSettings.investTableNotification = Number(item.value) === 1;
             } else if (item.key === 'lastPeriodErrorInvestNotification') {
                 AppSettings.lastPeriodErrorInvestNotification = Number(item.value) === 1;
             }

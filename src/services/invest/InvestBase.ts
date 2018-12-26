@@ -214,7 +214,7 @@ export class InvestBase {
         return this.checkInvestTime()
             .then(() => {
                 //首先判断是否开启投注通知 未开启通知直接返回
-                if (!AppSettings.investNotification) return BlueBirdPromise.resolve();
+                if (!AppSettings.investTableNotification) return BlueBirdPromise.resolve();
 
                 //再判断时间是否在设置的时间内 不在投注时间内直接返回
                 if (TimeService.isInStopInvestTime() || TimeService.isReachInvestEndTime()) return BlueBirdPromise.resolve();

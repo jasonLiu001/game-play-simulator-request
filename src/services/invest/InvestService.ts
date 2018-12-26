@@ -67,18 +67,16 @@ export class InvestService extends InvestBase {
                     .then(() => {
                         //表invest第一次初始化完毕 重置标识
                         if (Config.isInvestTableInitCompleted) Config.isInvestTableInitCompleted = false;
+
+                        if (AppSettings.investTableNotification) {//发送invest表 投注提醒通知
+                            let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
+                            let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
+                            let promiseArray: Array<BlueBirdPromise<any>> = [];
+                            promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
+                            promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
+                            return BlueBirdPromise.all(promiseArray);
+                        }
                     });
-            })
-            .then(() => {
-                if (AppSettings.investNotification) {//发送投注邮件通知
-                    let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-                    let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
-                    let promiseArray: Array<BlueBirdPromise<any>> = [];
-                    promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
-                    promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
-                    return BlueBirdPromise.all(promiseArray);
-                }
-                return BlueBirdPromise.resolve([]);
             })
             .then(() => {
                 //当前期号
