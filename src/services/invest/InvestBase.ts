@@ -213,7 +213,10 @@ export class InvestBase {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime()
             .then(() => {
-                //首先判断时间是否在设置的时间内 不在投注时间内直接返回
+                //首先判断是否开启投注通知 未开启通知直接返回
+                if (!AppSettings.investNotification) return BlueBirdPromise.resolve();
+
+                //再判断时间是否在设置的时间内 不在投注时间内直接返回
                 if (TimeService.isInStopInvestTime() || TimeService.isReachInvestEndTime()) return BlueBirdPromise.resolve();
 
                 //检查正确期数是否满足特定条件
