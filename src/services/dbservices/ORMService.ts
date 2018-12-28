@@ -596,6 +596,13 @@ export class LotteryDbService {
                                     group: 'warning',
                                     desc: '【慎用】停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
                                 },
+                                {
+                                    key: 'investTableMaxErrorCountNotification',
+                                    value: '1',
+                                    orderId: '22',
+                                    group: 'notification',
+                                    desc: 'invest表最大错误数量邮件提醒，模拟+真实下都有效'
+                                },
                             ]);
                         } else {
                             return res;

@@ -11,6 +11,8 @@ export class AppSettings {
     public static isUseReverseInvestNumbers: boolean = false;
     //是否开启invest投注提醒
     public static investTableBuyNotification: boolean = false;
+    //是否开启invest表最大错误数量提醒
+    public static investTableMaxErrorCountNotification: number = 1;
     //最低利润预警值
     public static minProfitNotification: number = 4500;
     //最高利润预警

@@ -81,44 +81,12 @@ export class NotificationService {
             })
             .then(() => {
                 //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
-                //连错4期提醒
-                log.info("开始检查【invest】表是否存在连错【4】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 5, false)
+                //invest表连错提醒
+                log.info("开始检查【invest】表是否存在连错【%s】期...", AppSettings.investTableMaxErrorCountNotification);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, AppSettings.investTableMaxErrorCountNotification + 1, false)
                     .catch((err) => {
                         if (err) {
-                            log.error("【invest】表 连错【4】期提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            })
-            .then(() => {
-                //连错3期提醒
-                log.info("开始检查【invest】表是否存在连错【3】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 4, false)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("【invest】表 连错【3】期提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            })
-            .then(() => {
-                //连错2期提醒
-                log.info("开始检查【invest】表是否存在连错【2】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 3, false)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("【invest】表 连错【2】期提醒邮件通知异常");
-                            log.error(err);
-                        }
-                    });
-            })
-            .then(() => {
-                log.info("开始检查【invest】表是否存在连错【1】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
-                    .catch((err) => {
-                        if (err) {
-                            log.error("【invest】表 连错【1】期提醒邮件通知异常");
+                            log.error("【invest】表 连错【%s】期提醒邮件通知异常", AppSettings.investTableMaxErrorCountNotification);
                             log.error(err);
                         }
                     });
