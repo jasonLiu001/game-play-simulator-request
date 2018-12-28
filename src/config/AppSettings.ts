@@ -23,4 +23,8 @@ export class AppSettings {
     public static lastPeriodErrorInvestNotification: boolean = false;
     //是否开启invest_total表投注提醒
     public static totalTableBuyNotification: boolean = false;
+    //是否开启invest_total表最大正确数量提醒
+    public static totalTableMaxWinCountNotification: number = 4;
+    //是否开启invest_total表最大错误数量提醒
+    public static totalTableMaxErrorCountNotification: number = 4;
 }

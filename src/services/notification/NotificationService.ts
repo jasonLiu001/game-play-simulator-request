@@ -60,21 +60,21 @@ export class NotificationService {
         log.info("正在同步应用程序所有参数设置，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
         return SettingService.getAndInitSettings()
             .then(() => {
-                log.info("开始检查【invest_total】表是否存在连错【4】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, false)
+                log.info("开始检查【invest_total】表是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, AppSettings.totalTableMaxErrorCountNotification + 1, false)
                     .catch((err) => {
                         if (err) {
-                            log.error("【invest_total】表 连错【4】期提醒邮件通知异常");
+                            log.error("【invest_total】表 连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification);
                             log.error(err);
                         }
                     });
             })
             .then(() => {
-                log.info("开始检查【invest_total】表是否存在连中【4】期...");
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 5, true)
+                log.info("开始检查【invest_total】表是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, AppSettings.totalTableMaxWinCountNotification + 1, true)
                     .catch((err) => {
                         if (err) {
-                            log.error("【invest_total】表 连中【4】期提醒邮件通知异常");
+                            log.error("【invest_total】表 连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification);
                             log.error(err);
                         }
                     });

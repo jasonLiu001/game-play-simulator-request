@@ -574,6 +574,20 @@ export class LotteryDbService {
                                     orderId: '18',
                                     group: 'notification',
                                     desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxWinCountNotification',
+                                    value: '4',
+                                    orderId: '19',
+                                    group: 'notification',
+                                    desc: 'total表最大正确数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxErrorCountNotification',
+                                    value: '4',
+                                    orderId: '20',
+                                    group: 'notification',
+                                    desc: 'total表最大错误数量邮件提醒，模拟+真实下都有效'
                                 }
                             ]);
                         } else {
