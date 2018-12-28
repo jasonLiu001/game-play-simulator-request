@@ -114,8 +114,6 @@ export class NotificationService {
                     });
             })
             .then(() => {
-                //连错1期提醒
-                if (!AppSettings.lastPeriodErrorInvestNotification) return BlueBirdPromise.resolve();
                 log.info("开始检查【invest】表是否存在连错【1】期...");
                 return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, 2, false)
                     .catch((err) => {

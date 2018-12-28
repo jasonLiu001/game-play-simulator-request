@@ -55,8 +55,8 @@ export class SettingService {
                 AppSettings.investTableBuyNotification = Number(item.value) === 1;
             } else if (item.key === 'totalTableBuyNotification') {
                 AppSettings.totalTableBuyNotification = Number(item.value) === 1;
-            } else if (item.key === 'lastPeriodErrorInvestNotification') {
-                AppSettings.lastPeriodErrorInvestNotification = Number(item.value) === 1;
+            } else if (item.key === 'enableWarningNotification') {
+                AppSettings.enableWarningNotification = Number(item.value) === 1;
             } else if (item.key === 'totalTableMaxWinCountNotification') {
                 AppSettings.totalTableMaxWinCountNotification = Number(item.value);
             } else if (item.key === 'totalTableMaxErrorCountNotification') {

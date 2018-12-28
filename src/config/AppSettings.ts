@@ -20,7 +20,7 @@ export class AppSettings {
     //程序启动时 自动开启真实投注
     public static enableRealInvestWhenProgramStart: boolean = false;
     //上期错误进行邮件提醒，模拟+真实下都有效
-    public static lastPeriodErrorInvestNotification: boolean = false;
+    public static enableWarningNotification: boolean = false;
     //是否开启invest_total表投注提醒
     public static totalTableBuyNotification: boolean = false;
     //是否开启invest_total表最大正确数量提醒

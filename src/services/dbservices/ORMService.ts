@@ -464,11 +464,11 @@ export class LotteryDbService {
                                     desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
                                 },
                                 {
-                                    key: 'realInvestEndTime',
-                                    value: '21:59:00',
+                                    key: 'awardMode',
+                                    value: '10',
                                     orderId: '3',
                                     group: 'system',
-                                    desc: '真实投注终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
+                                    desc: '元、角、分、厘模式'
                                 },
                                 {
                                     key: 'touZhuBeiShu',
@@ -489,21 +489,21 @@ export class LotteryDbService {
                                     value: '5100',
                                     orderId: '6',
                                     group: 'system',
-                                    desc: '当天最大盈利目标金额'
+                                    desc: 'invest表当天最大盈利目标金额'
                                 },
                                 {
                                     key: 'minAccountBalance',
                                     value: '0',
                                     orderId: '7',
                                     group: 'system',
-                                    desc: '当天最大亏损金额'
+                                    desc: 'invest表当天最大亏损金额'
                                 },
                                 {
-                                    key: 'awardMode',
-                                    value: '10',
+                                    key: 'realInvestEndTime',
+                                    value: '21:59:00',
                                     orderId: '8',
                                     group: 'system',
-                                    desc: '元、角、分、厘模式'
+                                    desc: '真实投注终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
                                 },
                                 {
                                     key: 'currentSelectedInvestPlanType',
@@ -520,46 +520,46 @@ export class LotteryDbService {
                                     desc: '每次程序启动时初始余额自动设置为上期余额，当天【重启程序】时需要开启此项'
                                 },
                                 {
-                                    key: 'isEnableInvestInMock',
+                                    key: 'investTableBuyNotification',
                                     value: '0',
                                     orderId: '11',
-                                    group: 'system',
-                                    desc: '遇【对错错】进入真实投注，直到盈利转模拟，不受最大盈利约束 模拟+正向投注时生效'
+                                    group: 'notification',
+                                    desc: 'invest表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
-                                    key: 'isUseReverseInvestNumbers',
+                                    key: 'enableWarningNotification',
                                     value: '0',
                                     orderId: '12',
-                                    group: 'system',
-                                    desc: '使用相反的号码投注'
+                                    group: 'notification',
+                                    desc: '是否开启预警提醒'
                                 },
                                 {
                                     key: 'maxProfitNotification',
                                     value: '0',
                                     orderId: '13',
                                     group: 'notification',
-                                    desc: '启用最高利润邮件预警，模拟+真实下都有效'
+                                    desc: 'invest表达到最高利润值后邮件预警，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'minProfitNotification',
                                     value: '0',
                                     orderId: '14',
                                     group: 'notification',
-                                    desc: '启用最低利润邮件预警，模拟+真实下都有效'
+                                    desc: 'invest表达到最低利润值后邮件预警，模拟+真实下都有效'
                                 },
                                 {
-                                    key: 'investTableBuyNotification',
+                                    key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '15',
-                                    group: 'notification',
-                                    desc: 'invest表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
+                                    group: 'system',
+                                    desc: 'invest表遇【对错错】进入真实投注，直到盈利转模拟，不受最大盈利约束 模拟+正向投注时生效'
                                 },
                                 {
-                                    key: 'lastPeriodErrorInvestNotification',
+                                    key: 'isUseReverseInvestNumbers',
                                     value: '0',
                                     orderId: '16',
-                                    group: 'notification',
-                                    desc: '上期错误提醒，遇到错误进行邮件提醒，模拟+真实下都有效'
+                                    group: 'system',
+                                    desc: '【慎用】使用相反的号码投注'
                                 },
                                 {
                                     key: 'siteUrl',
@@ -594,7 +594,7 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '21',
                                     group: 'system',
-                                    desc: '停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
+                                    desc: '【慎用】停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
                                 },
                             ]);
                         } else {
