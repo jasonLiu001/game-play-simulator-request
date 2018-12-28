@@ -530,7 +530,7 @@ export class LotteryDbService {
                                     key: 'enableWarningNotification',
                                     value: '0',
                                     orderId: '12',
-                                    group: 'notification',
+                                    group: 'system',
                                     desc: '是否开启预警提醒'
                                 },
                                 {
@@ -551,14 +551,14 @@ export class LotteryDbService {
                                     key: 'isEnableInvestInMock',
                                     value: '0',
                                     orderId: '15',
-                                    group: 'system',
+                                    group: 'warning',
                                     desc: 'invest表遇【对错错】进入真实投注，直到盈利转模拟，不受最大盈利约束 模拟+正向投注时生效'
                                 },
                                 {
                                     key: 'isUseReverseInvestNumbers',
                                     value: '0',
                                     orderId: '16',
-                                    group: 'system',
+                                    group: 'warning',
                                     desc: '【慎用】使用相反的号码投注'
                                 },
                                 {
@@ -593,7 +593,7 @@ export class LotteryDbService {
                                     key: 'isStopCheckLastPrizeNumber',
                                     value: '0',
                                     orderId: '21',
-                                    group: 'system',
+                                    group: 'warning',
                                     desc: '【慎用】停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
                                 },
                             ]);
