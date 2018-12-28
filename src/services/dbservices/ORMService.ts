@@ -12,7 +12,7 @@ import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
-import {EnumVendorType} from "../../models/EnumModel";
+import {EnumPushVendorType, EnumVendorType} from "../../models/EnumModel";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -1295,13 +1295,17 @@ export class LotteryDbService {
      *
      * 获取特定数量历史记录
      * @param {number} historyCount
+     * @param pushVendorType push厂商枚举 参见枚举类EnumPushVendorType
      */
-    public static getInvestPushInfoHistory(historyCount: number): Promise<Array<any>> {
+    public static getInvestPushInfoHistory(historyCount: number, pushVendorType: string): Promise<Array<any>> {
         return InvestPush.findAll({
             limit: historyCount,
             order: [
-                ['id', 'DESC']
+                ['createdTime', 'DESC']
             ],
+            where: {
+                pushVendorType: pushVendorType
+            },
             raw: true
         });
     }
