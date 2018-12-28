@@ -61,6 +61,8 @@ export class SettingService {
                 AppSettings.totalTableMaxWinCountNotification = Number(item.value);
             } else if (item.key === 'totalTableMaxErrorCountNotification') {
                 AppSettings.totalTableMaxErrorCountNotification = Number(item.value);
+            } else if (item.key === 'isStopCheckLastPrizeNumber') {
+                AppSettings.isStopCheckLastPrizeNumber = Number(item.value) === 1;
             }
         }
     }

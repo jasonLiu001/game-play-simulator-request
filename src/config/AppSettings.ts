@@ -27,4 +27,6 @@ export class AppSettings {
     public static totalTableMaxWinCountNotification: number = 4;
     //是否开启invest_total表最大错误数量提醒
     public static totalTableMaxErrorCountNotification: number = 4;
+    //停用对上期的开奖号码的形态的检查，允许每期都可以进行投注
+    public static isStopCheckLastPrizeNumber: boolean = false;
 }

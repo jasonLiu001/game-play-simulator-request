@@ -588,7 +588,14 @@ export class LotteryDbService {
                                     orderId: '20',
                                     group: 'notification',
                                     desc: 'total表最大错误数量邮件提醒，模拟+真实下都有效'
-                                }
+                                },
+                                {
+                                    key: 'isStopCheckLastPrizeNumber',
+                                    value: '0',
+                                    orderId: '21',
+                                    group: 'system',
+                                    desc: '停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
+                                },
                             ]);
                         } else {
                             return res;
