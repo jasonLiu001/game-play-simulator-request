@@ -603,6 +603,13 @@ export class LotteryDbService {
                                     group: 'notification',
                                     desc: 'invest表最大错误数量邮件提醒，模拟+真实下都有效'
                                 },
+                                {
+                                    key: 'isStopSendContinueInvestWarnEmail',
+                                    value: '0',
+                                    orderId: '23',
+                                    group: 'notification',
+                                    desc: 'invest表连续投注提醒，真实下都有效'
+                                },
                             ]);
                         } else {
                             return res;

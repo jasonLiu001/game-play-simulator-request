@@ -65,6 +65,8 @@ export class SettingService {
                 AppSettings.isStopCheckLastPrizeNumber = Number(item.value) === 1;
             } else if (item.key === 'investTableMaxErrorCountNotification') {
                 AppSettings.investTableMaxErrorCountNotification = Number(item.value);
+            } else if (item.key === 'isStopSendContinueInvestWarnEmail') {
+                AppSettings.isStopSendContinueInvestWarnEmail = Number(item.value) === 1;
             }
         }
     }
