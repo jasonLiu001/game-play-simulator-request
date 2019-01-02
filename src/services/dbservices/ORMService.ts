@@ -608,7 +608,7 @@ export class LotteryDbService {
                                     value: '0',
                                     orderId: '23',
                                     group: 'notification',
-                                    desc: 'invest表连续投注提醒，真实下都有效'
+                                    desc: 'invest表停止暂停投注提醒，真实下都有效'
                                 },
                             ]);
                         } else {
