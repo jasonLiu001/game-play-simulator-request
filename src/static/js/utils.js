@@ -154,7 +154,11 @@ var utilsMixin = {
                     periods.push(item.period);
                     switch (yAxisDataType) {
                         case self.chartYAxisDataType.winMoney:
-                            yData.push(item.winMoney);
+                            if (item.isUseReverseInvestNumbers === 1) {
+                                yData.push(-item.winMoney);
+                            } else {
+                                yData.push(item.winMoney);
+                            }
                             break;
                         case self.chartYAxisDataType.currentAccountBalance:
                             yData.push(item.currentAccountBalance);
@@ -191,7 +195,11 @@ var utilsMixin = {
                     periods.push(item.period);
                     switch (yAxisDataType) {
                         case self.chartYAxisDataType.winMoney:
-                            yData.push(item.winMoney);
+                            if (item.isUseReverseInvestNumbers === 1) {
+                                yData.push(-item.winMoney);
+                            } else {
+                                yData.push(item.winMoney);
+                            }
                             break;
                         case self.chartYAxisDataType.currentAccountBalance:
                             yData.push(item.currentAccountBalance);
