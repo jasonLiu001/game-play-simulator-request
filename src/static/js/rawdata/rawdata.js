@@ -29,7 +29,7 @@ var app = new Vue({
                     return;
                 }
 
-                self.requestResult = res.data.data;
+                self.requestResult = JSON.stringify(res.data.data, null, 2);
             });
         }
     },
