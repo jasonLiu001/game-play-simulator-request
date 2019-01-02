@@ -237,7 +237,7 @@ export class InvestBase {
                 return this.checkAwardHistoryCount();
             })
             .then(() => {
-                if (AppSettings.isStopSendContinueInvestWarnEmail) {
+                if (!AppSettings.isStopSendContinueInvestWarnEmail) {
                     //检查是否是连续投注，如果是则发送提醒邮件
                     return this.sendContinueInvestWarnEmail();
                 }
