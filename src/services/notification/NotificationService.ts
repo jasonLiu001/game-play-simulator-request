@@ -352,7 +352,7 @@ export class NotificationService {
             templateVar3 = String(maxWinOrLoseCount);
         }
 
-        promiseArray.push(SMSSender.send(tableName == CONST_INVEST_TOTAL_TABLE.tableName ? 'total表' : tableName + "表", String(CONFIG_CONST.currentSelectedInvestPlanType), templateVar3, EnumSMSSignType.cnlands, isWin ? EnumSMSTemplateType.CONTINUE_INVEST_CORRECT : EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
+        promiseArray.push(SMSSender.send(tableName == CONST_INVEST_TOTAL_TABLE.tableName ? 'total表' : tableName + "表", String(planType), templateVar3, EnumSMSSignType.cnlands, isWin ? EnumSMSTemplateType.CONTINUE_INVEST_CORRECT : EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
         return BlueBirdPromise.all(promiseArray);
     }
