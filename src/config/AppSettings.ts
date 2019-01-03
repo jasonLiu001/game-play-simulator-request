@@ -25,10 +25,18 @@ export class AppSettings {
     public static enableWarningNotification: boolean = false;
     //是否开启invest_total表投注提醒
     public static totalTableBuyNotification: boolean = false;
-    //是否开启invest_total表最大正确数量提醒
-    public static totalTableMaxWinCountNotification: number = 4;
-    //是否开启invest_total表最大错误数量提醒
-    public static totalTableMaxErrorCountNotification: number = 4;
+    //是否开启invest_total表 方案1 最大正确数量提醒
+    public static totalTableMaxWinCountNotification_Plan01: number = 4;
+    //是否开启invest_total表 方案1 最大错误数量提醒
+    public static totalTableMaxErrorCountNotification_Plan01: number = 4;
+    //是否开启invest_total表 方案2 最大正确数量提醒
+    public static totalTableMaxWinCountNotification_Plan02: number = 4;
+    //是否开启invest_total表 方案2 最大错误数量提醒
+    public static totalTableMaxErrorCountNotification_Plan02: number = 4;
+    //是否开启invest_total表 方案3 最大正确数量提醒
+    public static totalTableMaxWinCountNotification_Plan03: number = 4;
+    //是否开启invest_total表 方案3 最大错误数量提醒
+    public static totalTableMaxErrorCountNotification_Plan03: number = 4;
     //停用对上期的开奖号码的形态的检查，允许每期都可以进行投注
     public static isStopCheckLastPrizeNumber: boolean = false;
     //是否停止连续投注提醒

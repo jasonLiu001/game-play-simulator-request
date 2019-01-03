@@ -57,10 +57,18 @@ export class SettingService {
                 AppSettings.totalTableBuyNotification = Number(item.value) === 1;
             } else if (item.key === 'enableWarningNotification') {
                 AppSettings.enableWarningNotification = Number(item.value) === 1;
-            } else if (item.key === 'totalTableMaxWinCountNotification') {
-                AppSettings.totalTableMaxWinCountNotification = Number(item.value);
-            } else if (item.key === 'totalTableMaxErrorCountNotification') {
-                AppSettings.totalTableMaxErrorCountNotification = Number(item.value);
+            } else if (item.key === 'totalTableMaxWinCountNotification_Plan01') {
+                AppSettings.totalTableMaxWinCountNotification_Plan01 = Number(item.value);
+            } else if (item.key === 'totalTableMaxErrorCountNotification_Plan01') {
+                AppSettings.totalTableMaxErrorCountNotification_Plan01 = Number(item.value);
+            } else if (item.key === 'totalTableMaxWinCountNotification_Plan02') {
+                AppSettings.totalTableMaxWinCountNotification_Plan02 = Number(item.value);
+            } else if (item.key === 'totalTableMaxErrorCountNotification_Plan02') {
+                AppSettings.totalTableMaxErrorCountNotification_Plan02 = Number(item.value);
+            } else if (item.key === 'totalTableMaxWinCountNotification_Plan03') {
+                AppSettings.totalTableMaxWinCountNotification_Plan03 = Number(item.value);
+            } else if (item.key === 'totalTableMaxErrorCountNotification_Plan03') {
+                AppSettings.totalTableMaxErrorCountNotification_Plan03 = Number(item.value);
             } else if (item.key === 'isStopCheckLastPrizeNumber') {
                 AppSettings.isStopCheckLastPrizeNumber = Number(item.value) === 1;
             } else if (item.key === 'investTableMaxErrorCountNotification') {

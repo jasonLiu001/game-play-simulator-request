@@ -576,18 +576,18 @@ export class LotteryDbService {
                                     desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
                                 },
                                 {
-                                    key: 'totalTableMaxWinCountNotification',
+                                    key: 'totalTableMaxWinCountNotification_Plan01',
                                     value: '4',
                                     orderId: '19',
                                     group: 'notification',
-                                    desc: 'total表最大正确数量邮件提醒，模拟+真实下都有效'
+                                    desc: 'total表【方案1】最大正确数量邮件提醒，模拟+真实下都有效'
                                 },
                                 {
-                                    key: 'totalTableMaxErrorCountNotification',
+                                    key: 'totalTableMaxErrorCountNotification_Plan01',
                                     value: '4',
                                     orderId: '20',
                                     group: 'notification',
-                                    desc: 'total表最大错误数量邮件提醒，模拟+真实下都有效'
+                                    desc: 'total表【方案1】最大错误数量邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'isStopCheckLastPrizeNumber',
@@ -610,6 +610,34 @@ export class LotteryDbService {
                                     group: 'notification',
                                     desc: 'invest表停止暂停投注提醒，真实下都有效'
                                 },
+                                {
+                                    key: 'totalTableMaxWinCountNotification_Plan02',
+                                    value: '4',
+                                    orderId: '24',
+                                    group: 'notification',
+                                    desc: 'total表【方案2】最大正确数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxErrorCountNotification_Plan02',
+                                    value: '4',
+                                    orderId: '25',
+                                    group: 'notification',
+                                    desc: 'total表【方案2】最大错误数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxWinCountNotification_Plan03',
+                                    value: '4',
+                                    orderId: '26',
+                                    group: 'notification',
+                                    desc: 'total表【方案3】最大正确数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxErrorCountNotification_Plan03',
+                                    value: '4',
+                                    orderId: '27',
+                                    group: 'notification',
+                                    desc: 'total表【方案3】最大错误数量邮件提醒，模拟+真实下都有效'
+                                }
                             ]);
                         } else {
                             return res;

@@ -1,6 +1,7 @@
 import "jasmine";
 import {NotificationService} from "../../../src/services/notification/NotificationService";
 import {CONST_INVEST_TOTAL_TABLE} from "../../../src/models/db/CONST_INVEST_TOTAL_TABLE";
+import {CONFIG_CONST} from "../../../src/config/Config";
 
 describe('cancelInvest test', () => {
     let notificationService;
@@ -25,7 +26,7 @@ describe('cancelInvest test', () => {
     }, 60000);
 
     xit('cancelInvest should be work', (done) => {
-        notificationService.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, false)
+        notificationService.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, 2, false)
             .then((res) => {
                 console.log(res);
                 done();

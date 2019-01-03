@@ -60,21 +60,61 @@ export class NotificationService {
         log.info("正在同步应用程序所有参数设置，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
         return SettingService.getAndInitSettings()
             .then(() => {
-                log.info("开始检查【invest_total】表是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, AppSettings.totalTableMaxErrorCountNotification + 1, false)
+                log.info("开始检查【invest_total】表 【方案1】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan01);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 1, AppSettings.totalTableMaxErrorCountNotification_Plan01 + 1, false)
                     .catch((err) => {
                         if (err) {
-                            log.error("【invest_total】表 连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification);
+                            log.error("【invest_total】表 【方案1】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan01);
                             log.error(err);
                         }
                     });
             })
             .then(() => {
-                log.info("开始检查【invest_total】表是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, AppSettings.totalTableMaxWinCountNotification + 1, true)
+                log.info("开始检查【invest_total】表 【方案1】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan01);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 1, AppSettings.totalTableMaxWinCountNotification_Plan01 + 1, true)
                     .catch((err) => {
                         if (err) {
-                            log.error("【invest_total】表 连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification);
+                            log.error("【invest_total】表 【方案1】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan01);
+                            log.error(err);
+                        }
+                    });
+            })
+            .then(() => {
+                log.info("开始检查【invest_total】表 【方案2】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan02);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, AppSettings.totalTableMaxErrorCountNotification_Plan02 + 1, false)
+                    .catch((err) => {
+                        if (err) {
+                            log.error("【invest_total】表 【方案2】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan02);
+                            log.error(err);
+                        }
+                    });
+            })
+            .then(() => {
+                log.info("开始检查【invest_total】表 【方案2】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan02);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, AppSettings.totalTableMaxWinCountNotification_Plan02 + 1, true)
+                    .catch((err) => {
+                        if (err) {
+                            log.error("【invest_total】表 【方案2】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan02);
+                            log.error(err);
+                        }
+                    });
+            })
+            .then(() => {
+                log.info("开始检查【invest_total】表 【方案3】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan03);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 3, AppSettings.totalTableMaxErrorCountNotification_Plan03 + 1, false)
+                    .catch((err) => {
+                        if (err) {
+                            log.error("【invest_total】表 【方案3】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan03);
+                            log.error(err);
+                        }
+                    });
+            })
+            .then(() => {
+                log.info("开始检查【invest_total】表 【方案3】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan03);
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 3, AppSettings.totalTableMaxWinCountNotification_Plan03 + 1, true)
+                    .catch((err) => {
+                        if (err) {
+                            log.error("【invest_total】表 【方案3】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan03);
                             log.error(err);
                         }
                     });
@@ -83,7 +123,7 @@ export class NotificationService {
                 //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                 //invest表连错提醒
                 log.info("开始检查【invest】表是否存在连错【%s】期...", AppSettings.investTableMaxErrorCountNotification);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, AppSettings.investTableMaxErrorCountNotification + 1, false)
+                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, AppSettings.investTableMaxErrorCountNotification + 1, false)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错【%s】期提醒邮件通知异常", AppSettings.investTableMaxErrorCountNotification);
@@ -168,9 +208,9 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(tableName: string, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
+    public async sendContinueWinOrLoseWarnEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
-        return await  this.continueWinOrLose(tableName, CONFIG_CONST.currentSelectedInvestPlanType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount);
+        return await  this.continueWinOrLose(tableName, planType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount);
     }
 
     /**
