@@ -7,7 +7,7 @@ var app = new Vue({
             chartType: '',//图表类型
             startTime: moment().format('YYYY-MM-DD') + ' 09:50',
             endTime: moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00',
-            selectedPlans: ["plan_01", "plan_02", "plan_03"],//选择的方案 默认选中全部
+            selectedPlan: "plan_01",//选择的方案 默认选择方案1
             isShowPlan01: true,//显示方案1图表
             isShowPlan02: true,//显示方案2图表
             isShowPlan03: true,//显示方案3图表
@@ -25,15 +25,18 @@ var app = new Vue({
             this.isShowPlan01 = false;//显示方案1图表
             this.isShowPlan02 = false;//显示方案2图表
             this.isShowPlan03 = false;//显示方案3图表
-            //显示选择的计划
-            for (let plan of this.selectedPlans) {
-                if (plan === "plan_01") {
+            switch (this.selectedPlan) {
+                case 'plan_01':
                     this.isShowPlan01 = true;
-                } else if (plan === "plan_02") {
+                    break;
+                case 'plan_02':
                     this.isShowPlan02 = true;
-                } else if (plan === "plan_03") {
+                    break;
+                case 'plan_03':
                     this.isShowPlan03 = true;
-                }
+                    break;
+                default:
+                    this.isShowPlan01 = true;
             }
         },
         btnQueryClickHandler(event) {
@@ -117,13 +120,16 @@ var app = new Vue({
             case self.chartViewType.line://初始化线性图表
                 self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, '方案1', this.yAxisDataType, (myChart) => {
                     self.plan01_chart = myChart;
-                    this.chart_defalut_width = myChart.getWidth();//保存chart第一次初始化宽度
+                    self.chart_defalut_width = myChart.getWidth();//保存chart第一次初始化宽度
+                    self.isShowPlan01 = true;
                 });
                 self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, '方案2', this.yAxisDataType, (myChart) => {
                     self.plan02_chart = myChart;
+                    self.isShowPlan02 = false;
                 });
                 self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, '方案3', this.yAxisDataType, (myChart) => {
                     self.plan03_chart = myChart;
+                    self.isShowPlan03 = false;
                 });
                 break;
             case self.chartViewType.pillar://初始化柱状图表
@@ -135,9 +141,5 @@ var app = new Vue({
                 }
                 break;
         }
-    },
-    mounted() {
-        let self = this;
-
     }
 });

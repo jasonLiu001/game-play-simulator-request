@@ -33,19 +33,19 @@
             <label>选择方案：</label>
             <div class="form-check form-check-inline">
                 <label class="form-check-label" for="planCheckBox01">
-                    <input class="form-check-input" type="checkbox"
+                    <input class="form-check-input" type="radio"
                            id="planCheckBox01"
-                           value="plan_01" v-model="selectedPlans" @change="showSelectedPlan">方案1
+                           value="plan_01" v-model="selectedPlan" @change="showSelectedPlan">方案1
                 </label>
                 <label class="form-check-label" for="planCheckBox02">
-                    <input class="form-check-input" type="checkbox"
+                    <input class="form-check-input" type="radio"
                            id="planCheckBox02"
-                           value="plan_02" v-model="selectedPlans" @change="showSelectedPlan">方案2
+                           value="plan_02" v-model="selectedPlan" @change="showSelectedPlan">方案2
                 </label>
                 <label class="form-check-label" for="planCheckBox03">
-                    <input class="form-check-input" type="checkbox"
+                    <input class="form-check-input" type="radio"
                            id="planCheckBox03"
-                           value="plan_03" v-model="selectedPlans" @change="showSelectedPlan">方案3
+                           value="plan_03" v-model="selectedPlan" @change="showSelectedPlan">方案3
                 </label>
             </div>
         </div>
