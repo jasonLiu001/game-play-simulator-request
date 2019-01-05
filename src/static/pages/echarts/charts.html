@@ -30,7 +30,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label>选择方案：</label>
+            <button class="mt-1 btn btn-primary btn-block" @click="btnQueryClickHandler">查询</button>
+        </div>
+        <div class="form-group">
+            <label>显示方案：</label>
             <div class="form-check form-check-inline">
                 <label class="form-check-label" for="planCheckBox01">
                     <input class="form-check-input" type="radio"
@@ -49,7 +52,6 @@
                 </label>
             </div>
         </div>
-        <button class="mt-1 btn btn-primary btn-block" @click="btnQueryClickHandler">查询</button>
     </div>
     <div id="plan_01" v-show="isShowPlan01" style="height:400px;"></div>
     <div id="plan_02" v-show="isShowPlan02" style="height:400px;"></div>
