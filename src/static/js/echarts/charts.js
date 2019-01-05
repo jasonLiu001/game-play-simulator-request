@@ -7,6 +7,10 @@ var app = new Vue({
             chartType: '',//图表类型
             startTime: moment().format('YYYY-MM-DD') + ' 09:50',
             endTime: moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00',
+            selectedPlans: ["plan_01", "plan_02", "plan_03"],//选择的方案 默认选中全部
+            isShowPlan01: true,//显示方案1图表
+            isShowPlan02: true,//显示方案2图表
+            isShowPlan03: true,//显示方案3图表
             pageSize: 20,
             plan01_chart: null,
             plan02_chart: null,
@@ -16,6 +20,22 @@ var app = new Vue({
     },
     mixins: [utilsMixin],
     methods: {
+        showSelectedPlan() {
+            //重置所有checkbox状态
+            this.isShowPlan01 = false;//显示方案1图表
+            this.isShowPlan02 = false;//显示方案2图表
+            this.isShowPlan03 = false;//显示方案3图表
+            //显示选择的计划
+            for (let plan of this.selectedPlans) {
+                if (plan === "plan_01") {
+                    this.isShowPlan01 = true;
+                } else if (plan === "plan_02") {
+                    this.isShowPlan02 = true;
+                } else if (plan === "plan_03") {
+                    this.isShowPlan03 = true;
+                }
+            }
+        },
         btnQueryClickHandler(event) {
             let self = this;
             if (this.startTime === '') {
