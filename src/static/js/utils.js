@@ -131,12 +131,12 @@ var utilsMixin = {
          *
          * 更新折线图表显示
          */
-        updateLineCharts(url, planType, yAxisDataType, myChart) {
+        updateLineCharts(url, planType, chartName, yAxisDataType, myChart) {
             let self = this;
             myChart.showLoading();
             axios.post(url).then((res) => {
                 //复制一个新option
-                let chartOption = $.extend(true, {}, this.lineChartDefaultOption);
+                let chartOption = $.extend(true, {}, this.lineChartDefaultOption, {title: {text: chartName}});
 
                 if (!res.data.data) { //无数据
                     //更新图表显示

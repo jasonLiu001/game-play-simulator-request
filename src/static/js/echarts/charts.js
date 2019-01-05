@@ -79,9 +79,9 @@ var app = new Vue({
             //根据图表类型显示数据
             switch (this.chartType) {
                 case self.chartViewType.line://初始化线性图表
-                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType, this.plan01_chart);
-                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, this.yAxisDataType, this.plan02_chart);
-                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, this.yAxisDataType, this.plan03_chart);
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, "方案1", this.yAxisDataType, this.plan01_chart);
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 2, "方案2", this.yAxisDataType, this.plan02_chart);
+                    self.updateLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 3, "方案3", this.yAxisDataType, this.plan03_chart);
                     break;
                 case self.chartViewType.pillar://初始化柱状图表
                     self.updatePillarCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 1, this.yAxisDataType, this.plan01_chart);
@@ -115,14 +115,14 @@ var app = new Vue({
         //根据图表类型显示数据
         switch (this.chartType) {
             case self.chartViewType.line://初始化线性图表
-                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_01', 'invest', 1, '方案1', this.yAxisDataType, (myChart) => {
                     self.plan01_chart = myChart;
                     this.chart_defalut_width = myChart.getWidth();//保存chart第一次初始化宽度
                 });
-                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, 'Invest_02', this.yAxisDataType, (myChart) => {
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 2).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_02', 'invest', 2, '方案2', this.yAxisDataType, (myChart) => {
                     self.plan02_chart = myChart;
                 });
-                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, 'Invest_03', this.yAxisDataType, (myChart) => {
+                self.initLineCharts(this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 3).replace('{2}', this.startTime).replace('{3}', this.endTime), 'plan_03', 'invest', 3, '方案3', this.yAxisDataType, (myChart) => {
                     self.plan03_chart = myChart;
                 });
                 break;
@@ -130,9 +130,6 @@ var app = new Vue({
                 let url;
                 if (apiName === 'getTotalCorrectAndWrongCount') {
                     url = this.dataUrl.replace('{0}', this.startTime).replace('{1}', this.endTime);
-                    // self.initPillarCharts(url, 'plan_01', 'invest', 1, 'Invest_01', this.yAxisDataType, (myChart) => {
-                    //     self.plan01_chart = myChart;
-                    // });
                 } else {
                     url = this.dataUrl.replace('{0}', this.pageSize).replace('{1}', 1).replace('{2}', this.startTime).replace('{3}', this.endTime);
                 }
