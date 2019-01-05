@@ -569,46 +569,46 @@ export class LotteryDbService {
                                     desc: '网站首页地址'
                                 },
                                 {
-                                    key: 'totalTableBuyNotification',
-                                    value: '0',
-                                    orderId: '18',
-                                    group: 'notification',
-                                    desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxWinCountNotification_Plan01',
-                                    value: '4',
-                                    orderId: '19',
-                                    group: 'notification',
-                                    desc: 'total表【方案1】最大正确数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxErrorCountNotification_Plan01',
-                                    value: '4',
-                                    orderId: '20',
-                                    group: 'notification',
-                                    desc: 'total表【方案1】最大错误数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
                                     key: 'isStopCheckLastPrizeNumber',
                                     value: '0',
-                                    orderId: '21',
+                                    orderId: '18',
                                     group: 'warning',
                                     desc: '【慎用】停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
                                 },
                                 {
                                     key: 'investTableMaxErrorCountNotification',
                                     value: '1',
-                                    orderId: '22',
+                                    orderId: '19',
                                     group: 'notification',
                                     desc: 'invest表最大错误数量邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'isStopSendContinueInvestWarnEmail',
                                     value: '0',
-                                    orderId: '23',
+                                    orderId: '20',
                                     group: 'notification',
                                     desc: 'invest表停止暂停投注提醒，真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableBuyNotification',
+                                    value: '0',
+                                    orderId: '21',
+                                    group: 'notification',
+                                    desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxWinCountNotification_Plan01',
+                                    value: '4',
+                                    orderId: '22',
+                                    group: 'notification',
+                                    desc: 'total表【方案1】最大正确数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'totalTableMaxErrorCountNotification_Plan01',
+                                    value: '4',
+                                    orderId: '23',
+                                    group: 'notification',
+                                    desc: 'total表【方案1】最大错误数量邮件提醒，模拟+真实下都有效'
                                 },
                                 {
                                     key: 'totalTableMaxWinCountNotification_Plan02',
