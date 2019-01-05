@@ -347,7 +347,7 @@ export class NotificationService {
         let promiseArray: Array<BlueBirdPromise<any>> = [];
         let templateVar3: string = "";//短信模板变量3的内容
         if (isWin) {
-            templateVar3 = "正确" + String(maxWinOrLoseCount) + "次";
+            templateVar3 = "连中" + String(maxWinOrLoseCount) + "次";
         } else {
             templateVar3 = String(maxWinOrLoseCount);
         }
