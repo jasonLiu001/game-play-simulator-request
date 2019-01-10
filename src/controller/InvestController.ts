@@ -6,9 +6,11 @@ import {ResponseJson} from "../models/ResponseJson";
 import {TimeService} from "../services/time/TimeService";
 import {GlobalRequest} from "../global/GlobalRequest";
 import moment  = require('moment');
+import {InvestBase} from "../services/invest/InvestBase";
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('InvestController');
+    log = log4js.getLogger('InvestController'),
+    investBase = new InvestBase();
 
 class InvestControllerConfig {
     //已经投注的期号
@@ -95,5 +97,27 @@ export class InvestController {
                 log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
                 return res.status(200).send(jsonRes);
             });
+    }
+
+    /**
+     *
+     * 手动更新盈利
+     */
+    public manualCalculateWinMoney(req: Request, res: Response): any {
+        let jsonRes: ResponseJson = new ResponseJson();
+        log.info('更新盈利请求已收到');
+        investBase.calculateWinMoney()
+            .then(() => {
+                let successMsg: string = "盈利更新成功";
+                jsonRes.success(successMsg);
+                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "盈利更新失败";
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                return res.status(200).send(jsonRes);
+            })
     }
 }

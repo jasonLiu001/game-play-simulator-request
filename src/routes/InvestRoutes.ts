@@ -10,4 +10,7 @@ router.post('/manualInvest', investController.manualInvest);
 //撤单
 router.post('/manualCancelInvest', investController.manualCancelInvest);
 
+//手动更新盈利
+router.post('/manualCalculateWinMoney', investController.manualCalculateWinMoney);
+
 module.exports = router;
