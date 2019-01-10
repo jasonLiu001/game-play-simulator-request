@@ -13,7 +13,7 @@ export class AwardController {
 
     /**
      *
-     * 获取奖号列表
+     * 【接口暂未使用】获取奖号列表
      */
     public getLatestAwardInfo(req: Request, res: Response) {
         let jsonRes: ResponseJson = new ResponseJson();
@@ -34,7 +34,7 @@ export class AwardController {
 
     /**
      *
-     * 更新奖号 这个方法只更新最新的开奖信息，没有根据期号来更新
+     * 【接口暂未使用】更新奖号 这个方法只更新最新的开奖信息，没有根据期号来更新
      */
     public updateAward(req: Request, res: Response) {
         let jsonRes: ResponseJson = new ResponseJson();

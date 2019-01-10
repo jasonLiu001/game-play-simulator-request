@@ -55,7 +55,8 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
+    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
+        //保存最新的开奖信息前，先查询数据库中是否已经存在开奖记录，
         return LotteryDbService.getAwardInfo(award.period)
             .then((dbAwardRecord: any) => {
                 if (dbAwardRecord) {//奖号未更新的情况
@@ -67,23 +68,26 @@ export class AwardService {
                         log.info('开奖时间 %s 和 当前时间 %s 相差 %s 分钟 ，切换更新奖号数据源', moment(Config.globalVariable.nextPeriodInvestTime).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss'), minutesDiff);
                         //切换更新奖号方式
                         return awardKm28ComService.getAwardInfo();
-                    } else {
-                        //开奖时间和当前时间相差1.5分钟以内 数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
-                        return Promise.reject(RejectionMsg.isExistRecordInAward);
                     }
+
+                    //开奖时间和当前时间相差1.5分钟以内 数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
+                    return Promise.reject(RejectionMsg.isExistRecordInAward);
                 }
                 return award;
             })
             .then((newAward: AwardInfo) => {
-                //更新下期开奖时间
-                TimeService.updateNextPeriodInvestTime();
                 log.info('正在保存第三方开奖数据...');
                 //更新全局变量
                 Config.globalVariable.last_Period = newAward.period;
                 Config.globalVariable.last_PrizeNumber = newAward.openNumber;
                 Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
 
-                return LotteryDbService.saveOrUpdateAwardInfo(newAward);
+                return LotteryDbService.saveOrUpdateAwardInfo(newAward)
+                    .then((awardInfo: AwardInfo) => {
+                        //更新下期开奖时间
+                        TimeService.updateNextPeriodInvestTime();
+                        return awardInfo;
+                    });
             });
     }
 }
