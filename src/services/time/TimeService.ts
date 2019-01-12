@@ -202,6 +202,29 @@ export class TimeService {
 
     /**
      *
+     *
+     * 获取上期投注的期号 格式为：20170625-080
+     */
+    public static getLastPeriodNumber(currentTime: Date): string {
+        let periodList: Array<PeriodTime> = this.getPeriodList(currentTime, 0);
+        let currentPeriod = null;
+        let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间 初始值为无穷大
+        for (let i = 0; i < periodList.length; i++) {
+            let periodTime = periodList[i];
+            if (periodTime.openTime < currentTime) {
+                let diffTime = currentTime.getTime() - periodTime.openTime.getTime();//找出和当前时间的 时间差最小的时间，即为当前的投注期号
+                if (diffTime < minDiffTime) {
+                    minDiffTime = diffTime;
+                    currentPeriod = periodTime.period;
+                }
+            }
+        }
+
+        return currentPeriod;
+    }
+
+    /**
+     *
      * 获取当前期号的下期 期号 格式为：20170625-080
      * @param currentTime
      */

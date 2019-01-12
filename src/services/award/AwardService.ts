@@ -45,8 +45,15 @@ export class AwardService {
                     if (dbAwardRecord) return Promise.reject(RejectionMsg.isExistRecordInAward);
                 })
                 .then(() => {
-                    //有新的奖号出现，则更新开奖信息
-                    if (newAwardInfo) return AwardService.saveOrUpdateAwardInfo(newAwardInfo);
+                    let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
+                    //保存奖号前需要进行奖号检查
+                    if (lastPeriodStr == newAwardInfo.period) {
+                        log.info('从网络获取的期号为：%s，正确的期号应该是：%s，两者一致，该奖号可保存！', newAwardInfo.period, lastPeriodStr);
+                        //有新的奖号出现，则更新开奖信息
+                        if (newAwardInfo) return AwardService.saveOrUpdateAwardInfo(newAwardInfo);
+                    } else {
+                        return Promise.reject('从网络获取的期号为：' + newAwardInfo.period + '，正确的期号应该是：' + lastPeriodStr + '，两者不一致，放弃保存该奖号！');
+                    }
                 })
                 .then(() => {
                     log.info('保存第三方开奖数据完成');
