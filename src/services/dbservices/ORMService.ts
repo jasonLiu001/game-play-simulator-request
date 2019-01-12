@@ -1164,6 +1164,8 @@ export class LotteryDbService {
 
     /**
      *
+     *  查询plan_invest_numbers表经常超时，这个需要处理一下
+     *
      * 根据状态获取投注号码
      * SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status = 1 AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
