@@ -388,7 +388,7 @@ export class InvestBase {
 
         return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0)
             .then((list: Array<any>) => {
-                if (!list) BlueBirdPromise.resolve([]);
+                if (!list) return BlueBirdPromise.resolve([]);
                 log.info("查询到plan_invest_numbers表中未开奖数据%s条", list.length);
 
                 //各个计划产生号码结果
@@ -400,7 +400,7 @@ export class InvestBase {
                     //后三开奖号码
                     let prizeNumber = item.openNumber.substring(2);
                     //兑奖
-                    if (prizeNumber.length != 3 || prizeNumber == '') throw new Error('目前只支持后三开奖号码兑奖');
+                    if (prizeNumber.length != 3 || prizeNumber == '') return Promise.reject(new Error('目前只支持后三开奖号码兑奖'));
 
                     //各个计划投注号码
                     let planInvestNumbersInfo: PlanInvestNumbersInfo = {
