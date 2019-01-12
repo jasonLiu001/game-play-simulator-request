@@ -4,6 +4,7 @@ import BlueBirdPromise = require('bluebird');
 import {JiangNanLoginService} from "./jiangnan/JiangNanLoginService";
 import {JiangNanLotteryService} from "./jiangnan/JiangNanLotteryService";
 import moment  = require('moment');
+import {ConstVars} from "../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PlatformService'),
@@ -36,7 +37,7 @@ export class PlatformService {
             })
             .then((investResult) => {
                 log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');
-                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info('第%s次任务，执行完成，当前时间:%s', Config.currentInvestTotalCount, moment().format(ConstVars.momentDateTimeFormatter));
                 if (investResult) log.info(investResult);
                 log.info('正在执行退出登录...');
                 //投注完成后 退出登录

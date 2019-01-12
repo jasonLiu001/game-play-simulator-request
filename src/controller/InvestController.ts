@@ -7,6 +7,7 @@ import {TimeService} from "../services/time/TimeService";
 import {GlobalRequest} from "../global/GlobalRequest";
 import moment  = require('moment');
 import {InvestBase} from "../services/invest/InvestBase";
+import {ConstVars} from "../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
@@ -37,20 +38,20 @@ export class InvestController {
         let currentPeriod: string = TimeService.getCurrentPeriodNumber(new Date());
         if (period != currentPeriod) {
             jsonRes.fail(period + "期已停止投注，投注失败");
-            log.error("手动投注失败，%s期已停止投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
+            log.error("手动投注失败，%s期已停止投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));
             return res.status(200).send(jsonRes);
         }
 
         if (InvestControllerConfig.investPeriod == period) {
             jsonRes.fail(period + "期已投注，勿重复投注");
-            log.error("手动投注失败，%s期重复投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
+            log.error("手动投注失败，%s期重复投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));
             return res.status(200).send(jsonRes);
         }
 
         LotteryDbService.getInvestByTableName(investTableName, period, planType)
             .then((investInfo: InvestInfo) => {
                 if (investInfo.status == 1) {
-                    log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));
                     return Promise.reject(investInfo.period + "期已结束，投注失败");
                 }
                 investInfo.awardMode = awardMode;
@@ -62,7 +63,7 @@ export class InvestController {
             .then(() => {
                 let successMsg: string = period + "期，一键投注成功";
                 jsonRes.success(successMsg);
-                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 //投注成功 更新已投注期号 防止重复投注
                 InvestControllerConfig.investPeriod = period;
                 return res.status(200).send(jsonRes);
@@ -70,7 +71,7 @@ export class InvestController {
             .catch((e) => {
                 let errMsg: string = period + "期，一键投注失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
@@ -88,13 +89,13 @@ export class InvestController {
             .then((msg) => {
                 let successMsg: string = period + "期，一键撤单成功";
                 jsonRes.success(successMsg + " " + msg);
-                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = period + "期，一键撤单失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
@@ -110,13 +111,13 @@ export class InvestController {
             .then(() => {
                 let successMsg: string = "盈利更新成功";
                 jsonRes.success(successMsg);
-                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "盈利更新失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             })
     }

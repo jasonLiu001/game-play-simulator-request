@@ -14,6 +14,7 @@ import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../
 import {SMSSender} from "./sender/SMSSender";
 import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
+import {ConstVars} from "../../global/ConstVars";
 
 
 let log4js = require('log4js'),
@@ -57,7 +58,7 @@ export class NotificationService {
      * 检查并同时发送通知
      */
     public async checkAndSendNotification(): BlueBirdPromise<any> {
-        log.info("正在同步应用程序所有参数设置，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
+        log.info("正在同步应用程序所有参数设置，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
         return SettingService.getAndInitSettings()
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案1】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan01);
@@ -146,7 +147,7 @@ export class NotificationService {
                     });
             })
             .then(() => {
-                log.info("通知任务，检查所有通知结束，当前时间：%s", moment().format("YYYY-MM-DD HH:mm:ss"));
+                log.info("通知任务，检查所有通知结束，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
             });
     }
 
@@ -169,11 +170,11 @@ export class NotificationService {
             NotificationConfig.todayMaxOrMinProfitInvestPeriod = historyData[0].period;
             if (currentAccountBalance <= AppSettings.minProfitNotification) {
                 let lowerTitle = "最低预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最低利润值点";
-                log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), lowerTitle);
+                log.info("当前时间：%s %s", moment().format(ConstVars.momentDateTimeFormatter), lowerTitle);
                 return await NotificationSender.send(lowerTitle, "已达最低预警利润值：" + AppSettings.minProfitNotification, EnumNotificationType.PUSH_AND_EMAIL);
             } else if (currentAccountBalance >= AppSettings.maxProfitNotification) {
                 let higherTitle = "最高预警 方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】已达最高利润值点";
-                log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), higherTitle);
+                log.info("当前时间：%s %s", moment().format(ConstVars.momentDateTimeFormatter), higherTitle);
                 return await NotificationSender.send(higherTitle, "已达最高预警利润值：" + AppSettings.maxProfitNotification, EnumNotificationType.PUSH_AND_EMAIL);
             }
         }
@@ -186,17 +187,17 @@ export class NotificationService {
      * 前一天的账号余额 低于特定值时发送通知
      */
     public async whenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any> {
-        let yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD');
+        let yesterday: string = moment().subtract(1, 'days').format(ConstVars.momentDateFormatter);
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值
         let yesterdayAccountBalance: any = await LotteryDbService.getMaxAndMinProfitFromInvest(yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
         let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 亏损状态提醒';//通知邮件标题
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
-            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
+            log.info("当前时间：%s %s", moment().format(ConstVars.momentDateTimeFormatter), emailTitle);
             return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
         } else if (yesterdayAccountBalance.minAccountBalance < parseFloat((CONFIG_CONST.originAccountBalance / 5).toFixed(2))) {//最小账户余额小于初始账号的1/5 亏损
-            log.info("当前时间：%s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle);
+            log.info("当前时间：%s %s", moment().format(ConstVars.momentDateTimeFormatter), emailTitle);
             return await NotificationSender.send(emailTitle, emailContent, EnumNotificationType.EMAIL);
         }
         return BlueBirdPromise.resolve(true);
@@ -304,7 +305,7 @@ export class NotificationService {
         log.info('检查结果如下：');
         //这里的maxWinOrLoseCount需要减1操作，和数组元素个数保持一致
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1 && latestOppositeCount == latestOppositeWinOrLoseCount) {
-            log.info('存在连【%s】【%s】期记录，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, moment().format("YYYY-MM-DD HH:mm:ss"));
+            log.info('存在连【%s】【%s】期记录，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, moment().format(ConstVars.momentDateTimeFormatter));
             if (tableName === CONST_INVEST_TABLE.tableName) {
                 if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
@@ -325,7 +326,7 @@ export class NotificationService {
                 }
             }
         } else {
-            log.info('无需发送预警消息，当前【%s】期里，存在【%s】期【%s】，检查时间：%s', maxWinOrLoseCount - 1, continueMaxWinOrLoseTimes, winOrLoseString, moment().format("YYYY-MM-DD HH:mm:ss"));
+            log.info('无需发送预警消息，当前【%s】期里，存在【%s】期【%s】，检查时间：%s', maxWinOrLoseCount - 1, continueMaxWinOrLoseTimes, winOrLoseString, moment().format(ConstVars.momentDateTimeFormatter));
         }
 
         return BlueBirdPromise.resolve([]);
@@ -343,7 +344,7 @@ export class NotificationService {
     private async sendWinOrLoseEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0,): BlueBirdPromise<any> {
         let emailTitle = "连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 + 连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + "】期 提醒";
         let emailContent = "【" + tableName + "】表 方案【" + planType + "】 已连" + (isWin ? "中" : "错") + "【" + maxWinOrLoseCount + "】期 最新连" + (!isWin ? "中" : "错") + "【" + latestOppositeWinOrLoseCount + "】期";
-        log.info("当前时间：%s %s %s", moment().format('YYYY-MM-DD HH:mm:ss'), emailTitle, emailContent);
+        log.info("当前时间：%s %s %s", moment().format(ConstVars.momentDateTimeFormatter), emailTitle, emailContent);
         let promiseArray: Array<BlueBirdPromise<any>> = [];
         let templateVar3: string = "";//短信模板变量3的内容
         if (isWin) {
@@ -363,7 +364,7 @@ export class NotificationService {
      */
     public async sendBuyNumberNotification(): BlueBirdPromise<any> {
         let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
-        let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format('YYYY-MM-DD HH:mm:ss') + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
+        let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format(ConstVars.momentDateTimeFormatter) + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
         let promiseArray: Array<BlueBirdPromise<any>> = [];
         promiseArray.push(SMSSender.send(Config.globalVariable.current_Peroid, moment().format('HH:mm:ss'), String(CONFIG_CONST.currentSelectedInvestPlanType), EnumSMSSignType.cnlands, EnumSMSTemplateType.RECOMMEND_INVEST));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));

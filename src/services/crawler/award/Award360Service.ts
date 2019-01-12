@@ -4,6 +4,7 @@ import moment  = require('moment');
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {IAwardCrawler} from "./IAwardCrawler";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
+import {ConstVars} from "../../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Award360Service'),
@@ -70,7 +71,7 @@ export class Award360Service implements IAwardCrawler {
                             openNumber: lotteryData[0].WinNumber,
                             period: year + '' + monthFragment + '' + dayFragment + '-' + num,
                             openTime: lotteryData[0].EndTime,
-                            createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                            createdTime: moment().format(ConstVars.momentDateTimeFormatter),
                             updateStatus: updateStatus//自动更新
                         };
                         resolve(awardInfo);

@@ -13,6 +13,7 @@ import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumPushVendorType, EnumVendorType} from "../../models/EnumModel";
+import {ConstVars} from "../../global/ConstVars";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -137,7 +138,7 @@ const Award = sequelize.define('award', {
         defaultValue: Sequelize.NOW,
         get: function () {
             const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
     },
     updateStatus: {//更新状态 1：自动更新 2：手工更新
@@ -196,16 +197,16 @@ const Invest = sequelize.define('invest', {
             defaultValue: Sequelize.NOW,
             get: function () {
                 const investTime = this.getDataValue('investTime');
-                return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+                return moment(investTime).format(ConstVars.momentDateTimeFormatter);
             }
         },
         investDate: {//投注日期
             type: Sequelize.STRING,
-            defaultValue: moment().format('YYYY-MM-DD')
+            defaultValue: moment().format(ConstVars.momentDateFormatter)
         },
         investTimestamp: {//投注时间
             type: Sequelize.STRING,
-            defaultValue: moment().format('HH:mm:ss')
+            defaultValue: moment().format(ConstVars.momentTimeFormatter)
         }
     },
     {
@@ -276,16 +277,16 @@ const InvestTotal = sequelize.define('invest_total', {
             defaultValue: Sequelize.NOW,
             get: function () {
                 const investTime = this.getDataValue('investTime');
-                return moment(investTime).format('YYYY-MM-DD HH:mm:ss');
+                return moment(investTime).format(ConstVars.momentDateTimeFormatter);
             }
         },
         investDate: {//投注日期
             type: Sequelize.STRING,
-            defaultValue: moment().format('YYYY-MM-DD')
+            defaultValue: moment().format(ConstVars.momentDateFormatter)
         },
         investTimestamp: {//投注时间
             type: Sequelize.STRING,
-            defaultValue: moment().format('HH:mm:ss')
+            defaultValue: moment().format(ConstVars.momentTimeFormatter)
         }
     },
     {
@@ -358,7 +359,7 @@ const Vendor = sequelize.define('vendor', {
         defaultValue: Sequelize.NOW,
         get: function () {
             const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
     }
 });
@@ -391,7 +392,7 @@ const InvestPush = sequelize.define('invest_push', {
         type: Sequelize.DATE,
         get: function () {
             const createdTime = this.getDataValue('tokenExpireTime');
-            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
     },
     createdTime: {//创建时间
@@ -399,7 +400,7 @@ const InvestPush = sequelize.define('invest_push', {
         defaultValue: Sequelize.NOW,
         get: function () {
             const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
     }
 });

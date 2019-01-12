@@ -4,6 +4,7 @@ import {AwardInfo} from "../../../models/db/AwardInfo";
 import {IAwardCrawler} from "./IAwardCrawler";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
 import moment  = require('moment');
+import {ConstVars} from "../../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardKm28ComService'),
@@ -103,7 +104,7 @@ export class AwardKm28ComService implements IAwardCrawler {
                     openNumber: openNumber,
                     openTime: openTime,
                     period: period,
-                    createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    createdTime: moment().format(ConstVars.momentDateTimeFormatter),
                     updateStatus: updateStatus//自动更新
                 };
                 if (awardInfo.openNumber != '') {

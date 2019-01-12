@@ -3,6 +3,7 @@ import Promise = require('bluebird');
 import moment  = require('moment');
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {HttpRequestHeaders} from "../../../models/EnumModel";
+import {ConstVars} from "../../../global/ConstVars";
 
 let request = require('request'),
     log4js = require('log4js'),
@@ -56,7 +57,7 @@ export class AwardCaiBaXianService implements IAwardCrawler {
                             period: year + '' + monthFragment + '' + dayFragment + '-' + num,
                             openNumber: lotteryData.opencode,
                             openTime: lotteryData.timeStop,
-                            createdTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                            createdTime: moment().format(ConstVars.momentDateTimeFormatter),
                             updateStatus: updateStatus//自动更新
                         };
                         resolve(awardInfo);

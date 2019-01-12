@@ -5,6 +5,10 @@ import _ = require('lodash');
 import moment  = require('moment');
 import {RejectionMsg} from "../../models/EnumModel";
 import {AppSettings} from "../../config/AppSettings";
+import {ConstVars} from "../../global/ConstVars";
+
+let log4js = require('log4js'),
+    log = log4js.getLogger('TimeService');
 
 export class TimeService {
     /**
@@ -33,6 +37,7 @@ export class TimeService {
         let nextOpenTime = TimeService.getNextOpenTime(currentTime, delaySeconds);
         //未到开奖时间
         if (nextOpenTime.getTime() == Config.globalVariable.nextPeriodInvestTime.getTime()) {
+            log.info("当前时间: %s,下期可投注时间：%s", moment().format(ConstVars.momentDateTimeFormatter), moment(nextOpenTime).format(ConstVars.momentDateTimeFormatter));
             return Promise.reject(RejectionMsg.notReachInvestTime);
         } else {
             return Promise.resolve(true);

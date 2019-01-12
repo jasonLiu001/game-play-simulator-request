@@ -15,6 +15,7 @@ import {EnumNotificationType} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
+import {ConstVars} from "../../global/ConstVars";
 
 
 let log4js = require('log4js'),
@@ -80,7 +81,7 @@ export class InvestBase {
      * 检查是否可以执行真正的投注操作
      */
     private checkLastPrizeNumberValidation(): BlueBirdPromise<boolean> {
-        log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, moment().format('YYYY-MM-DD HH:mm:ss'));
+        log.info('%s期开奖号码:%s，当前时间：%s', Config.globalVariable.last_Period, Config.globalVariable.last_PrizeNumber, moment().format(ConstVars.momentDateTimeFormatter));
         log.info('当前%s期，任务执行中...', Config.globalVariable.current_Peroid);
         //上期的开奖号码是否满足投注条件
         return numberService.isLastPrizeNumberValid()
@@ -104,12 +105,12 @@ export class InvestBase {
         if (TimeService.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
             TimeService.updateNextPeriodInvestTime();
-            return BlueBirdPromise.reject("当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，在02:00~10:00之间，不符合投注时间")
+            return BlueBirdPromise.reject("当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，在02:00~10:00之间，不符合投注时间")
         }
 
         //当天22:00以后自动切换到模拟投注
         if (CONFIG_CONST.isRealInvest && TimeService.isReachInvestEndTime()) {
-            let timeReachMessage = "当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss') + "，当天" + AppSettings.realInvestEndTime + "以后，自动启动模拟投注";
+            let timeReachMessage = "当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，当天" + AppSettings.realInvestEndTime + "以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
             let mockResult: any = await SettingService.switchToMockInvest();
@@ -196,7 +197,7 @@ export class InvestBase {
                 //当期完整期号 格式：20180511-078
                 let currentPeriodString: string = TimeService.getCurrentPeriodNumber(new Date());
                 //提醒邮件
-                let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format('YYYY-MM-DD HH:mm:ss');
+                let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format(ConstVars.momentDateTimeFormatter);
                 //发送邮件提醒
                 return NotificationSender.send("余额:" + lastInvestInfo.currentAccountBalance + "连续购买前", warnMessage, EnumNotificationType.PUSH_AND_EMAIL);
             }).then(() => {
@@ -312,9 +313,9 @@ export class InvestBase {
                 winMoney: 0,
                 status: 0,
                 isWin: 0,
-                investTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                investDate: moment().format('YYYY-MM-DD'),
-                investTimestamp: moment().format('HH:mm:ss')
+                investTime: moment().format(ConstVars.momentDateTimeFormatter),
+                investDate: moment().format(ConstVars.momentDateFormatter),
+                investTimestamp: moment().format(ConstVars.momentTimeFormatter)
             };
             planType++;
             allPlanInvests.push(investInfo);

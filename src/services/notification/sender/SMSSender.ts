@@ -4,6 +4,7 @@ import {LotteryDbService} from "../../dbservices/ORMService";
 import {EnumSMSTemplateType, EnumVendorType} from "../../../models/EnumModel";
 import {VendorInfo} from "../../../models/db/VendorInfo";
 import {CONFIG_CONST} from "../../../config/Config";
+import {ConstVars} from "../../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('SMSSender'),
@@ -58,7 +59,7 @@ export class SMSSender {
             })
             .catch((e) => {
                 if (e) {
-                    log.error("发送短信失败，当前时间：%s", moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error("发送短信失败，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
                     log.error(e);
                 }
             });

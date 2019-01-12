@@ -6,6 +6,7 @@ import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
 import {PushSender} from "../services/notification/sender/PushSender";
 import {EnumPushVendorType} from "../models/EnumModel";
+import {ConstVars} from "../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');
@@ -26,20 +27,20 @@ export class PushController {
             pushPlatform: pushPlatform,
             tokenExpireTime: null,
             pushVendorType: EnumPushVendorType.TENCENT_XG,//Push厂商类型 默认为信鸽
-            createdTime: moment().format('YYYY-MM-DD HH:mm:ss')
+            createdTime: moment().format(ConstVars.momentDateTimeFormatter)
         };
 
         LotteryDbService.saveOrUpdateInvestPushInfo(investPushModel)
             .then(() => {
                 let successMsg: string = "deviceToken:" + investPushModel.deviceToken + " 保存成功";
                 jsonRes.success(successMsg);
-                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "deviceToken保存失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             });
     }
@@ -55,13 +56,13 @@ export class PushController {
             .then(() => {
                 let successMsg: string = "Push发送成功";
                 jsonRes.success(successMsg);
-                log.info("%s，当前时间：%s", successMsg, moment().format('YYYY-MM-DD HH:mm:ss'));
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
                 let errMsg: string = "push发送失败";
                 jsonRes.fail(errMsg, e.message);
-                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format('YYYY-MM-DD HH:mm:ss'), e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             });
     }

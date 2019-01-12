@@ -5,6 +5,7 @@ import {InvestPushInfo} from "../../../models/db/InvestPushInfo";
 import {CommonUtil} from "../../common/CommonUtil";
 import {XGPushModel} from "../../../models/XGPushModel";
 import {EnumPushVendorType} from "../../../models/EnumModel";
+import {ConstVars} from "../../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushSender');
@@ -41,7 +42,7 @@ export class PushSender {
             })
             .catch((e) => {
                 if (e) {
-                    log.error("发送Push失败，当前时间：%s", moment().format('YYYY-MM-DD HH:mm:ss'));
+                    log.error("发送Push失败，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
                     log.error(e);
                 }
             })
