@@ -52,7 +52,7 @@ export class InvestController {
             .then((investInfo: InvestInfo) => {
                 if (investInfo.status == 1) {
                     log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));
-                    return Promise.reject(investInfo.period + "期已结束，投注失败");
+                    return Promise.reject(new Error(investInfo.period + "期已结束，投注失败"));
                 }
                 investInfo.awardMode = awardMode;
                 investInfo.touZhuBeiShu = touZhuBeiShu;
