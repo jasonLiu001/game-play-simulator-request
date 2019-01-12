@@ -30,13 +30,23 @@ export class AwardService {
      */
     public static startGetAwardInfoTask(success?: Function): void {
         ScheduleTaskList.awardFetchTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.awardFetchTaskEntity.cronTimeStr, () => {
+            let newAwardInfo: AwardInfo = null;
             TimeService.isInvestTime()
                 .then(() => {
                     log.info('获取第三方开奖数据');
                     return crawl360Service.getAwardInfo();
                 })
                 .then((award: AwardInfo) => {
-                    return AwardService.saveOrUpdateAwardInfo(award);
+                    newAwardInfo = award;//保存最新开奖号码
+                    return LotteryDbService.getAwardInfo(award.period);
+                })
+                .then((dbAwardRecord: any) => {
+                    //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
+                    if (dbAwardRecord) return Promise.reject(RejectionMsg.isExistRecordInAward);
+                })
+                .then(() => {
+                    //有新的奖号出现，则更新开奖信息
+                    if (newAwardInfo) return AwardService.saveOrUpdateAwardInfo(newAwardInfo);
                 })
                 .then(() => {
                     log.info('保存第三方开奖数据完成');
@@ -56,38 +66,17 @@ export class AwardService {
      * 获取开奖信息
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
-        //保存最新的开奖信息前，先查询数据库中是否已经存在开奖记录，
-        return LotteryDbService.getAwardInfo(award.period)
-            .then((dbAwardRecord: any) => {
-                if (dbAwardRecord) {//奖号未更新的情况
-                    //如果当前时间大于开奖时间2分钟的情况下，还是没有更新奖号，则切换获取奖号的站点
-                    let dateTimeNow = moment();
-                    //当前时间和开奖时间时差
-                    let minutesDiff = dateTimeNow.diff(moment(Config.globalVariable.nextPeriodInvestTime), 'minutes', true);
-                    if (minutesDiff >= 1.5) {//相差1.5分钟 还是未开奖 则切换开奖源
-                        log.info('开奖时间 %s 和 当前时间 %s 相差 %s 分钟 ，切换更新奖号数据源', moment(Config.globalVariable.nextPeriodInvestTime).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss'), minutesDiff);
-                        //切换更新奖号方式
-                        return awardKm28ComService.getAwardInfo();
-                    }
+        log.info('正在保存第三方开奖数据...');
+        //更新全局变量
+        Config.globalVariable.last_Period = award.period;
+        Config.globalVariable.last_PrizeNumber = award.openNumber;
+        Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
 
-                    //开奖时间和当前时间相差1.5分钟以内 数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
-                    return Promise.reject(RejectionMsg.isExistRecordInAward);
-                }
-                return award;
-            })
-            .then((newAward: AwardInfo) => {
-                log.info('正在保存第三方开奖数据...');
-                //更新全局变量
-                Config.globalVariable.last_Period = newAward.period;
-                Config.globalVariable.last_PrizeNumber = newAward.openNumber;
-                Config.globalVariable.current_Peroid = TimeService.getCurrentPeriodNumber(new Date());
-
-                return LotteryDbService.saveOrUpdateAwardInfo(newAward)
-                    .then((awardInfo: AwardInfo) => {
-                        //更新下期开奖时间
-                        TimeService.updateNextPeriodInvestTime();
-                        return awardInfo;
-                    });
+        return LotteryDbService.saveOrUpdateAwardInfo(award)
+            .then((awardInfo: AwardInfo) => {
+                //更新下期开奖时间
+                TimeService.updateNextPeriodInvestTime();
+                return awardInfo;
             });
     }
 }
