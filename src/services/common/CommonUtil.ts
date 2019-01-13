@@ -22,7 +22,9 @@ export class CommonUtil {
             GlobalRequest.request(
                 {
                     url: url,
-                    method: 'GET'
+                    method: 'GET',
+                    encoding: 'utf8',
+                    gzip: true //服务器可能发送给客户端是压缩后的响应数据
                 }, (error, response, body) => {
                     if (error) {
                         reject(error);

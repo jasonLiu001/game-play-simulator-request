@@ -10,6 +10,7 @@ import moment  = require('moment');
 import Promise = require('bluebird');
 import cron = require('node-cron');
 import {AwardKm28ComService} from "../crawler/award/AwardKm28ComService";
+import {Award500comService} from "../crawler/historyawards/Award500comService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -85,5 +86,16 @@ export class AwardService {
                 TimeService.updateNextPeriodInvestTime();
                 return awardInfo;
             });
+    }
+
+    /**
+     *
+     * 保存历史开奖号码到数据库
+     */
+    public static saveOrUpdateHistoryAwardByDate(periodDate: string): Promise<any> {
+        return Award500comService.getHistoryAwardByDate(periodDate)
+            .then((historyAwards: Array<AwardInfo>) => {
+                return LotteryDbService.saveOrUpdateAwardInfoList(historyAwards);
+            })
     }
 }

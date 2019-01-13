@@ -15,7 +15,7 @@ export class AppController {
      *
      * 启动app
      */
-    public start(req: Request, res: Response) {
+    public start(req: Request, res: Response): any {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
             AppServices.start();

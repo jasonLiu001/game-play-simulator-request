@@ -17,7 +17,7 @@ export class AwardController {
      *
      * 【接口暂未使用】获取奖号列表
      */
-    public getLatestAwardInfo(req: Request, res: Response) {
+    public getLatestAwardInfo(req: Request, res: Response): any {
         let jsonRes: ResponseJson = new ResponseJson();
         let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
         awardKm28ComService.getAwardInfo()
@@ -39,7 +39,7 @@ export class AwardController {
      *
      * 【接口暂未使用】更新奖号 这个方法只更新最新的开奖信息，没有根据期号来更新，不需要传递参数
      */
-    public updateAward(req: Request, res: Response) {
+    public updateAward(req: Request, res: Response): any {
         let jsonRes: ResponseJson = new ResponseJson();
         let lastAwardInfo: AwardInfo = null;
         let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
@@ -59,6 +59,30 @@ export class AwardController {
             })
             .catch((e) => {
                 let errMsg: string = lastPeriodStr + "期奖号更新失败";
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
+                return res.status(200).send(jsonRes);
+            });
+    }
+
+    /**
+     *
+     * 更新历史奖号
+     * @returns {any}
+     */
+    public updateHistoryAward(req: Request, res: Response): any {
+        let jsonRes: ResponseJson = new ResponseJson();
+        //需要获取的开奖号码的日期
+        let updateDate: string = req.body.date;
+        return AwardService.saveOrUpdateHistoryAwardByDate(updateDate)
+            .then(() => {
+                let successMsg: string = updateDate + "日，历史奖号更新成功";
+                jsonRes.success(successMsg, ``);
+                log.info('%s 当前时间：%s', successMsg, moment().format(ConstVars.momentDateTimeFormatter));
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = updateDate + "日，历史奖号更新失败";
                 jsonRes.fail(errMsg, e.message);
                 log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);

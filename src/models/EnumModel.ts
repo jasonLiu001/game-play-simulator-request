@@ -161,3 +161,22 @@ export const enum EnumSMSTemplateType {
      */
     CONTINUE_INVEST_CORRECT = 253110
 }
+
+
+/***
+ *
+ * 开奖号码 更新状态
+ */
+export const enum EnumAwardUpdateStatus {
+    /**
+     *
+     * 程序自动更新
+     */
+    AUTO_UPDATE = 1,
+
+    /**
+     *
+     * 手动更新开奖号码
+     */
+    MANUAL_UPDATE = 2
+}

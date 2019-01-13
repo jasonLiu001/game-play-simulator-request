@@ -700,6 +700,17 @@ export class LotteryDbService {
             });
     }
 
+    /**
+     *
+     * 批量保存/更新开奖号码
+     */
+    public static saveOrUpdateAwardInfoList(awardList: Array<AwardInfo>): Promise<any> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let award of awardList) {
+            promiseArray.push(LotteryDbService.saveOrUpdateAwardInfo(award));
+        }
+        return Promise.all(promiseArray);
+    }
 
     /**
      *
