@@ -4,20 +4,15 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import {InvestBase} from "./InvestBase";
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
-import moment  = require('moment');
 import {TimeService} from "../time/TimeService";
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {ExtraInvestService} from "./ExtraInvestService";
 import {PlatformService} from "../platform/PlatformService";
 import {AppSettings} from "../../config/AppSettings";
-import {NotificationSender} from "../notification/NotificationSender";
 import {SettingService} from "../settings/SettingService";
-import BlueBirdPromise = require('bluebird');
-import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
-import {SMSSender} from "../notification/sender/SMSSender";
+import {EnumDbTableName} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -39,10 +34,10 @@ export class InvestService extends InvestBase {
                 return numberService.generateInvestNumber();
             })
             .then(() => {
-                log.info('正在保存表%s 投注记录...', CONST_INVEST_TOTAL_TABLE.tableName);
-                return this.initAllPlanInvestInfo(CONST_INVEST_TOTAL_TABLE.tableName)
+                log.info('正在保存表%s 投注记录...', EnumDbTableName.INVEST_TOTAL);
+                return this.initAllPlanInvestInfo(EnumDbTableName.INVEST_TOTAL)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
-                        log.info('%s表记录已保存数据%s条', CONST_INVEST_TOTAL_TABLE.tableName, allInvestTotalInfo.length);
+                        log.info('%s表记录已保存数据%s条', EnumDbTableName.INVEST_TOTAL, allInvestTotalInfo.length);
                         return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
                     })
                     .then(() => {
@@ -61,11 +56,11 @@ export class InvestService extends InvestBase {
             })
             .then(() => {
                 let messageType = CONFIG_CONST.isRealInvest ? "真实投注" : "模拟投注";
-                log.info('正在保存表%s %s记录...', CONST_INVEST_TABLE.tableName, messageType);
+                log.info('正在保存表%s %s记录...', EnumDbTableName.INVEST, messageType);
                 //真实后模拟投注后 更新各个方案的账户余额
-                return this.initAllPlanInvestInfo(CONST_INVEST_TABLE.tableName)
+                return this.initAllPlanInvestInfo(EnumDbTableName.INVEST)
                     .then((allPlanInvestInfo: Array<InvestInfo>) => {
-                        log.info('%s表 %s记录已保存', CONST_INVEST_TABLE.tableName, messageType);
+                        log.info('%s表 %s记录已保存', EnumDbTableName.INVEST, messageType);
                         //保存投注记录
                         return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
                     })

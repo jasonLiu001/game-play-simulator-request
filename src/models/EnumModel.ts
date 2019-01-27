@@ -180,3 +180,22 @@ export const enum EnumAwardUpdateStatus {
      */
     MANUAL_UPDATE = 2
 }
+
+/**
+ *
+ * 数据库表名称
+ */
+export const enum EnumDbTableName {
+    /**
+     *
+     * invest表
+     */
+    INVEST = "invest",
+
+    /**
+     *
+     *
+     * invest_total表
+     */
+    INVEST_TOTAL = "invest_total"
+}

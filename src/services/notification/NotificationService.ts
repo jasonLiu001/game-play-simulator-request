@@ -10,10 +10,8 @@ import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 import {TimeService} from "../time/TimeService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
-import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
+import {EnumDbTableName, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {ConstVars} from "../../global/ConstVars";
 
 
@@ -62,7 +60,7 @@ export class NotificationService {
         return SettingService.getAndInitSettings()
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案1】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan01);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 1, AppSettings.totalTableMaxErrorCountNotification_Plan01 + 1, false)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 1, AppSettings.totalTableMaxErrorCountNotification_Plan01 + 1, false)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案1】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan01);
@@ -72,7 +70,7 @@ export class NotificationService {
             })
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案1】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan01);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 1, AppSettings.totalTableMaxWinCountNotification_Plan01 + 1, true)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 1, AppSettings.totalTableMaxWinCountNotification_Plan01 + 1, true)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案1】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan01);
@@ -82,7 +80,7 @@ export class NotificationService {
             })
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案2】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan02);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, AppSettings.totalTableMaxErrorCountNotification_Plan02 + 1, false)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 2, AppSettings.totalTableMaxErrorCountNotification_Plan02 + 1, false)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案2】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan02);
@@ -92,7 +90,7 @@ export class NotificationService {
             })
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案2】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan02);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 2, AppSettings.totalTableMaxWinCountNotification_Plan02 + 1, true)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 2, AppSettings.totalTableMaxWinCountNotification_Plan02 + 1, true)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案2】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan02);
@@ -102,7 +100,7 @@ export class NotificationService {
             })
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案3】是否存在连错【%s】期...", AppSettings.totalTableMaxErrorCountNotification_Plan03);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 3, AppSettings.totalTableMaxErrorCountNotification_Plan03 + 1, false)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 3, AppSettings.totalTableMaxErrorCountNotification_Plan03 + 1, false)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案3】连错【%s】期提醒邮件通知异常", AppSettings.totalTableMaxErrorCountNotification_Plan03);
@@ -112,7 +110,7 @@ export class NotificationService {
             })
             .then(() => {
                 log.info("开始检查【invest_total】表 【方案3】是否存在连中【%s】期...", AppSettings.totalTableMaxWinCountNotification_Plan03);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TOTAL_TABLE.tableName, 3, AppSettings.totalTableMaxWinCountNotification_Plan03 + 1, true)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST_TOTAL, 3, AppSettings.totalTableMaxWinCountNotification_Plan03 + 1, true)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest_total】表 【方案3】连中【%s】期提醒邮件通知异常", AppSettings.totalTableMaxWinCountNotification_Plan03);
@@ -124,7 +122,7 @@ export class NotificationService {
                 //次数多的要先发送邮件，这样次数少的就不会重复发了，因为公用的一个变量控制重复发送
                 //invest表连错提醒
                 log.info("开始检查【invest】表是否存在连错【%s】期...", AppSettings.investTableMaxErrorCountNotification);
-                return this.sendContinueWinOrLoseWarnEmail(CONST_INVEST_TABLE.tableName, CONFIG_CONST.currentSelectedInvestPlanType, AppSettings.investTableMaxErrorCountNotification + 1, false)
+                return this.sendContinueWinOrLoseWarnEmail(EnumDbTableName.INVEST, CONFIG_CONST.currentSelectedInvestPlanType, AppSettings.investTableMaxErrorCountNotification + 1, false)
                     .catch((err) => {
                         if (err) {
                             log.error("【invest】表 连错【%s】期提醒邮件通知异常", AppSettings.investTableMaxErrorCountNotification);
@@ -135,7 +133,7 @@ export class NotificationService {
             .then(() => {
                 //最大最小利润预警
                 log.info("开始检查【invest】表最大最小利润情况...");
-                return this.sendMaxOrMinProfitNotification(CONST_INVEST_TABLE.tableName)
+                return this.sendMaxOrMinProfitNotification(EnumDbTableName.INVEST)
                     .then(() => {
                         log.info("【invest】表最大最小利润检查完成");
                     })
@@ -225,10 +223,10 @@ export class NotificationService {
      */
     private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
         let historyData: Array<InvestInfo>;
-        if (tableName == CONST_INVEST_TABLE.tableName) {
+        if (tableName == EnumDbTableName.INVEST) {
             //方案  最新的投注记录
             historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
             historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         }
 
@@ -306,7 +304,7 @@ export class NotificationService {
         //这里的maxWinOrLoseCount需要减1操作，和数组元素个数保持一致
         if (continueMaxWinOrLoseTimes == maxWinOrLoseCount - 1 && latestOppositeCount == latestOppositeWinOrLoseCount) {
             log.info('存在连【%s】【%s】期记录，检查时间：%s', winOrLoseString, maxWinOrLoseCount - 1, moment().format(ConstVars.momentDateTimeFormatter));
-            if (tableName === CONST_INVEST_TABLE.tableName) {
+            if (tableName === EnumDbTableName.INVEST) {
                 if (NotificationConfig.invest_lastedRealInvestPeriod != historyData[0].period) {
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.invest_lastedRealInvestPeriod = historyData[0].period;
@@ -315,7 +313,7 @@ export class NotificationService {
                 } else {
                     log.info('预警通知已发送，无需重复发送');
                 }
-            } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+            } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
                 if (NotificationConfig.investTotal_lastedRealInvestPeriod != historyData[0].period) {
                     //发送邮件前保存 数据库最新的期号信息，以便下次发送邮件判断
                     NotificationConfig.investTotal_lastedRealInvestPeriod = historyData[0].period;
@@ -353,7 +351,7 @@ export class NotificationService {
             templateVar3 = String(maxWinOrLoseCount);
         }
 
-        promiseArray.push(SMSSender.send(tableName == CONST_INVEST_TOTAL_TABLE.tableName ? 'total表' : tableName + "表", String(planType), templateVar3, EnumSMSSignType.cnlands, isWin ? EnumSMSTemplateType.CONTINUE_INVEST_CORRECT : EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
+        promiseArray.push(SMSSender.send(tableName == EnumDbTableName.INVEST_TOTAL ? 'total表' : tableName + "表", String(planType), templateVar3, EnumSMSSignType.cnlands, isWin ? EnumSMSTemplateType.CONTINUE_INVEST_CORRECT : EnumSMSTemplateType.CONTINUE_INVEST_ERROR));
         promiseArray.push(NotificationSender.send(emailTitle, emailContent, EnumNotificationType.PUSH_AND_EMAIL));
         return BlueBirdPromise.all(promiseArray);
     }

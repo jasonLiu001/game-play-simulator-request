@@ -7,15 +7,13 @@ import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {NotificationSender} from "../notification/NotificationSender";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
-import {EnumNotificationType} from "../../models/EnumModel";
+import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
+import {ConstVars} from "../../global/ConstVars";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {ConstVars} from "../../global/ConstVars";
 
 
 let log4js = require('log4js'),
@@ -251,7 +249,7 @@ export class InvestBase {
      * @returns {boolean}
      */
     private isResetOriginalAccountBalance(tableName: String): boolean {
-        if (tableName === CONST_INVEST_TABLE.tableName) {
+        if (tableName === EnumDbTableName.INVEST) {
             //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
             if (Config.isInvestTableInitCompleted && AppSettings.isUseLastAccountBalance) {
                 return false;//不需要重置初始账号余额
@@ -260,7 +258,7 @@ export class InvestBase {
             } else {
                 return false;
             }
-        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
             //app第一次运行 并且设置了初始余额为上期余额时 不需要重置
             if (Config.isInvestTotalTableInitCompleted && AppSettings.isUseLastAccountBalance) {
                 return false;//不需要重置初始账号余额
@@ -289,9 +287,9 @@ export class InvestBase {
             let planInvestMoney = planInvestNumbersArray.length * 2;
             //获取上期余额
             let investList: InvestInfo[] = null;
-            if (tableName === CONST_INVEST_TABLE.tableName) {
+            if (tableName === EnumDbTableName.INVEST) {
                 investList = await LotteryDbService.getInvestInfoHistory(planType, 1);
-            } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+            } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
                 investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
@@ -332,9 +330,9 @@ export class InvestBase {
     private async updateInvestWinMoney(tableName: String): BlueBirdPromise<any> {
         let resultList;
 
-        if (tableName === CONST_INVEST_TABLE.tableName) {
+        if (tableName === EnumDbTableName.INVEST) {
             resultList = await LotteryDbService.getInvestInfoListByStatus(0);
-        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
             resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
         }
         if (!resultList) return BlueBirdPromise.resolve([]);
@@ -370,9 +368,9 @@ export class InvestBase {
 
         let saveResult;
         //首先更新之前未开奖的数据
-        if (tableName === CONST_INVEST_TABLE.tableName) {
+        if (tableName === EnumDbTableName.INVEST) {
             saveResult = await LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
-        } else if (tableName === CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
             saveResult = await LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
         }
         log.info('已更新%s表未开奖数据%s条', tableName, investInfoList.length);
@@ -386,9 +384,9 @@ export class InvestBase {
      */
     public async calculateWinMoney(): BlueBirdPromise<any> {
         //更新invest表余额
-        let updateInvestResult = await this.updateInvestWinMoney(CONST_INVEST_TABLE.tableName);
+        let updateInvestResult = await this.updateInvestWinMoney(EnumDbTableName.INVEST);
         //更新invest_total表余额
-        let updateInvestTotalResult = await this.updateInvestWinMoney(CONST_INVEST_TOTAL_TABLE.tableName);
+        let updateInvestTotalResult = await this.updateInvestWinMoney(EnumDbTableName.INVEST_TOTAL);
 
         return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0)
             .then((list: Array<any>) => {

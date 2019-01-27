@@ -1,18 +1,16 @@
 import Promise = require('bluebird');
-import {CONFIG_CONST} from "../../config/Config";
 import moment  = require('moment');
+import {CONFIG_CONST} from "../../config/Config";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
-import {CONST_INVEST_TABLE} from "../../models/db/CONST_INVEST_TABLE";
 import {SettingsInfo, UpdateSettingsInfo} from "../../models/db/SettingsInfo";
-import {CONST_INVEST_TOTAL_TABLE} from "../../models/db/CONST_INVEST_TOTAL_TABLE";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
-import {EnumPushVendorType, EnumVendorType} from "../../models/EnumModel";
+import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
 import {ConstVars} from "../../global/ConstVars";
 
 const Sequelize = require('sequelize');
@@ -1389,9 +1387,9 @@ export class LotteryDbService {
      * @param {number} planType 计划类型
      */
     public static getInvestByTableName(tableName: string, period: string, planType: number): Promise<InvestInfo> {
-        if (tableName == CONST_INVEST_TABLE.tableName) {
+        if (tableName == EnumDbTableName.INVEST) {
             return LotteryDbService.getInvestInfo(period, planType);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
             return LotteryDbService.getInvestTotalInfo(period, planType);
         } else {
             return Promise.resolve(null);
@@ -1407,9 +1405,9 @@ export class LotteryDbService {
      * @param {string} afterTime
      */
     public static getInvestHistoryByTableName(tableName: string, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
-        if (tableName == CONST_INVEST_TABLE.tableName) {
+        if (tableName == EnumDbTableName.INVEST) {
             return LotteryDbService.getInvestInfoHistory(planType, historyCount, afterTime);
-        } else if (tableName == CONST_INVEST_TOTAL_TABLE.tableName) {
+        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
             return LotteryDbService.getInvestTotalInfoHistory(planType, historyCount, afterTime);
         } else {
             return Promise.resolve([]);
