@@ -313,6 +313,8 @@ export class InvestBase {
                 winMoney: 0,
                 status: 0,
                 isWin: 0,
+                isRealInvest: 0,
+                isMockPlan01: 0,
                 investTime: moment().format(ConstVars.momentDateTimeFormatter),
                 investDate: moment().format(ConstVars.momentDateFormatter),
                 investTimestamp: moment().format(ConstVars.momentTimeFormatter)
@@ -353,6 +355,8 @@ export class InvestBase {
                 winMoney: item.winMoney,
                 status: item.status,
                 isWin: item.isWin,
+                isRealInvest: item.isRealInvest,
+                isMockPlan01: item.isMockPlan01,
                 investTime: item.investTime,
                 investDate: item.investDate,
                 investTimestamp: item.investTimestamp
