@@ -81,6 +81,8 @@ export class SettingService {
                 AppSettings.doubleInvest_TouZhuBeiShu = item.value;
             } else if (item.key === 'doubleInvest_IsUseReverseInvestNumbers') {
                 AppSettings.doubleInvest_IsUseReverseInvestNumbers = Number(item.value) === 1;
+            } else if (item.key === 'doubleInvest_CurrentSelectedInvestPlanType') {
+                AppSettings.doubleInvest_CurrentSelectedInvestPlanType = Number(item.value);
             }
         }
     }

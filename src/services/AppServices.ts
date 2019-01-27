@@ -55,6 +55,10 @@ export class AppServices {
                     //投注前 首先获取参数配置信息
                     SettingService.getAndInitSettings()
                         .then(() => {
+                            //判断是否当前 是否处于倍投模式  模拟投注+正向投注+倍投award不为0+倍投倍数不为0
+                            AppSettings.runtime_IsInDoubleInvestMode = AppSettings.doubleInvest_AwardMode != '0' && AppSettings.doubleInvest_TouZhuBeiShu != '0' && !CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers;
+                        })
+                        .then(() => {
                             return investService.executeAutoInvest(GlobalRequest.request);//执行投注
                         });
                 });

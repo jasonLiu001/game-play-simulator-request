@@ -669,6 +669,13 @@ export class LotteryDbService {
                                     orderId: '30',
                                     group: 'doubleInvest',
                                     desc: '倍投时是否取相反的号码，模拟投注下有效'
+                                },
+                                {
+                                    key: 'doubleInvest_CurrentSelectedInvestPlanType',
+                                    value: '1',
+                                    orderId: '31',
+                                    group: 'doubleInvest',
+                                    desc: '倍投时选取的投注方案，模拟投注下有效'
                                 }
                             ]);
                         } else {

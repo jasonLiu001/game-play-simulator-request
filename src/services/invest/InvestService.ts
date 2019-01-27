@@ -13,12 +13,14 @@ import {SettingService} from "../settings/SettingService";
 import {EnumDbTableName} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
 import BlueBirdPromise = require('bluebird');
+import {DoubleInvestService} from "./DoubleInvestService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     numberService = new NumberService(),
     extraInvestService = new ExtraInvestService(),
-    notificationService = new NotificationService();
+    notificationService = new NotificationService(),
+    doubleInvestService = new DoubleInvestService();
 
 export class InvestService extends InvestBase {
 
@@ -47,6 +49,12 @@ export class InvestService extends InvestBase {
                         //发送invest_total表 投注提醒通知
                         if (AppSettings.totalTableBuyNotification) return notificationService.sendBuyNumberNotification();
                     });
+            })
+            .then(() => {
+                if (AppSettings.runtime_IsInDoubleInvestMode) {//倍投模式
+                    log.info("检查已启用倍投模式，倍投模式执行中...");
+                    return doubleInvestService.executeDoubleInvestService(request);
+                }
             })
             .then(() => {
                 //投注前保存 投注号码

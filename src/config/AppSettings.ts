@@ -47,4 +47,8 @@ export class AppSettings {
     public static doubleInvest_TouZhuBeiShu: string = '0';
     // 倍投时 号码是否取反
     public static doubleInvest_IsUseReverseInvestNumbers: boolean = false;
+    // 程序运行时变量 设置项中不存在此项 当前是否处于倍投模式
+    public static runtime_IsInDoubleInvestMode: boolean = false;
+    // 倍投时选择的投注方案
+    public static doubleInvest_CurrentSelectedInvestPlanType: number = 1;
 }
