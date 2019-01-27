@@ -1,13 +1,13 @@
 import BlueBirdPromise = require('bluebird');
-import moment  = require('moment');
+import _ = require('lodash');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {TimeService} from "../time/TimeService";
-import {CONFIG_CONST} from "../../config/Config";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {PlatformService} from "../platform/PlatformService";
 import {EnumNotificationType} from "../../models/EnumModel";
 import {NotificationSender} from "../notification/NotificationSender";
+import {AbstractRuleBase} from "../rules/AbstractRuleBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('DoubleInvestService');
@@ -46,6 +46,15 @@ export class DoubleInvestService {
                 investInfo.awardMode = Number(currentDoubleInvestAwardMode);
                 //修改 倍投倍数
                 investInfo.touZhuBeiShu = Number(currentDoubleInvestTouZhuBeiShu);
+                //修改 倍投号码是否取反
+                if (AppSettings.doubleInvest_IsUseReverseInvestNumbers) {
+                    //从1000注中移除特定号码，得到相反的号码
+                    let abstractRuleBase = new AbstractRuleBase();
+                    let diffArray: Array<string> = _.difference(abstractRuleBase.getTotalNumberArray(), investInfo.investNumbers.split(","));
+                    investInfo.investNumbers = diffArray.join(',');
+                    log.info('倍投时 使用正常反向投注号码 投注...');
+                }
+
                 return BlueBirdPromise.resolve(investInfo);
             })
             .then((investInfo: InvestInfo) => {
