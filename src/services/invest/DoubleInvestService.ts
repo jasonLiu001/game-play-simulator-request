@@ -1,4 +1,5 @@
 import BlueBirdPromise = require('bluebird');
+import moment  = require('moment');
 import _ = require('lodash');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
@@ -8,6 +9,9 @@ import {PlatformService} from "../platform/PlatformService";
 import {EnumNotificationType} from "../../models/EnumModel";
 import {NotificationSender} from "../notification/NotificationSender";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
+import {AwardService} from "../award/AwardService";
+import {ConstVars} from "../../global/ConstVars";
+import {InvestBase} from "./InvestBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('DoubleInvestService');
@@ -16,12 +20,12 @@ let log4js = require('log4js'),
  *
  * 倍投服务
  */
-export class DoubleInvestService {
+export class DoubleInvestService extends InvestBase {
     /**
      *
      * 执行投注入口
      */
-    public executeDoubleInvestService(request: any): BlueBirdPromise<any> {
+    public async executeDoubleInvestService(request: any): BlueBirdPromise<any> {
 
         //倍投模式
         let doubleInvestAwardModeArray: Array<string> = AppSettings.doubleInvest_AwardMode.split(",");
@@ -34,7 +38,30 @@ export class DoubleInvestService {
         let currentDoubleInvestTouZhuBeiShu: string = doubleInvestTouZhuBeiShuArray[0];
         log.info("当前倍投倍数参数值：%s，正在执行倍投倍数：%s", doubleInvestTouZhuBeiShuArray.join(","), currentDoubleInvestTouZhuBeiShu);
 
+        //放弃倍投条件1
         if (doubleInvestAwardModeArray.length != doubleInvestTouZhuBeiShuArray.length) return BlueBirdPromise.reject("放弃执行倍投，原因：倍投模式：" + AppSettings.doubleInvest_AwardMode + " 倍投倍数：" + AppSettings.doubleInvest_TouZhuBeiShu + "，两者值个数不一致");
+
+        //放弃倍投条件2
+        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestTotalInfoHistory(AppSettings.doubleInvest_CurrentSelectedInvestPlanType, 2);
+        if (historyData.length < 2) return BlueBirdPromise.reject("放弃执行倍投，原因：invest_total表中记录不足2条");
+
+        //取上一期投注数据 因为本期还在执行中
+        if (historyData[1].status === 0) {//本期执行投注，但是上期仍然未开奖，手动更新
+            //更新历史奖号
+            let updateHistoryAward = await  AwardService.saveOrUpdateHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter));
+            //计算当前盈利
+            let calculateWinMoneyResult = await this.calculateWinMoney();
+        }
+
+        //上期已中奖 则本期倍投取消
+        if (historyData[1].status === 0 && historyData[1].isWin === 1) {
+            return this.updateDoubleInvestSettings("0", "0")
+                .then(() => {
+                    let emailContent: string = "恭喜！倍投进行到" + currentDoubleInvestTouZhuBeiShu + "倍时，上期已中奖，无需继续投注！";
+                    log.info(emailContent);
+                    return NotificationSender.send(historyData[0].period + '期 倍投自动终止，上期已中奖', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
+                });
+        }
 
         //当前期号
         let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
@@ -66,30 +93,34 @@ export class DoubleInvestService {
                             doubleInvestAwardModeArray.shift();
                             //移除当前倍投倍数
                             doubleInvestTouZhuBeiShuArray.shift();
+                            //更新倍投参数值
+                            return this.updateDoubleInvestSettings(doubleInvestAwardModeArray.join(","), doubleInvestTouZhuBeiShuArray.join(","));
                         } else {//如果倍投为最后一期时，修改数组中的值为0
-                            //更新当前倍投模式
-                            doubleInvestAwardModeArray.splice(0, 1, "0");
-                            //更新当前倍投倍数
-                            doubleInvestTouZhuBeiShuArray.splice(0, 1, "0");
+                            return this.updateDoubleInvestSettings("0", "0");
                         }
-
-                        //更新倍投参数值
-                        return LotteryDbService.saveOrUpdateSettingsInfo(
-                            {
-                                key: 'doubleInvest_AwardMode',
-                                value: doubleInvestAwardModeArray.join(",")
-                            })
-                            .then(() => {
-                                return LotteryDbService.saveOrUpdateSettingsInfo(
-                                    {
-                                        key: 'doubleInvest_TouZhuBeiShu',
-                                        value: doubleInvestTouZhuBeiShuArray.join(",")
-                                    });
-                            });
                     })
                     .then(() => {
                         let emailContent: string = "倍投模式：" + currentDoubleInvestAwardMode + "，倍投倍数：" + currentDoubleInvestTouZhuBeiShu;
-                        return NotificationSender.send(investInfo.period + ' 正在执行倍投操作', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
+                        return NotificationSender.send(investInfo.period + '期 正在执行倍投操作', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
+                    });
+            });
+    }
+
+    /**
+     *
+     * 更新倍投参数值
+     */
+    public async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string): BlueBirdPromise<any> {
+        return LotteryDbService.saveOrUpdateSettingsInfo(
+            {
+                key: 'doubleInvest_AwardMode',
+                value: doubleInvestAwardModeValue
+            })
+            .then(() => {
+                return LotteryDbService.saveOrUpdateSettingsInfo(
+                    {
+                        key: 'doubleInvest_TouZhuBeiShu',
+                        value: doubleInvestTouZhuBeiShuValue
                     });
             });
     }

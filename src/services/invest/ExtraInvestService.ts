@@ -7,6 +7,7 @@ import {NotificationSender} from "../notification/NotificationSender";
 import {PlatformService} from "../platform/PlatformService";
 import {SettingService} from "../settings/SettingService";
 import {EnumNotificationType} from "../../models/EnumModel";
+import {InvestBase} from "./InvestBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -15,7 +16,7 @@ let log4js = require('log4js'),
  *
  * 特别投注服务，在这里的方法可以在模拟投注时，直接进行真实投注
  */
-export class ExtraInvestService {
+export class ExtraInvestService extends InvestBase {
 
     /**
      *

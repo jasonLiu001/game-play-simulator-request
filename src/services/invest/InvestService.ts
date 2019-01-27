@@ -1,5 +1,6 @@
 import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
+import moment  = require('moment');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {InvestBase} from "./InvestBase";
 import {NumberService} from "../numbers/NumberService";
@@ -14,6 +15,8 @@ import {EnumDbTableName} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
 import BlueBirdPromise = require('bluebird');
 import {DoubleInvestService} from "./DoubleInvestService";
+import {AwardService} from "../award/AwardService";
+import {ConstVars} from "../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -29,7 +32,18 @@ export class InvestService extends InvestBase {
      * @param request request对象实例
      */
     async executeAutoInvest(request: any): BlueBirdPromise<any> {
-        return this.calculateWinMoney()
+        //本期执行投注时，发现上期仍然没有开奖，则改用其他开奖源更新开奖数据
+        return LotteryDbService.getInvestTotalInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1)
+            .then((historyData: Array<InvestInfo>) => {
+                if (historyData.length > 0 && historyData[0].status === 0) {//上期未开奖 则从其他开奖源更新上期奖号
+                    return AwardService.saveOrUpdateHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
+                        .then(() => {
+                            return this.calculateWinMoney();
+                        });
+                } else {
+                    return this.calculateWinMoney();
+                }
+            })
             .then(() => {
                 log.info('正在产生投注号码...');
                 //产生当期的投注号码
