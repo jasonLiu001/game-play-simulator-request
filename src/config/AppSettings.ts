@@ -41,4 +41,8 @@ export class AppSettings {
     public static isStopCheckLastPrizeNumber: boolean = false;
     //是否停止连续投注提醒
     public static isStopSendContinueInvestWarnEmail: boolean = false;
+    // 倍投元角分模式，支持多期，中间逗号分隔 如：100,10
+    public static doubleInvest_AwardMode: string = '0';
+    // 倍投投注倍数，支持多期，中间逗号分隔 如：1,2
+    public static doubleInvest_TouZhuBeiShu: string = '0';
 }

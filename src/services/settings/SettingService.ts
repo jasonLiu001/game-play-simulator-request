@@ -75,6 +75,10 @@ export class SettingService {
                 AppSettings.investTableMaxErrorCountNotification = Number(item.value);
             } else if (item.key === 'isStopSendContinueInvestWarnEmail') {
                 AppSettings.isStopSendContinueInvestWarnEmail = Number(item.value) === 1;
+            } else if (item.key === 'doubleInvest_AwardMode') {
+                AppSettings.doubleInvest_AwardMode = item.value;
+            } else if (item.key === 'doubleInvest_TouZhuBeiShu') {
+                AppSettings.doubleInvest_TouZhuBeiShu = item.value;
             }
         }
     }

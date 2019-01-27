@@ -648,6 +648,20 @@ export class LotteryDbService {
                                     orderId: '27',
                                     group: 'notification',
                                     desc: 'total表【方案3】最大错误数量邮件提醒，模拟+真实下都有效'
+                                },
+                                {
+                                    key: 'doubleInvest_AwardMode',
+                                    value: '0',
+                                    orderId: '28',
+                                    group: 'doubleInvest',
+                                    desc: '倍投元角分模式逗号分隔，支持多期，模拟投注下有效，如: 100,10'
+                                },
+                                {
+                                    key: 'doubleInvest_TouZhuBeiShu',
+                                    value: '0',
+                                    orderId: '29',
+                                    group: 'doubleInvest',
+                                    desc: '倍投投注倍数逗号分隔，支持多期，模拟投注下有效，如：5,1'
                                 }
                             ]);
                         } else {
