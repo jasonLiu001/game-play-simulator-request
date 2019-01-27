@@ -79,6 +79,8 @@ export class SettingService {
                 AppSettings.doubleInvest_AwardMode = item.value;
             } else if (item.key === 'doubleInvest_TouZhuBeiShu') {
                 AppSettings.doubleInvest_TouZhuBeiShu = item.value;
+            } else if (item.key === 'doubleInvest_IsUseReverseInvestNumbers') {
+                AppSettings.doubleInvest_IsUseReverseInvestNumbers = Number(item.value) === 1;
             }
         }
     }

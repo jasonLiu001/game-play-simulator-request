@@ -45,4 +45,6 @@ export class AppSettings {
     public static doubleInvest_AwardMode: string = '0';
     // 倍投投注倍数，支持多期，中间逗号分隔 如：1,2
     public static doubleInvest_TouZhuBeiShu: string = '0';
+    // 倍投时 号码是否取反
+    public static doubleInvest_IsUseReverseInvestNumbers: boolean = false;
 }

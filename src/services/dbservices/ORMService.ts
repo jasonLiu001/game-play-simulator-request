@@ -662,6 +662,13 @@ export class LotteryDbService {
                                     orderId: '29',
                                     group: 'doubleInvest',
                                     desc: '倍投投注倍数逗号分隔，支持多期，模拟投注下有效，如：5,1'
+                                },
+                                {
+                                    key: 'doubleInvest_IsUseReverseInvestNumbers',
+                                    value: '0',
+                                    orderId: '30',
+                                    group: 'doubleInvest',
+                                    desc: '倍投时是否取相反的号码，模拟投注下有效'
                                 }
                             ]);
                         } else {
