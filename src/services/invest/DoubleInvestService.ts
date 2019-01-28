@@ -54,7 +54,7 @@ export class DoubleInvestService extends InvestBase {
         }
 
         //上期已中奖 则本期倍投取消
-        if (historyData[1].status === 0 && historyData[1].isWin === 1) {
+        if (historyData[1].status === 1 && historyData[1].isWin === 1) {
             return this.updateDoubleInvestSettings("0", "0")
                 .then(() => {
                     let emailContent: string = "恭喜！倍投进行到" + currentDoubleInvestTouZhuBeiShu + "倍时，上期已中奖，无需继续投注！";
