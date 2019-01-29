@@ -55,7 +55,7 @@ export class DoubleInvestService extends InvestBase {
 
         //上期已中奖 则本期倍投取消
         if (historyData[1].status === 1 && historyData[1].isWin === 1) {
-            return this.updateDoubleInvestSettings("0", "0")
+            return this.updateDoubleInvestSettings("0", "0", "0", "1")
                 .then(() => {
                     let emailContent: string = "恭喜！倍投进行到" + currentDoubleInvestTouZhuBeiShu + "倍时，上期已中奖，无需继续投注！";
                     log.info(emailContent);
@@ -94,9 +94,9 @@ export class DoubleInvestService extends InvestBase {
                             //移除当前倍投倍数
                             doubleInvestTouZhuBeiShuArray.shift();
                             //更新倍投参数值
-                            return this.updateDoubleInvestSettings(doubleInvestAwardModeArray.join(","), doubleInvestTouZhuBeiShuArray.join(","));
+                            return this.updateDoubleInvestSettings(doubleInvestAwardModeArray.join(","), doubleInvestTouZhuBeiShuArray.join(","), AppSettings.doubleInvest_IsUseReverseInvestNumbers ? "1" : "0", String(AppSettings.doubleInvest_CurrentSelectedInvestPlanType));
                         } else {//如果倍投为最后一期时，修改数组中的值为0
-                            return this.updateDoubleInvestSettings("0", "0");
+                            return this.updateDoubleInvestSettings("0", "0", "0", "1");
                         }
                     })
                     .then(() => {
@@ -110,7 +110,7 @@ export class DoubleInvestService extends InvestBase {
      *
      * 更新倍投参数值
      */
-    public async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string): BlueBirdPromise<any> {
+    public async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string, doubleInvest_IsUseReverseInvestNumbersValue: string, doubleInvest_CurrentSelectedInvestPlanTypeValue: string): BlueBirdPromise<any> {
         return LotteryDbService.saveOrUpdateSettingsInfo(
             {
                 key: 'doubleInvest_AwardMode',
@@ -121,6 +121,20 @@ export class DoubleInvestService extends InvestBase {
                     {
                         key: 'doubleInvest_TouZhuBeiShu',
                         value: doubleInvestTouZhuBeiShuValue
+                    });
+            })
+            .then(() => {
+                return LotteryDbService.saveOrUpdateSettingsInfo(
+                    {
+                        key: 'doubleInvest_IsUseReverseInvestNumbers',
+                        value: doubleInvest_IsUseReverseInvestNumbersValue
+                    });
+            })
+            .then(() => {
+                return LotteryDbService.saveOrUpdateSettingsInfo(
+                    {
+                        key: 'doubleInvest_CurrentSelectedInvestPlanType',
+                        value: doubleInvest_CurrentSelectedInvestPlanTypeValue
                     });
             });
     }
