@@ -96,6 +96,24 @@ export const enum EnumPushVendorType {
 
 /**
  *
+ * push 厂商类型 表invest_push中的类型
+ */
+export const enum EnumPushPlatformType {
+    /**
+     *
+     * 腾讯信鸽
+     */
+    TENCENT_XG = 1,
+
+    /**
+     *
+     * 华为
+     */
+    HUA_WEI = 2
+}
+
+/**
+ *
  * 发送的通知类型
  */
 export const enum EnumNotificationType {

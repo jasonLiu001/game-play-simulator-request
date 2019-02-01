@@ -1,12 +1,10 @@
 import {Request, Response} from "express";
-import BlueBirdPromise = require('bluebird');
-import moment  = require('moment');
 import {ResponseJson} from "../models/ResponseJson";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
 import {PushSender} from "../services/notification/sender/PushSender";
-import {EnumPushVendorType} from "../models/EnumModel";
 import {ConstVars} from "../global/ConstVars";
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');
@@ -16,6 +14,7 @@ export class PushController {
         let deviceToken: string = req.body.deviceToken;
         let imei: string = req.body.imei;
         let pushPlatform: number = req.body.pushPlatform;
+        let pushVendorType: string = req.body.pushVendorType;
 
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('保存deviceToken请求已收到，参数:deviceToken=%s', deviceToken);
@@ -26,7 +25,7 @@ export class PushController {
             imei: imei,
             pushPlatform: pushPlatform,
             tokenExpireTime: null,
-            pushVendorType: EnumPushVendorType.TENCENT_XG,//Push厂商类型 默认为信鸽
+            pushVendorType: pushVendorType,//Push厂商类型 默认为信鸽
             createdTime: moment().format(ConstVars.momentDateTimeFormatter)
         };
 

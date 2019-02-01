@@ -1389,15 +1389,17 @@ export class LotteryDbService {
      *
      * 获取特定数量历史记录
      * @param {number} historyCount
+     * @param pushPlatform push厂商平台 参见枚举类EnumPushPlatformType
      * @param pushVendorType push厂商枚举 参见枚举类EnumPushVendorType
      */
-    public static getInvestPushInfoHistory(historyCount: number, pushVendorType: string): Promise<Array<any>> {
+    public static getInvestPushInfoHistory(historyCount: number, pushPlatform: number, pushVendorType: string): Promise<Array<any>> {
         return InvestPush.findAll({
             limit: historyCount,
             order: [
                 ['createdTime', 'DESC']
             ],
             where: {
+                pushPlatform: pushPlatform,
                 pushVendorType: pushVendorType
             },
             raw: true
