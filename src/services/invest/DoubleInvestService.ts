@@ -53,14 +53,11 @@ export class DoubleInvestService extends InvestBase {
             let calculateWinMoneyResult = await this.calculateWinMoney();
         }
 
-        //上期已中奖 则本期倍投取消
-        if (historyData[1].status === 1 && historyData[1].isWin === 1) {
-            return this.updateDoubleInvestSettings("0", "0", "0", "1")
-                .then(() => {
-                    let emailContent: string = "恭喜！倍投进行到" + currentDoubleInvestTouZhuBeiShu + "倍时，上期已中奖，无需继续投注！";
-                    log.info(emailContent);
-                    return NotificationSender.send(historyData[0].period + '期 倍投自动终止，上期已中奖', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
-                });
+        //上期已中奖 并且当前是正向投注时 则本期倍投取消
+        if (!AppSettings.doubleInvest_IsUseReverseInvestNumbers && historyData[1].status === 1 && historyData[1].isWin === 1) {
+            return this.stopDoubleInvest(currentDoubleInvestTouZhuBeiShu, historyData);//停止倍投
+        } else if (AppSettings.doubleInvest_IsUseReverseInvestNumbers && historyData[1].status === 1 && historyData[1].isWin === 0) {//反向投注 并且上期中 则本期倍投取消
+            return this.stopDoubleInvest(currentDoubleInvestTouZhuBeiShu, historyData);//停止倍投
         }
 
         //当前期号
@@ -85,24 +82,42 @@ export class DoubleInvestService extends InvestBase {
                 return BlueBirdPromise.resolve(investInfo);
             })
             .then((investInfo: InvestInfo) => {
-                return PlatformService.loginAndInvest(request, investInfo)
-                    .then(() => {
-                        log.info("%s 期倍投完成，倍投模式：%s，倍投倍数：%s，开始更新下期倍投参数值", investInfo.period, currentDoubleInvestAwardMode, currentDoubleInvestTouZhuBeiShu);
-                        if (doubleInvestAwardModeArray.length > 1 && doubleInvestTouZhuBeiShuArray.length > 1) {
-                            //移除当前倍投模式
-                            doubleInvestAwardModeArray.shift();
-                            //移除当前倍投倍数
-                            doubleInvestTouZhuBeiShuArray.shift();
-                            //更新倍投参数值
-                            return this.updateDoubleInvestSettings(doubleInvestAwardModeArray.join(","), doubleInvestTouZhuBeiShuArray.join(","), AppSettings.doubleInvest_IsUseReverseInvestNumbers ? "1" : "0", String(AppSettings.doubleInvest_CurrentSelectedInvestPlanType));
-                        } else {//如果倍投为最后一期时，修改数组中的值为0
-                            return this.updateDoubleInvestSettings("0", "0", "0", "1");
-                        }
-                    })
-                    .then(() => {
-                        let emailContent: string = "倍投模式：" + currentDoubleInvestAwardMode + "，倍投倍数：" + currentDoubleInvestTouZhuBeiShu;
-                        return NotificationSender.send(investInfo.period + '期 正在执行倍投操作', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
-                    });
+                //执行真实投注
+                return this.startDoubleInvest(request, investInfo, currentDoubleInvestAwardMode, currentDoubleInvestTouZhuBeiShu, doubleInvestAwardModeArray, doubleInvestTouZhuBeiShuArray);
+            });
+    }
+
+    private async startDoubleInvest(request: any, investInfo: InvestInfo, currentDoubleInvestAwardMode: string, currentDoubleInvestTouZhuBeiShu: string, doubleInvestAwardModeArray: Array<string>, doubleInvestTouZhuBeiShuArray: Array<string>): BlueBirdPromise<any> {
+        return PlatformService.loginAndInvest(request, investInfo)
+            .then(() => {
+                log.info("%s 期倍投完成，倍投模式：%s，倍投倍数：%s，开始更新下期倍投参数值", investInfo.period, currentDoubleInvestAwardMode, currentDoubleInvestTouZhuBeiShu);
+                if (doubleInvestAwardModeArray.length > 1 && doubleInvestTouZhuBeiShuArray.length > 1) {
+                    //移除当前倍投模式
+                    doubleInvestAwardModeArray.shift();
+                    //移除当前倍投倍数
+                    doubleInvestTouZhuBeiShuArray.shift();
+                    //更新倍投参数值
+                    return this.updateDoubleInvestSettings(doubleInvestAwardModeArray.join(","), doubleInvestTouZhuBeiShuArray.join(","), AppSettings.doubleInvest_IsUseReverseInvestNumbers ? "1" : "0", String(AppSettings.doubleInvest_CurrentSelectedInvestPlanType));
+                } else {//如果倍投为最后一期时，修改数组中的值为0
+                    return this.updateDoubleInvestSettings("0", "0", "0", "1");
+                }
+            })
+            .then(() => {
+                let emailContent: string = "倍投模式：" + currentDoubleInvestAwardMode + "，倍投倍数：" + currentDoubleInvestTouZhuBeiShu;
+                return NotificationSender.send(investInfo.period + '期 正在执行倍投操作', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
+            });
+    }
+
+    /**
+     *
+     * 停止倍投
+     */
+    private async stopDoubleInvest(currentDoubleInvestTouZhuBeiShu: string, historyData: Array<InvestInfo>): BlueBirdPromise<any> {
+        return this.updateDoubleInvestSettings("0", "0", "0", "1")
+            .then(() => {
+                let emailContent: string = "恭喜！倍投进行到" + currentDoubleInvestTouZhuBeiShu + "倍时，上期已中奖，无需继续投注！";
+                log.info(emailContent);
+                return NotificationSender.send(historyData[0].period + '期 倍投自动终止，上期已中奖', emailContent, EnumNotificationType.PUSH_AND_EMAIL);
             });
     }
 
