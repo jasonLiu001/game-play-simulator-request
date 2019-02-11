@@ -1352,14 +1352,20 @@ export class LotteryDbService {
     public static saveOrUpdateInvestPushInfo(investPush: InvestPushInfo): Promise<InvestPushInfo> {
         return InvestPush.findOne(
             {
-                where: {deviceToken: investPush.deviceToken},
+                where: {
+                    deviceToken: investPush.deviceToken,
+                    pushPlatform: investPush.pushPlatform
+                },
                 raw: true
             })
             .then((res) => {
                 if (res) {
                     return InvestPush.update(investPush,
                         {
-                            where: {deviceToken: investPush.deviceToken},
+                            where: {
+                                deviceToken: investPush.deviceToken,
+                                pushPlatform: investPush.pushPlatform
+                            },
                         })
                         .then(() => {
                             return investPush;
