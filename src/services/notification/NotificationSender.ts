@@ -28,11 +28,11 @@ export class NotificationSender {
                 break;
             case EnumNotificationType.PUSH:
                 //发送push
-                promiseArray.push(PushSender.send(title, content));
+                promiseArray.push(PushSender.sendTencentXGPush(title, content));
                 break;
             case EnumNotificationType.PUSH_AND_EMAIL:
                 //发送push
-                promiseArray.push(PushSender.send(title, content));
+                promiseArray.push(PushSender.sendTencentXGPush(title, content));
                 //发送e-mail
                 promiseArray.push(EmailSender.send(title, content));
                 break;

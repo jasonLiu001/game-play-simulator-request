@@ -51,7 +51,7 @@ export class PushController {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('sendPush方法请求已收到，参数:title=%s,content=%s', title, content);
 
-        PushSender.send(title, content)
+        PushSender.sendTencentXGPush(title, content)
             .then(() => {
                 let successMsg: string = "Push发送成功";
                 jsonRes.success(successMsg);
