@@ -31,7 +31,7 @@ export class PushController {
 
         LotteryDbService.saveOrUpdateInvestPushInfo(investPushModel)
             .then(() => {
-                let successMsg: string = "deviceToken:" + investPushModel.deviceToken + " 保存成功";
+                let successMsg: string = "deviceToken:" + investPushModel.deviceToken + "，push平台类型：" + investPushModel.pushPlatform + ",push厂商:" + investPushModel.pushVendorType + " 保存成功";
                 jsonRes.success(successMsg);
                 log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
                 return res.status(200).send(jsonRes);
