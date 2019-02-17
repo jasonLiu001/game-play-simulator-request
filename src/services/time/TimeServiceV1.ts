@@ -1,11 +1,10 @@
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {PeriodTime} from "../../models/PeriodTime";
-import Promise = require('bluebird');
-import _ = require('lodash');
-import moment  = require('moment');
 import {RejectionMsg} from "../../models/EnumModel";
 import {AppSettings} from "../../config/AppSettings";
 import {ConstVars} from "../../global/ConstVars";
+import Promise = require('bluebird');
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('TimeServiceV1');
