@@ -10,12 +10,12 @@ describe('TimerServiceV2 test', () => {
         done();
     });
 
-    xit('getPeriodList -- 获取所有的期号列表', (done) => {
+    it('getPeriodList -- 获取所有的期号列表', (done) => {
         let periodList: Array<any> = TimeServiceV2.getPeriodList(testDate);
         done();
     }, 60000);
 
-    it('getOpenTimeList -- 获取所有开时间列表 ', (done) => {
+    xit('getOpenTimeList -- 获取所有开时间列表 ', (done) => {
         let openTimelist: Array<any> = TimeServiceV2.getOpenTimeList(testDate);
         done();
     }, 60000);

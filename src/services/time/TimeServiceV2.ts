@@ -55,18 +55,24 @@ export class TimeServiceV2 {
         let day = currentTime.getDate();
         //当天的00:30
         let firstTime = new Date(year, month, day, 0, 30, 0);
+        //当天的07:30
+        let secondTime = new Date(year, month, day, 7, 30, 0);
 
         //第二天00:30
-        let secondTime = new Date(year, month, day + 1, 0, 30, 0);
+        let thirdTime = new Date(year, month, day + 1, 0, 30, 0);
 
         let openTimeList = [];
-        //00:30-23:50， 共59期  20分钟一期
-        for (let i = 0; i < 59; i++) {
+        //00:30-03:10， 共9期  20分钟一期
+        for (let i = 0; i < 9; i++) {
             openTimeList.push(new Date(firstTime.getTime() + i * 20 * 60 * 1000 + delaySeconds * 1000));
+        }
+        //07:30-23:50， 共50期  20分钟一期
+        for (let i = 0; i < 50; i++) {
+            openTimeList.push(new Date(secondTime.getTime() + i * 20 * 60 * 1000 + delaySeconds * 1000));
         }
 
         //第二天00:30点
-        openTimeList.push(new Date(secondTime.getTime() + delaySeconds * 1000));
+        openTimeList.push(new Date(thirdTime.getTime() + delaySeconds * 1000));
 
         return openTimeList;
     }
@@ -105,20 +111,26 @@ export class TimeServiceV2 {
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
         let day = currentTime.getDate();
+        //当天的00:30
         let firstTime = new Date(year, month, day, 0, 30, 0);
-        let secondTime = new Date(year, month, day + 1, 0, 30, 0);
+        //当天的07:30
+        let secondTime = new Date(year, month, day, 7, 30, 0);
+
+        //第二天00:30
+        let thirdTime = new Date(year, month, day + 1, 0, 30, 0);
 
         let openTimeList = [];
 
-        //前一天最后一期开奖时间是当天00:00:00
+        //前一天最后一期开奖时间是当天00:30:00
         let yearFragment = String(year);
         let monthFragment = (String(month + 1).length == 1 ? ('0' + String(month + 1)) : String(month + 1));
         let dayFragment = String(day).length == 1 ? ('0' + String(day)) : String(day);
         //timeFragment的格式为20170508-
         let timeFragement = yearFragment + monthFragment + dayFragment + '-';
 
-        for (let i = 0; i < 59; i++) {
-            let delayTime = new Date(firstTime.getTime() + i * 20 * 60 * 1000 + delaySeconds * 1000);
+        //00:30-03:10， 共9期  20分钟一期
+        for (let i = 1; i <= 9; i++) {
+            let delayTime = new Date(firstTime.getTime() + (i - 1) * 20 * 60 * 1000 + delaySeconds * 1000);
             openTimeList.push(delayTime);
             let p = (i < 10) ? ("00" + String(i)) : ("0" + String(i));
             let period = timeFragement + p;
@@ -128,8 +140,20 @@ export class TimeServiceV2 {
             })
         }
 
+        //07:30-23:50， 共50期  20分钟一期
+        for (let i = 1; i <= 50; i++) {
+            let delayTime = new Date(secondTime.getTime() + (i - 1) * 20 * 60 * 1000 + delaySeconds * 1000);
+            openTimeList.push(delayTime);
+            let p = (String(i + 9).length == 2) ? ("0" + String(i + 9)) : String(i + 9);
+            let period = timeFragement + p;
+            periodList.push({
+                openTime: delayTime,
+                period: period
+            })
+        }
+
         //当天最后一期 开奖时间是在下一天的00:30:00
-        openTimeList.push(new Date(secondTime.getTime() + delaySeconds * 1000));
+        openTimeList.push(new Date(thirdTime.getTime() + delaySeconds * 1000));
 
         return periodList;
     }
@@ -205,10 +229,20 @@ export class TimeServiceV2 {
 
     /**
      *
-     * 是否是停止买卖时间  02:00-10:00 停止购买
+     * 是否是停止买卖时间  03:30-07:30 停止购买
      */
     public static isInStopInvestTime(): boolean {
-        return false;
+        let currentTime = new Date();
+        let year = currentTime.getFullYear();
+        let month = currentTime.getMonth();
+        let day = currentTime.getDate();
+
+        //当天03:10
+        let twoClock = new Date(year, month, day, 3, 30, 0);
+        //当天07:30
+        let tenClock = new Date(year, month, day, 7, 30, 0);
+
+        return currentTime > twoClock && currentTime < tenClock;
     }
 
     /**
