@@ -84,7 +84,7 @@ export class TimeServiceV2 {
      * @param currentTime 当前系统时间
      * @param delaySeconds 开奖延迟时间
      */
-    private static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
+    public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
         let openTimeList: Array<Date> = TimeServiceV2.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -153,7 +153,10 @@ export class TimeServiceV2 {
         }
 
         //当天最后一期 开奖时间是在下一天的00:30:00
-        openTimeList.push(new Date(thirdTime.getTime() + delaySeconds * 1000));
+        periodList.push({
+            openTime: new Date(moment(firstTime).add('1', 'd').toDate().getTime() + delaySeconds * 1000),
+            period: String(moment(currentTime).format("YYYYMMDD") + '-001')
+        });
 
         return periodList;
     }
