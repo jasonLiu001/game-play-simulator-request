@@ -1,13 +1,13 @@
-import {Config, CONFIG_CONST} from "../../../config/Config";
-import {TimeServiceV1} from "../../time/TimeServiceV1";
-import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
-import BlueBirdPromise = require('bluebird');
+import {CONFIG_CONST} from "../../../config/Config";
+import {TimeServiceV2} from "../../time/TimeServiceV2";
+import {IPlatformLotteryService, PlatformAbstractBase} from "../PlatformAbstractBase";
 import {EnumAwardMode, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 import {LotteryDbService} from "../../dbservices/ORMService";
 import {SMSSender} from "../../notification/sender/SMSSender";
+import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 
 let log4js = require('log4js'),
@@ -227,8 +227,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param touZhuBeiShu
      */
     public multiInvest(request: any, touZhuBeiShu: string = '1') {
-        let currentPeriod = TimeServiceV1.getCurrentPeriodNumber(new Date());
-        let currentNextPeriod = TimeServiceV1.getCurrentNextPeriodNumber(new Date());
+        let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
+        let currentNextPeriod = TimeServiceV2.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
         return this.investPrepare(request)
             .then((token) => {

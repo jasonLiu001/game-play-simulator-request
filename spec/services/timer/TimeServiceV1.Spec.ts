@@ -13,9 +13,4 @@ describe('TimerServiceV1 test', () => {
         let periodList: Array<any> = TimeServiceV1.getPeriodList(testDate);
         done();
     }, 60000);
-
-    it('getPeriodList should be work', (done) => {
-        let lastPeriodStr: string = TimeServiceV1.getLastPeriodNumber(new Date());
-        done();
-    }, 60000);
 });

@@ -2,7 +2,7 @@ import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
-import {TimeServiceV1} from "../time/TimeServiceV1";
+import {TimeServiceV2} from "../time/TimeServiceV2";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {AwardInfo} from "../../models/db/AwardInfo";
@@ -100,14 +100,14 @@ export class InvestBase {
      */
     private async checkInvestTime(): BlueBirdPromise<any> {
         //检查在此时间内是否允许投注
-        if (TimeServiceV1.isInStopInvestTime()) {//不可投注的时间段时
+        if (TimeServiceV2.isInStopInvestTime()) {//不可投注的时间段时
             //更新开奖时间
-            TimeServiceV1.updateNextPeriodInvestTime();
+            TimeServiceV2.updateNextPeriodInvestTime();
             return BlueBirdPromise.reject("当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，在02:00~10:00之间，不符合投注时间")
         }
 
         //当天22:00以后自动切换到模拟投注
-        if (CONFIG_CONST.isRealInvest && TimeServiceV1.isReachInvestEndTime()) {
+        if (CONFIG_CONST.isRealInvest && TimeServiceV2.isReachInvestEndTime()) {
             let timeReachMessage = "当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，当天" + AppSettings.realInvestEndTime + "以后，自动启动模拟投注";
 
             //自动切换到模拟投注 同时发送购买结束提醒
@@ -193,7 +193,7 @@ export class InvestBase {
                 if (!lastInvestInfo) return BlueBirdPromise.resolve(true);
 
                 //当期完整期号 格式：20180511-078
-                let currentPeriodString: string = TimeServiceV1.getCurrentPeriodNumber(new Date());
+                let currentPeriodString: string = TimeServiceV2.getCurrentPeriodNumber(new Date());
                 //提醒邮件
                 let warnMessage: string = "上期：" + lastInvestInfo.period + "，当期：" + currentPeriodString + "，当前时间：" + moment().format(ConstVars.momentDateTimeFormatter);
                 //发送邮件提醒
@@ -216,7 +216,7 @@ export class InvestBase {
                 if (!AppSettings.enableWarningNotification) return BlueBirdPromise.resolve();
 
                 //再判断时间是否在设置的时间内 不在投注时间内直接返回
-                if (TimeServiceV1.isInStopInvestTime() || TimeServiceV1.isReachInvestEndTime()) return BlueBirdPromise.resolve();
+                if (TimeServiceV2.isInStopInvestTime() || TimeServiceV2.isReachInvestEndTime()) return BlueBirdPromise.resolve();
 
                 //检查正确期数是否满足特定条件
                 return notificationService.checkAndSendNotification();

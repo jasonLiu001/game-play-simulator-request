@@ -8,7 +8,7 @@ import {NotificationSender} from "./NotificationSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
-import {TimeServiceV1} from "../time/TimeServiceV1";
+import {TimeServiceV2} from "../time/TimeServiceV2";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import {EnumDbTableName, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
@@ -46,7 +46,7 @@ export class NotificationService {
         //2分钟检查一次是否需要发送通知
         ScheduleTaskList.notificationTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.notificationTaskEntity.cronTimeStr, () => {
             //首先判断时间是否在设置的时间内 不在投注时间内直接返回
-            if (TimeServiceV1.isInStopInvestTime() || TimeServiceV1.isReachInvestEndTime()) return;
+            if (TimeServiceV2.isInStopInvestTime() || TimeServiceV2.isReachInvestEndTime()) return;
 
         });
     }

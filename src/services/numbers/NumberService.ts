@@ -4,14 +4,12 @@ import {KillNumbersFollowPlay} from "../rules/killnumber/KillNumbersFollowPlay";
 import {BraveNumbers} from "../rules/BraveNumbers";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
-import Promise = require('bluebird');
-import _ = require('lodash');
 import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {PlanInfo} from "../../models/db/PlanInfo";
-import {TimeServiceV1} from "../time/TimeServiceV1";
+import {TimeServiceV2} from "../time/TimeServiceV2";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
@@ -23,6 +21,8 @@ import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
 import {KillNumberRandom} from "../rules/killnumber/KillNumberRandom";
 import {AppSettings} from "../../config/AppSettings";
+import Promise = require('bluebird');
+import _ = require('lodash');
 
 
 let log4js = require('log4js'),
@@ -50,7 +50,7 @@ export class NumberService extends AbstractRuleBase {
      */
     private initAllRelatedPlanInfoTables(): Promise<any> {
         //当前期号
-        let period = TimeServiceV1.getCurrentPeriodNumber(new Date());
+        let period = TimeServiceV2.getCurrentPeriodNumber(new Date());
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
             jiou_type: '',
@@ -107,7 +107,7 @@ export class NumberService extends AbstractRuleBase {
             })
             .then((results) => {
                 promiseAllResult = results;
-                return LotteryDbService.getPlanInfo(TimeServiceV1.getCurrentPeriodNumber(new Date()));
+                return LotteryDbService.getPlanInfo(TimeServiceV2.getCurrentPeriodNumber(new Date()));
             })
             .then((planInfo: PlanInfo) => {
                 planInfo.jiou_type = promiseAllResult[0].killNumber;

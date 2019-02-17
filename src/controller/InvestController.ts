@@ -3,11 +3,11 @@ import {InvestInfo} from "../models/db/InvestInfo";
 import {LotteryDbService} from "../services/dbservices/ORMService";
 import {PlatformService} from "../services/platform/PlatformService";
 import {ResponseJson} from "../models/ResponseJson";
-import {TimeServiceV1} from "../services/time/TimeServiceV1";
+import {TimeServiceV2} from "../services/time/TimeServiceV2";
 import {GlobalRequest} from "../global/GlobalRequest";
-import moment  = require('moment');
 import {InvestBase} from "../services/invest/InvestBase";
 import {ConstVars} from "../global/ConstVars";
+import moment  = require('moment');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
@@ -35,7 +35,7 @@ export class InvestController {
         log.info('手动一键投注请求已收到，参数:period=%s,planType=%s,awardMode=%s,touZhuBeiShu=%s,investTableName=%s', period, planType, awardMode, touZhuBeiShu, investTableName);
 
         //当前能够投注的期号
-        let currentPeriod: string = TimeServiceV1.getCurrentPeriodNumber(new Date());
+        let currentPeriod: string = TimeServiceV2.getCurrentPeriodNumber(new Date());
         if (period != currentPeriod) {
             jsonRes.fail(period + "期已停止投注，投注失败");
             log.error("手动投注失败，%s期已停止投注，%s期可投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));

@@ -3,7 +3,7 @@ import moment  = require('moment');
 import _ = require('lodash');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
-import {TimeServiceV1} from "../time/TimeServiceV1";
+import {TimeServiceV2} from "../time/TimeServiceV2";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {PlatformService} from "../platform/PlatformService";
 import {EnumNotificationType} from "../../models/EnumModel";
@@ -61,7 +61,7 @@ export class DoubleInvestService extends InvestBase {
         }
 
         //当前期号
-        let currentPeriod = TimeServiceV1.getCurrentPeriodNumber(new Date());
+        let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
         //倍投时选取 invest_total表 投注方案
         return LotteryDbService.getInvestTotalInfo(currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
             .then((investInfo: InvestInfo) => {
