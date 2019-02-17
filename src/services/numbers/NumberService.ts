@@ -11,7 +11,7 @@ import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {PlanInfo} from "../../models/db/PlanInfo";
-import {TimeService} from "../time/TimeService";
+import {TimeServiceV1} from "../time/TimeServiceV1";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
@@ -50,7 +50,7 @@ export class NumberService extends AbstractRuleBase {
      */
     private initAllRelatedPlanInfoTables(): Promise<any> {
         //当前期号
-        let period = TimeService.getCurrentPeriodNumber(new Date());
+        let period = TimeServiceV1.getCurrentPeriodNumber(new Date());
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
             jiou_type: '',
@@ -107,7 +107,7 @@ export class NumberService extends AbstractRuleBase {
             })
             .then((results) => {
                 promiseAllResult = results;
-                return LotteryDbService.getPlanInfo(TimeService.getCurrentPeriodNumber(new Date()));
+                return LotteryDbService.getPlanInfo(TimeServiceV1.getCurrentPeriodNumber(new Date()));
             })
             .then((planInfo: PlanInfo) => {
                 planInfo.jiou_type = promiseAllResult[0].killNumber;

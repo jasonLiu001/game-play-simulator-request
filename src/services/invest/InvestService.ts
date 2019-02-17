@@ -5,7 +5,7 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import {InvestBase} from "./InvestBase";
 import {NumberService} from "../numbers/NumberService";
 import {ErrorService} from "../ErrorService";
-import {TimeService} from "../time/TimeService";
+import {TimeServiceV1} from "../time/TimeServiceV1";
 import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {ExtraInvestService} from "./ExtraInvestService";
 import {PlatformService} from "../platform/PlatformService";
@@ -96,7 +96,7 @@ export class InvestService extends InvestBase {
             })
             .then(() => {
                 //当前期号
-                let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
+                let currentPeriod = TimeServiceV1.getCurrentPeriodNumber(new Date());
                 return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {

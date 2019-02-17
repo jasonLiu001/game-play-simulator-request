@@ -1,5 +1,5 @@
 import {Config, CONFIG_CONST} from "../../../config/Config";
-import {TimeService} from "../../time/TimeService";
+import {TimeServiceV1} from "../../time/TimeServiceV1";
 import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
 import BlueBirdPromise = require('bluebird');
 import {EnumAwardMode, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../../models/EnumModel";
@@ -227,8 +227,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param touZhuBeiShu
      */
     public multiInvest(request: any, touZhuBeiShu: string = '1') {
-        let currentPeriod = TimeService.getCurrentPeriodNumber(new Date());
-        let currentNextPeriod = TimeService.getCurrentNextPeriodNumber(new Date());
+        let currentPeriod = TimeServiceV1.getCurrentPeriodNumber(new Date());
+        let currentNextPeriod = TimeServiceV1.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
         return this.investPrepare(request)
             .then((token) => {

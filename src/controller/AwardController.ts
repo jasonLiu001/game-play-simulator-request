@@ -5,7 +5,7 @@ import {AwardInfo} from "../models/db/AwardInfo";
 import {ResponseJson} from "../models/ResponseJson";
 import {AwardService} from "../services/award/AwardService";
 import {ConstVars} from "../global/ConstVars";
-import {TimeService} from "../services/time/TimeService";
+import {TimeServiceV1} from "../services/time/TimeServiceV1";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardController'),
@@ -19,7 +19,7 @@ export class AwardController {
      */
     public getLatestAwardInfo(req: Request, res: Response): any {
         let jsonRes: ResponseJson = new ResponseJson();
-        let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
+        let lastPeriodStr: string = TimeServiceV1.getLastPeriodNumber(new Date());
         awardKm28ComService.getAwardInfo()
             .then((award: AwardInfo) => {
                 let successMsg: string = "获取" + lastPeriodStr + "期奖号成功";
@@ -42,7 +42,7 @@ export class AwardController {
     public updateAward(req: Request, res: Response): any {
         let jsonRes: ResponseJson = new ResponseJson();
         let lastAwardInfo: AwardInfo = null;
-        let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
+        let lastPeriodStr: string = TimeServiceV1.getLastPeriodNumber(new Date());
         awardKm28ComService.getAwardInfo()
             .then((newAward: AwardInfo) => {
                 lastAwardInfo = newAward;

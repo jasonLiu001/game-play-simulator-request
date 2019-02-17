@@ -1,6 +1,6 @@
 import "jasmine";
 import moment  = require('moment');
-import {TimeService} from "../../../src/services/time/TimeService";
+import {TimeServiceV1} from "../../../src/services/time/TimeServiceV1";
 
 describe('TimerService test', () => {
 
@@ -10,12 +10,12 @@ describe('TimerService test', () => {
 
     it('getPeriodList should be work', (done) => {
         let testDate: any = moment('2019-01-12 00:00:00').toDate();
-        let periodList: Array<any> = TimeService.getPeriodList(testDate);
+        let periodList: Array<any> = TimeServiceV1.getPeriodList(testDate);
         done();
     }, 60000);
 
     it('getPeriodList should be work', (done) => {
-        let lastPeriodStr: string = TimeService.getLastPeriodNumber(new Date());
+        let lastPeriodStr: string = TimeServiceV1.getLastPeriodNumber(new Date());
         done();
     }, 60000);
 });
