@@ -96,7 +96,7 @@ export class InvestBase {
 
     /**
      *
-     * 检查投注时间 在02:00-10:00点之间不允许投注  当天22:00以后自动切换到模拟投注
+     * 检查投注时间 在03:10-07:30点之间不允许投注  当天22:00以后自动切换到模拟投注
      */
     private async checkInvestTime(): BlueBirdPromise<any> {
         //检查在此时间内是否允许投注
@@ -106,7 +106,7 @@ export class InvestBase {
             return BlueBirdPromise.reject("当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，在02:00~10:00之间，不符合投注时间")
         }
 
-        //当天22:00以后自动切换到模拟投注
+        //根据设置中的停止时间参数值 切换到模拟投注
         if (CONFIG_CONST.isRealInvest && TimeServiceV2.isReachInvestEndTime()) {
             let timeReachMessage = "当前时间：" + moment().format(ConstVars.momentDateTimeFormatter) + "，当天" + AppSettings.realInvestEndTime + "以后，自动启动模拟投注";
 

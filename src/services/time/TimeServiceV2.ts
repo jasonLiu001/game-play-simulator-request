@@ -260,13 +260,16 @@ export class TimeServiceV2 {
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
         let day = currentTime.getDate();
-        //当天的21:59
-        let thirdTime = new Date(year, month, day, 21, 59, 0);
+        // 设置中的停止时间
+        let investEndTime;
         let investEndTimeArr: Array<string> = AppSettings.realInvestEndTime.split(':');
         if (investEndTimeArr.length == 3) {
-            thirdTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
+            investEndTime = new Date(year, month, day, Number(investEndTimeArr[0]), Number(investEndTimeArr[1]), Number(investEndTimeArr[2]));
+        } else {
+            //不限制
+            return false;
         }
 
-        return currentTime > thirdTime;
+        return currentTime > investEndTime;
     }
 }
