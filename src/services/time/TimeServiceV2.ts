@@ -155,7 +155,7 @@ export class TimeServiceV2 {
         //当天最后一期 开奖时间是在下一天的00:30:00
         periodList.push({
             openTime: new Date(moment(firstTime).add('1', 'd').toDate().getTime() + delaySeconds * 1000),
-            period: String(moment(currentTime).format("YYYYMMDD") + '-001')
+            period: String(moment(currentTime).add('1', 'd').format("YYYYMMDD") + '-001')
         });
 
         return periodList;

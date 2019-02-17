@@ -10,7 +10,7 @@ describe('TimerServiceV2 test', () => {
         done();
     });
 
-    xit('getPeriodList -- 获取所有的期号列表', (done) => {
+    it('getPeriodList -- 获取所有的期号列表', (done) => {
         let periodList: Array<any> = TimeServiceV2.getPeriodList(testDate);
         done();
     }, 60000);
