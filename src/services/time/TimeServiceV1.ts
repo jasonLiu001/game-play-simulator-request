@@ -44,7 +44,7 @@ export class TimeServiceV1 {
         }
     }
 
-    public static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
+    private static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
         //当天的01:55到10:00
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
@@ -111,7 +111,7 @@ export class TimeServiceV1 {
      *
      * period的格式为：20170625-080
      */
-    public static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
+    private static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
         let periodList = [];
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
