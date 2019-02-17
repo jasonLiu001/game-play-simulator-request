@@ -2,7 +2,7 @@ import "jasmine";
 import moment  = require('moment');
 import {TimeServiceV1} from "../../../src/services/time/TimeServiceV1";
 
-describe('TimerService test', () => {
+describe('TimerServiceV1 test', () => {
 
     beforeEach((done) => {
         done();
