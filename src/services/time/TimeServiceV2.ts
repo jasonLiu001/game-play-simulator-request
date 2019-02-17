@@ -48,7 +48,7 @@ export class TimeServiceV2 {
      * @param {Date} currentTime
      * @param {number} delaySeconds
      */
-    public static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
+    private static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
         //当天的01:55到10:00
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
@@ -84,7 +84,7 @@ export class TimeServiceV2 {
      * @param currentTime 当前系统时间
      * @param delaySeconds 开奖延迟时间
      */
-    public static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
+    private static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
         let openTimeList: Array<Date> = TimeServiceV2.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -106,7 +106,7 @@ export class TimeServiceV2 {
      * 获取所有开奖的期号列表
      * period的格式为：20170625-080
      */
-    public static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
+    private static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
         let periodList = [];
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
