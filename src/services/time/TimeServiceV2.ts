@@ -48,7 +48,7 @@ export class TimeServiceV2 {
      * @param {Date} currentTime
      * @param {number} delaySeconds
      */
-    private static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
+    public static getOpenTimeList(currentTime: Date, delaySeconds = 0): Array<Date> {
         //当天的01:55到10:00
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();//month取值 0-11
@@ -61,7 +61,7 @@ export class TimeServiceV2 {
 
         let openTimeList = [];
         //00:30-23:50， 共59期  20分钟一期
-        for (let i = 1; i <= 59; i++) {
+        for (let i = 0; i < 59; i++) {
             openTimeList.push(new Date(firstTime.getTime() + i * 20 * 60 * 1000 + delaySeconds * 1000));
         }
 
@@ -100,7 +100,7 @@ export class TimeServiceV2 {
      * 获取所有开奖的期号列表
      * period的格式为：20170625-080
      */
-    private static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
+    public static getPeriodList(currentTime: Date, delaySeconds = 0): Array<PeriodTime> {
         let periodList = [];
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
@@ -117,7 +117,7 @@ export class TimeServiceV2 {
         //timeFragment的格式为20170508-
         let timeFragement = yearFragment + monthFragment + dayFragment + '-';
 
-        for (let i = 1; i <= 59; i++) {
+        for (let i = 0; i < 59; i++) {
             let delayTime = new Date(firstTime.getTime() + i * 20 * 60 * 1000 + delaySeconds * 1000);
             openTimeList.push(delayTime);
             let p = (i < 10) ? ("00" + String(i)) : ("0" + String(i));
