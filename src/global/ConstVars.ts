@@ -13,7 +13,7 @@ export const ConstVars = {
 
 /**
  *
- * 设置表初始化数据
+ * Settings 参数表 初始化数据
  */
 export const SettingTableInitData = [
     {
@@ -294,5 +294,26 @@ export const SettingTableInitData = [
         desc: '倍投时选取的投注方案，模拟投注下有效',
         isEnable: 1,
         remark: ''
+    }
+];
+
+/**
+ *
+ * Vendor 表 发送短信厂商 接收短信手机号的配置表
+ */
+export const VendorTableInitData = [
+    {
+        key: '',
+        value: '',
+        desc: '腾讯云短信相关的appid和appkey',
+        orderId: 1,
+        type: 'TencentSMS'
+    },
+    {
+        key: '',
+        value: '',
+        desc: '接收短信的手机号,key和value都填同一手机号',
+        orderId: 2,
+        type: 'UserPhone'
     }
 ];

@@ -11,7 +11,7 @@ import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
-import {ConstVars, SettingTableInitData} from "../../global/ConstVars";
+import {ConstVars, SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -348,7 +348,7 @@ const Setting = sequelize.define('settings', {
 
 /**
  *
- * 厂商
+ * Vendor 表 发送短信厂商 接收短信手机号的配置表
  */
 const Vendor = sequelize.define('vendor', {
     id: {
@@ -458,7 +458,7 @@ export class LotteryDbService {
                 // });
                 return sequelize.sync();
             })
-            .then(() => {//设置参数初始化 首先检查是否已经存在，存在则不再重复初始化
+            .then(() => {//设置Settings表参数初始化 首先检查是否已经存在，存在则不再重复初始化
                 return Setting.findOne(
                     {
                         where: {key: 'originAccountBalance'},
@@ -468,6 +468,21 @@ export class LotteryDbService {
                         if (!res) {
                             //初始化Setting表数据
                             return Setting.bulkCreate(SettingTableInitData);
+                        } else {
+                            return res;
+                        }
+                    });
+            })
+            .then(() => {// Vendor表参数初始化 首先检查是否已经存在，存在则不再重复初始化
+                return Vendor.findOne(
+                    {
+                        where: {type: 'TencentSMS'},
+                        raw: true
+                    })
+                    .then((res) => {
+                        if (!res) {
+                            //初始化Vendor表数据
+                            return Vendor.bulkCreate(VendorTableInitData);
                         } else {
                             return res;
                         }
