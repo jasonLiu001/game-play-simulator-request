@@ -11,6 +11,7 @@ import Promise = require('bluebird');
 import cron = require('node-cron');
 import {AwardKm28ComService} from "../crawler/award/AwardKm28ComService";
 import {Award500comService} from "../crawler/historyawards/Award500comService";
+import {ConstVars} from "../../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -35,11 +36,16 @@ export class AwardService {
             TimeServiceV2.isInvestTime()
                 .then(() => {
                     log.info('获取第三方开奖数据');
-                    return crawl360Service.getAwardInfo();
+                    return Award500comService.getHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
+                        .then((historyAwards: Array<AwardInfo>) => {
+                            return historyAwards.length > 0 ? historyAwards[0] : null;
+                        });
+                    //暂时不用360的开奖源
+                    //return crawl360Service.getAwardInfo();
                 })
                 .then((award: AwardInfo) => {
                     newAwardInfo = award;//保存最新开奖号码
-                    return LotteryDbService.getAwardInfo(award.period);
+                    return award != null ? LotteryDbService.getAwardInfo(award.period) : Promise.reject(RejectionMsg.prizeNumberNotUpdated);
                 })
                 .then((dbAwardRecord: any) => {
                     //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止

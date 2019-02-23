@@ -9,7 +9,7 @@ describe('Award500comService test', () => {
     });
 
     it('getHistoryAwardByDate should be work', (done) => {
-        Award500comService.getHistoryAwardByDate('2019-1-13')
+        Award500comService.getHistoryAwardByDate('2019-02-24')
             .then((awardList) => {
                 console.log(awardList);
                 done();
