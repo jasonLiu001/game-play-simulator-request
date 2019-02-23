@@ -11,7 +11,7 @@ import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
-import {ConstVars} from "../../global/ConstVars";
+import {ConstVars, SettingTableInitData} from "../../global/ConstVars";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -340,6 +340,9 @@ const Setting = sequelize.define('settings', {
     },
     desc: {//参数说明
         type: Sequelize.STRING
+    },
+    remark: {//备注 特别说明
+        type: Sequelize.STRING
     }
 });
 
@@ -463,225 +466,8 @@ export class LotteryDbService {
                     })
                     .then((res) => {
                         if (!res) {
-                            return Setting.bulkCreate([
-                                {
-                                    key: 'isRealInvest',
-                                    value: '0',
-                                    orderId: '1',
-                                    group: 'system',
-                                    desc: '开启真实投注模式 1:真实 0:模拟'
-                                },
-                                {
-                                    key: 'enableRealInvestWhenProgramStart',
-                                    value: '0',
-                                    orderId: '2',
-                                    group: 'system',
-                                    desc: '在程序启动且未达盈利目标，自主进入真实投注，如当天【重启程序】时需要关闭此项'
-                                },
-                                {
-                                    key: 'awardMode',
-                                    value: '10',
-                                    orderId: '3',
-                                    group: 'system',
-                                    desc: '元、角、分、厘模式'
-                                },
-                                {
-                                    key: 'touZhuBeiShu',
-                                    value: '1',
-                                    orderId: '4',
-                                    group: 'system',
-                                    desc: '投注倍数'
-                                },
-                                {
-                                    key: 'originAccountBalance',
-                                    value: '5000',
-                                    orderId: '5',
-                                    group: 'system',
-                                    desc: '账户初始余额'
-                                },
-                                {
-                                    key: 'maxAccountBalance',
-                                    value: '5100',
-                                    orderId: '6',
-                                    group: 'system',
-                                    desc: 'invest表当天最大盈利目标金额'
-                                },
-                                {
-                                    key: 'minAccountBalance',
-                                    value: '0',
-                                    orderId: '7',
-                                    group: 'system',
-                                    desc: 'invest表当天最大亏损金额'
-                                },
-                                {
-                                    key: 'realInvestEndTime',
-                                    value: '21:59:00',
-                                    orderId: '8',
-                                    group: 'system',
-                                    desc: '真实投注终止投注截止时间如21:59:00，0表示无限制，优先级高于最大利润'
-                                },
-                                {
-                                    key: 'currentSelectedInvestPlanType',
-                                    value: '1',
-                                    orderId: '9',
-                                    group: 'system',
-                                    desc: '当前选择的投注方案类型'
-                                },
-                                {
-                                    key: 'isUseLastAccountBalance',
-                                    value: '0',
-                                    orderId: '10',
-                                    group: 'system',
-                                    desc: '每次程序启动时初始余额自动设置为上期余额，当天【重启程序】时需要开启此项'
-                                },
-                                {
-                                    key: 'investTableBuyNotification',
-                                    value: '0',
-                                    orderId: '11',
-                                    group: 'notification',
-                                    desc: 'invest表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'enableWarningNotification',
-                                    value: '0',
-                                    orderId: '12',
-                                    group: 'system',
-                                    desc: '是否开启预警提醒'
-                                },
-                                {
-                                    key: 'maxProfitNotification',
-                                    value: '0',
-                                    orderId: '13',
-                                    group: 'notification',
-                                    desc: 'invest表达到最高利润值后邮件预警，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'minProfitNotification',
-                                    value: '0',
-                                    orderId: '14',
-                                    group: 'notification',
-                                    desc: 'invest表达到最低利润值后邮件预警，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'isEnableInvestInMock',
-                                    value: '0',
-                                    orderId: '15',
-                                    group: 'warning',
-                                    desc: 'invest表遇【对错错】进入真实投注，直到盈利转模拟，不受最大盈利约束 模拟+正向投注时生效'
-                                },
-                                {
-                                    key: 'isUseReverseInvestNumbers',
-                                    value: '0',
-                                    orderId: '16',
-                                    group: 'warning',
-                                    desc: '【慎用】使用相反的号码投注'
-                                },
-                                {
-                                    key: 'siteUrl',
-                                    value: 'https://123.jn704.com',
-                                    orderId: '17',
-                                    group: 'system',
-                                    desc: '网站首页地址'
-                                },
-                                {
-                                    key: 'isStopCheckLastPrizeNumber',
-                                    value: '0',
-                                    orderId: '18',
-                                    group: 'warning',
-                                    desc: '【慎用】停用对上期的开奖号码的形态的检查，允许每期都可以进行投注'
-                                },
-                                {
-                                    key: 'investTableMaxErrorCountNotification',
-                                    value: '1',
-                                    orderId: '19',
-                                    group: 'notification',
-                                    desc: 'invest表最大错误数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'isStopSendContinueInvestWarnEmail',
-                                    value: '0',
-                                    orderId: '20',
-                                    group: 'notification',
-                                    desc: 'invest表停止暂停投注提醒，真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableBuyNotification',
-                                    value: '0',
-                                    orderId: '21',
-                                    group: 'notification',
-                                    desc: 'total表投注提醒，每期投注都进行邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxWinCountNotification_Plan01',
-                                    value: '4',
-                                    orderId: '22',
-                                    group: 'notification',
-                                    desc: 'total表【方案1】最大正确数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxErrorCountNotification_Plan01',
-                                    value: '4',
-                                    orderId: '23',
-                                    group: 'notification',
-                                    desc: 'total表【方案1】最大错误数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxWinCountNotification_Plan02',
-                                    value: '4',
-                                    orderId: '24',
-                                    group: 'notification',
-                                    desc: 'total表【方案2】最大正确数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxErrorCountNotification_Plan02',
-                                    value: '4',
-                                    orderId: '25',
-                                    group: 'notification',
-                                    desc: 'total表【方案2】最大错误数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxWinCountNotification_Plan03',
-                                    value: '4',
-                                    orderId: '26',
-                                    group: 'notification',
-                                    desc: 'total表【方案3】最大正确数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'totalTableMaxErrorCountNotification_Plan03',
-                                    value: '4',
-                                    orderId: '27',
-                                    group: 'notification',
-                                    desc: 'total表【方案3】最大错误数量邮件提醒，模拟+真实下都有效'
-                                },
-                                {
-                                    key: 'doubleInvest_AwardMode',
-                                    value: '0',
-                                    orderId: '28',
-                                    group: 'doubleInvest',
-                                    desc: '倍投元角分模式逗号分隔，支持total表多期，模拟投注下有效，如: 100,10'
-                                },
-                                {
-                                    key: 'doubleInvest_TouZhuBeiShu',
-                                    value: '0',
-                                    orderId: '29',
-                                    group: 'doubleInvest',
-                                    desc: '倍投投注倍数逗号分隔，支持total表多期，模拟投注下有效，如：5,1'
-                                },
-                                {
-                                    key: 'doubleInvest_IsUseReverseInvestNumbers',
-                                    value: '0',
-                                    orderId: '30',
-                                    group: 'doubleInvest',
-                                    desc: '倍投时是否取相反的号码，模拟投注下有效'
-                                },
-                                {
-                                    key: 'doubleInvest_CurrentSelectedInvestPlanType',
-                                    value: '1',
-                                    orderId: '31',
-                                    group: 'doubleInvest',
-                                    desc: '倍投时选取的投注方案，模拟投注下有效'
-                                }
-                            ]);
+                            //初始化Setting表数据
+                            return Setting.bulkCreate(SettingTableInitData);
                         } else {
                             return res;
                         }
