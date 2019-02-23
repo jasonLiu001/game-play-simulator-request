@@ -334,6 +334,10 @@ const Setting = sequelize.define('settings', {
     group: {//分组名称
         type: Sequelize.STRING
     },
+    isEnable: {//参数值是否可用 用作前端显示用 默认启用
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+    },
     desc: {//参数说明
         type: Sequelize.STRING
     }
