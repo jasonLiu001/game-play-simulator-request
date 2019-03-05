@@ -6,6 +6,8 @@ import moment  = require('moment');
 import {AppServices} from "./services/AppServices";
 import {ScheduleTaskList} from "./config/ScheduleTaskList";
 import {ConstVars} from "./global/ConstVars";
+import {NotificationSender} from "./services/notification/NotificationSender";
+import {EnumNotificationType} from "./models/EnumModel";
 
 let app: express.Application = express();
 const PORT = 6080;
@@ -73,4 +75,5 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
 
 app.listen(PORT, () => {
     log.info('Express server listening on port ' + PORT);
+    NotificationSender.send('投注程序启动成功', '投注程序启动成功', EnumNotificationType.PUSH_AND_EMAIL)
 });
