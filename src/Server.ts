@@ -75,5 +75,5 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
 
 app.listen(PORT, () => {
     log.info('Express server listening on port ' + PORT);
-    NotificationSender.send('投注程序启动成功', '投注程序启动成功', EnumNotificationType.PUSH_AND_EMAIL)
+    //NotificationSender.send('投注程序启动成功', '投注程序启动成功', EnumNotificationType.PUSH_AND_EMAIL)
 });
