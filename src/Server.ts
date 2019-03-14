@@ -1,18 +1,17 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import {NotificationService} from "./services/notification/NotificationService";
-import cron = require('node-cron');
-import moment  = require('moment');
 import {AppServices} from "./services/AppServices";
 import {ScheduleTaskList} from "./config/ScheduleTaskList";
 import {ConstVars} from "./global/ConstVars";
-import {NotificationSender} from "./services/notification/NotificationSender";
-import {EnumNotificationType} from "./models/EnumModel";
+import cron = require('node-cron');
+import moment  = require('moment');
 
 let app: express.Application = express();
 const PORT = 6080;
 
 let log4js = require('log4js'),
+    errorhandler = require('errorhandler'),
     path = require('path');
 log4js.configure(path.resolve(__dirname, '.', 'config/log4js.json'));
 
@@ -32,6 +31,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 //static resources 访问时不需要添加static到路径  http://localhost:6080/lib/lodash.js
 app.use(express.static(__dirname + '/static'));
+//添加errorHandler
+app.use(errorhandler({dumpExceptions: true, showStack: true}));
 //添加log4js到express
 app.use(log4js.connectLogger(log, {level: log4js.levels.DEBUG}));
 
