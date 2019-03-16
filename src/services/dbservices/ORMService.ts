@@ -14,6 +14,7 @@ import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
 import {ConstVars, SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
 import {sequelize} from "../../global/GlobalSequelize";
 import {AwardTable} from "./tables/AwardTable";
+import {InvestTable, InvestTotalTable} from "./tables/InvestTable";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -94,167 +95,6 @@ class PlanBaseModelDefinition {
         };
     }
 }
-
-
-/**
- *
- * 投注记录表
- */
-const Invest = sequelize.define('invest', {
-        period: {//期号
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
-        planType: {//方案类型
-            type: Sequelize.INTEGER,
-            primaryKey: true
-        },
-        investNumbers: {//投注号码
-            type: Sequelize.TEXT
-        },
-        investNumberCount: {//投注号码总注数
-            type: Sequelize.INTEGER
-        },
-        currentAccountBalance: {//当前账户余额
-            type: Sequelize.DECIMAL(10, 2)
-        },
-        originAccountBalance: {//初始账户余额
-            type: Sequelize.DECIMAL(10, 2),
-            defaultValue: 1000
-        },
-        awardMode: {//元、角、分、厘 模式
-            type: Sequelize.INTEGER
-        },
-        touZhuBeiShu: {//投注倍数
-            type: Sequelize.INTEGER,
-            defaultValue: 1
-        },
-        isUseReverseInvestNumbers: {//是否取相反的号码投注
-            type: Sequelize.INTEGER,
-            defaultValue: 0
-        },
-        winMoney: {//盈利金额
-            type: Sequelize.DECIMAL(10, 2)
-        },
-        status: {//是否开奖标识
-            type: Sequelize.INTEGER
-        },
-        isWin: {//是否中奖标识
-            type: Sequelize.INTEGER
-        },
-        investTime: {//投注日期和时间
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
-            get: function () {
-                const investTime = this.getDataValue('investTime');
-                return moment(investTime).format(ConstVars.momentDateTimeFormatter);
-            }
-        },
-        investDate: {//投注日期
-            type: Sequelize.STRING,
-            defaultValue: moment().format(ConstVars.momentDateFormatter)
-        },
-        investTimestamp: {//投注时间
-            type: Sequelize.STRING,
-            defaultValue: moment().format(ConstVars.momentTimeFormatter)
-        }
-    },
-    {
-        indexes: [
-            {
-                name: 'ix_investTimestamp',
-                fields: ['investTimestamp']
-            },
-            {
-                name: 'ix_investDate',
-                fields: ['investDate']
-            },
-            {
-                name: 'ix_investTime',
-                fields: ['investTime']
-            }
-        ]
-    });
-
-/**
- *
- * 记录每个计划全天所有投注记录
- */
-const InvestTotal = sequelize.define('invest_total', {
-        period: {//期号
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
-        planType: {//方案类型
-            type: Sequelize.INTEGER,
-            primaryKey: true
-        },
-        investNumbers: {//投注号码
-            type: Sequelize.TEXT
-        },
-        investNumberCount: {//投注号码总注数
-            type: Sequelize.INTEGER
-        },
-        currentAccountBalance: {//当前账户余额
-            type: Sequelize.DECIMAL(10, 2)
-        },
-        originAccountBalance: {//初始账户余额
-            type: Sequelize.DECIMAL(10, 2),
-            defaultValue: 1000
-        },
-        awardMode: {//元、角、分、厘 模式
-            type: Sequelize.INTEGER
-        },
-        touZhuBeiShu: {//投注倍数
-            type: Sequelize.INTEGER,
-            defaultValue: 1
-        },
-        isUseReverseInvestNumbers: {//是否取相反的号码投注
-            type: Sequelize.INTEGER,
-            defaultValue: 0
-        },
-        winMoney: {//盈利金额
-            type: Sequelize.DECIMAL(10, 2)
-        },
-        status: {//是否开奖标识
-            type: Sequelize.INTEGER
-        },
-        isWin: {//是否中奖标识
-            type: Sequelize.INTEGER
-        },
-        investTime: {//投注日期和时间
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
-            get: function () {
-                const investTime = this.getDataValue('investTime');
-                return moment(investTime).format(ConstVars.momentDateTimeFormatter);
-            }
-        },
-        investDate: {//投注日期
-            type: Sequelize.STRING,
-            defaultValue: moment().format(ConstVars.momentDateFormatter)
-        },
-        investTimestamp: {//投注时间
-            type: Sequelize.STRING,
-            defaultValue: moment().format(ConstVars.momentTimeFormatter)
-        }
-    },
-    {
-        indexes: [
-            {
-                name: 'ix_investTimestamp',
-                fields: ['investTimestamp']
-            },
-            {
-                name: 'ix_investDate',
-                fields: ['investDate']
-            },
-            {
-                name: 'ix_investTime',
-                fields: ['investTime']
-            }
-        ]
-    });
 
 /**
  *
@@ -519,7 +359,7 @@ export class LotteryDbService {
      * 获取投注信息
      */
     public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
-        return Invest.findOne({
+        return InvestTable.findOne({
             where: {period: period, planType: planType},
             raw: true
         });
@@ -558,7 +398,7 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
-        return Invest.findOne(
+        return InvestTable.findOne(
             {
                 where: {
                     period: investInfo.period,
@@ -568,7 +408,7 @@ export class LotteryDbService {
             })
             .then((res) => {
                 if (res) {
-                    return Invest.update(investInfo,
+                    return InvestTable.update(investInfo,
                         {
                             where: {
                                 period: investInfo.period,
@@ -579,7 +419,7 @@ export class LotteryDbService {
                             return investInfo;
                         });
                 } else {
-                    return Invest.create(investInfo)
+                    return InvestTable.create(investInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -605,7 +445,7 @@ export class LotteryDbService {
      */
     public static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
         if (afterTime == "") {
-            return Invest.findAll({
+            return InvestTable.findAll({
                 limit: historyCount,
                 where: {
                     planType: planType
@@ -616,7 +456,7 @@ export class LotteryDbService {
                 raw: true
             });
         } else {
-            return Invest.findAll({
+            return InvestTable.findAll({
                 limit: historyCount,
                 where: {
                     planType: planType,
@@ -644,7 +484,7 @@ export class LotteryDbService {
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
         ////这里的表关联暂时无法使用
-        // return Invest.findAll({
+        // return InvestTable.findAll({
         //     where: {
         //         status: status
         //     },
@@ -669,7 +509,7 @@ export class LotteryDbService {
      * 获取投注信息
      */
     public static getInvestTotalInfo(period: string, planType: number): Promise<InvestTotalInfo> {
-        return InvestTotal.findOne({
+        return InvestTotalTable.findOne({
             where: {period: period, planType: planType},
             raw: true
         });
@@ -680,7 +520,7 @@ export class LotteryDbService {
      * 保存或者更新投注信息
      */
     public static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
-        return InvestTotal.findOne(
+        return InvestTotalTable.findOne(
             {
                 where: {
                     period: investTotalInfo.period,
@@ -690,7 +530,7 @@ export class LotteryDbService {
             })
             .then((res) => {
                 if (res) {
-                    return InvestTotal.update(investTotalInfo,
+                    return InvestTotalTable.update(investTotalInfo,
                         {
                             where: {
                                 period: investTotalInfo.period,
@@ -701,7 +541,7 @@ export class LotteryDbService {
                             return investTotalInfo;
                         });
                 } else {
-                    return InvestTotal.create(investTotalInfo)
+                    return InvestTotalTable.create(investTotalInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -727,7 +567,7 @@ export class LotteryDbService {
      */
     public static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
         if (afterTime == "") {
-            return InvestTotal.findAll({
+            return InvestTotalTable.findAll({
                 limit: historyCount,
                 where: {planType: planType},
                 order: [
@@ -736,7 +576,7 @@ export class LotteryDbService {
                 raw: true
             });
         } else {
-            return InvestTotal.findAll({
+            return InvestTotalTable.findAll({
                 limit: historyCount,
                 where: {
                     planType: planType,
@@ -764,7 +604,7 @@ export class LotteryDbService {
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
         ////这里的表关联暂时无法使用
-        // return InvestTotal.findAll({
+        // return InvestTotalTable.findAll({
         //     where: {
         //         status: status
         //     },
