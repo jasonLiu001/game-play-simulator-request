@@ -15,6 +15,8 @@ import {ConstVars, SettingTableInitData, VendorTableInitData} from "../../global
 import {sequelize} from "../../global/GlobalSequelize";
 import {AwardTable} from "./tables/AwardTable";
 import {InvestTable, InvestTotalTable} from "./tables/InvestTable";
+import {SettingTable} from "./tables/SettingTable";
+import {VendorTable} from "./tables/VendorTable";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -98,71 +100,6 @@ class PlanBaseModelDefinition {
 
 /**
  *
- * 参数设置表
- */
-const Setting = sequelize.define('settings', {
-    key: {//参数名称
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    orderId: {//排序id
-        type: Sequelize.INTEGER
-    },
-    value: {//参数值
-        type: Sequelize.STRING
-    },
-    group: {//分组名称
-        type: Sequelize.STRING
-    },
-    isEnable: {//参数值是否可用 用作前端显示用 默认启用
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    desc: {//参数说明
-        type: Sequelize.STRING
-    },
-    remark: {//备注 特别说明
-        type: Sequelize.STRING
-    }
-});
-
-/**
- *
- * Vendor 表 发送短信厂商 接收短信手机号的配置表
- */
-const Vendor = sequelize.define('vendor', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    key: {//参数名称
-        type: Sequelize.STRING,
-    },
-    value: {//参数值
-        type: Sequelize.STRING,
-    },
-    desc: {//参数说明
-        type: Sequelize.STRING
-    },
-    orderId: {//排序id
-        type: Sequelize.INTEGER
-    },
-    type: {//类型
-        type: Sequelize.STRING
-    },
-    createdTime: {//创建时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
-        }
-    }
-});
-
-/**
- *
  * 保存发送push的token
  */
 const InvestPush = sequelize.define('invest_push', {
@@ -239,7 +176,7 @@ export class LotteryDbService {
                 return sequelize.sync();
             })
             .then(() => {//设置Settings表参数初始化 首先检查是否已经存在，存在则不再重复初始化
-                return Setting.findOne(
+                return SettingTable.findOne(
                     {
                         where: {key: 'originAccountBalance'},
                         raw: true
@@ -247,14 +184,14 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             //初始化Setting表数据
-                            return Setting.bulkCreate(SettingTableInitData);
+                            return SettingTable.bulkCreate(SettingTableInitData);
                         } else {
                             return res;
                         }
                     });
             })
             .then(() => {// Vendor表参数初始化 首先检查是否已经存在，存在则不再重复初始化
-                return Vendor.findOne(
+                return VendorTable.findOne(
                     {
                         where: {type: 'TencentSMS'},
                         raw: true
@@ -262,7 +199,7 @@ export class LotteryDbService {
                     .then((res) => {
                         if (!res) {
                             //初始化Vendor表数据
-                            return Vendor.bulkCreate(VendorTableInitData);
+                            return VendorTable.bulkCreate(VendorTableInitData);
                         } else {
                             return res;
                         }
@@ -829,7 +766,7 @@ export class LotteryDbService {
      * 获取所有的参数设置信息
      */
     public static getSettingsInfoList(): Promise<Array<SettingsInfo>> {
-        return Setting.findAll({
+        return SettingTable.findAll({
             order: [
                 ['orderId', 'ASC']
             ],
@@ -842,14 +779,14 @@ export class LotteryDbService {
      * 保存或更新设置
      */
     public static saveOrUpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
-        return Setting.findOne(
+        return SettingTable.findOne(
             {
                 where: {key: settingsInfo.key},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return Setting.update(settingsInfo,
+                    return SettingTable.update(settingsInfo,
                         {
                             fields: ['value'],
                             where: {
@@ -860,7 +797,7 @@ export class LotteryDbService {
                             return settingsInfo;
                         });
                 } else {
-                    return Setting.create(settingsInfo)
+                    return SettingTable.create(settingsInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -876,7 +813,7 @@ export class LotteryDbService {
      * 获取所有厂商信息
      */
     public static getVendorInfoList(): Promise<Array<VendorInfo>> {
-        return Vendor.findAll({
+        return VendorTable.findAll({
             order: [
                 ['orderId', 'ASC']
             ],
@@ -890,7 +827,7 @@ export class LotteryDbService {
      * @param enumVendorType 枚举值 包括 腾讯短信服务(TencentSMS)
      */
     public static getVendorInfo(enumVendorType: EnumVendorType): Promise<VendorInfo> {
-        return Vendor.findOne({
+        return VendorTable.findOne({
             where: {type: enumVendorType},
             raw: true
         });
@@ -901,14 +838,14 @@ export class LotteryDbService {
      * 保存或者更新厂商信息
      */
     public static saveOrUpdateVendorInfo(vendorInfo: VendorInfo): Promise<VendorInfo> {
-        return Vendor.findOne(
+        return VendorTable.findOne(
             {
                 where: {key: vendorInfo.key},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return Vendor.update(vendorInfo,
+                    return VendorTable.update(vendorInfo,
                         {
                             fields: ['value'],
                             where: {
@@ -919,7 +856,7 @@ export class LotteryDbService {
                             return vendorInfo;
                         });
                 } else {
-                    return Vendor.create(vendorInfo)
+                    return VendorTable.create(vendorInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
