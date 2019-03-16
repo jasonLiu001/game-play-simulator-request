@@ -1,4 +1,3 @@
-import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {InvestBase} from "./InvestBase";
@@ -34,7 +33,7 @@ export class InvestService extends InvestBase {
      */
     async executeAutoInvest(request: any): BlueBirdPromise<any> {
         //本期执行投注时，发现上期仍然没有开奖，则改用其他开奖源更新开奖数据
-        return LotteryDbService.getInvestTotalInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1)
+        return InvestTableService.getInvestTotalInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1)
             .then((historyData: Array<InvestInfo>) => {
                 if (historyData.length > 0 && historyData[0].status === 0) {//上期未开奖 则从其他开奖源更新上期奖号
                     return AwardService.saveOrUpdateHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
@@ -55,7 +54,7 @@ export class InvestService extends InvestBase {
                 return this.initAllPlanInvestInfo(EnumDbTableName.INVEST_TOTAL)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
                         log.info('%s表记录已保存数据%s条', EnumDbTableName.INVEST_TOTAL, allInvestTotalInfo.length);
-                        return LotteryDbService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
+                        return InvestTableService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
                     })
                     .then(() => {
                         //表invest_total第一次初始化完毕 重置标识

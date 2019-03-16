@@ -2,7 +2,6 @@ import BlueBirdPromise = require('bluebird');
 
 import moment  = require('moment');
 import cron = require('node-cron');
-import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {NotificationSender} from "./NotificationSender";
 import {InvestInfo} from "../../models/db/InvestInfo";
@@ -228,7 +227,7 @@ export class NotificationService {
             //方案  最新的投注记录
             historyData = await InvestTableService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
-            historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
+            historyData = await InvestTableService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         }
 
         //数量不足 不发送邮件通知

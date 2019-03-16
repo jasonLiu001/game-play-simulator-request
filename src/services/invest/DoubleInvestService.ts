@@ -12,6 +12,7 @@ import {AbstractRuleBase} from "../rules/AbstractRuleBase";
 import {AwardService} from "../award/AwardService";
 import {ConstVars} from "../../global/ConstVars";
 import {InvestBase} from "./InvestBase";
+import {InvestTableService} from "../dbservices/services/InvestTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('DoubleInvestService');
@@ -42,7 +43,7 @@ export class DoubleInvestService extends InvestBase {
         if (doubleInvestAwardModeArray.length != doubleInvestTouZhuBeiShuArray.length) return BlueBirdPromise.reject("放弃执行倍投，原因：倍投模式：" + AppSettings.doubleInvest_AwardMode + " 倍投倍数：" + AppSettings.doubleInvest_TouZhuBeiShu + "，两者值个数不一致");
 
         //放弃倍投条件2
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestTotalInfoHistory(AppSettings.doubleInvest_CurrentSelectedInvestPlanType, 2);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestTotalInfoHistory(AppSettings.doubleInvest_CurrentSelectedInvestPlanType, 2);
         if (historyData.length < 2) return BlueBirdPromise.reject("放弃执行倍投，原因：invest_total表中记录不足2条");
 
         //取上一期投注数据 因为本期还在执行中
@@ -63,7 +64,7 @@ export class DoubleInvestService extends InvestBase {
         //当前期号
         let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
         //倍投时选取 invest_total表 投注方案
-        return LotteryDbService.getInvestTotalInfo(currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
+        return InvestTableService.getInvestTotalInfo(currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
             .then((investInfo: InvestInfo) => {
                 if (!investInfo) return BlueBirdPromise.reject("倍投执行失败，invest_total表中未查询到方案：" + AppSettings.doubleInvest_CurrentSelectedInvestPlanType + "，投注信息");
                 //修改 倍投模式

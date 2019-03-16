@@ -292,7 +292,7 @@ export class InvestBase {
             if (tableName === EnumDbTableName.INVEST) {
                 investList = await InvestTableService.getInvestInfoHistory(planType, 1);
             } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-                investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
+                investList = await InvestTableService.getInvestTotalInfoHistory(planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
             let lastAccountBalance = (this.isResetOriginalAccountBalance(tableName) || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
@@ -333,7 +333,7 @@ export class InvestBase {
         if (tableName === EnumDbTableName.INVEST) {
             resultList = await InvestTableService.getInvestInfoListByStatus(0);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
+            resultList = await InvestTableService.getInvestTotalInfoListByStatus(0);
         }
         if (!resultList) return BlueBirdPromise.resolve([]);
 
@@ -369,7 +369,7 @@ export class InvestBase {
         if (tableName === EnumDbTableName.INVEST) {
             saveResult = await InvestTableService.saveOrUpdateInvestInfoList(investInfoList);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            saveResult = await LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
+            saveResult = await InvestTableService.saveOrUpdateInvestTotalInfoList(investInfoList);
         }
         log.info('已更新%s表未开奖数据%s条', tableName, investInfoList.length);
         return saveResult;
