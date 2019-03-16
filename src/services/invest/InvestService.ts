@@ -1,6 +1,5 @@
 import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
-import moment  = require('moment');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {InvestBase} from "./InvestBase";
 import {NumberService} from "../numbers/NumberService";
@@ -13,10 +12,12 @@ import {AppSettings} from "../../config/AppSettings";
 import {SettingService} from "../settings/SettingService";
 import {EnumDbTableName} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
-import BlueBirdPromise = require('bluebird');
 import {DoubleInvestService} from "./DoubleInvestService";
 import {AwardService} from "../award/AwardService";
 import {ConstVars} from "../../global/ConstVars";
+import {InvestTableService} from "../dbservices/services/InvestTableService";
+import moment  = require('moment');
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
@@ -84,7 +85,7 @@ export class InvestService extends InvestBase {
                     .then((allPlanInvestInfo: Array<InvestInfo>) => {
                         log.info('%s表 %s记录已保存', EnumDbTableName.INVEST, messageType);
                         //保存投注记录
-                        return LotteryDbService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
+                        return InvestTableService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
                     })
                     .then(() => {
                         //表invest第一次初始化完毕 重置标识
@@ -97,7 +98,7 @@ export class InvestService extends InvestBase {
             .then(() => {
                 //当前期号
                 let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
-                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+                return InvestTableService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
                 if (!investInfo) return BlueBirdPromise.resolve();

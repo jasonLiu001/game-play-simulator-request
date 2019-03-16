@@ -5,8 +5,8 @@ import {EnumAwardMode, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateTyp
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {SMSSender} from "../../notification/sender/SMSSender";
+import {InvestTableService} from "../../dbservices/services/InvestTableService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 
@@ -233,7 +233,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
         return this.investPrepare(request)
             .then((token) => {
                 requestToken = token;
-                return LotteryDbService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+                return InvestTableService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
                 return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);

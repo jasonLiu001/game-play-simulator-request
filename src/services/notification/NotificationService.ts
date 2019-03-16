@@ -13,6 +13,7 @@ import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import {EnumDbTableName, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../models/EnumModel";
 import {SMSSender} from "./sender/SMSSender";
 import {ConstVars} from "../../global/ConstVars";
+import {InvestTableService} from "../dbservices/services/InvestTableService";
 
 
 let log4js = require('log4js'),
@@ -154,7 +155,7 @@ export class NotificationService {
      * 达到指定利润发送预警邮件
      */
     public async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
         //未开奖直接返回
@@ -188,7 +189,7 @@ export class NotificationService {
         let yesterday: string = moment().subtract(1, 'days').format(ConstVars.momentDateFormatter);
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值
-        let yesterdayAccountBalance: any = await LotteryDbService.getMaxAndMinProfitFromInvest(yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
+        let yesterdayAccountBalance: any = await InvestTableService.getMaxAndMinProfitFromInvest(yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
         let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 亏损状态提醒';//通知邮件标题
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损
@@ -225,7 +226,7 @@ export class NotificationService {
         let historyData: Array<InvestInfo>;
         if (tableName == EnumDbTableName.INVEST) {
             //方案  最新的投注记录
-            historyData = await LotteryDbService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
+            historyData = await InvestTableService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
             historyData = await LotteryDbService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         }

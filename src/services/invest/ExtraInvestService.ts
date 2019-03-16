@@ -1,5 +1,4 @@
 import BlueBirdPromise = require('bluebird');
-import moment  = require('moment');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
@@ -8,6 +7,7 @@ import {PlatformService} from "../platform/PlatformService";
 import {SettingService} from "../settings/SettingService";
 import {EnumNotificationType} from "../../models/EnumModel";
 import {InvestBase} from "./InvestBase";
+import {InvestTableService} from "../dbservices/services/InvestTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -57,7 +57,7 @@ export class ExtraInvestService extends InvestBase {
      */
     public async investWhenFindTwoErrorInThree(planType: number, historyCount: number): BlueBirdPromise<boolean> {
         //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = await LotteryDbService.getInvestInfoHistory(planType, historyCount,);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(planType, historyCount,);
 
         //数量不足 直接返回
         if (historyData.length < historyCount) return BlueBirdPromise.resolve(false);

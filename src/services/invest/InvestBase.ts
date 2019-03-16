@@ -13,6 +13,7 @@ import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
 import {ConstVars} from "../../global/ConstVars";
 import {AwardTableService} from "../dbservices/services/AwardTableService";
+import {InvestTableService} from "../dbservices/services/InvestTableService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 
@@ -114,7 +115,7 @@ export class InvestBase {
             //自动切换到模拟投注 同时发送购买结束提醒
             let mockResult: any = await SettingService.switchToMockInvest();
             //当前最新一条投注方案
-            let investInfoList: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+            let investInfoList: InvestInfo[] = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
             if (!investInfoList || investInfoList.length === 0) return BlueBirdPromise.reject(timeReachMessage);
 
             //发送 购买结束提醒
@@ -136,7 +137,7 @@ export class InvestBase {
         if (Config.currentInvestTotalCount == 0) return BlueBirdPromise.resolve(true);
 
         //当前最新一条投注方案
-        let investInfo: InvestInfo[] = await LotteryDbService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        let investInfo: InvestInfo[] = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
         // 首次无记录时 直接返回
         if (!investInfo || investInfo.length === 0) return BlueBirdPromise.resolve(true);
 
@@ -188,7 +189,7 @@ export class InvestBase {
         if (!CONFIG_CONST.isRealInvest) return BlueBirdPromise.resolve(true);
 
         //查询是否存在上期投注记录
-        return LotteryDbService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
+        return InvestTableService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
             .then((lastInvestInfo: InvestInfo) => {
                 //不存在上期的投注记录 直接返回，可以投注
                 if (!lastInvestInfo) return BlueBirdPromise.resolve(true);
@@ -289,7 +290,7 @@ export class InvestBase {
             //获取上期余额
             let investList: InvestInfo[] = null;
             if (tableName === EnumDbTableName.INVEST) {
-                investList = await LotteryDbService.getInvestInfoHistory(planType, 1);
+                investList = await InvestTableService.getInvestInfoHistory(planType, 1);
             } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
                 investList = await LotteryDbService.getInvestTotalInfoHistory(planType, 1);
             }
@@ -330,7 +331,7 @@ export class InvestBase {
         let resultList;
 
         if (tableName === EnumDbTableName.INVEST) {
-            resultList = await LotteryDbService.getInvestInfoListByStatus(0);
+            resultList = await InvestTableService.getInvestInfoListByStatus(0);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
             resultList = await LotteryDbService.getInvestTotalInfoListByStatus(0);
         }
@@ -366,7 +367,7 @@ export class InvestBase {
         let saveResult;
         //首先更新之前未开奖的数据
         if (tableName === EnumDbTableName.INVEST) {
-            saveResult = await LotteryDbService.saveOrUpdateInvestInfoList(investInfoList);
+            saveResult = await InvestTableService.saveOrUpdateInvestInfoList(investInfoList);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
             saveResult = await LotteryDbService.saveOrUpdateInvestTotalInfoList(investInfoList);
         }

@@ -1,12 +1,12 @@
 import {Request, Response} from "express";
 import {InvestInfo} from "../models/db/InvestInfo";
-import {LotteryDbService} from "../services/dbservices/ORMService";
 import {PlatformService} from "../services/platform/PlatformService";
 import {ResponseJson} from "../models/ResponseJson";
 import {TimeServiceV2} from "../services/time/TimeServiceV2";
 import {GlobalRequest} from "../global/GlobalRequest";
 import {InvestBase} from "../services/invest/InvestBase";
 import {ConstVars} from "../global/ConstVars";
+import {InvestTableService} from "../services/dbservices/services/InvestTableService";
 import moment  = require('moment');
 
 let log4js = require('log4js'),
@@ -48,7 +48,7 @@ export class InvestController {
             return res.status(200).send(jsonRes);
         }
 
-        LotteryDbService.getInvestByTableName(investTableName, period, planType)
+        InvestTableService.getInvestByTableName(investTableName, period, planType)
             .then((investInfo: InvestInfo) => {
                 if (investInfo.status == 1) {
                     log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));
