@@ -36,6 +36,7 @@ export class AwardService {
             TimeServiceV2.isInvestTime()
                 .then(() => {
                     log.info('获取第三方开奖数据');
+                    console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：%s", process.memoryUsage());
                     log.info("当前CPU使用率：%s，内存使用率：%s", process.cpuUsage(), process.memoryUsage());
                     return Award500comService.getHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
                         .then((historyAwards: Array<AwardInfo>) => {
@@ -46,11 +47,13 @@ export class AwardService {
                 })
                 .then((award: AwardInfo) => {
                     newAwardInfo = award;//保存最新开奖号码
+                    console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：%s", process.memoryUsage());
                     log.info("当前CPU使用率：%s，内存使用率：%s", process.cpuUsage(), process.memoryUsage());
                     return award != null ? LotteryDbService.getAwardInfo(award.period) : Promise.reject(RejectionMsg.prizeNumberNotUpdated);
                 })
                 .then((dbAwardRecord: any) => {
                     //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
+                    console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：%s", process.memoryUsage());
                     log.info("当前CPU使用率：%s，内存使用率：%s", process.cpuUsage(), process.memoryUsage());
                     if (dbAwardRecord) return Promise.reject(RejectionMsg.isExistRecordInAward);
                 })
@@ -62,6 +65,7 @@ export class AwardService {
                         //有新的奖号出现，则更新开奖信息
                         if (newAwardInfo) return AwardService.saveOrUpdateAwardInfo(newAwardInfo);
                     } else {
+                        console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：%s", process.memoryUsage());
                         log.info("当前CPU使用率：%s，内存使用率：%s", process.cpuUsage(), process.memoryUsage());
                         return Promise.reject('从网络获取的期号为：' + newAwardInfo.period + '，正确的期号应该是：' + lastPeriodStr + '，两者不一致，放弃保存该奖号！');
                     }
