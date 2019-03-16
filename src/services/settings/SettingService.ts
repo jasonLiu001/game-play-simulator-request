@@ -1,9 +1,9 @@
 import {ErrorService} from "../ErrorService";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {SettingsInfo, update_isRealInvest_to_mock, update_isRealInvest_to_real} from "../../models/db/SettingsInfo";
-import BlueBirdPromise = require('bluebird');
 import {AppSettings} from "../../config/AppSettings";
-import {Config, CONFIG_CONST} from "../../config/Config";
+import {CONFIG_CONST} from "../../config/Config";
+import {SettingTableService} from "../dbservices/services/SettingTableService";
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('SettingService');
@@ -92,7 +92,7 @@ export class SettingService {
      * 从数据库中获取配置并初始化
      */
     public static getAndInitSettings(): BlueBirdPromise<any> {
-        return LotteryDbService.getSettingsInfoList()
+        return SettingTableService.getSettingsInfoList()
             .then((settingInfoList: Array<SettingsInfo>) => {
                 SettingService.initSettings(settingInfoList);
                 return settingInfoList;
@@ -109,7 +109,7 @@ export class SettingService {
     public static switchToMockInvest(): BlueBirdPromise<any> {
         //切换到模拟投注
         CONFIG_CONST.isRealInvest = false;
-        return LotteryDbService.saveOrUpdateSettingsInfo(update_isRealInvest_to_mock);
+        return SettingTableService.saveOrUpdateSettingsInfo(update_isRealInvest_to_mock);
 
     }
 
@@ -121,6 +121,6 @@ export class SettingService {
         //切换到真实投注
         CONFIG_CONST.isRealInvest = true;
         //自动切换到真实投注
-        return LotteryDbService.saveOrUpdateSettingsInfo(update_isRealInvest_to_real);
+        return SettingTableService.saveOrUpdateSettingsInfo(update_isRealInvest_to_real);
     }
 }

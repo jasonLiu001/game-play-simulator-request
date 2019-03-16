@@ -1,10 +1,9 @@
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {EnumSMSTemplateType, EnumVendorType} from "../../../models/EnumModel";
 import {VendorInfo} from "../../../models/db/VendorInfo";
-import {CONFIG_CONST} from "../../../config/Config";
 import {ConstVars} from "../../../global/ConstVars";
+import {VendorTableService} from "../../dbservices/services/VendorTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('SMSSender'),
@@ -29,8 +28,8 @@ export class SMSSender {
         let params = [templateVar1, templateVar2, templateVar3];
 
         let promiseArray: Array<BlueBirdPromise<VendorInfo>> = [];
-        promiseArray.push(LotteryDbService.getVendorInfo(EnumVendorType.TencentSMS));
-        promiseArray.push(LotteryDbService.getVendorInfo(EnumVendorType.UserPhone));
+        promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.TencentSMS));
+        promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.UserPhone));
         return BlueBirdPromise.all(promiseArray)
             .then((vendorList: Array<VendorInfo>) => {
                 let tencentSMSVendor: VendorInfo = vendorList[0];

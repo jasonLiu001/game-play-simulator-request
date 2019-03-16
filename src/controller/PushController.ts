@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import {ResponseJson} from "../models/ResponseJson";
-import {LotteryDbService} from "../services/dbservices/ORMService";
 import {InvestPushInfo} from "../models/db/InvestPushInfo";
 import {PushSender} from "../services/notification/sender/PushSender";
 import {ConstVars} from "../global/ConstVars";
+import {InvestPushTableService} from "../services/dbservices/services/InvestPushTableService";
 import moment  = require('moment');
 
 let log4js = require('log4js'),
@@ -29,7 +29,7 @@ export class PushController {
             createdTime: moment().format(ConstVars.momentDateTimeFormatter)
         };
 
-        LotteryDbService.saveOrUpdateInvestPushInfo(investPushModel)
+        InvestPushTableService.saveOrUpdateInvestPushInfo(investPushModel)
             .then(() => {
                 let successMsg: string = "deviceToken:" + investPushModel.deviceToken + "，push平台类型：" + investPushModel.pushPlatform + ",push厂商:" + investPushModel.pushVendorType + " 保存成功";
                 jsonRes.success(successMsg);

@@ -1,6 +1,5 @@
 import BlueBirdPromise = require('bluebird');
 import {InvestInfo} from "../../models/db/InvestInfo";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
 import {NotificationSender} from "../notification/NotificationSender";
 import {PlatformService} from "../platform/PlatformService";
@@ -8,6 +7,7 @@ import {SettingService} from "../settings/SettingService";
 import {EnumNotificationType} from "../../models/EnumModel";
 import {InvestBase} from "./InvestBase";
 import {InvestTableService} from "../dbservices/services/InvestTableService";
+import {SettingTableService} from "../dbservices/services/SettingTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('ExtraInvestService');
@@ -32,7 +32,7 @@ export class ExtraInvestService extends InvestBase {
                         .then(() => {
                             //更新停止投注的最大盈利值
                             CONFIG_CONST.maxAccountBalance = investInfo.currentAccountBalance + 1;
-                            return LotteryDbService.saveOrUpdateSettingsInfo({
+                            return SettingTableService.saveOrUpdateSettingsInfo({
                                 key: 'maxAccountBalance',
                                 value: String(CONFIG_CONST.maxAccountBalance)
                             });

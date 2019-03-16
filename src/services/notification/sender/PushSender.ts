@@ -1,11 +1,11 @@
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {InvestPushInfo} from "../../../models/db/InvestPushInfo";
 import {CommonUtil} from "../../common/CommonUtil";
 import {XGPushModel} from "../../../models/XGPushModel";
 import {EnumPushPlatformType, EnumPushVendorType} from "../../../models/EnumModel";
 import {ConstVars} from "../../../global/ConstVars";
+import {InvestPushTableService} from "../../dbservices/services/InvestPushTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushSender');
@@ -16,7 +16,7 @@ export class PushSender {
      * 发送
      */
     public static async sendTencentXGPush(title: string, content: string): BlueBirdPromise<any> {
-        return LotteryDbService.getInvestPushInfoHistory(1, EnumPushPlatformType.TENCENT_XG, EnumPushVendorType.TENCENT_XG)
+        return InvestPushTableService.getInvestPushInfoHistory(1, EnumPushPlatformType.TENCENT_XG, EnumPushVendorType.TENCENT_XG)
             .then((investPushInfoArray: Array<InvestPushInfo>) => {
                 if (investPushInfoArray.length == 0) return BlueBirdPromise.reject("invest_push table is empty.");
 

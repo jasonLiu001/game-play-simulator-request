@@ -4,7 +4,6 @@ import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
 import {PlanResultInfo} from "../../../models/db/PlanResultInfo";
 import {PlanInfo} from "../../../models/db/PlanInfo";
 import {sequelize} from "../../../global/GlobalSequelize";
-import {LotteryDbService} from "../ORMService";
 
 export class PlanTableService{
     //region 计划plan表

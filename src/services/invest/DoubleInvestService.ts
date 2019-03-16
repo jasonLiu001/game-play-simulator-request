@@ -4,7 +4,6 @@ import _ = require('lodash');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {TimeServiceV2} from "../time/TimeServiceV2";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {PlatformService} from "../platform/PlatformService";
 import {EnumNotificationType} from "../../models/EnumModel";
 import {NotificationSender} from "../notification/NotificationSender";
@@ -13,6 +12,7 @@ import {AwardService} from "../award/AwardService";
 import {ConstVars} from "../../global/ConstVars";
 import {InvestBase} from "./InvestBase";
 import {InvestTableService} from "../dbservices/services/InvestTableService";
+import {SettingTableService} from "../dbservices/services/SettingTableService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('DoubleInvestService');
@@ -127,27 +127,27 @@ export class DoubleInvestService extends InvestBase {
      * 更新倍投参数值
      */
     public async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string, doubleInvest_IsUseReverseInvestNumbersValue: string, doubleInvest_CurrentSelectedInvestPlanTypeValue: string): BlueBirdPromise<any> {
-        return LotteryDbService.saveOrUpdateSettingsInfo(
+        return SettingTableService.saveOrUpdateSettingsInfo(
             {
                 key: 'doubleInvest_AwardMode',
                 value: doubleInvestAwardModeValue
             })
             .then(() => {
-                return LotteryDbService.saveOrUpdateSettingsInfo(
+                return SettingTableService.saveOrUpdateSettingsInfo(
                     {
                         key: 'doubleInvest_TouZhuBeiShu',
                         value: doubleInvestTouZhuBeiShuValue
                     });
             })
             .then(() => {
-                return LotteryDbService.saveOrUpdateSettingsInfo(
+                return SettingTableService.saveOrUpdateSettingsInfo(
                     {
                         key: 'doubleInvest_IsUseReverseInvestNumbers',
                         value: doubleInvest_IsUseReverseInvestNumbersValue
                     });
             })
             .then(() => {
-                return LotteryDbService.saveOrUpdateSettingsInfo(
+                return SettingTableService.saveOrUpdateSettingsInfo(
                     {
                         key: 'doubleInvest_CurrentSelectedInvestPlanType',
                         value: doubleInvest_CurrentSelectedInvestPlanTypeValue
