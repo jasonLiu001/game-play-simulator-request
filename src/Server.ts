@@ -80,11 +80,11 @@ app.listen(PORT, () => {
 
 process.on('uncaughtException', function (exception) {
     console.error('uncaughtException: ,', exception);
-    log.error('uncaughtException: %s', exception); // to see your exception details in the console
+    log.error('uncaughtException: %s', JSON.stringify(exception)); // to see your exception details in the console
 });
 
 //Promise 异常捕获
 process.on('unhandledRejection', (reason, p) => {
     console.error('Unhandled Rejection at:', p, ' reason: ', reason);
-    log.error('Unhandled Rejection at: %s, reason: %s', p, reason);
+    log.error('Unhandled Rejection at: %s, reason: %s', JSON.stringify(p), JSON.stringify(reason));
 });

@@ -36,8 +36,8 @@ export class TimeServiceV2 {
         //未到开奖时间
         if (nextOpenTime.getTime() == Config.globalVariable.nextPeriodInvestTime.getTime()) {
             log.info("当前时间: %s,下期可投注时间：%s", moment().format(ConstVars.momentDateTimeFormatter), moment(nextOpenTime).format(ConstVars.momentDateTimeFormatter));
-            console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：%s", process.memoryUsage());
-            log.info("当前CPU使用率：%s，内存使用率：%s", process.cpuUsage(), process.memoryUsage());
+            console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：", process.memoryUsage());
+            log.info("当前CPU使用率：%s，内存使用率：%s", JSON.stringify(process.cpuUsage()), JSON.stringify(process.memoryUsage()));
             return Promise.reject(RejectionMsg.notReachInvestTime);
         } else {
             return Promise.resolve(true);
