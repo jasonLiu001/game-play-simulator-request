@@ -13,6 +13,7 @@ import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
 import {ConstVars, SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
 import {sequelize} from "../../global/GlobalSequelize";
+import {AwardTable} from "./tables/AwardTable";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -94,34 +95,7 @@ class PlanBaseModelDefinition {
     }
 }
 
-/**
- *
- *  开奖信息表
- */
-const Award = sequelize.define('award', {
-    period: {//开奖期号
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    openNumber: {//开奖号码
-        type: Sequelize.STRING
-    },
-    openTime: {//开奖时间
-        type: Sequelize.STRING
-    },
-    createdTime: {//日期和时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
-        }
-    },
-    updateStatus: {//更新状态 1：自动更新 2：手工更新
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    }
-});
+
 /**
  *
  * 投注记录表
@@ -474,7 +448,7 @@ export class LotteryDbService {
      * 获取开奖信息
      */
     public static getAwardInfo(period: string): Promise<AwardInfo> {
-        return Award.findOne(
+        return AwardTable.findOne(
             {
                 where: {period: period},
                 raw: true
@@ -486,14 +460,14 @@ export class LotteryDbService {
      * @param award
      */
     public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
-        return Award.findOne(
+        return AwardTable.findOne(
             {
                 where: {period: award.period},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return Award.update(award,
+                    return AwardTable.update(award,
                         {
                             where: {period: award.period}
                         })
@@ -501,7 +475,7 @@ export class LotteryDbService {
                             return award;
                         });
                 } else {
-                    return Award.create(award)
+                    return AwardTable.create(award)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -528,7 +502,7 @@ export class LotteryDbService {
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
     public static getAwardInfoHistory(historyCount: number) {
-        return Award.findAll({
+        return AwardTable.findAll({
             limit: historyCount,
             order: [
                 ['period', 'DESC']
@@ -678,7 +652,7 @@ export class LotteryDbService {
         //         ['period', 'ASC']
         //     ],
         //     include: [{
-        //         model: Award,
+        //         model: AwardTable,
         //         required: true,
         //         attributes: ['openNumber', 'openTime'],
         //         where: {period: Sequelize.col('award.period')}
@@ -798,7 +772,7 @@ export class LotteryDbService {
         //         ['period', 'ASC']
         //     ],
         //     include: [{
-        //         model: Award,
+        //         model: AwardTable,
         //         required: true,
         //         attributes: ['openNumber', 'openTime'],
         //         where: {period: Sequelize.col('award.period')}
