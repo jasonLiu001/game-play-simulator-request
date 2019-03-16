@@ -1,5 +1,4 @@
 import Promise = require('bluebird');
-import moment  = require('moment');
 import {CONFIG_CONST} from "../../config/Config";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
@@ -11,148 +10,19 @@ import {InvestTotalInfo} from "../../models/db/InvestTotalInfo";
 import {InvestPushInfo} from "../../models/db/InvestPushInfo";
 import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
-import {ConstVars, SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
+import {SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
 import {sequelize} from "../../global/GlobalSequelize";
 import {AwardTable} from "./tables/AwardTable";
 import {InvestTable, InvestTotalTable} from "./tables/InvestTable";
 import {SettingTable} from "./tables/SettingTable";
 import {VendorTable} from "./tables/VendorTable";
+import {InvestPush} from "./tables/InvestPushTable";
+import {PlanTable, PlanInvestNumbersTable, PlanResultTable} from "./tables/PlanTable";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-/**
- *
- * 计划相关的表模型定义
- */
-class PlanBaseModelDefinition {
-    /**
-     *
-     * 根据传递的类型返回新的实体
-     * @param type
-     */
-    public static getModelDefinition(type) {
-        return {
-            period: {//期号
-                type: Sequelize.STRING,
-                primaryKey: true
-            },
-            jiou_type: {//杀奇偶类型
-                type: type
-            },
-            killplan_bai_wei: {//杀号计划 杀百位
-                type: type
-            },
-            killplan_shi_wei: {//杀号计划 杀十位
-                type: type
-            },
-            killplan_ge_wei: {//杀号计划 杀个位
-                type: type
-            },
-            missplan_bai_wei: {//遗漏计划 杀百位
-                type: type
-            },
-            missplan_shi_wei: {//遗漏计划 杀十位
-                type: type
-            },
-            missplan_ge_wei: {//遗漏计划 杀个位
-                type: type
-            },
-            brokengroup_01_334: {//断组 3-3-4
-                type: type
-            },
-            brokengroup_01_224: {//断组 2-2-4 断组
-                type: type
-            },
-            brokengroup_01_125: {//断组 1-2-5 断组
-                type: type
-            },
-            road012_01: {//杀012路类型
-                type: type
-            },
-            number_distance: {//杀跨度
-                type: type
-            },
-            sum_values: {//杀和值
-                type: type
-            },
-            three_number_together: {//特殊号：三连
-                type: type
-            },
-            killbaiwei_01: {//杀百位
-                type: type
-            },
-            killshiwei_01: {//杀十位
-                type: type
-            },
-            killgewei_01: {//杀个位
-                type: type
-            },
-            bravenumber_6_01: {//6胆
-                type: type
-            },
-            status: {//当前数据是否已经更新
-                type: Sequelize.INTEGER
-            }
-        };
-    }
-}
 
-/**
- *
- * 保存发送push的token
- */
-const InvestPush = sequelize.define('invest_push', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    deviceToken: {//发送push的device token
-        type: Sequelize.STRING,
-        primaryKey: true
-    },
-    imei: {//设备号
-        type: Sequelize.STRING
-    },
-    pushPlatform: {//发送push的平台
-        type: Sequelize.INTEGER,
-        defaultValue: 1
-    },
-    pushVendorType: {//Push厂商类型
-        type: Sequelize.STRING
-    },
-    tokenExpireTime: {//token过期时间
-        type: Sequelize.DATE,
-        get: function () {
-            const createdTime = this.getDataValue('tokenExpireTime');
-            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
-        }
-    },
-    createdTime: {//创建时间
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        get: function () {
-            const createdTime = this.getDataValue('createdTime');
-            return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
-        }
-    }
-});
-
-/**
- * 计划投注号码表
- */
-const Plan = sequelize.define('plan', PlanBaseModelDefinition.getModelDefinition(Sequelize.STRING));
-/**
- *
- * 计划杀号结果表
- */
-const PlanResult = sequelize.define('plan_result', PlanBaseModelDefinition.getModelDefinition(Sequelize.INTEGER));
-/**
- *
- * 计划投注号码表
- */
-const PlanInvestNumbers = sequelize.define('plan_invest_numbers', PlanBaseModelDefinition.getModelDefinition(Sequelize.TEXT));
 
 /**
  *
@@ -568,7 +438,7 @@ export class LotteryDbService {
      * @param period
      */
     public static getPlanInfo(period: string): Promise<PlanInfo> {
-        return Plan.findOne({
+        return PlanTable.findOne({
             where: {period: period},
             raw: true
         });
@@ -580,14 +450,14 @@ export class LotteryDbService {
      * 保存或更新计划记录表
      */
     public static saveOrUpdatePlanInfo(planInfo: PlanInfo): Promise<PlanInfo> {
-        return Plan.findOne(
+        return PlanTable.findOne(
             {
                 where: {period: planInfo.period},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return Plan.update(planInfo,
+                    return PlanTable.update(planInfo,
                         {
                             where: {period: planInfo.period}
                         })
@@ -595,7 +465,7 @@ export class LotteryDbService {
                             return planInfo;
                         });
                 } else {
-                    return Plan.create(planInfo)
+                    return PlanTable.create(planInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -613,7 +483,7 @@ export class LotteryDbService {
      * @param period
      */
     public static getPlanResultInfo(period: string): Promise<PlanResultInfo> {
-        return PlanResult.findOne({
+        return PlanResultTable.findOne({
             where: {period: period},
             raw: true
         });
@@ -638,7 +508,7 @@ export class LotteryDbService {
      * @return {Promise<any>}
      */
     public static getPlanResultInfoHistory(historyCount: number): Promise<Array<any>> {
-        return PlanResult.findAll({
+        return PlanResultTable.findAll({
             limit: historyCount,
             where: {status: 1},
             order: [
@@ -666,14 +536,14 @@ export class LotteryDbService {
      * 保存或更新计划记录投注结果表
      */
     public static saveOrUpdatePlanResultInfo(planResultInfo: PlanResultInfo): Promise<PlanResultInfo> {
-        return PlanResult.findOne(
+        return PlanResultTable.findOne(
             {
                 where: {period: planResultInfo.period},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return PlanResult.update(planResultInfo,
+                    return PlanResultTable.update(planResultInfo,
                         {
                             where: {period: planResultInfo.period}
                         })
@@ -681,7 +551,7 @@ export class LotteryDbService {
                             return planResultInfo;
                         });
                 } else {
-                    return PlanResult.create(planResultInfo)
+                    return PlanResultTable.create(planResultInfo)
                         .then((model) => {
                             return model.get({plain: true});
                         });
@@ -699,7 +569,7 @@ export class LotteryDbService {
      * @param period
      */
     public static getPlanInvestNumberesInfo(period: string): Promise<PlanInvestNumbersInfo> {
-        return PlanInvestNumbers.findOne({
+        return PlanInvestNumbersTable.findOne({
             where: {period: period},
             raw: true
         });
@@ -710,14 +580,14 @@ export class LotteryDbService {
      * 保存或更新计划投注号码表
      */
     public static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        return PlanInvestNumbers.findOne(
+        return PlanInvestNumbersTable.findOne(
             {
                 where: {period: planInvestNumbers.period},
                 raw: true
             })
             .then((res) => {
                 if (res) {
-                    return PlanInvestNumbers.update(planInvestNumbers,
+                    return PlanInvestNumbersTable.update(planInvestNumbers,
                         {
                             where: {period: planInvestNumbers.period}
                         })
@@ -725,7 +595,7 @@ export class LotteryDbService {
                             return planInvestNumbers;
                         });
                 } else {
-                    return PlanInvestNumbers.create(planInvestNumbers)
+                    return PlanInvestNumbersTable.create(planInvestNumbers)
                         .then((model) => {
                             return model.get({plain: true});
                         });
