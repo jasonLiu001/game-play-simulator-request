@@ -76,5 +76,13 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
 
 app.listen(PORT, () => {
     log.info('Express server listening on port ' + PORT);
-    //NotificationSender.send('投注程序启动成功', '投注程序启动成功', EnumNotificationType.PUSH_AND_EMAIL)
+});
+
+process.on('uncaughtException', function (exception) {
+    log.error('uncaughtException: %s', exception); // to see your exception details in the console
+});
+
+//Promise 异常捕获
+process.on('unhandledRejection', (reason, p) => {
+    log.error('Unhandled Rejection at: %s, reason: %s', p, reason);
 });
