@@ -1,12 +1,11 @@
 import {IRules} from "../IRules";
 import {CONFIG_CONST} from "../../../config/Config";
 import {AbstractRuleBase} from "../AbstractRuleBase";
-import Promise = require('bluebird');
-import _ = require('lodash');
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {RejectionMsg} from "../../../models/EnumModel";
 import {FixedPositionKillNumberResult} from "../../../models/RuleResult";
+import {AwardTableService} from "../../dbservices/services/AwardTableService";
+import Promise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberBaiWei');
@@ -20,7 +19,7 @@ let log4js = require('log4js'),
 export class KillNumberBaiWei extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
     filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let totalNumberArray = this.getTotalNumberArray();
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀百位提示：" + RejectionMsg.historyCountIsNotEnough);
 

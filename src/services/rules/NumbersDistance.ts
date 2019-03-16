@@ -1,13 +1,12 @@
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import {IRules} from "./IRules";
-import _ = require('lodash');
-import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
 import {OpenNumber} from "../../models/OpenNumber";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {CONFIG_CONST} from "../../config/Config";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {RejectionMsg} from "../../models/EnumModel";
+import {AwardTableService} from "../dbservices/services/AwardTableService";
+import Promise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('NumbersDistance');
@@ -19,7 +18,7 @@ let log4js = require('log4js'),
 export class NumbersDistance extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
     filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀跨提示：" + RejectionMsg.historyCountIsNotEnough);
 

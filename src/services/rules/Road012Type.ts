@@ -1,12 +1,11 @@
 import {IRules} from "./IRules";
 import {AbstractRuleBase} from "./AbstractRuleBase";
-import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
-import {OpenNumber} from "../../models/OpenNumber";
 import {CONFIG_CONST} from "../../config/Config";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {AwardInfo} from "../../models/db/AwardInfo";
 import {RejectionMsg} from "../../models/EnumModel";
+import {AwardTableService} from "../dbservices/services/AwardTableService";
+import Promise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Road012Type');
@@ -23,7 +22,7 @@ export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNu
 
     public filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀012路中断提示：" + RejectionMsg.historyCountIsNotEnough);
 

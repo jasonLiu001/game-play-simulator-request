@@ -12,6 +12,7 @@ import {SettingService} from "../settings/SettingService";
 import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {NotificationService} from "../notification/NotificationService";
 import {ConstVars} from "../../global/ConstVars";
+import {AwardTableService} from "../dbservices/services/AwardTableService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 
@@ -168,7 +169,7 @@ export class InvestBase {
      * 检查已开奖的期数个数
      */
     private checkAwardHistoryCount(): BlueBirdPromise<boolean> {
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) {
                     return BlueBirdPromise.reject("历史开奖总期数个数，不足" + CONFIG_CONST.historyCount + "期，不满足投注条件，已放弃本次投注");

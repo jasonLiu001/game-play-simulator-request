@@ -1,6 +1,5 @@
 import Promise = require('bluebird');
 import {CONFIG_CONST} from "../../config/Config";
-import {AwardInfo} from "../../models/db/AwardInfo";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {PlanResultInfo} from "../../models/db/PlanResultInfo";
@@ -12,17 +11,14 @@ import {VendorInfo} from "../../models/db/VendorInfo";
 import {EnumDbTableName, EnumVendorType} from "../../models/EnumModel";
 import {SettingTableInitData, VendorTableInitData} from "../../global/ConstVars";
 import {sequelize} from "../../global/GlobalSequelize";
-import {AwardTable} from "./tables/AwardTable";
 import {InvestTable, InvestTotalTable} from "./tables/InvestTable";
 import {SettingTable} from "./tables/SettingTable";
 import {VendorTable} from "./tables/VendorTable";
 import {InvestPush} from "./tables/InvestPushTable";
-import {PlanTable, PlanInvestNumbersTable, PlanResultTable} from "./tables/PlanTable";
+import {PlanInvestNumbersTable, PlanResultTable, PlanTable} from "./tables/PlanTable";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-
-
 
 /**
  *
@@ -88,77 +84,6 @@ export class LotteryDbService {
     public static dropAllTables() {
         return sequelize.drop();
     }
-
-    //region 开奖信息award表
-    /**
-     *
-     * 获取开奖信息
-     */
-    public static getAwardInfo(period: string): Promise<AwardInfo> {
-        return AwardTable.findOne(
-            {
-                where: {period: period},
-                raw: true
-            });
-    }
-
-    /**
-     * 保存或更新开奖数据
-     * @param award
-     */
-    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
-        return AwardTable.findOne(
-            {
-                where: {period: award.period},
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return AwardTable.update(award,
-                        {
-                            where: {period: award.period}
-                        })
-                        .then(() => {
-                            return award;
-                        });
-                } else {
-                    return AwardTable.create(award)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
-    }
-
-    /**
-     *
-     * 批量保存/更新开奖号码
-     */
-    public static saveOrUpdateAwardInfoList(awardList: Array<AwardInfo>): Promise<any> {
-        let promiseArray: Array<Promise<any>> = [];
-        for (let award of awardList) {
-            promiseArray.push(LotteryDbService.saveOrUpdateAwardInfo(award));
-        }
-        return Promise.all(promiseArray);
-    }
-
-    /**
-     *
-     * 获取特定数量的最新开奖数据
-     * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
-     * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
-     */
-    public static getAwardInfoHistory(historyCount: number) {
-        return AwardTable.findAll({
-            limit: historyCount,
-            order: [
-                ['period', 'DESC']
-            ],
-            raw: true
-        });
-    }
-
-    //endregion
 
     //region 根据条件过滤后的 实际投注明细invest表
     /**

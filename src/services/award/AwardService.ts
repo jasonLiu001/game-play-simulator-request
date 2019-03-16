@@ -2,16 +2,16 @@ import {AwardInfo} from "../../models/db/AwardInfo";
 import {TimeServiceV2} from "../time/TimeServiceV2";
 import {Config} from "../../config/Config";
 import {Award360Service} from "../crawler/award/Award360Service";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {RejectionMsg} from "../../models/EnumModel";
 import {AwardCaiBaXianService} from "../crawler/award/AwardCaiBaXianService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
-import moment  = require('moment');
-import Promise = require('bluebird');
-import cron = require('node-cron');
 import {AwardKm28ComService} from "../crawler/award/AwardKm28ComService";
 import {Award500comService} from "../crawler/historyawards/Award500comService";
 import {ConstVars} from "../../global/ConstVars";
+import {AwardTableService} from "../dbservices/services/AwardTableService";
+import moment  = require('moment');
+import Promise = require('bluebird');
+import cron = require('node-cron');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -49,7 +49,7 @@ export class AwardService {
                     newAwardInfo = award;//保存最新开奖号码
                     console.info("当前CPU使用率：", process.cpuUsage(), "内存使用率：", process.memoryUsage());
                     log.info("当前CPU使用率：%s，内存使用率：%s", JSON.stringify(process.cpuUsage()), JSON.stringify(process.memoryUsage()));
-                    return award != null ? LotteryDbService.getAwardInfo(award.period) : Promise.reject(RejectionMsg.prizeNumberNotUpdated);
+                    return award != null ? AwardTableService.getAwardInfo(award.period) : Promise.reject(RejectionMsg.prizeNumberNotUpdated);
                 })
                 .then((dbAwardRecord: any) => {
                     //数据库中存在开奖记录，说明当前奖号还没有更新，不停获取直到更新为止
@@ -94,7 +94,7 @@ export class AwardService {
         Config.globalVariable.last_PrizeNumber = award.openNumber;
         Config.globalVariable.current_Peroid = TimeServiceV2.getCurrentPeriodNumber(new Date());
 
-        return LotteryDbService.saveOrUpdateAwardInfo(award)
+        return AwardTableService.saveOrUpdateAwardInfo(award)
             .then((awardInfo: AwardInfo) => {
                 //更新下期开奖时间
                 TimeServiceV2.updateNextPeriodInvestTime();
@@ -109,7 +109,7 @@ export class AwardService {
     public static saveOrUpdateHistoryAwardByDate(periodDate: string): Promise<any> {
         return Award500comService.getHistoryAwardByDate(periodDate)
             .then((historyAwards: Array<AwardInfo>) => {
-                return LotteryDbService.saveOrUpdateAwardInfoList(historyAwards);
+                return AwardTableService.saveOrUpdateAwardInfoList(historyAwards);
             })
     }
 }

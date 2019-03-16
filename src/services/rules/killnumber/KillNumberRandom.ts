@@ -1,14 +1,13 @@
 import {IRules} from "../IRules";
 import {AbstractRuleBase} from "../AbstractRuleBase";
-import Promise = require('bluebird');
 import {RejectionMsg} from "../../../models/EnumModel";
-import _ = require('lodash');
 import {KillNumberInfo} from "./KillNumbersFollowPlay";
 import {CommonKillNumberResult} from "../../../models/RuleResult";
 import {OpenNumber} from "../../../models/OpenNumber";
 import {CONFIG_CONST} from "../../../config/Config";
-import {LotteryDbService} from "../../dbservices/ORMService";
 import {AwardInfo} from "../../../models/db/AwardInfo";
+import {AwardTableService} from "../../dbservices/services/AwardTableService";
+import Promise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('KillNumberRandom');
@@ -39,7 +38,7 @@ export class KillNumberRandom extends AbstractRuleBase implements IRules<CommonK
         //开奖号码
         let prizeNumber: OpenNumber = this.getPrizeNumberObj();
 
-        return LotteryDbService.getAwardInfoHistory(CONFIG_CONST.historyCount)
+        return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
                 if (!awardHistoryList || awardHistoryList.length != CONFIG_CONST.historyCount) return Promise.reject("杀跨提示：" + RejectionMsg.historyCountIsNotEnough);
 
