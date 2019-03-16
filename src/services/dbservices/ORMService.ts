@@ -4,9 +4,6 @@ import {sequelize} from "../../global/GlobalSequelize";
 import {SettingTable} from "./tables/SettingTable";
 import {VendorTable} from "./tables/VendorTable";
 
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-
 /**
  *
  * 数据库操作实体类

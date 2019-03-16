@@ -1,7 +1,6 @@
 import {sequelize} from "../../../global/GlobalSequelize";
 
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 
 
 /**

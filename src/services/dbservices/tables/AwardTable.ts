@@ -2,7 +2,6 @@ import {sequelize} from "../../../global/GlobalSequelize";
 import {ConstVars} from "../../../global/ConstVars";
 
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 import moment = require("moment");
 
 /**
