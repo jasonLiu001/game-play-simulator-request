@@ -1,4 +1,3 @@
-import {LotteryDbService} from "../dbservices/ORMService";
 import {Config, CONFIG_CONST} from "../../config/Config";
 import {NumberService} from "../numbers/NumberService";
 import {InvestInfo} from "../../models/db/InvestInfo";
@@ -14,6 +13,7 @@ import {NotificationService} from "../notification/NotificationService";
 import {ConstVars} from "../../global/ConstVars";
 import {AwardTableService} from "../dbservices/services/AwardTableService";
 import {InvestTableService} from "../dbservices/services/InvestTableService";
+import {PlanTableService} from "../dbservices/services/PlanTableService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
 
@@ -386,7 +386,7 @@ export class InvestBase {
         //更新invest_total表余额
         let updateInvestTotalResult = await this.updateInvestWinMoney(EnumDbTableName.INVEST_TOTAL);
 
-        return LotteryDbService.getPlanInvestNumbersInfoListByStatus(0)
+        return PlanTableService.getPlanInvestNumbersInfoListByStatus(0)
             .then((list: Array<any>) => {
                 if (!list) return BlueBirdPromise.resolve([]);
                 log.info("查询到plan_invest_numbers表中未开奖数据%s条", list.length);
@@ -456,9 +456,9 @@ export class InvestBase {
                 }
 
                 //保存各计划中奖状态 及 计划更新状态
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList)
+                return PlanTableService.saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList)
                     .then(() => {
-                        return LotteryDbService.saveOrUpdatePlanResultInfoList(planResultInfoList);
+                        return PlanTableService.saveOrUpdatePlanResultInfoList(planResultInfoList);
                     });
             })
             .then((results) => {

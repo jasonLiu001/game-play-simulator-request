@@ -7,7 +7,6 @@ import {AbstractRuleBase} from "../rules/AbstractRuleBase";
 import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
-import {LotteryDbService} from "../dbservices/ORMService";
 import {PlanInfo} from "../../models/db/PlanInfo";
 import {TimeServiceV2} from "../time/TimeServiceV2";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
@@ -21,6 +20,7 @@ import {ThreeNumberTogether} from "../rules/ThreeNumberTogether";
 import {KillNumberBaiWei} from "../rules/killnumber/KillNumberBaiWei";
 import {KillNumberRandom} from "../rules/killnumber/KillNumberRandom";
 import {AppSettings} from "../../config/AppSettings";
+import {PlanTableService} from "../dbservices/services/PlanTableService";
 import Promise = require('bluebird');
 import _ = require('lodash');
 
@@ -75,10 +75,10 @@ export class NumberService extends AbstractRuleBase {
         };
 
         planInfoBaseString.status = 1;//计划状态默认是：1
-        return LotteryDbService.saveOrUpdatePlanInfo(planInfoBaseString)
+        return PlanTableService.saveOrUpdatePlanInfo(planInfoBaseString)
             .then(() => {
                 planInfoBaseString.status = 0;
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString);
+                return PlanTableService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString);
             });
     }
 
@@ -107,7 +107,7 @@ export class NumberService extends AbstractRuleBase {
             })
             .then((results) => {
                 promiseAllResult = results;
-                return LotteryDbService.getPlanInfo(TimeServiceV2.getCurrentPeriodNumber(new Date()));
+                return PlanTableService.getPlanInfo(TimeServiceV2.getCurrentPeriodNumber(new Date()));
             })
             .then((planInfo: PlanInfo) => {
                 planInfo.jiou_type = promiseAllResult[0].killNumber;
@@ -127,10 +127,10 @@ export class NumberService extends AbstractRuleBase {
                 planInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumber;
                 planInfo.killgewei_01 = promiseAllResult[11].geWei.killNumber;
                 planInfo.bravenumber_6_01 = promiseAllResult[12].killNumber;
-                return LotteryDbService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
+                return PlanTableService.saveOrUpdatePlanInfo(planInfo);//保存排除的奇偶类型
             })
             .then((planInfo: PlanInfo) => {
-                return LotteryDbService.getPlanInvestNumberesInfo(planInfo.period);
+                return PlanTableService.getPlanInvestNumberesInfo(planInfo.period);
             })
             .then((planInvestNumbersInfo: PlanInvestNumbersInfo) => {
                 planInvestNumbersInfo.jiou_type = promiseAllResult[0].killNumberResult.join(',');
@@ -150,7 +150,7 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumberResult.join(',');
                 planInvestNumbersInfo.killgewei_01 = promiseAllResult[11].geWei.killNumberResult.join(',');
                 planInvestNumbersInfo.bravenumber_6_01 = promiseAllResult[12].killNumberResult.join(',');
-                return LotteryDbService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+                return PlanTableService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
             })
             .then(() => {
                 //真实投注的方案 对应投注号码
