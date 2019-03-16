@@ -86,18 +86,6 @@ export class InvestInfoBase {
 
     /**
      *
-     * 是否是真实投注
-     */
-    isRealInvest: number;
-
-    /**
-     *
-     * 是否是 模拟方案1 投注
-     */
-    isMockPlan01: number;
-
-    /**
-     *
      *
      * 投注时间
      */

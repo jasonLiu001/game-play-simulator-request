@@ -190,12 +190,6 @@ const Invest = sequelize.define('invest', {
         isWin: {//是否中奖标识
             type: Sequelize.INTEGER
         },
-        isRealInvest: {//是否是真实投注
-            type: Sequelize.INTEGER
-        },
-        isMockPlan01: {//是否是 模拟方案1 投注
-            type: Sequelize.INTEGER
-        },
         investTime: {//投注日期和时间
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW,
@@ -274,12 +268,6 @@ const InvestTotal = sequelize.define('invest_total', {
             type: Sequelize.INTEGER
         },
         isWin: {//是否中奖标识
-            type: Sequelize.INTEGER
-        },
-        isRealInvest: {//是否是真实投注
-            type: Sequelize.INTEGER
-        },
-        isMockPlan01: {//是否是 模拟方案1 投注
             type: Sequelize.INTEGER
         },
         investTime: {//投注日期和时间
