@@ -7,9 +7,9 @@ import {GlobalRequest} from "../global/GlobalRequest";
 import {InvestBase} from "../services/invest/InvestBase";
 import {ConstVars} from "../global/ConstVars";
 import {InvestTableService} from "../services/dbservices/services/InvestTableService";
-import moment  = require('moment');
-import {EnumDbTableName} from "../models/EnumModel";
 import {InvestQuery} from "../models/query/InvestQuery";
+import moment  = require('moment');
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
@@ -25,7 +25,7 @@ export class InvestController {
      *
      * 根据计划执行一键投注
      */
-    manualInvest(req: Request, res: Response): any {
+    async manualInvest(req: Request, res: Response): BlueBirdPromise<any> {
         let period: string = req.body.period;
         let planType: number = Number(req.body.planType);
         let awardMode: number = Number(req.body.awardMode);//投注模式
@@ -82,7 +82,7 @@ export class InvestController {
      *
      * 一键撤销投注
      */
-    manualCancelInvest(req: Request, res: Response): any {
+    async manualCancelInvest(req: Request, res: Response): BlueBirdPromise<any> {
         let period: string = req.body.period;
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('手动一键撤单请求已收到，参数:period=%s', period);
@@ -106,7 +106,7 @@ export class InvestController {
      *
      * 手动更新盈利
      */
-    manualCalculateWinMoney(req: Request, res: Response): any {
+    async manualCalculateWinMoney(req: Request, res: Response): BlueBirdPromise<any> {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('更新盈利请求已收到');
         investBase.calculateWinMoney()
@@ -128,7 +128,7 @@ export class InvestController {
      *
      * 获取投注列表
      */
-    getInvestList(req: Request, res: Response, next: any) {
+    async getInvestList(req: Request, res: Response, next: any): BlueBirdPromise<any> {
         let jsonRes: ResponseJson = new ResponseJson();
         //构造查询实体
         let investQuery: InvestQuery = {

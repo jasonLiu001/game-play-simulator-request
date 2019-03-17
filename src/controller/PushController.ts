@@ -5,12 +5,17 @@ import {PushSender} from "../services/notification/sender/PushSender";
 import {ConstVars} from "../global/ConstVars";
 import {InvestPushTableService} from "../services/dbservices/services/InvestPushTableService";
 import moment  = require('moment');
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('PushController');
 
 export class PushController {
-    public saveDeviceToken(req: Request, res: Response): any {
+    /**
+     *
+     * 保存token
+     */
+    async saveDeviceToken(req: Request, res: Response): BlueBirdPromise<any> {
         let deviceToken: string = req.body.deviceToken;
         let imei: string = req.body.imei;
         let pushPlatform: number = req.body.pushPlatform;
@@ -44,7 +49,11 @@ export class PushController {
             });
     }
 
-    public sendPush(req: Request, res: Response): any {
+    /**
+     *
+     * 发送push
+     */
+    async sendPush(req: Request, res: Response): BlueBirdPromise<any> {
         let title: string = req.body.title;
         let content: string = req.body.content;
 
