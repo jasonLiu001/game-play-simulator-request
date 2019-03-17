@@ -7,13 +7,13 @@ export class CommonKillNumberResult {
      *
      * 杀号号码
      */
-    public killNumber: string;
+    killNumber: string;
 
     /**
      *
      * 杀号结果
      */
-    public killNumberResult: Array<string>;
+    killNumberResult: Array<string>;
 }
 
 
@@ -26,23 +26,23 @@ export class FixedPositionKillNumberResult {
      *
      * 杀百位
      */
-    public baiWei: CommonKillNumberResult;
+    baiWei: CommonKillNumberResult;
 
     /**
      *
      * 杀十位
      */
-    public shiWei: CommonKillNumberResult;
+    shiWei: CommonKillNumberResult;
 
     /**
      *
      * 杀个位
      */
-    public geWei: CommonKillNumberResult;
+    geWei: CommonKillNumberResult;
 
     /**
      *
      * 最终杀号结果
      */
-    public finalResult: CommonKillNumberResult;
+    finalResult: CommonKillNumberResult;
 }

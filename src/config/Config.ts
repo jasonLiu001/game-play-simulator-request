@@ -1,5 +1,4 @@
 import {EnumAwardMode} from "../models/EnumModel";
-import {SettingsInfo} from "../models/db/SettingsInfo";
 
 let path = require('path');
 
@@ -65,22 +64,22 @@ export const CONFIG_CONST = {
  * */
 export class Config {
     //保存的验证码图片本地路径
-    public static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
+    static captchaImgSavePath: string = path.resolve(__dirname, "..", "captcha.jpeg");
     //invest_total表是否第一次初始化完毕
-    public static isInvestTotalTableInitCompleted: boolean = true;
+    static isInvestTotalTableInitCompleted: boolean = true;
     //invest表是否第一次初始化完毕
-    public static isInvestTableInitCompleted: boolean = true;
+    static isInvestTableInitCompleted: boolean = true;
     //当前已经实际投注的期数
-    public static currentInvestTotalCount: number = 0;
+    static currentInvestTotalCount: number = 0;
     //全局变量 程序运行时可变
-    public static globalVariable: any = {
+    static globalVariable: any = {
         last_Period: null, //上期期号 程序运行时初始化
         last_PrizeNumber: null, //上期开奖号码 程序运行时初始化
         nextPeriodInvestTime: null, //下期投注时间 程序运行时初始化
         current_Peroid: null //当前投注期号 程序运行时初始化
     };
     //投注方案
-    public static investPlan: any = {
+    static investPlan: any = {
         one: {
             investNumbers: ''
         },

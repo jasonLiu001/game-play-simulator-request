@@ -16,7 +16,7 @@ export class AppController {
      *
      * 启动app
      */
-    public async start(req: Request, res: Response): BlueBirdPromise<any> {
+    async start(req: Request, res: Response): BlueBirdPromise<any> {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
             AppServices.start();

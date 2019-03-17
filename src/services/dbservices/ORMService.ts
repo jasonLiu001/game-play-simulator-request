@@ -13,7 +13,7 @@ export class LotteryDbService {
      *
      * 测试数据库连接同时创建数据库
      */
-    public static createLotteryTable(): Promise<any> {
+    static createLotteryTable(): Promise<any> {
         //测试数据库连接
         return sequelize
             .authenticate()
@@ -65,7 +65,7 @@ export class LotteryDbService {
      *
      * 删除数据库中所有表
      */
-    public static dropAllTables() {
+    static dropAllTables() {
         return sequelize.drop();
     }
 }

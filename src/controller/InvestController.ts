@@ -17,7 +17,7 @@ let log4js = require('log4js'),
 
 class InvestControllerConfig {
     //已经投注的期号
-    public static investPeriod: string = null;
+    static investPeriod: string = null;
 }
 
 export class InvestController {

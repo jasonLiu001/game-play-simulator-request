@@ -8,21 +8,21 @@ export class PlanInfoBase<T> {
      * 期号
      * @type {string}
      */
-    public period: string;
+    period: string;
 
     /**
      *
      * 杀奇偶类型
      * @type {string}
      */
-    public jiou_type: T;
+    jiou_type: T;
 
     /**
      *
      *杀号计划 杀百位
      * @type {string}
      */
-    public killplan_bai_wei: T;
+    killplan_bai_wei: T;
 
     /**
      *
@@ -30,7 +30,7 @@ export class PlanInfoBase<T> {
      *杀号计划 杀十位
      * @type {string}
      */
-    public killplan_shi_wei: T;
+    killplan_shi_wei: T;
 
     /**
      *
@@ -38,83 +38,83 @@ export class PlanInfoBase<T> {
      *杀号计划 杀个位
      * @type {string}
      */
-    public killplan_ge_wei: T;
+    killplan_ge_wei: T;
 
     /**
      *
      * 遗漏计划 杀百位
      */
-    public missplan_bai_wei: T;
+    missplan_bai_wei: T;
 
     /**
      *
      * 遗漏计划 杀十位
      */
-    public missplan_shi_wei: T;
+    missplan_shi_wei: T;
 
     /**
      *
      * 遗漏计划 杀个位
      */
-    public missplan_ge_wei: T;
+    missplan_ge_wei: T;
 
     /**
      *
      * 断组 3-3-4
      */
-    public brokengroup_01_334: T;
+    brokengroup_01_334: T;
 
     /**
      *
      *
      * 断组 2-2-4 断组
      */
-    public brokengroup_01_224: T;
+    brokengroup_01_224: T;
 
     /**
      *
      *
      * 断组 1-2-5 断组
      */
-    public brokengroup_01_125: T;
+    brokengroup_01_125: T;
 
     /**
      *
      * 杀012路类型
      */
-    public road012_01: T;
+    road012_01: T;
 
     /**
      *
      * 杀跨度
      */
-    public number_distance: T;
+    number_distance: T;
 
     /**
      *
      * 杀和值
      */
-    public sum_values: T;
+    sum_values: T;
 
     /**
      *
      * 特殊号：三连
      */
-    public three_number_together: T;
+    three_number_together: T;
 
     /**
      *
      * 杀百位
      * @type {string}
      */
-    public killbaiwei_01: T;
+    killbaiwei_01: T;
 
     /**
      *
      * 杀十位
      * @type {string}
      */
-    public killshiwei_01: T;
+    killshiwei_01: T;
 
     /**
      *
@@ -122,17 +122,17 @@ export class PlanInfoBase<T> {
      * 杀个位
      * @type {string}
      */
-    public killgewei_01: T;
+    killgewei_01: T;
 
     /**
      *
      * 6胆
      */
-    public bravenumber_6_01: T;
+    bravenumber_6_01: T;
 
     /**
      *
      * 当前数据是否已经更新
      */
-    public status: number;
+    status: number;
 }

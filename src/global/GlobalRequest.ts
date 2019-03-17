@@ -17,5 +17,5 @@ let cookie = Request.jar(),
  * 全局的Request对象
  */
 export class GlobalRequest {
-    public static request: any = request;
+    static request: any = request;
 }

@@ -13,7 +13,7 @@ class PlanBaseModelDefinition {
      * 根据传递的类型返回新的实体
      * @param type
      */
-    public static getModelDefinition(type) {
+    static getModelDefinition(type) {
         return {
             period: {//期号
                 type: Sequelize.STRING,

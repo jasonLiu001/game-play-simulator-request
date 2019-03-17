@@ -226,7 +226,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param request
      * @param touZhuBeiShu
      */
-    public multiInvest(request: any, touZhuBeiShu: string = '1') {
+    multiInvest(request: any, touZhuBeiShu: string = '1') {
         let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
         let currentNextPeriod = TimeServiceV2.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
