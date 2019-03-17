@@ -41,15 +41,30 @@ export abstract class QueryBase {
 
     /**
      *
-     * 构建查询参数实体
+     * 构建GET方法查询参数实体
      */
     protected buildQueryEntity<T extends QueryBase>(req: Request, args: T): T {
         args.tableName = req.query.tableName;
-        args.pageIndex = req.query.pageIndex;
-        args.pageSize = req.query.pageSize;
-        args.planType = req.query.planType;
+        args.pageIndex = Number(req.query.pageIndex);
+        args.pageSize = Number(req.query.pageSize);
+        args.planType = Number(req.query.planType);
         args.startTime = req.query.startTime;
         args.endTime = req.query.endTime;
+        return args;
+    }
+
+    /**
+     *
+     *
+     * 构建POST方法查询参数实体
+     */
+    protected buildBodyEntity<T extends QueryBase>(req: Request, args: T): T {
+        args.tableName = req.body.tableName;
+        args.pageIndex = Number(req.body.pageIndex);
+        args.pageSize = Number(req.body.pageSize);
+        args.planType = Number(req.body.planType);
+        args.startTime = req.body.startTime;
+        args.endTime = req.body.endTime;
         return args;
     }
 }
