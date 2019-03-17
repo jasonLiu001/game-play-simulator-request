@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-export const sequelize = new Sequelize('reward', 'reward', 'Fkwy++88ah', {
-    host: '47.104.87.20',
+export const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
+    host: 'localhost',
     port: 3306,
     dialect: 'mysql',
     dialectOptions: {},
