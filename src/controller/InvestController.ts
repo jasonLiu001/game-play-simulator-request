@@ -8,6 +8,8 @@ import {InvestBase} from "../services/invest/InvestBase";
 import {ConstVars} from "../global/ConstVars";
 import {InvestTableService} from "../services/dbservices/services/InvestTableService";
 import moment  = require('moment');
+import {EnumDbTableName} from "../models/EnumModel";
+import {InvestQuery} from "../models/query/InvestQuery";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
@@ -23,7 +25,7 @@ export class InvestController {
      *
      * 根据计划执行一键投注
      */
-    public manualInvest(req: Request, res: Response): any {
+    manualInvest(req: Request, res: Response): any {
         let period: string = req.body.period;
         let planType: number = Number(req.body.planType);
         let awardMode: number = Number(req.body.awardMode);//投注模式
@@ -80,7 +82,7 @@ export class InvestController {
      *
      * 一键撤销投注
      */
-    public manualCancelInvest(req: Request, res: Response): any {
+    manualCancelInvest(req: Request, res: Response): any {
         let period: string = req.body.period;
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('手动一键撤单请求已收到，参数:period=%s', period);
@@ -104,7 +106,7 @@ export class InvestController {
      *
      * 手动更新盈利
      */
-    public manualCalculateWinMoney(req: Request, res: Response): any {
+    manualCalculateWinMoney(req: Request, res: Response): any {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('更新盈利请求已收到');
         investBase.calculateWinMoney()
@@ -120,5 +122,34 @@ export class InvestController {
                 log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             })
+    }
+
+    /**
+     *
+     * 获取投注列表
+     */
+    getInvestList(req: Request, res: Response, next: any) {
+        let jsonRes: ResponseJson = new ResponseJson();
+        //构造查询实体
+        let investQuery: InvestQuery = {
+            tableName: req.query.tableName,
+            pageIndex: req.query.pageIndex,
+            pageSize: req.query.pageSize,
+            planType: req.query.planType,
+            startTime: req.query.startTime,
+            endTime: req.query.endTime
+        };
+
+        InvestTableService.getInvestListByTableName(investQuery)
+            .then(() => {
+                let successMsg: string = "获取投注列表成功";
+                jsonRes.success(successMsg);
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "获取投注列表失败";
+                jsonRes.fail(errMsg, e.message);
+                return res.status(200).send(jsonRes);
+            });
     }
 }

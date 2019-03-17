@@ -13,4 +13,7 @@ router.post('/manualCancelInvest', investController.manualCancelInvest);
 //手动更新盈利
 router.post('/manualCalculateWinMoney', investController.manualCalculateWinMoney);
 
+//获取invest和invest_total表所有投注记录
+router.get('/getInvestList', investController.getInvestList);
+
 module.exports = router;

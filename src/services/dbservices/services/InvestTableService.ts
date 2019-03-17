@@ -5,17 +5,19 @@ import {sequelize} from "../../../global/GlobalSequelize";
 import {InvestInfo} from "../../../models/db/InvestInfo";
 import {EnumDbTableName} from "../../../models/EnumModel";
 import {InvestTotalInfo} from "../../../models/db/InvestTotalInfo";
+import {InvestQuery} from "../../../models/query/InvestQuery";
+import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-export class InvestTableService{
+export class InvestTableService {
     //region Invest表
     /**
      *
      * 获取投注信息
      */
-    public static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
+    static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
         return InvestTable.findOne({
             where: {period: period, planType: planType},
             raw: true
@@ -30,7 +32,7 @@ export class InvestTableService{
      * @param {number} planType
      * @returns {Bluebird<any>}
      */
-    public static getMaxAndMinProfitFromInvest(dateArray: Array<string>, planType: number): Promise<any> {
+    static getMaxAndMinProfitFromInvest(dateArray: Array<string>, planType: number): Promise<any> {
         let dateSql = '';//时间Sql
         dateArray.forEach((item, index) => {
             if (index < dateArray.length && dateArray.length > 1) {
@@ -54,7 +56,7 @@ export class InvestTableService{
      *
      * 保存或者更新投注信息
      */
-    public static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
+    static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
         return InvestTable.findOne(
             {
                 where: {
@@ -88,7 +90,7 @@ export class InvestTableService{
      *
      * 批量保存或者更新投注信息
      */
-    public static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
+    static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investInfo of investInfoList) {
             promiseArray.push(InvestTableService.saveOrUpdateInvestInfo(investInfo));
@@ -100,7 +102,7 @@ export class InvestTableService{
      *
      * 获取特定数量的最新投注记录
      */
-    public static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+    static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
         if (afterTime == "") {
             return InvestTable.findAll({
                 limit: historyCount,
@@ -136,7 +138,7 @@ export class InvestTableService{
      * SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status =1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
-    public static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
+    static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + "  AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
@@ -157,6 +159,7 @@ export class InvestTableService{
         //     raw: true
         // });
     }
+
     //endregion
 
     //region 所有计划每局投注明细invest_total表
@@ -164,7 +167,7 @@ export class InvestTableService{
      *
      * 获取投注信息
      */
-    public static getInvestTotalInfo(period: string, planType: number): Promise<InvestTotalInfo> {
+    static getInvestTotalInfo(period: string, planType: number): Promise<InvestTotalInfo> {
         return InvestTotalTable.findOne({
             where: {period: period, planType: planType},
             raw: true
@@ -175,7 +178,7 @@ export class InvestTableService{
      *
      * 保存或者更新投注信息
      */
-    public static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
+    static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
         return InvestTotalTable.findOne(
             {
                 where: {
@@ -209,7 +212,7 @@ export class InvestTableService{
      *
      * 批量保存或者更新投注信息
      */
-    public static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
+    static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investTotal of investTotalInfoList) {
             promiseArray.push(InvestTableService.saveOrUpdateInvestTotalInfo(investTotal));
@@ -221,7 +224,7 @@ export class InvestTableService{
      *
      * 获取特定数量的最新投注记录
      */
-    public static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+    static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
         if (afterTime == "") {
             return InvestTotalTable.findAll({
                 limit: historyCount,
@@ -255,7 +258,7 @@ export class InvestTableService{
      * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
      */
-    public static getInvestTotalInfoListByStatus(status: number): Promise<Array<any>> {
+    static getInvestTotalInfoListByStatus(status: number): Promise<Array<any>> {
         let sql = "SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
 
@@ -287,7 +290,7 @@ export class InvestTableService{
      * @param {string} period 期号
      * @param {number} planType 计划类型
      */
-    public static getInvestByTableName(tableName: string, period: string, planType: number): Promise<InvestInfo> {
+    static getInvestByTableName(tableName: string, period: string, planType: number): Promise<InvestInfoBase> {
         if (tableName == EnumDbTableName.INVEST) {
             return InvestTableService.getInvestInfo(period, planType);
         } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
@@ -296,5 +299,23 @@ export class InvestTableService{
             return Promise.resolve(null);
         }
     }
+
+    /**
+     *
+     * 查询invest或investTotal表投注记录
+     * @param {InvestQuery} invest
+     * @returns {Bluebird<InvestInfoBase>}
+     */
+    static getInvestListByTableName(invest: InvestQuery): Promise<InvestInfoBase> {
+        if (invest.tableName == EnumDbTableName.INVEST) {
+            //todo:查询invest表数据
+
+        } else if (invest.tableName == EnumDbTableName.INVEST_TOTAL) {
+            //todo:查询invest_total表数据
+        }
+
+        return Promise.resolve(null);
+    }
+
     //endregion
 }
