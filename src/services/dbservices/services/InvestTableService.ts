@@ -13,16 +13,11 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 export class InvestTableService {
-    //region Invest表
     /**
      *
-     *
      * 获取某一时期内的最大利润和最小利润值
-     * @param {Array} dateArray 支持多个日期
-     * @param {number} planType
-     * @returns {Bluebird<any>}
      */
-    static getMaxAndMinProfitFromInvest(dateArray: Array<string>, planType: number): Promise<any> {
+    static getMaxAndMinProfitByTableName(tableName: string, dateArray: Array<string>, planType: number): Promise<any> {
         let dateSql = '';//时间Sql
         dateArray.forEach((item, index) => {
             if (index < dateArray.length && dateArray.length > 1) {
@@ -32,7 +27,7 @@ export class InvestTableService {
             }
         });
 
-        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxAccountBalance,MIN(t.`currentAccountBalance`) AS minAccountBalance FROM invest t WHERE t.`investDate` in(" + dateSql + ") AND t.`planType`=" + planType + ' AND t.`investTimestamp`>\'10:00:00\' AND t.`investTimestamp`<\'22:00:00\'';
+        let sql = "SELECT MAX(t.`currentAccountBalance`) AS maxAccountBalance,MIN(t.`currentAccountBalance`) AS minAccountBalance FROM " + tableName + " AS t WHERE t.`investDate` in(" + dateSql + ") AND t.`planType`=" + planType + ' AND t.`investTimestamp`>\'10:00:00\' AND t.`investTimestamp`<\'22:00:00\'';
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT})
             .then((results: Array<any>) => {
                 return {
@@ -45,64 +40,12 @@ export class InvestTableService {
     /**
      *
      * 根据状态获取投注信息
-     * SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status =1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
-     * @param status 0：未开奖，1：已开奖
-     */
-    static getInvestInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + "  AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
-        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
-
-        ////这里的表关联暂时无法使用
-        // return InvestTable.findAll({
-        //     where: {
-        //         status: status
-        //     },
-        //     order: [
-        //         ['period', 'ASC']
-        //     ],
-        //     include: [{
-        //         model: AwardTable,
-        //         required: true,
-        //         attributes: ['openNumber', 'openTime'],
-        //         where: {period: Sequelize.col('award.period')}
-        //     }],
-        //     raw: true
-        // });
-    }
-
-    //endregion
-
-    //region 所有计划每局投注明细invest_total表
-
-    /**
-     *
-     * 根据状态获取投注信息
      * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
-     * @param status 0：未开奖，1：已开奖
      */
-    static getInvestTotalInfoListByStatus(status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
+    static getInvestTotalInfoListStatusByTableName(tableName: string, status: number): Promise<Array<any>> {
+        let sql = "SELECT i.*, a.openNumber FROM " + tableName + " AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
-
-        ////这里的表关联暂时无法使用
-        // return InvestTotalTable.findAll({
-        //     where: {
-        //         status: status
-        //     },
-        //     order: [
-        //         ['period', 'ASC']
-        //     ],
-        //     include: [{
-        //         model: AwardTable,
-        //         required: true,
-        //         attributes: ['openNumber', 'openTime'],
-        //         where: {period: Sequelize.col('award.period')}
-        //     }],
-        //     raw: true
-        // });
     }
-
-    //endregion
 
     /**
      *

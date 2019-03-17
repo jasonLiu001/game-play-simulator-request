@@ -188,7 +188,7 @@ export class NotificationService {
         let yesterday: string = moment().subtract(1, 'days').format(ConstVars.momentDateFormatter);
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值
-        let yesterdayAccountBalance: any = await InvestTableService.getMaxAndMinProfitFromInvest(yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
+        let yesterdayAccountBalance: any = await InvestTableService.getMaxAndMinProfitByTableName(EnumDbTableName.INVEST, yesterdayArray, CONFIG_CONST.currentSelectedInvestPlanType);
         let emailTitle = '方案【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 亏损状态提醒';//通知邮件标题
         let emailContent = '方案 【' + CONFIG_CONST.currentSelectedInvestPlanType + '】 昨天 ' + yesterday + ' 截止22:00:00， 状态为亏损，最大余额：' + yesterdayAccountBalance.maxAccountBalance + ', 最小余额：' + yesterdayAccountBalance.minAccountBalance;//通知邮件内容
         if (yesterdayAccountBalance.maxAccountBalance < CONFIG_CONST.originAccountBalance) {//最大利润小于初始账号 亏损

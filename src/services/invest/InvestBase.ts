@@ -331,9 +331,9 @@ export class InvestBase {
         let resultList;
 
         if (tableName === EnumDbTableName.INVEST) {
-            resultList = await InvestTableService.getInvestInfoListByStatus(0);
+            resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST, 0);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            resultList = await InvestTableService.getInvestTotalInfoListByStatus(0);
+            resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST_TOTAL, 0);
         }
         if (!resultList) return BlueBirdPromise.resolve([]);
 

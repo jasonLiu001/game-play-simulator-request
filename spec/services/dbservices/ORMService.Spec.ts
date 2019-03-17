@@ -1,6 +1,7 @@
 import "jasmine";
 import {LotteryDbService} from "../../../src/services/dbservices/ORMService";
 import {InvestTableService} from "../../../src/services/dbservices/services/InvestTableService";
+import {EnumDbTableName} from "../../../src/models/EnumModel";
 
 describe('ORMService Test', () => {
     beforeEach((done) => {
@@ -8,7 +9,7 @@ describe('ORMService Test', () => {
     });
 
     it('getInvestInfoListByStatus Test', (done) => {
-        InvestTableService.getInvestInfoListByStatus(0)
+        InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST, 0)
             .then((res) => {
                 console.log(res);
                 done();
