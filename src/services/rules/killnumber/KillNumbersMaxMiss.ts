@@ -40,7 +40,6 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules<Fixed
             });
     }
 
-
     filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         //保存杀号结果
@@ -71,5 +70,4 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules<Fixed
             });
 
     }
-
 }

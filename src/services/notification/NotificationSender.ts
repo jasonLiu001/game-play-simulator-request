@@ -17,7 +17,7 @@ export class NotificationSender {
      *
      * 发送提醒 多种方式
      */
-    public static send(title: string, content: string, notificationType: EnumNotificationType): BlueBirdPromise<any> {
+    static send(title: string, content: string, notificationType: EnumNotificationType): BlueBirdPromise<any> {
 
         let promiseArray: Array<BlueBirdPromise<any>> = [];
 

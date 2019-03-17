@@ -17,7 +17,7 @@ export class Analysis360Service implements IAnalysisCrawler {
      *
      * 杀号索引 在图表上的列索引 根据这个索引可以找到要杀的号码
      */
-    public static killNumberIndex: number = null;
+    static killNumberIndex: number = null;
 
     /**
      *
@@ -75,7 +75,7 @@ export class Analysis360Service implements IAnalysisCrawler {
      * @param killNumberPosition
      * @return 返回需要杀掉的号码数组
      */
-    public getKillNumber(killNumberPosition: EnumKillNumberPosition): Promise<any> {
+    getKillNumber(killNumberPosition: EnumKillNumberPosition): Promise<any> {
         return new Promise((resolve, reject) => {
             request(
                 {
@@ -149,7 +149,7 @@ export class Analysis360Service implements IAnalysisCrawler {
      * 获取最大遗漏号码
      * 返回需要杀掉号码组成的数组
      */
-    public getMaxMissNumber(maxMissNumberPosition: EnumKillNumberPosition): Promise<any> {
+    getMaxMissNumber(maxMissNumberPosition: EnumKillNumberPosition): Promise<any> {
         return new Promise((resolve, reject) => {
             request(
                 {

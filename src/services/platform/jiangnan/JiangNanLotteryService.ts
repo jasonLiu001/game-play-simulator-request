@@ -18,7 +18,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 产生平台投注模式 元，角，分，厘
      */
-    public getInvestMode(awardMode: number): any {
+    getInvestMode(awardMode: number): any {
         let mode = String(EnumAwardMode.feng);//默认为分模式
         switch (awardMode) {
             case EnumAwardMode.yuan:
@@ -42,7 +42,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 获取当前账号余额
      */
-    public getBalance(request: any): BlueBirdPromise<any> {
+    getBalance(request: any): BlueBirdPromise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + '/userInfo/getBalance.mvc');
     }
 
@@ -50,7 +50,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 登录成功后，获取用户信息
      */
-    public getLoginUserInfo(request: any): BlueBirdPromise<any> {
+    getLoginUserInfo(request: any): BlueBirdPromise<any> {
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/userInfo/getUserInfo.mvc', {
             menuName: ''
         });
@@ -61,7 +61,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 产生投注的token  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      */
-    public getInvestToken(request: any): BlueBirdPromise<any> {
+    getInvestToken(request: any): BlueBirdPromise<any> {
         return new BlueBirdPromise((resolve, reject) => {
             request.post(
                 {
@@ -137,7 +137,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行追号投注操作
      */
-    public multiInvestMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
+    multiInvestMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
         let investStr = this.getMultiInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
@@ -149,7 +149,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
+    investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
         let investStr = this.getInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
@@ -163,7 +163,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 投注准备
      */
-    public investPrepare(request: any): BlueBirdPromise<any> {
+    investPrepare(request: any): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/pchome')
             .then(() => {
                 return this.getLoginUserInfo(request);
@@ -183,7 +183,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param request
      * @param investInfo 数据库记录实体
      */
-    public invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.investPrepare(request)
             .then((token) => {
                 return this.investMock(request, token, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);

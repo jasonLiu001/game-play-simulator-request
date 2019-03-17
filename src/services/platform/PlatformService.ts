@@ -22,7 +22,7 @@ export class PlatformService {
      * @param request
      * @param investInfo
      */
-    public static async loginAndInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    static async loginAndInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         log.info('正在执行真实登录...');
         //使用request投注 需要先登录在投注 每次投注前都需要登录
         return jiangNanLoginService.login(request)
@@ -55,7 +55,7 @@ export class PlatformService {
      * @param request
      * @param cancelPeriod 撤单期号
      */
-    public static async cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
+    static async cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
         log.info('执行一键撤单，开始登录...');
         return jiangNanLoginService.login(request)
             .then((loginResult) => {

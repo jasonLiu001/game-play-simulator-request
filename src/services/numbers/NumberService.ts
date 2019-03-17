@@ -82,7 +82,7 @@ export class NumberService extends AbstractRuleBase {
             });
     }
 
-    public generateInvestNumber(): Promise<string> {
+    generateInvestNumber(): Promise<string> {
         let promiseAllResult: any = null;
         //首先初始化计划相关表
         return this.initAllRelatedPlanInfoTables()
@@ -208,7 +208,7 @@ export class NumberService extends AbstractRuleBase {
      *
      * 检查上期开奖号码是否满足投注条件
      */
-    public isLastPrizeNumberValid(): Promise<boolean> {
+    isLastPrizeNumberValid(): Promise<boolean> {
         //region 偶偶奇过滤条件[已废弃]
         //开奖号码
         let prizeNumber: OpenNumber = this.getPrizeNumberObj();

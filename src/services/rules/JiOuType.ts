@@ -12,7 +12,7 @@ let log4js = require('log4js'),
  * 杀奇偶类型
  */
 export class JiOuType extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
-    public filterNumbers(): Promise<CommonKillNumberResult> {
+    filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         //开奖号码

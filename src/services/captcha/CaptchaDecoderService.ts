@@ -10,7 +10,7 @@ let fs = require('fs'),
     request = require("request");
 
 export class CaptchaDecoderService {
-    public decoder(): Promise<ResponseData> {
+    decoder(): Promise<ResponseData> {
         return new Promise((resolve, reject) => {
             let formData = {
                 'user': CONFIG_CONST.username,

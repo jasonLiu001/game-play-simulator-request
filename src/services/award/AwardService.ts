@@ -30,7 +30,7 @@ export class AwardService {
      *
      * 开始获取奖号
      */
-    public static startGetAwardInfoTask(success?: Function): void {
+    static startGetAwardInfoTask(success?: Function): void {
         ScheduleTaskList.awardFetchTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.awardFetchTaskEntity.cronTimeStr, () => {
             let newAwardInfo: AwardInfo = null;
             TimeServiceV2.isInvestTime()
@@ -87,7 +87,7 @@ export class AwardService {
      *
      * 获取开奖信息
      */
-    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
+    static saveOrUpdateAwardInfo(award: AwardInfo): Promise<any> {
         log.info('正在保存第三方开奖数据...');
         //更新全局变量
         Config.globalVariable.last_Period = award.period;
@@ -106,7 +106,7 @@ export class AwardService {
      *
      * 保存历史开奖号码到数据库
      */
-    public static saveOrUpdateHistoryAwardByDate(periodDate: string): Promise<any> {
+    static saveOrUpdateHistoryAwardByDate(periodDate: string): Promise<any> {
         return Award500comService.getHistoryAwardByDate(periodDate)
             .then((historyAwards: Array<AwardInfo>) => {
                 return AwardTableService.saveOrUpdateAwardInfoList(historyAwards);

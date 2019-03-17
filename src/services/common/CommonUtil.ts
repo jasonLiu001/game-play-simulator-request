@@ -17,7 +17,7 @@ export class CommonUtil {
      *
      * Http的Get请求
      */
-    public static async httpGet(url: string): Promise<any> {
+    static async httpGet(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
             GlobalRequest.request(
                 {
@@ -39,7 +39,7 @@ export class CommonUtil {
      *
      * 产生推送签名
      */
-    public static getPushSign(title: string, content: string, xGPushModel: XGPushModel): string {
+    static getPushSign(title: string, content: string, xGPushModel: XGPushModel): string {
         let signContent: string = "GETopenapi.xg.qq.com/v2/push/single_deviceaccess_id=" + xGPushModel.access_id
             + "device_token=" + xGPushModel.device_token + "expire_time=" + xGPushModel.expire_time
             + "message={\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}"
@@ -54,7 +54,7 @@ export class CommonUtil {
      *
      * 请求的url中，如果包含中文，一定记得要编码
      */
-    public static getPushSignUrl(title: string, content: string, xGPushModel: XGPushModel, sign: string): string {
+    static getPushSignUrl(title: string, content: string, xGPushModel: XGPushModel, sign: string): string {
         return "http://openapi.xg.qq.com/v2/push/single_device?access_id="
             + xGPushModel.access_id + "&timestamp=" + xGPushModel.timestamp + "&device_token=" + xGPushModel.device_token
             + "&message_type=1&expire_time=" + xGPushModel.expire_time + "&message=" + encodeURIComponent("{\"content\":\"" + content + "\",\"title\":\"" + title + "\",\"vibrate\":1}") + "&sign=" + encodeURIComponent(sign);

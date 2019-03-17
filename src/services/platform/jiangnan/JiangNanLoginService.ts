@@ -27,7 +27,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      *
      * 开始模拟登录操作
      */
-    public loginMock(request: any, captchaCodeString: string): Promise<any> {
+    loginMock(request: any, captchaCodeString: string): Promise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + "/login/need-validate-code.mvc")
             .then(() => {
                 return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login/safe.mvc?');
@@ -54,7 +54,7 @@ export class JiangNanLoginService extends PlatformAbstractBase implements IPlatf
      *
      * 返回数据：{"msg":"","code":200,"data":null}
      */
-    public login(request: any): Promise<any> {
+    login(request: any): Promise<any> {
         return this.gotoLoginPage(request, '/pc')
             .then((indexContent) => {
                 //请求验证码

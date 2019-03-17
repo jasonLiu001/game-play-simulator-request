@@ -23,7 +23,7 @@ export class Vbc02LoginService extends PlatformAbstractBase implements IPlatform
      *
      * 开始模拟登录操作
      */
-    public loginMock(request: any, captchaCodeString: string): Promise<any> {
+    loginMock(request: any, captchaCodeString: string): Promise<any> {
         //输出request调试信息
         //require('request').debug = true;
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/login', {
@@ -39,7 +39,7 @@ export class Vbc02LoginService extends PlatformAbstractBase implements IPlatform
      *
      * 对外的调用接口
      */
-    public login(request: any): Promise<any> {
+    login(request: any): Promise<any> {
         return this.gotoLoginPage(request, '/login')
             .then((indexContent) => {
                 //请求验证码

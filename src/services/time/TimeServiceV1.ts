@@ -14,7 +14,7 @@ export class TimeServiceV1 {
      *
      * 更新下期可投注时间
      */
-    public static updateNextPeriodInvestTime(): void {
+    static updateNextPeriodInvestTime(): void {
         Config.globalVariable.nextPeriodInvestTime = TimeServiceV1.getNextOpenTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);//更新开奖时间
     }
 
@@ -25,7 +25,7 @@ export class TimeServiceV1 {
      * @param delaySeconds
      * @return {any}
      */
-    public static isInvestTime(): Promise<boolean> {
+    static isInvestTime(): Promise<boolean> {
         let currentTime: Date = new Date();//当前时间
         let delaySeconds: number = CONFIG_CONST.openTimeDelaySeconds;//开奖延迟时间
         if (Config.globalVariable.nextPeriodInvestTime == null) {
@@ -186,7 +186,7 @@ export class TimeServiceV1 {
      *
      * 获取当前投注的期号 格式为：20170625-080
      */
-    public static getCurrentPeriodNumber(currentTime: Date): string {
+    static getCurrentPeriodNumber(currentTime: Date): string {
         let periodList: Array<PeriodTime> = this.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -209,7 +209,7 @@ export class TimeServiceV1 {
      *
      * 获取上期投注的期号 格式为：20170625-080
      */
-    public static getLastPeriodNumber(currentTime: Date): string {
+    static getLastPeriodNumber(currentTime: Date): string {
         let periodList: Array<PeriodTime> = this.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间 初始值为无穷大
@@ -232,7 +232,7 @@ export class TimeServiceV1 {
      * 获取当前期号的下期 期号 格式为：20170625-080
      * @param currentTime
      */
-    public static getCurrentNextPeriodNumber(currentTime: Date): string {
+    static getCurrentNextPeriodNumber(currentTime: Date): string {
         let periodList: Array<PeriodTime> = TimeServiceV1.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
@@ -254,7 +254,7 @@ export class TimeServiceV1 {
      *
      * 是否是停止买卖时间  02:00-10:00 停止购买
      */
-    public static isInStopInvestTime(): boolean {
+    static isInStopInvestTime(): boolean {
         let currentTime = new Date();
         let year = currentTime.getFullYear();
         let month = currentTime.getMonth();
@@ -272,7 +272,7 @@ export class TimeServiceV1 {
      *
      * 是否到达设置中的结束投注时间
      */
-    public static isReachInvestEndTime(): boolean {
+    static isReachInvestEndTime(): boolean {
         //0 不限制投注时间
         if (AppSettings.realInvestEndTime == '0') return false;
 

@@ -210,7 +210,7 @@ export class InvestBase {
      *
      * 是否可投注检查
      */
-    public doCheck(): BlueBirdPromise<boolean> {
+    doCheck(): BlueBirdPromise<boolean> {
         //检查投注时间 在02:00-10:00点之间不允许投注 当天22:00以后自动切换到模拟投注
         return this.checkInvestTime()
             .then(() => {
@@ -277,7 +277,7 @@ export class InvestBase {
      *
      * 初始化投注信息 投注后 账户余额等信息
      */
-    public async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
+    async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
         log.info('初始化表%s投注数据', tableName);
         let allPlanInvests: Array<InvestInfo> = [];
         let planType: number = 1;
@@ -380,7 +380,7 @@ export class InvestBase {
      *
      * 计算上期盈亏
      */
-    public async calculateWinMoney(): BlueBirdPromise<any> {
+    async calculateWinMoney(): BlueBirdPromise<any> {
         //更新invest表余额
         let updateInvestResult = await this.updateInvestWinMoney(EnumDbTableName.INVEST);
         //更新invest_total表余额

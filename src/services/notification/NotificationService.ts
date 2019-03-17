@@ -24,11 +24,11 @@ let log4js = require('log4js'),
  */
 class NotificationConfig {
     //invest数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
-    public static invest_lastedRealInvestPeriod: string = null;
+    static invest_lastedRealInvestPeriod: string = null;
     //invest_total数据表中 当天已经保存的最新的投注期号 用于不重复发送通知邮件
-    public static investTotal_lastedRealInvestPeriod: string = null;
+    static investTotal_lastedRealInvestPeriod: string = null;
     //数据库中 达到利润预警值的投注期号 用于不重复发送通知邮件
-    public static todayMaxOrMinProfitInvestPeriod: string = null;
+    static todayMaxOrMinProfitInvestPeriod: string = null;
 }
 
 /**
@@ -41,7 +41,7 @@ export class NotificationService {
      *
      * 间隔2分钟检查是否需要发送通知  入口方法
      */
-    public async start(): BlueBirdPromise<any> {
+    async start(): BlueBirdPromise<any> {
         log.info('通知已启动，持续监视中...');
         //2分钟检查一次是否需要发送通知
         ScheduleTaskList.notificationTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.notificationTaskEntity.cronTimeStr, () => {
@@ -55,7 +55,7 @@ export class NotificationService {
      *
      * 检查并同时发送通知
      */
-    public async checkAndSendNotification(): BlueBirdPromise<any> {
+    async checkAndSendNotification(): BlueBirdPromise<any> {
         log.info("正在同步应用程序所有参数设置，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
         return SettingService.getAndInitSettings()
             .then(() => {
@@ -153,7 +153,7 @@ export class NotificationService {
      *
      * 达到指定利润发送预警邮件
      */
-    public async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
+    async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
         let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
@@ -184,7 +184,7 @@ export class NotificationService {
      *
      * 前一天的账号余额 低于特定值时发送通知
      */
-    public async whenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any> {
+    async whenYesterdayAccountBalanceLowerThan(): BlueBirdPromise<any> {
         let yesterday: string = moment().subtract(1, 'days').format(ConstVars.momentDateFormatter);
         let yesterdayArray: Array<string> = [yesterday];
         //昨天的最大最小值
@@ -207,7 +207,7 @@ export class NotificationService {
      * 连中：5,4,3
      * 连错：5,4,3
      */
-    public async sendContinueWinOrLoseWarnEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
+    async sendContinueWinOrLoseWarnEmail(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
         //方案 连续5,4,3期错误 发送邮件提醒
         return await  this.continueWinOrLose(tableName, planType, maxWinOrLoseCount, isWin, latestOppositeWinOrLoseCount);
     }
@@ -360,7 +360,7 @@ export class NotificationService {
      *
      * 发送购买提醒
      */
-    public async sendBuyNumberNotification(): BlueBirdPromise<any> {
+    async sendBuyNumberNotification(): BlueBirdPromise<any> {
         let emailTitle = "【" + Config.globalVariable.current_Peroid + "】期投注提醒";
         let emailContent = "【" + Config.globalVariable.current_Peroid + "】期已执行投注！投注时间【" + moment().format(ConstVars.momentDateTimeFormatter) + "】，选择方案【" + CONFIG_CONST.currentSelectedInvestPlanType + "】";
         let promiseArray: Array<BlueBirdPromise<any>> = [];

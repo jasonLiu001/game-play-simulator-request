@@ -2,8 +2,8 @@ import Promise = require('bluebird');
 import {InvestPush} from "../tables/InvestPushTable";
 import {InvestPushInfo} from "../../../models/db/InvestPushInfo";
 
-export class InvestPushTableService{
-    public static saveOrUpdateInvestPushInfo(investPush: InvestPushInfo): Promise<InvestPushInfo> {
+export class InvestPushTableService {
+    static saveOrUpdateInvestPushInfo(investPush: InvestPushInfo): Promise<InvestPushInfo> {
         return InvestPush.findOne(
             {
                 where: {
@@ -37,7 +37,7 @@ export class InvestPushTableService{
      *
      * 批量保存推送信息
      */
-    public static saveOrUpdateInvestPushInfoList(investPushList: Array<InvestPushInfo>): Promise<Array<InvestPushInfo>> {
+    static saveOrUpdateInvestPushInfoList(investPushList: Array<InvestPushInfo>): Promise<Array<InvestPushInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investPush of investPushList) {
             promiseArray.push(InvestPushTableService.saveOrUpdateInvestPushInfo(investPush));
@@ -52,7 +52,7 @@ export class InvestPushTableService{
      * @param pushPlatform push厂商平台 参见枚举类EnumPushPlatformType
      * @param pushVendorType push厂商枚举 参见枚举类EnumPushVendorType
      */
-    public static getInvestPushInfoHistory(historyCount: number, pushPlatform: number, pushVendorType: string): Promise<Array<any>> {
+    static getInvestPushInfoHistory(historyCount: number, pushPlatform: number, pushVendorType: string): Promise<Array<any>> {
         return InvestPush.findAll({
             limit: historyCount,
             order: [

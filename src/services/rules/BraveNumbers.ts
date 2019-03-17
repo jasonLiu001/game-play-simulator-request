@@ -13,7 +13,7 @@ let log4js = require('log4js'),
  * 倒数第一期万位分别加1,6,9,3,8,4后的各自结果取和尾组成6位胆码
  */
 export class BraveNumbers extends AbstractRuleBase implements IRules<CommonKillNumberResult> {
-    public filterNumbers(): Promise<CommonKillNumberResult> {
+    filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         let restNumberArray: Array<string> = [];
         //开奖号码

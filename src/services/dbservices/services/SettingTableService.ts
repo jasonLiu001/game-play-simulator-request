@@ -2,12 +2,12 @@ import Promise = require('bluebird');
 import {SettingsInfo, UpdateSettingsInfo} from "../../../models/db/SettingsInfo";
 import {SettingTable} from "../tables/SettingTable";
 
-export class SettingTableService{
+export class SettingTableService {
     /**
      *
      * 获取所有的参数设置信息
      */
-    public static getSettingsInfoList(): Promise<Array<SettingsInfo>> {
+    static getSettingsInfoList(): Promise<Array<SettingsInfo>> {
         return SettingTable.findAll({
             order: [
                 ['orderId', 'ASC']
@@ -20,7 +20,7 @@ export class SettingTableService{
      *
      * 保存或更新设置
      */
-    public static saveOrUpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
+    static saveOrUpdateSettingsInfo(settingsInfo: UpdateSettingsInfo): Promise<SettingsInfo> {
         return SettingTable.findOne(
             {
                 where: {key: settingsInfo.key},

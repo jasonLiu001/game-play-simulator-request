@@ -17,7 +17,7 @@ export class SettingService {
      *
      * 初始化设置
      */
-    public static initSettings(settingInfoList: Array<SettingsInfo>): void {
+    static initSettings(settingInfoList: Array<SettingsInfo>): void {
         for (let index in settingInfoList) {
             let item = settingInfoList[index];
             if (item.key === 'originAccountBalance') {
@@ -91,7 +91,7 @@ export class SettingService {
      *
      * 从数据库中获取配置并初始化
      */
-    public static getAndInitSettings(): BlueBirdPromise<any> {
+    static getAndInitSettings(): BlueBirdPromise<any> {
         return SettingTableService.getSettingsInfoList()
             .then((settingInfoList: Array<SettingsInfo>) => {
                 SettingService.initSettings(settingInfoList);
@@ -106,7 +106,7 @@ export class SettingService {
      *
      * 切换到模拟投注
      */
-    public static switchToMockInvest(): BlueBirdPromise<any> {
+    static switchToMockInvest(): BlueBirdPromise<any> {
         //切换到模拟投注
         CONFIG_CONST.isRealInvest = false;
         return SettingTableService.saveOrUpdateSettingsInfo(update_isRealInvest_to_mock);
@@ -117,7 +117,7 @@ export class SettingService {
      *
      * 切换到真实投注
      */
-    public static switchToRealInvest(): BlueBirdPromise<any> {
+    static switchToRealInvest(): BlueBirdPromise<any> {
         //切换到真实投注
         CONFIG_CONST.isRealInvest = true;
         //自动切换到真实投注

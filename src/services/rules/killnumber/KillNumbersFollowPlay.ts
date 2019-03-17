@@ -16,7 +16,7 @@ let analysis360Service = new Analysis360Service(),
  * 根据计划杀号
  */
 export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules<FixedPositionKillNumberResult> {
-    public filterNumbers(): Promise<FixedPositionKillNumberResult> {
+    filterNumbers(): Promise<FixedPositionKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
 
 

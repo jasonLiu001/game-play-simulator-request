@@ -13,7 +13,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 产生V博平台投注模式 元，角，分，厘
      */
-    public getInvestMode(awardMode: number): any {
+    getInvestMode(awardMode: number): any {
         let mode = 'FEN';//默认为分
         log.info('当前投注单位：%s', awardMode);
         switch (awardMode) {
@@ -38,7 +38,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      *
      * 执行后三投注操作
      */
-    public investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
+    investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
         let json = {
             betWay: 'NORMAL',
             datas: [
@@ -82,7 +82,7 @@ export class Vbc02LotteryService extends PlatformAbstractBase implements IPlatfo
      * @param request
      * @param investInfo 投注记录实体
      */
-    public invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/')
             .then((investInfo: InvestInfo) => {
                 return this.investMock(request, null, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);

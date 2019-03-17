@@ -22,7 +22,7 @@ export class ExtraInvestService extends InvestBase {
      *
      * 执行投注入口
      */
-    public executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    executeExtraInvest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         //首先判断是否满足特定的投注形态 不受当天最高盈利限制
         return this.investWhenFindTwoErrorInThree(CONFIG_CONST.currentSelectedInvestPlanType, 4)
             .then((isCanInvest) => {
@@ -55,7 +55,7 @@ export class ExtraInvestService extends InvestBase {
      * @param planType 当前选择的方案类型
      * @param historyCount 需要取的历史奖号数量
      */
-    public async investWhenFindTwoErrorInThree(planType: number, historyCount: number): BlueBirdPromise<boolean> {
+    async investWhenFindTwoErrorInThree(planType: number, historyCount: number): BlueBirdPromise<boolean> {
         //方案  最新的投注记录
         let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(planType, historyCount,);
 

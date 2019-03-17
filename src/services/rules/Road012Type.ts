@@ -20,7 +20,7 @@ export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNu
         return number % 3;
     }
 
-    public filterNumbers(): Promise<CommonKillNumberResult> {
+    filterNumbers(): Promise<CommonKillNumberResult> {
         let originNumberArray = this.getTotalNumberArray();
         return AwardTableService.getAwardInfoHistory(CONFIG_CONST.historyCount)
             .then((awardHistoryList: Array<AwardInfo>) => {
@@ -57,7 +57,7 @@ export class Road012Type extends AbstractRuleBase implements IRules<CommonKillNu
                     let third012Type = this.getNumber012Type(Number(item.charAt(2)));
                     let cur012Type = first012Type + '' + second012Type + '' + third012Type;
 
-                    if (cur012Type == cur012Type_1 || cur012Type == cur012Type_2 || cur012Type == cur012Type_3)continue;
+                    if (cur012Type == cur012Type_1 || cur012Type == cur012Type_2 || cur012Type == cur012Type_3) continue;
 
                     restNumberArray.push(item);
                 }

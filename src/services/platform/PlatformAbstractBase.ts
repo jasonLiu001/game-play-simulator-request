@@ -15,7 +15,7 @@ export class PlatformAbstractBase {
      *
      * 打开登录页
      */
-    public gotoLoginPage(request: any, loginUrl: string): Promise<any> {
+    gotoLoginPage(request: any, loginUrl: string): Promise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + loginUrl);
     }
 
@@ -23,7 +23,7 @@ export class PlatformAbstractBase {
      *
      * 请求成功登录之后的页面
      */
-    public gotoLoginSuccessPage(request: any, loginSuccessUrl: string): Promise<any> {
+    gotoLoginSuccessPage(request: any, loginSuccessUrl: string): Promise<any> {
         return this.httpGet(request, CONFIG_CONST.siteUrl + loginSuccessUrl);
     }
 
@@ -34,7 +34,7 @@ export class PlatformAbstractBase {
      * @param request
      * @param captchaCodeUrl  图片验证产生的url
      */
-    public saveCaptchaCodeImage(request: any, captchaCodeUrl: string): Promise<any> {
+    saveCaptchaCodeImage(request: any, captchaCodeUrl: string): Promise<any> {
         return new Promise((resolve, reject) => {
             request.get(
                 {
@@ -57,7 +57,7 @@ export class PlatformAbstractBase {
      *
      * Http的Get请求
      */
-    public httpGet(request: any, url: string): Promise<any> {
+    httpGet(request: any, url: string): Promise<any> {
         return new Promise((resolve, reject) => {
             request.get(
                 {
@@ -79,7 +79,7 @@ export class PlatformAbstractBase {
      *  新的Content-Type类型，如：Content-Type:application/json 需要单独写实现方法，直接调用request原生方法来实现即可
      *  参照地址：https://github.com/request/request#requestoptions-callback
      */
-    public httpFormPost(request: any, url: string, form: any = {}, headers: any = {}): Promise<any> {
+    httpFormPost(request: any, url: string, form: any = {}, headers: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             request.post(
                 {
@@ -101,7 +101,7 @@ export class PlatformAbstractBase {
      *
      * 退出登录
      */
-    public loginOut(request: any, logoutUrl): Promise<any> {
+    loginOut(request: any, logoutUrl): Promise<any> {
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + logoutUrl)
             .catch((e) => {
                 ErrorService.appInvestErrorHandler(log, e);

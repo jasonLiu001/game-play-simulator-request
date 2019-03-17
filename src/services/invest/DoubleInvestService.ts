@@ -26,7 +26,7 @@ export class DoubleInvestService extends InvestBase {
      *
      * 执行投注入口
      */
-    public async executeDoubleInvestService(request: any): BlueBirdPromise<any> {
+    async executeDoubleInvestService(request: any): BlueBirdPromise<any> {
 
         //倍投模式
         let doubleInvestAwardModeArray: Array<string> = AppSettings.doubleInvest_AwardMode.split(",");
@@ -126,7 +126,7 @@ export class DoubleInvestService extends InvestBase {
      *
      * 更新倍投参数值
      */
-    public async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string, doubleInvest_IsUseReverseInvestNumbersValue: string, doubleInvest_CurrentSelectedInvestPlanTypeValue: string): BlueBirdPromise<any> {
+    async updateDoubleInvestSettings(doubleInvestAwardModeValue: string, doubleInvestTouZhuBeiShuValue: string, doubleInvest_IsUseReverseInvestNumbersValue: string, doubleInvest_CurrentSelectedInvestPlanTypeValue: string): BlueBirdPromise<any> {
         return SettingTableService.saveOrUpdateSettingsInfo(
             {
                 key: 'doubleInvest_AwardMode',

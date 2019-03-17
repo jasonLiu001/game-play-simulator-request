@@ -23,7 +23,7 @@ export class AppServices {
      *
      * 启动程序，自动获取开奖号码并投注
      */
-    public static async start(): BlueBirdPromise<any> {
+    static async start(): BlueBirdPromise<any> {
         log.info('主程序已启动，持续监视中...');
         return LotteryDbService.createLotteryTable()
             .then(() => {
@@ -72,7 +72,7 @@ export class AppServices {
      *
      * 初始化app启动时各项配置
      */
-    public static initAppStartConfig(): void {
+    static initAppStartConfig(): void {
         Config.isInvestTotalTableInitCompleted = true;
         Config.isInvestTableInitCompleted = true;
         Config.currentInvestTotalCount = 0;

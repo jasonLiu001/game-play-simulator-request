@@ -23,7 +23,7 @@ export class EmailSender {
      *
      * 发送邮件
      */
-    public static async send(title: string, content: string): BlueBirdPromise<any> {
+    static async send(title: string, content: string): BlueBirdPromise<any> {
         // setup email data with unicode symbols
         let mailOptions = {
             from: EMAIL_CONFIG.from, // sender address

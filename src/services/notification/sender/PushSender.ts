@@ -15,7 +15,7 @@ export class PushSender {
      *
      * 发送
      */
-    public static async sendTencentXGPush(title: string, content: string): BlueBirdPromise<any> {
+    static async sendTencentXGPush(title: string, content: string): BlueBirdPromise<any> {
         return InvestPushTableService.getInvestPushInfoHistory(1, EnumPushPlatformType.TENCENT_XG, EnumPushVendorType.TENCENT_XG)
             .then((investPushInfoArray: Array<InvestPushInfo>) => {
                 if (investPushInfoArray.length == 0) return BlueBirdPromise.reject("invest_push table is empty.");

@@ -7,7 +7,7 @@ export class AwardTableService {
      *
      * 获取开奖信息
      */
-    public static getAwardInfo(period: string): Promise<AwardInfo> {
+    static getAwardInfo(period: string): Promise<AwardInfo> {
         return AwardTable.findOne(
             {
                 where: {period: period},
@@ -19,7 +19,7 @@ export class AwardTableService {
      * 保存或更新开奖数据
      * @param award
      */
-    public static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
+    static saveOrUpdateAwardInfo(award: AwardInfo): Promise<AwardInfo> {
         return AwardTable.findOne(
             {
                 where: {period: award.period},
@@ -47,7 +47,7 @@ export class AwardTableService {
      *
      * 批量保存/更新开奖号码
      */
-    public static saveOrUpdateAwardInfoList(awardList: Array<AwardInfo>): Promise<any> {
+    static saveOrUpdateAwardInfoList(awardList: Array<AwardInfo>): Promise<any> {
         let promiseArray: Array<Promise<any>> = [];
         for (let award of awardList) {
             promiseArray.push(AwardTableService.saveOrUpdateAwardInfo(award));
@@ -61,7 +61,7 @@ export class AwardTableService {
      * SELECT rowid AS id, * FROM award ORDER BY period DESC LIMIT 4
      * @param historyCount 获取历史开奖号码按期号倒序排列 最新的是第一条
      */
-    public static getAwardInfoHistory(historyCount: number) {
+    static getAwardInfoHistory(historyCount: number) {
         return AwardTable.findAll({
             limit: historyCount,
             order: [
