@@ -5,7 +5,7 @@ import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
 import {TimeServiceV2} from "../time/TimeServiceV2";
 import {PlatformService} from "../platform/PlatformService";
-import {EnumNotificationType} from "../../models/EnumModel";
+import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {NotificationSender} from "../notification/NotificationSender";
 import {AbstractRuleBase} from "../rules/AbstractRuleBase";
 import {AwardService} from "../award/AwardService";
@@ -64,7 +64,7 @@ export class DoubleInvestService extends InvestBase {
         //当前期号
         let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
         //倍投时选取 invest_total表 投注方案
-        return InvestTableService.getInvestTotalInfo(currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
+        return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST_TOTAL, currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
             .then((investInfo: InvestInfo) => {
                 if (!investInfo) return BlueBirdPromise.reject("倍投执行失败，invest_total表中未查询到方案：" + AppSettings.doubleInvest_CurrentSelectedInvestPlanType + "，投注信息");
                 //修改 倍投模式

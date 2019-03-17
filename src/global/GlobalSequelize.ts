@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
-export const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
-    host: 'localhost',
+export const sequelize = new Sequelize('reward', 'reward', 'Fkwy++88ah', {
+    host: '47.104.87.20',
     port: 3306,
     dialect: 'mysql',
     dialectOptions: {},
-    logging: false,//不输出sql操作日志
+    logging: true,//不输出sql操作日志
 
     pool: {
         max: 5,

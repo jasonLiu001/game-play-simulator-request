@@ -1,7 +1,10 @@
 import {CONFIG_CONST} from "../../../config/Config";
 import {TimeServiceV2} from "../../time/TimeServiceV2";
 import {IPlatformLotteryService, PlatformAbstractBase} from "../PlatformAbstractBase";
-import {EnumAwardMode, EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../../models/EnumModel";
+import {
+    EnumAwardMode, EnumDbTableName, EnumNotificationType, EnumSMSSignType,
+    EnumSMSTemplateType
+} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {InvestInfo} from "../../../models/db/InvestInfo";
@@ -233,7 +236,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
         return this.investPrepare(request)
             .then((token) => {
                 requestToken = token;
-                return InvestTableService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+                return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST, currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
                 return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);

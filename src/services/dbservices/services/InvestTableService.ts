@@ -16,17 +16,6 @@ export class InvestTableService {
     //region Invest表
     /**
      *
-     * 获取投注信息
-     */
-    static getInvestInfo(period: string, planType: number): Promise<InvestInfo> {
-        return InvestTable.findOne({
-            where: {period: period, planType: planType},
-            raw: true
-        });
-    }
-
-    /**
-     *
      *
      * 获取某一时期内的最大利润和最小利润值
      * @param {Array} dateArray 支持多个日期
@@ -166,17 +155,6 @@ export class InvestTableService {
     //region 所有计划每局投注明细invest_total表
     /**
      *
-     * 获取投注信息
-     */
-    static getInvestTotalInfo(period: string, planType: number): Promise<InvestTotalInfo> {
-        return InvestTotalTable.findOne({
-            where: {period: period, planType: planType},
-            raw: true
-        });
-    }
-
-    /**
-     *
      * 保存或者更新投注信息
      */
     static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
@@ -286,19 +264,22 @@ export class InvestTableService {
     //region 公共方法
     /**
      *
-     * 根据表名获取投注信息
+     * 查询invest或invest_total表投注详情
      * @param {string} tableName 表名
      * @param {string} period 期号
      * @param {number} planType 计划类型
      */
-    static getInvestByTableName(tableName: string, period: string, planType: number): Promise<InvestInfoBase> {
+    static getInvestInfoByTableName(tableName: string, period: string, planType: number): Promise<InvestInfoBase> {
+        let tableInstance: any = InvestTable;
         if (tableName == EnumDbTableName.INVEST) {
-            return InvestTableService.getInvestInfo(period, planType);
+            tableInstance = InvestTable;
         } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
-            return InvestTableService.getInvestTotalInfo(period, planType);
-        } else {
-            return Promise.resolve(null);
+            tableInstance = InvestTotalTable;
         }
+        return tableInstance.findOne({
+            where: {period: period, planType: planType},
+            raw: true
+        });
     }
 
     /**

@@ -52,7 +52,7 @@ export class InvestController {
             return res.status(200).send(jsonRes);
         }
 
-        InvestTableService.getInvestByTableName(investTableName, period, planType)
+        InvestTableService.getInvestInfoByTableName(investTableName, period, planType)
             .then((investInfo: InvestInfo) => {
                 if (investInfo.status == 1) {
                     log.error("手动投注失败，%s期已完成，%s期可投注，不允许投注，当前时间：%s", period, currentPeriod, moment().format(ConstVars.momentDateTimeFormatter));

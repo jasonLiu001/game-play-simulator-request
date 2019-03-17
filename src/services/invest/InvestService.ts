@@ -97,7 +97,7 @@ export class InvestService extends InvestBase {
             .then(() => {
                 //当前期号
                 let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
-                return InvestTableService.getInvestInfo(currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
+                return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST, currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
                 if (!investInfo) return BlueBirdPromise.resolve();

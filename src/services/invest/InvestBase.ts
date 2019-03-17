@@ -189,7 +189,7 @@ export class InvestBase {
         if (!CONFIG_CONST.isRealInvest) return BlueBirdPromise.resolve(true);
 
         //查询是否存在上期投注记录
-        return InvestTableService.getInvestInfo(Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
+        return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST, Config.globalVariable.last_Period, CONFIG_CONST.currentSelectedInvestPlanType)
             .then((lastInvestInfo: InvestInfo) => {
                 //不存在上期的投注记录 直接返回，可以投注
                 if (!lastInvestInfo) return BlueBirdPromise.resolve(true);
