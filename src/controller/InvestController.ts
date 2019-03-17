@@ -137,9 +137,9 @@ export class InvestController {
         investQuery = investQuery.buildQueryEntity(req, investQuery);
 
         InvestTableService.getInvestListByTableName(investQuery)
-            .then(() => {
+            .then((dataList: Array<InvestQuery>) => {
                 let successMsg: string = "获取投注列表成功";
-                jsonRes.success(successMsg);
+                jsonRes.success(successMsg, dataList);
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {
@@ -161,9 +161,9 @@ export class InvestController {
         profitQuery = profitQuery.buildQueryEntity(req, profitQuery);
 
         InvestTableService.getInvestProfitListByTableName(profitQuery)
-            .then(() => {
+            .then((dataList: Array<any>) => {
                 let successMsg: string = "获取投注利润成功";
-                jsonRes.success(successMsg);
+                jsonRes.success(successMsg, dataList);
                 return res.status(200).send(jsonRes);
             })
             .catch((e) => {

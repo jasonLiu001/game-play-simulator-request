@@ -307,22 +307,48 @@ export class InvestTableService {
      * @param {InvestQuery} invest
      * @returns {Bluebird<InvestInfoBase>}
      */
-    static getInvestListByTableName(invest: InvestQuery): Promise<InvestInfoBase> {
+    static getInvestListByTableName(invest: InvestQuery): Promise<Array<InvestQuery>> {
+        let tableInstance: any = InvestTable;
         if (invest.tableName == EnumDbTableName.INVEST) {
-            //todo:查询invest表数据
-
+            tableInstance = InvestTable;
         } else if (invest.tableName == EnumDbTableName.INVEST_TOTAL) {
-            //todo:查询invest_total表数据
+            tableInstance = InvestTotalTable;
         }
 
-        return Promise.resolve(null);
+        //动态 where 查询条件
+        let whereCondition: any;
+        if (invest.startTime != "" && invest.startTime != undefined) {
+            whereCondition = {
+                planType: invest.planType,
+                investTimestamp: (invest.startTime != "" && invest.startTime != undefined) ? {
+                    [Op.gte]: invest.startTime,
+                    [Op.lte]: invest.endTime
+                } : null
+            };
+        } else {
+            whereCondition = {
+                planType: invest.planType
+            };
+        }
+
+        //返回查询结果 指定查询字段
+        return tableInstance.findAll({
+            attributes: ['period', 'planType', 'investNumberCount', 'currentAccountBalance', 'isUseReverseInvestNumbers', 'status', 'isWin', 'investTime'],
+            offset: (invest.pageIndex - 1) * invest.pageSize,
+            limit: invest.pageSize,
+            where: whereCondition,
+            order: [
+                ['period', 'DESC']
+            ],
+            raw: true
+        });
     }
 
     /**
      *
      * 查询利润列表
      */
-    static getInvestProfitListByTableName(profitQuery: ProfitQuery) {
+    static getInvestProfitListByTableName(profitQuery: ProfitQuery): Promise<Array<any>> {
         if (profitQuery.tableName == EnumDbTableName.INVEST) {
             //todo:查询invest表数据
 
