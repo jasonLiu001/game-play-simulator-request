@@ -184,7 +184,12 @@ export class InvestTableService {
      * 查询利润列表
      */
     static getInvestProfitListByTableName(profitQuery: ProfitQuery): Promise<Array<any>> {
-        let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM invest R WHERE R.`investTimestamp`>=:startTime AND R.`investTimestamp`<=:endTime AND R.planType=:planType) A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
+        let whereCondition: string = "";
+        if (profitQuery.startTime != undefined && profitQuery.startTime != '') {
+            whereCondition = " AND R.`investTimestamp`>=:startTime AND R.`investTimestamp`<=:endTime ";
+        }
+
+        let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM invest R WHERE R.planType=:planType " + whereCondition + ") A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
         return sequelize.query(sql,
             {
                 replacements: {
