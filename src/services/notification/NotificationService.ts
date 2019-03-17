@@ -223,12 +223,8 @@ export class NotificationService {
      */
     private async continueWinOrLose(tableName: string, planType: number, maxWinOrLoseCount: number, isWin: boolean, latestOppositeWinOrLoseCount: number = 0): BlueBirdPromise<any> {
         let historyData: Array<InvestInfo>;
-        if (tableName == EnumDbTableName.INVEST) {
-            //方案  最新的投注记录
-            historyData = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
-        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
-            historyData = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
-        }
+        //方案  最新的投注记录
+        historyData = await InvestTableService.getInvestInfoHistoryByTableName(tableName, planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
 
         //数量不足 不发送邮件通知
         if (historyData.length < maxWinOrLoseCount) return BlueBirdPromise.resolve(true);

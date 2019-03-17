@@ -277,7 +277,7 @@ export class InvestBase {
      *
      * 初始化投注信息 投注后 账户余额等信息
      */
-    async initAllPlanInvestInfo(tableName: String): BlueBirdPromise<Array<any>> {
+    async initAllPlanInvestInfo(tableName: string): BlueBirdPromise<Array<any>> {
         log.info('初始化表%s投注数据', tableName);
         let allPlanInvests: Array<InvestInfo> = [];
         let planType: number = 1;
@@ -289,11 +289,9 @@ export class InvestBase {
             let planInvestMoney = planInvestNumbersArray.length * 2;
             //获取上期余额
             let investList: InvestInfo[] = null;
-            if (tableName === EnumDbTableName.INVEST) {
-                investList = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, planType, 1);
-            } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-                investList = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, planType, 1);
-            }
+
+            investList = await InvestTableService.getInvestInfoHistoryByTableName(tableName, planType, 1);
+
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
             let lastAccountBalance = (this.isResetOriginalAccountBalance(tableName) || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;
 
@@ -327,14 +325,11 @@ export class InvestBase {
      *
      * 更新盈利
      */
-    private async updateInvestWinMoney(tableName: String): BlueBirdPromise<any> {
+    private async updateInvestWinMoney(tableName: string): BlueBirdPromise<any> {
         let resultList;
 
-        if (tableName === EnumDbTableName.INVEST) {
-            resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST, 0);
-        } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST_TOTAL, 0);
-        }
+        resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(tableName, 0);
+
         if (!resultList) return BlueBirdPromise.resolve([]);
 
         let investInfoList: Array<InvestInfo> = [];
@@ -366,11 +361,8 @@ export class InvestBase {
 
         let saveResult;
         //首先更新之前未开奖的数据
-        if (tableName === EnumDbTableName.INVEST) {
-            saveResult = await InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST, investInfoList);
-        } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            saveResult = await InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST_TOTAL, investInfoList);
-        }
+        saveResult = await InvestTableService.saveOrUpdateInvestInfoListByTableName(tableName, investInfoList);
+
         log.info('已更新%s表未开奖数据%s条', tableName, investInfoList.length);
         return saveResult;
     }

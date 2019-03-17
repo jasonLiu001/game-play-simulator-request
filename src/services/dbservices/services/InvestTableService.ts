@@ -51,7 +51,7 @@ export class InvestTableService {
      *
      * 获取特定数量的最新投注记录
      */
-    static getInvestInfoHistoryByTableName(tableName: EnumDbTableName, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+    static getInvestInfoHistoryByTableName(tableName: string, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         if (afterTime == "") {
             return tableInstance.findAll({
@@ -83,7 +83,7 @@ export class InvestTableService {
      *
      * 保存或者更新投注信息
      */
-    static saveOrUpdateInvestInfoListByTableName(tableName: EnumDbTableName, investInfoList: Array<InvestInfoBase>): Promise<Array<InvestInfoBase>> {
+    static saveOrUpdateInvestInfoListByTableName(tableName: string, investInfoList: Array<InvestInfoBase>): Promise<Array<InvestInfoBase>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investInfo of investInfoList) {
             promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(tableName, investInfo));
@@ -95,7 +95,7 @@ export class InvestTableService {
      *
      * 保存或者更新投注信息
      */
-    static saveOrUpdateInvestInfoByTableName(tableName: EnumDbTableName, investInfo: InvestInfoBase): Promise<InvestInfoBase> {
+    static saveOrUpdateInvestInfoByTableName(tableName: string, investInfo: InvestInfoBase): Promise<InvestInfoBase> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         return tableInstance.findOne(
             {
