@@ -194,7 +194,7 @@ export class InvestTableService {
             {
                 replacements: {
                     planType: profitQuery.planType,
-                    pageIndex: profitQuery.pageIndex,
+                    pageIndex: (profitQuery.pageIndex - 1) * profitQuery.pageSize,
                     pageSize: profitQuery.pageSize,
                     startTime: profitQuery.startTime,
                     endTime: profitQuery.endTime
