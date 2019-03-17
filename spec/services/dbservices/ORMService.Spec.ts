@@ -9,7 +9,7 @@ describe('ORMService Test', () => {
     });
 
     it('getInvestInfoListByStatus Test', (done) => {
-        InvestTableService.getInvestTotalInfoListStatusByTableName(EnumDbTableName.INVEST, 0)
+        InvestTableService.getInvestInfoListStatusByTableName(EnumDbTableName.INVEST, 0)
             .then((res) => {
                 console.log(res);
                 done();

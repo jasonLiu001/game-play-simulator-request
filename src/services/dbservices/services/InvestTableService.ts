@@ -42,9 +42,9 @@ export class InvestTableService {
      * 根据状态获取投注信息
      * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      */
-    static getInvestTotalInfoListStatusByTableName(tableName: string, status: number): Promise<Array<any>> {
-        let sql = "SELECT i.*, a.openNumber FROM " + tableName + " AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = " + status + " AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
-        return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
+    static getInvestInfoListStatusByTableName(tableName: string, status: number): Promise<Array<any>> {
+        let sql = "SELECT i.*, a.openNumber FROM " + tableName + " AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = :status AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
+        return sequelize.query(sql, {replacements: {status: status}}, {type: sequelize.QueryTypes.SELECT});
     }
 
     /**
@@ -184,14 +184,18 @@ export class InvestTableService {
      * 查询利润列表
      */
     static getInvestProfitListByTableName(profitQuery: ProfitQuery): Promise<Array<any>> {
-        if (profitQuery.tableName == EnumDbTableName.INVEST) {
-            //todo:查询invest表数据
-
-        } else if (profitQuery.tableName == EnumDbTableName.INVEST_TOTAL) {
-            //todo:查询invest_total表数据
-        }
-
-        return Promise.resolve(null);
+        let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM invest R WHERE R.`investTimestamp`>=:startTime AND R.`investTimestamp`<=:endTime AND R.planType=:planType) A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
+        return sequelize.query(sql,
+            {
+                replacements: {
+                    planType: profitQuery.planType,
+                    pageIndex: profitQuery.pageIndex,
+                    pageSize: profitQuery.pageSize,
+                    startTime: profitQuery.startTime,
+                    endTime: profitQuery.endTime
+                }
+            },
+            {type: sequelize.QueryTypes.SELECT});
     }
 
     /**

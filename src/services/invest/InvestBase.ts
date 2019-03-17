@@ -328,7 +328,7 @@ export class InvestBase {
     private async updateInvestWinMoney(tableName: string): BlueBirdPromise<any> {
         let resultList;
 
-        resultList = await InvestTableService.getInvestTotalInfoListStatusByTableName(tableName, 0);
+        resultList = await InvestTableService.getInvestInfoListStatusByTableName(tableName, 0);
 
         if (!resultList) return BlueBirdPromise.resolve([]);
 
