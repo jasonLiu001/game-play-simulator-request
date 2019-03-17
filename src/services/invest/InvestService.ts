@@ -54,7 +54,7 @@ export class InvestService extends InvestBase {
                 return this.initAllPlanInvestInfo(EnumDbTableName.INVEST_TOTAL)
                     .then((allInvestTotalInfo: Array<InvestTotalInfo>) => {
                         log.info('%s表记录已保存数据%s条', EnumDbTableName.INVEST_TOTAL, allInvestTotalInfo.length);
-                        return InvestTableService.saveOrUpdateInvestTotalInfoList(allInvestTotalInfo);
+                        return InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST_TOTAL, allInvestTotalInfo);
                     })
                     .then(() => {
                         //表invest_total第一次初始化完毕 重置标识
@@ -84,7 +84,7 @@ export class InvestService extends InvestBase {
                     .then((allPlanInvestInfo: Array<InvestInfo>) => {
                         log.info('%s表 %s记录已保存', EnumDbTableName.INVEST, messageType);
                         //保存投注记录
-                        return InvestTableService.saveOrUpdateInvestInfoList(allPlanInvestInfo);
+                        return InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST, allPlanInvestInfo);
                     })
                     .then(() => {
                         //表invest第一次初始化完毕 重置标识

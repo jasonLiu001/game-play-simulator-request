@@ -367,9 +367,9 @@ export class InvestBase {
         let saveResult;
         //首先更新之前未开奖的数据
         if (tableName === EnumDbTableName.INVEST) {
-            saveResult = await InvestTableService.saveOrUpdateInvestInfoList(investInfoList);
+            saveResult = await InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST, investInfoList);
         } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-            saveResult = await InvestTableService.saveOrUpdateInvestTotalInfoList(investInfoList);
+            saveResult = await InvestTableService.saveOrUpdateInvestInfoListByTableName(EnumDbTableName.INVEST_TOTAL, investInfoList);
         }
         log.info('已更新%s表未开奖数据%s条', tableName, investInfoList.length);
         return saveResult;

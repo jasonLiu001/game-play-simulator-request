@@ -44,18 +44,6 @@ export class InvestTableService {
 
     /**
      *
-     * 批量保存或者更新投注信息
-     */
-    static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
-        let promiseArray: Array<Promise<any>> = [];
-        for (let investInfo of investInfoList) {
-            promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(EnumDbTableName.INVEST, investInfo));
-        }
-        return Promise.all(promiseArray);
-    }
-
-    /**
-     *
      * 获取特定数量的最新投注记录
      */
     static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
@@ -122,18 +110,6 @@ export class InvestTableService {
 
     /**
      *
-     * 批量保存或者更新投注信息
-     */
-    static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
-        let promiseArray: Array<Promise<any>> = [];
-        for (let investTotal of investTotalInfoList) {
-            promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(EnumDbTableName.INVEST_TOTAL, investTotal));
-        }
-        return Promise.all(promiseArray);
-    }
-
-    /**
-     *
      * 获取特定数量的最新投注记录
      */
     static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
@@ -194,11 +170,19 @@ export class InvestTableService {
 
     //endregion
 
+    static saveOrUpdateInvestInfoListByTableName(tableName: EnumDbTableName, investInfoList: Array<InvestInfoBase>): Promise<Array<InvestInfoBase>> {
+        let promiseArray: Array<Promise<any>> = [];
+        for (let investInfo of investInfoList) {
+            promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(tableName, investInfo));
+        }
+        return Promise.all(promiseArray);
+    }
+
     /**
      *
      * 保存或者更新投注信息
      */
-    static saveOrUpdateInvestInfoByTableName(tableName: EnumDbTableName, investInfo: InvestInfoBase): Promise<InvestTotalInfo> {
+    static saveOrUpdateInvestInfoByTableName(tableName: EnumDbTableName, investInfo: InvestInfoBase): Promise<InvestInfoBase> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         return tableInstance.findOne(
             {
