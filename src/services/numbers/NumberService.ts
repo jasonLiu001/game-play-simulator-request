@@ -23,6 +23,7 @@ import {AppSettings} from "../../config/AppSettings";
 import {PlanTableService} from "../dbservices/services/PlanTableService";
 import Promise = require('bluebird');
 import _ = require('lodash');
+import {EnumDbTableName} from "../../models/EnumModel";
 
 
 let log4js = require('log4js'),
@@ -78,7 +79,7 @@ export class NumberService extends AbstractRuleBase {
         return PlanTableService.saveOrUpdatePlanInfo(planInfoBaseString)
             .then(() => {
                 planInfoBaseString.status = 0;
-                return PlanTableService.saveOrUpdatePlanInvestNumbersInfo(planInfoBaseString);
+                return PlanTableService.saveOrUpdatePlanInfoByTableName(EnumDbTableName.PLAN_INVEST_NUMBERS, planInfoBaseString);
             });
     }
 
@@ -150,7 +151,7 @@ export class NumberService extends AbstractRuleBase {
                 planInvestNumbersInfo.killbaiwei_01 = promiseAllResult[10].baiWei.killNumberResult.join(',');
                 planInvestNumbersInfo.killgewei_01 = promiseAllResult[11].geWei.killNumberResult.join(',');
                 planInvestNumbersInfo.bravenumber_6_01 = promiseAllResult[12].killNumberResult.join(',');
-                return PlanTableService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo);
+                return PlanTableService.saveOrUpdatePlanInfoByTableName(EnumDbTableName.PLAN_INVEST_NUMBERS, planInvestNumbersInfo);
             })
             .then(() => {
                 //真实投注的方案 对应投注号码

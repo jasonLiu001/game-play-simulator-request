@@ -456,7 +456,7 @@ export class InvestBase {
                 }
 
                 //保存各计划中奖状态 及 计划更新状态
-                return PlanTableService.saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList)
+                return PlanTableService.saveOrUpdatePlanInfoListByTableName(EnumDbTableName.PLAN_INVEST_NUMBERS, planInvestNumbersInfoList)
                     .then(() => {
                         return PlanTableService.saveOrUpdatePlanResultInfoList(planResultInfoList);
                     });

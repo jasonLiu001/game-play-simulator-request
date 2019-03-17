@@ -4,6 +4,9 @@ import {PlanInvestNumbersInfo} from "../../../models/db/PlanInvestNumbersInfo";
 import {PlanResultInfo} from "../../../models/db/PlanResultInfo";
 import {PlanInfo} from "../../../models/db/PlanInfo";
 import {sequelize} from "../../../global/GlobalSequelize";
+import {EnumDbTableName} from "../../../models/EnumModel";
+import {InvestTable, InvestTotalTable} from "../tables/InvestTable";
+import {PlanInfoBase} from "../../../models/db/PlanInfoBase";
 
 export class PlanTableService {
     //region 计划plan表
@@ -153,34 +156,6 @@ export class PlanTableService {
 
     /**
      *
-     * 保存或更新计划投注号码表
-     */
-    static saveOrUpdatePlanInvestNumbersInfo(planInvestNumbers: PlanInvestNumbersInfo): Promise<PlanInvestNumbersInfo> {
-        return PlanInvestNumbersTable.findOne(
-            {
-                where: {period: planInvestNumbers.period},
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return PlanInvestNumbersTable.update(planInvestNumbers,
-                        {
-                            where: {period: planInvestNumbers.period}
-                        })
-                        .then(() => {
-                            return planInvestNumbers;
-                        });
-                } else {
-                    return PlanInvestNumbersTable.create(planInvestNumbers)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
-    }
-
-    /**
-     *
      *  查询plan_invest_numbers表经常超时，这个需要处理一下
      *
      * 根据状态获取投注号码
@@ -191,18 +166,62 @@ export class PlanTableService {
         let sql = "SELECT r.*, a.openNumber FROM plan_invest_numbers AS r LEFT JOIN award AS a ON r.period = a.period WHERE r.status =" + status + " AND a.`openNumber`<>'' order by a.period DESC LIMIT 0,120";
         return sequelize.query(sql, {type: sequelize.QueryTypes.SELECT});
     }
+    //endregion
 
     /**
      *
      * 批量保存或者更新投注信息
      */
-    static saveOrUpdatePlanInvestNumbersInfoList(planInvestNumbersInfoList: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
+    static saveOrUpdatePlanInfoListByTableName(tableName: string, planInvestNumbersInfoList: Array<PlanInvestNumbersInfo>): Promise<Array<PlanInvestNumbersInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let planInvestNumbersInfo of planInvestNumbersInfoList) {
-            promiseArray.push(PlanTableService.saveOrUpdatePlanInvestNumbersInfo(planInvestNumbersInfo));
+            promiseArray.push(PlanTableService.saveOrUpdatePlanInfoByTableName(tableName, planInvestNumbersInfo));
         }
         return Promise.all(promiseArray);
     }
 
-    //endregion
+    /**
+     *
+     * 保存或更新计划投注号码表
+     */
+    static saveOrUpdatePlanInfoByTableName(tableName: string, planInvestNumbers: PlanInvestNumbersInfo): Promise<any> {
+        let taleInstance: any = PlanTableService.getQueryTableInstance(tableName);
+        return taleInstance.findOne(
+            {
+                where: {period: planInvestNumbers.period},
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return taleInstance.update(planInvestNumbers,
+                        {
+                            where: {period: planInvestNumbers.period}
+                        })
+                        .then(() => {
+                            return planInvestNumbers;
+                        });
+                } else {
+                    return taleInstance.create(planInvestNumbers)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
+    /**
+     *
+     * 获取查询表实例
+     */
+    private static getQueryTableInstance(tableName: string): any {
+        let tableInstance: any = PlanTable;
+        if (tableName == EnumDbTableName.PLAN) {
+            tableInstance = PlanTable;
+        } else if (tableName == EnumDbTableName.PLAN_RESULT) {
+            tableInstance = PlanResultTable;
+        } else if (tableName == EnumDbTableName.PLAN_INVEST_NUMBERS) {
+            tableInstance = PlanInvestNumbersTable;
+        }
+        return tableInstance;
+    }
 }

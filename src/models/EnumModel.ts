@@ -215,5 +215,23 @@ export const enum EnumDbTableName {
      *
      * invest_total表
      */
-    INVEST_TOTAL = "invest_total"
+    INVEST_TOTAL = "invest_total",
+    /**
+     *
+     * plan 表
+     */
+    PLAN = "plan",
+    /**
+     *
+     *
+     * plan_invest_numbers 表
+     */
+    PLAN_INVEST_NUMBERS = "plan_invest_numbers",
+
+    /**
+     *
+     *
+     * plan_result 表
+     */
+    PLAN_RESULT = "plan_result"
 }
