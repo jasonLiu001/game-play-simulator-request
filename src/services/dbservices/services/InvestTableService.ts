@@ -44,46 +44,12 @@ export class InvestTableService {
 
     /**
      *
-     * 保存或者更新投注信息
-     */
-    static saveOrUpdateInvestInfo(investInfo: InvestInfo): Promise<InvestInfo> {
-        return InvestTable.findOne(
-            {
-                where: {
-                    period: investInfo.period,
-                    planType: investInfo.planType
-                },
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return InvestTable.update(investInfo,
-                        {
-                            where: {
-                                period: investInfo.period,
-                                planType: investInfo.planType
-                            }
-                        })
-                        .then(() => {
-                            return investInfo;
-                        });
-                } else {
-                    return InvestTable.create(investInfo)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
-    }
-
-    /**
-     *
      * 批量保存或者更新投注信息
      */
     static saveOrUpdateInvestInfoList(investInfoList: Array<InvestInfo>): Promise<Array<InvestInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investInfo of investInfoList) {
-            promiseArray.push(InvestTableService.saveOrUpdateInvestInfo(investInfo));
+            promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(EnumDbTableName.INVEST, investInfo));
         }
         return Promise.all(promiseArray);
     }
@@ -153,39 +119,6 @@ export class InvestTableService {
     //endregion
 
     //region 所有计划每局投注明细invest_total表
-    /**
-     *
-     * 保存或者更新投注信息
-     */
-    static saveOrUpdateInvestTotalInfo(investTotalInfo: InvestTotalInfo): Promise<InvestTotalInfo> {
-        return InvestTotalTable.findOne(
-            {
-                where: {
-                    period: investTotalInfo.period,
-                    planType: investTotalInfo.planType
-                },
-                raw: true
-            })
-            .then((res) => {
-                if (res) {
-                    return InvestTotalTable.update(investTotalInfo,
-                        {
-                            where: {
-                                period: investTotalInfo.period,
-                                planType: investTotalInfo.planType
-                            }
-                        })
-                        .then(() => {
-                            return investTotalInfo;
-                        });
-                } else {
-                    return InvestTotalTable.create(investTotalInfo)
-                        .then((model) => {
-                            return model.get({plain: true});
-                        });
-                }
-            });
-    }
 
     /**
      *
@@ -194,7 +127,7 @@ export class InvestTableService {
     static saveOrUpdateInvestTotalInfoList(investTotalInfoList: Array<InvestTotalInfo>): Promise<Array<InvestTotalInfo>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investTotal of investTotalInfoList) {
-            promiseArray.push(InvestTableService.saveOrUpdateInvestTotalInfo(investTotal));
+            promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(EnumDbTableName.INVEST_TOTAL, investTotal));
         }
         return Promise.all(promiseArray);
     }
@@ -261,7 +194,41 @@ export class InvestTableService {
 
     //endregion
 
-    //region 公共方法
+    /**
+     *
+     * 保存或者更新投注信息
+     */
+    static saveOrUpdateInvestInfoByTableName(tableName: EnumDbTableName, investInfo: InvestInfoBase): Promise<InvestTotalInfo> {
+        let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
+        return tableInstance.findOne(
+            {
+                where: {
+                    period: investInfo.period,
+                    planType: investInfo.planType
+                },
+                raw: true
+            })
+            .then((res) => {
+                if (res) {
+                    return tableInstance.update(investInfo,
+                        {
+                            where: {
+                                period: investInfo.period,
+                                planType: investInfo.planType
+                            }
+                        })
+                        .then(() => {
+                            return investInfo;
+                        });
+                } else {
+                    return tableInstance.create(investInfo)
+                        .then((model) => {
+                            return model.get({plain: true});
+                        });
+                }
+            });
+    }
+
     /**
      *
      * 查询invest或invest_total表投注详情
@@ -270,12 +237,7 @@ export class InvestTableService {
      * @param {number} planType 计划类型
      */
     static getInvestInfoByTableName(tableName: string, period: string, planType: number): Promise<InvestInfoBase> {
-        let tableInstance: any = InvestTable;
-        if (tableName == EnumDbTableName.INVEST) {
-            tableInstance = InvestTable;
-        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
-            tableInstance = InvestTotalTable;
-        }
+        let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         return tableInstance.findOne({
             where: {period: period, planType: planType},
             raw: true
@@ -289,12 +251,7 @@ export class InvestTableService {
      * @returns {Bluebird<InvestInfoBase>}
      */
     static getInvestListByTableName(invest: InvestQuery): Promise<Array<InvestQuery>> {
-        let tableInstance: any = InvestTable;
-        if (invest.tableName == EnumDbTableName.INVEST) {
-            tableInstance = InvestTable;
-        } else if (invest.tableName == EnumDbTableName.INVEST_TOTAL) {
-            tableInstance = InvestTotalTable;
-        }
+        let tableInstance: any = InvestTableService.getQueryTableInstance(invest.tableName);
 
         //动态 where 查询条件
         let whereCondition: any;
@@ -340,6 +297,17 @@ export class InvestTableService {
         return Promise.resolve(null);
     }
 
-    //endregion
-
+    /**
+     *
+     * 获取查询表实例
+     */
+    private static getQueryTableInstance(tableName: string): any {
+        let tableInstance: any = InvestTable;
+        if (tableName == EnumDbTableName.INVEST) {
+            tableInstance = InvestTable;
+        } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
+            tableInstance = InvestTotalTable;
+        }
+        return tableInstance;
+    }
 }
