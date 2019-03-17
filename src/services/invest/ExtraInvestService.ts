@@ -4,7 +4,7 @@ import {CONFIG_CONST} from "../../config/Config";
 import {NotificationSender} from "../notification/NotificationSender";
 import {PlatformService} from "../platform/PlatformService";
 import {SettingService} from "../settings/SettingService";
-import {EnumNotificationType} from "../../models/EnumModel";
+import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {InvestBase} from "./InvestBase";
 import {InvestTableService} from "../dbservices/services/InvestTableService";
 import {SettingTableService} from "../dbservices/services/SettingTableService";
@@ -57,7 +57,7 @@ export class ExtraInvestService extends InvestBase {
      */
     async investWhenFindTwoErrorInThree(planType: number, historyCount: number): BlueBirdPromise<boolean> {
         //方案  最新的投注记录
-        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(planType, historyCount,);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, planType, historyCount,);
 
         //数量不足 直接返回
         if (historyData.length < historyCount) return BlueBirdPromise.resolve(false);

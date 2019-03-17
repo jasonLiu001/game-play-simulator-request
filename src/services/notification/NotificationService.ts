@@ -154,7 +154,7 @@ export class NotificationService {
      * 达到指定利润发送预警邮件
      */
     async sendMaxOrMinProfitNotification(tableName: string): BlueBirdPromise<any> {
-        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, CONFIG_CONST.currentSelectedInvestPlanType, 1);
         if (!historyData || historyData.length == 0) return BlueBirdPromise.resolve(false);
 
         //未开奖直接返回
@@ -225,9 +225,9 @@ export class NotificationService {
         let historyData: Array<InvestInfo>;
         if (tableName == EnumDbTableName.INVEST) {
             //方案  最新的投注记录
-            historyData = await InvestTableService.getInvestInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
+            historyData = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         } else if (tableName == EnumDbTableName.INVEST_TOTAL) {
-            historyData = await InvestTableService.getInvestTotalInfoHistory(planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
+            historyData = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, planType, maxWinOrLoseCount + latestOppositeWinOrLoseCount);
         }
 
         //数量不足 不发送邮件通知

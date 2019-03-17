@@ -44,40 +44,6 @@ export class InvestTableService {
 
     /**
      *
-     * 获取特定数量的最新投注记录
-     */
-    static getInvestInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
-        if (afterTime == "") {
-            return InvestTable.findAll({
-                limit: historyCount,
-                where: {
-                    planType: planType
-                },
-                order: [
-                    ['period', 'DESC']
-                ],
-                raw: true
-            });
-        } else {
-            return InvestTable.findAll({
-                limit: historyCount,
-                where: {
-                    planType: planType,
-                    investTime: {
-                        [Op.gt]: afterTime
-                    }
-                },
-                order: [
-                    ['period', 'DESC']
-                ],
-                raw: true
-            });
-        }
-
-    }
-
-    /**
-     *
      * 根据状态获取投注信息
      * SELECT i.*, a.openNumber FROM invest AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status =1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
@@ -110,38 +76,6 @@ export class InvestTableService {
 
     /**
      *
-     * 获取特定数量的最新投注记录
-     */
-    static getInvestTotalInfoHistory(planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
-        if (afterTime == "") {
-            return InvestTotalTable.findAll({
-                limit: historyCount,
-                where: {planType: planType},
-                order: [
-                    ['period', 'DESC']
-                ],
-                raw: true
-            });
-        } else {
-            return InvestTotalTable.findAll({
-                limit: historyCount,
-                where: {
-                    planType: planType,
-                    investTime: {
-                        [Op.gt]: afterTime
-                    }
-                },
-                order: [
-                    ['period', 'DESC']
-                ],
-                raw: true
-            });
-        }
-
-    }
-
-    /**
-     *
      * 根据状态获取投注信息
      * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      * @param status 0：未开奖，1：已开奖
@@ -170,6 +104,42 @@ export class InvestTableService {
 
     //endregion
 
+    /**
+     *
+     * 获取特定数量的最新投注记录
+     */
+    static getInvestInfoHistoryByTableName(tableName: EnumDbTableName, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+        let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
+        if (afterTime == "") {
+            return tableInstance.findAll({
+                limit: historyCount,
+                where: {planType: planType},
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        } else {
+            return tableInstance.findAll({
+                limit: historyCount,
+                where: {
+                    planType: planType,
+                    investTime: {
+                        [Op.gt]: afterTime
+                    }
+                },
+                order: [
+                    ['period', 'DESC']
+                ],
+                raw: true
+            });
+        }
+    }
+
+    /**
+     *
+     * 保存或者更新投注信息
+     */
     static saveOrUpdateInvestInfoListByTableName(tableName: EnumDbTableName, investInfoList: Array<InvestInfoBase>): Promise<Array<InvestInfoBase>> {
         let promiseArray: Array<Promise<any>> = [];
         for (let investInfo of investInfoList) {

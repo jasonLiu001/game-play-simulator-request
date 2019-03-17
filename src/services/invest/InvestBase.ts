@@ -115,7 +115,7 @@ export class InvestBase {
             //自动切换到模拟投注 同时发送购买结束提醒
             let mockResult: any = await SettingService.switchToMockInvest();
             //当前最新一条投注方案
-            let investInfoList: InvestInfo[] = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+            let investInfoList: InvestInfo[] = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, CONFIG_CONST.currentSelectedInvestPlanType, 1);
             if (!investInfoList || investInfoList.length === 0) return BlueBirdPromise.reject(timeReachMessage);
 
             //发送 购买结束提醒
@@ -137,7 +137,7 @@ export class InvestBase {
         if (Config.currentInvestTotalCount == 0) return BlueBirdPromise.resolve(true);
 
         //当前最新一条投注方案
-        let investInfo: InvestInfo[] = await InvestTableService.getInvestInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1);
+        let investInfo: InvestInfo[] = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, CONFIG_CONST.currentSelectedInvestPlanType, 1);
         // 首次无记录时 直接返回
         if (!investInfo || investInfo.length === 0) return BlueBirdPromise.resolve(true);
 
@@ -290,9 +290,9 @@ export class InvestBase {
             //获取上期余额
             let investList: InvestInfo[] = null;
             if (tableName === EnumDbTableName.INVEST) {
-                investList = await InvestTableService.getInvestInfoHistory(planType, 1);
+                investList = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST, planType, 1);
             } else if (tableName === EnumDbTableName.INVEST_TOTAL) {
-                investList = await InvestTableService.getInvestTotalInfoHistory(planType, 1);
+                investList = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, planType, 1);
             }
             //上期余额 应用第一次启动时 当前余额等于初始账户余额
             let lastAccountBalance = (this.isResetOriginalAccountBalance(tableName) || !investList || investList.length === 0) ? CONFIG_CONST.originAccountBalance : investList[0].currentAccountBalance;

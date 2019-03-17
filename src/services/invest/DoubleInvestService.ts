@@ -43,7 +43,7 @@ export class DoubleInvestService extends InvestBase {
         if (doubleInvestAwardModeArray.length != doubleInvestTouZhuBeiShuArray.length) return BlueBirdPromise.reject("放弃执行倍投，原因：倍投模式：" + AppSettings.doubleInvest_AwardMode + " 倍投倍数：" + AppSettings.doubleInvest_TouZhuBeiShu + "，两者值个数不一致");
 
         //放弃倍投条件2
-        let historyData: Array<InvestInfo> = await InvestTableService.getInvestTotalInfoHistory(AppSettings.doubleInvest_CurrentSelectedInvestPlanType, 2);
+        let historyData: Array<InvestInfo> = await InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, AppSettings.doubleInvest_CurrentSelectedInvestPlanType, 2);
         if (historyData.length < 2) return BlueBirdPromise.reject("放弃执行倍投，原因：invest_total表中记录不足2条");
 
         //取上一期投注数据 因为本期还在执行中

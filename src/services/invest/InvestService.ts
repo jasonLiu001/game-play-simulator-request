@@ -33,7 +33,7 @@ export class InvestService extends InvestBase {
      */
     async executeAutoInvest(request: any): BlueBirdPromise<any> {
         //本期执行投注时，发现上期仍然没有开奖，则改用其他开奖源更新开奖数据
-        return InvestTableService.getInvestTotalInfoHistory(CONFIG_CONST.currentSelectedInvestPlanType, 1)
+        return InvestTableService.getInvestInfoHistoryByTableName(EnumDbTableName.INVEST_TOTAL, CONFIG_CONST.currentSelectedInvestPlanType, 1)
             .then((historyData: Array<InvestInfo>) => {
                 if (historyData.length > 0 && historyData[0].status === 0) {//上期未开奖 则从其他开奖源更新上期奖号
                     return AwardService.saveOrUpdateHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
