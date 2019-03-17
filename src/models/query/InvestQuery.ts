@@ -1,14 +1,18 @@
 import {QueryBase} from "./QueryBase";
-import {EnumDbTableName} from "../EnumModel";
+import {Request} from "express";
 
 /**
  *
  * 查询invest表实体参数
  */
 export class InvestQuery extends QueryBase {
+
     /**
      *
-     * 表名称 {@link EnumDbTableName}
+     * 构建查询参数实体
      */
-    tableName: string;
+    buildQueryEntity<InvestQuery extends QueryBase>(req: Request, args: InvestQuery): InvestQuery {
+        let profitQuery: InvestQuery = super.buildQueryEntity<InvestQuery>(req, args);
+        return profitQuery;
+    }
 }

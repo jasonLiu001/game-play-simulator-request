@@ -1,5 +1,3 @@
-import _ = require('lodash');
-import BlueBirdPromise = require('bluebird');
 import {GlobalRequest} from "../../global/GlobalRequest";
 import {XGPushModel} from "../../models/XGPushModel";
 

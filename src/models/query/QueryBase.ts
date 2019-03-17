@@ -1,8 +1,10 @@
+import {Request} from "express";
+
 /**
  *
  * 查询实体基类
  */
-export class QueryBase {
+export abstract class QueryBase {
     /**
      *
      * 每页数据量
@@ -31,4 +33,23 @@ export class QueryBase {
      * 结束时间
      */
     endTime: string;
+    /**
+     *
+     * 表名称 {@link EnumDbTableName}
+     */
+    tableName: string;
+
+    /**
+     *
+     * 构建查询参数实体
+     */
+    protected buildQueryEntity<T extends QueryBase>(req: Request, args: T): T {
+        args.tableName = req.query.tableName;
+        args.pageIndex = req.query.pageIndex;
+        args.pageSize = req.query.pageSize;
+        args.planType = req.query.planType;
+        args.startTime = req.query.startTime;
+        args.endTime = req.query.endTime;
+        return args;
+    }
 }

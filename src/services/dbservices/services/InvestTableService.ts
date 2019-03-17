@@ -7,6 +7,7 @@ import {EnumDbTableName} from "../../../models/EnumModel";
 import {InvestTotalInfo} from "../../../models/db/InvestTotalInfo";
 import {InvestQuery} from "../../../models/query/InvestQuery";
 import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
+import {ProfitQuery} from "../../../models/query/ProfitQuery";
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -317,5 +318,21 @@ export class InvestTableService {
         return Promise.resolve(null);
     }
 
+    /**
+     *
+     * 查询利润列表
+     */
+    static getInvestProfitListByTableName(profitQuery: ProfitQuery) {
+        if (profitQuery.tableName == EnumDbTableName.INVEST) {
+            //todo:查询invest表数据
+
+        } else if (profitQuery.tableName == EnumDbTableName.INVEST_TOTAL) {
+            //todo:查询invest_total表数据
+        }
+
+        return Promise.resolve(null);
+    }
+
     //endregion
+
 }

@@ -16,4 +16,7 @@ router.post('/manualCalculateWinMoney', investController.manualCalculateWinMoney
 //获取invest和invest_total表所有投注记录
 router.get('/getInvestList', investController.getInvestList);
 
+//查询利润列表
+router.get('/getProfitList', investController.getProfitList);
+
 module.exports = router;
