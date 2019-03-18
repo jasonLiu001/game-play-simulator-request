@@ -153,10 +153,26 @@ export class InvestTableService {
         if (invest.startTime != "" && invest.startTime != undefined) {
             whereCondition = {
                 planType: invest.planType,
-                investTimestamp: (invest.startTime != "" && invest.startTime != undefined) ? {
+                investTimestamp: {
                     [Op.gte]: invest.startTime,
                     [Op.lte]: invest.endTime
-                } : null
+                }
+            };
+        } else if (invest.startDate != "" && invest.startDate != undefined) {
+            whereCondition = {
+                planType: invest.planType,
+                investDate: {
+                    [Op.gte]: invest.startDate,
+                    [Op.lte]: invest.endDate
+                }
+            };
+        } else if (invest.startDateTime != "" && invest.startDateTime != undefined) {
+            whereCondition = {
+                planType: invest.planType,
+                investTime: {
+                    [Op.gte]: invest.startDateTime,
+                    [Op.lte]: invest.endDateTime
+                }
             };
         } else {
             whereCondition = {

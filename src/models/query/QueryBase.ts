@@ -24,15 +24,41 @@ export abstract class QueryBase {
 
     /**
      *
-     * 开始时间
+     * 开始时间 时、分、秒部分 如：09:30
      */
     startTime: string;
 
     /**
      *
-     * 结束时间
+     * 开始日期 日期部分 如：2019-01-12
+     */
+    startDate: string;
+
+    /**
+     *
+     * 开始日期+时间 日期+时分秒 如：2019-01-12 09:30
+     */
+    startDateTime: string;
+
+
+    /**
+     *
+     * 结束时间 时、分、秒部分 如：22:30
      */
     endTime: string;
+
+    /**
+     *
+     * 结束日期 日期部分 如：2019-01-12
+     */
+    endDate: string;
+
+    /**
+     *
+     * 结束日期+时间 日期+时分秒 如：2019-01-12 22:30
+     */
+    endDateTime: string;
+
     /**
      *
      * 表名称 {@link EnumDbTableName}
@@ -49,7 +75,11 @@ export abstract class QueryBase {
         args.pageSize = Number(req.query.pageSize);
         args.planType = Number(req.query.planType);
         args.startTime = req.query.startTime;
+        args.startDate = req.query.startDate;
+        args.startDateTime = req.query.startDateTime;
         args.endTime = req.query.endTime;
+        args.endDate = req.query.endDate;
+        args.endDateTime = req.query.endDateTime;
         return args;
     }
 
