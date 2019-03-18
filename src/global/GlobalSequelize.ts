@@ -5,7 +5,7 @@ export const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     port: 3306,
     dialect: 'mysql',
     dialectOptions: {},
-    logging: true,//不输出sql操作日志
+    logging: false,//不输出sql操作日志
     //问题：Deprecation warning for String based operators
     //解决方案：https://github.com/sequelize/sequelize/issues/8417#issuecomment-335124373
     operatorsAliases: Op, // use Sequelize.Op
