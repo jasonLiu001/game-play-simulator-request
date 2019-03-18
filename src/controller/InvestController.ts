@@ -11,7 +11,6 @@ import {InvestQuery} from "../models/query/InvestQuery";
 import {ProfitQuery} from "../models/query/ProfitQuery";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
-import {QueryBase} from "../models/query/QueryBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),

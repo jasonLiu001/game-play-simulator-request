@@ -2,9 +2,7 @@ import Promise = require('bluebird');
 import {CONFIG_CONST} from "../../../config/Config";
 import {InvestTable, InvestTotalTable} from "../tables/InvestTable";
 import {sequelize} from "../../../global/GlobalSequelize";
-import {InvestInfo} from "../../../models/db/InvestInfo";
 import {EnumDbTableName} from "../../../models/EnumModel";
-import {InvestTotalInfo} from "../../../models/db/InvestTotalInfo";
 import {InvestQuery} from "../../../models/query/InvestQuery";
 import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
 import {ProfitQuery} from "../../../models/query/ProfitQuery";
@@ -44,7 +42,7 @@ export class InvestTableService {
      */
     static getInvestInfoListStatusByTableName(tableName: string, status: number): Promise<Array<any>> {
         let sql = "SELECT i.*, a.openNumber FROM " + tableName + " AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = :status AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
-        return sequelize.query(sql, {replacements: {status: status}}, {type: sequelize.QueryTypes.SELECT});
+        return sequelize.query(sql, {replacements: {status: status}, type: sequelize.QueryTypes.SELECT});
     }
 
     /**
@@ -198,9 +196,9 @@ export class InvestTableService {
                     pageSize: profitQuery.pageSize,
                     startTime: profitQuery.startTime,
                     endTime: profitQuery.endTime
-                }
-            },
-            {type: sequelize.QueryTypes.SELECT});
+                },
+                type: sequelize.QueryTypes.SELECT
+            });
     }
 
     /**

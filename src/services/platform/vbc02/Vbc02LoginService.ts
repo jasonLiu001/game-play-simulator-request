@@ -1,9 +1,9 @@
 import {CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
-import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
-import Promise = require('bluebird');
+import {IPlatformLoginService, PlatformAbstractBase} from "../PlatformAbstractBase";
 import {ErrorService} from "../../ErrorService";
+import Promise = require('bluebird');
 
 let path = require('path'),
     fs = require('fs'),

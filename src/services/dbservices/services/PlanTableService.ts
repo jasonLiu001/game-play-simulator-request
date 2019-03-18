@@ -5,8 +5,6 @@ import {PlanResultInfo} from "../../../models/db/PlanResultInfo";
 import {PlanInfo} from "../../../models/db/PlanInfo";
 import {sequelize} from "../../../global/GlobalSequelize";
 import {EnumDbTableName} from "../../../models/EnumModel";
-import {InvestTable, InvestTotalTable} from "../tables/InvestTable";
-import {PlanInfoBase} from "../../../models/db/PlanInfoBase";
 
 export class PlanTableService {
     //region 计划plan表

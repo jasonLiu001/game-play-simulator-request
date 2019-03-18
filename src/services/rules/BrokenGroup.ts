@@ -1,9 +1,8 @@
 import {AbstractRuleBase} from "./AbstractRuleBase";
 import {IRules} from "./IRules";
-import _ = require('lodash');
-import Promise = require('bluebird');
 import {CommonKillNumberResult} from "../../models/RuleResult";
 import {OpenNumber} from "../../models/OpenNumber";
+import Promise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('BrokenGroup');

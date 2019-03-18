@@ -1,5 +1,4 @@
 import BlueBirdPromise = require('bluebird');
-import moment  = require('moment');
 import {EMAIL_CONFIG} from "../../../config/Config";
 
 const nodemailer = require('nodemailer');

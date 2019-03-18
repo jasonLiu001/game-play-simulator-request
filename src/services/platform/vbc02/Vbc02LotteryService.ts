@@ -1,9 +1,9 @@
 import {CONFIG_CONST} from "../../../config/Config";
-import {PlatformAbstractBase, IPlatformLotteryService} from "../PlatformAbstractBase";
-import BlueBirdPromise = require('bluebird');
+import {IPlatformLotteryService, PlatformAbstractBase} from "../PlatformAbstractBase";
 import {EnumAwardMode} from "../../../models/EnumModel";
 import {ErrorService} from "../../ErrorService";
 import {InvestInfo} from "../../../models/db/InvestInfo";
+import BlueBirdPromise = require('bluebird');
 
 let log4js = require('log4js'),
     log = log4js.getLogger('Vbc02LotteryService');

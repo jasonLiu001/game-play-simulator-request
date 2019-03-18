@@ -1,13 +1,13 @@
-import {Config, CONFIG_CONST} from "../../../config/Config";
+import {CONFIG_CONST} from "../../../config/Config";
 import {ResponseData} from "../../../models/ResponseData";
 import {CaptchaDecoderService} from "../../captcha/CaptchaDecoderService";
-import {PlatformAbstractBase, IPlatformLoginService} from "../PlatformAbstractBase";
-import Promise = require('bluebird');
-import moment  = require('moment');
+import {IPlatformLoginService, PlatformAbstractBase} from "../PlatformAbstractBase";
 import {ErrorService} from "../../ErrorService";
 import {NotificationSender} from "../../notification/NotificationSender";
 import {EnumNotificationType, EnumSMSSignType, EnumSMSTemplateType} from "../../../models/EnumModel";
 import {SMSSender} from "../../notification/sender/SMSSender";
+import Promise = require('bluebird');
+import moment  = require('moment');
 
 let path = require('path'),
     fs = require('fs'),

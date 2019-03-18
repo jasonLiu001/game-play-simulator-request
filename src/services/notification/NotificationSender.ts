@@ -1,7 +1,6 @@
 import BlueBirdPromise = require('bluebird');
 import {PushSender} from "./sender/PushSender";
 import {EmailSender} from "./sender/EmailSender";
-import {SMSSender} from "./sender/SMSSender";
 import {EnumNotificationType} from "../../models/EnumModel";
 
 let log4js = require('log4js'),
