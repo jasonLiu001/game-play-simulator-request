@@ -134,7 +134,7 @@ var utilsMixin = {
         updateLineCharts(url, planType, chartName, yAxisDataType, myChart) {
             let self = this;
             myChart.showLoading();
-            axios.post(url).then((res) => {
+            axios.get(url).then((res) => {
                 //复制一个新option
                 let chartOption = $.extend(true, {}, this.lineChartDefaultOption, {title: {text: chartName}});
 
@@ -186,7 +186,7 @@ var utilsMixin = {
         initLineCharts(url, domElement, dataTableName, planType, chartName, yAxisDataType, successCallback) {
             let self = this;
             // 基于准备好的dom，初始化echarts实例
-            axios.post(url).then((res) => {
+            axios.get(url).then((res) => {
                 let data = res.data.data;
                 let periods = [];
                 let yData = [];
@@ -232,7 +232,7 @@ var utilsMixin = {
         updatePillarCharts(url, planType, yAxisDataType, myChart) {
             let self = this;
             myChart.showLoading();
-            axios.post(url).then((res) => {
+            axios.get(url).then((res) => {
                 //复制一个新option
                 let chartOption = $.extend(true, {}, this.pillarChartDefaultOption);
 
@@ -277,7 +277,7 @@ var utilsMixin = {
         initPillarCharts(url, domElement, dataTableName, planType, chartName, yAxisDataType, successCallback) {
             let self = this;
             // 基于准备好的dom，初始化echarts实例
-            axios.post(url).then((res) => {
+            axios.get(url).then((res) => {
                 let data = res.data.data;
                 let correctOrWrongCount = [];
                 let correctCount = [];

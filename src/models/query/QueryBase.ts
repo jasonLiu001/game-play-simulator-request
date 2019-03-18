@@ -7,6 +7,12 @@ import {Request} from "express";
 export abstract class QueryBase {
     /**
      *
+     * 表名称 {@link EnumDbTableName}
+     */
+    tableName: string;
+
+    /**
+     *
      * 每页数据量
      */
     pageSize: number;
@@ -59,11 +65,6 @@ export abstract class QueryBase {
      */
     endDateTime: string;
 
-    /**
-     *
-     * 表名称 {@link EnumDbTableName}
-     */
-    tableName: string;
 
     /**
      *

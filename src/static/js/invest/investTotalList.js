@@ -22,7 +22,7 @@ var app = new Vue({
             window.open(url);
         },
         renderPageData(callback, dropLoader) {
-            let url = apiList.findAllInvestTotalInfoList + "?pageIndex=" + this.pageIndex + "&pageSize=" + this.pageSize;
+            let url = apiList.findAllInvestTotalInfoList + "?tableName=invest_total&pageIndex=" + this.pageIndex + "&pageSize=" + this.pageSize;
 
             axios.post(url).then((res) => {
                 if (!res.data.data) {

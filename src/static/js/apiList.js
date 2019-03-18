@@ -1,8 +1,8 @@
-var servrContextPath = "/service";
+var servrContextPath = "/";
 var apiList = {
-    findAllInvestTotalInfoList: servrContextPath + "/lottery/findAllInvestTotalInfoList",
+    findAllInvestTotalInfoList: servrContextPath + "/invest/getInvestList",
     getInvestTotalInfoByPeriod: servrContextPath + "/lottery/getInvestTotalInfoByPeriod",
-    findInvestInfoList: servrContextPath + "/lottery/findInvestInfoList?pageIndex=1&pageSize={0}&planType={1}&startTimeStr={2}&endTimeStr={3}",
-    findInvestTotalInfoList: servrContextPath + "/lottery/findInvestTotalInfoList?pageIndex=1&pageSize={0}&planType={1}&startTimeStr={2}&endTimeStr={3}",
+    findInvestInfoList: servrContextPath + "/invest/getInvestList?tableName=invest&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
+    findInvestTotalInfoList: servrContextPath + "/invest/getInvestList?tableName=invest_total&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
     getTotalCorrectAndWrongCount: servrContextPath + "/lottery/getTotalCorrectAndWrongCount?startTimeStr={0}&endTimeStr={1}"
 };
