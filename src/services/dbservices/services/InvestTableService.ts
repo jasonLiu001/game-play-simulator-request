@@ -1,4 +1,5 @@
 import BlueBirdPromise = require('bluebird');
+import moment = require("moment");
 import {CONFIG_CONST} from "../../../config/Config";
 import {InvestTable, InvestTotalTable} from "../tables/InvestTable";
 import {sequelize} from "../../../global/GlobalSequelize";
@@ -7,6 +8,7 @@ import {InvestQuery} from "../../../models/query/InvestQuery";
 import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
 import {ProfitQuery} from "../../../models/query/ProfitQuery";
 import {InvestInfoGroupByPeriodViewModel} from "../../../models/viewmodel/InvestInfoGroupByPeriod";
+import {ConstVars} from "../../../global/ConstVars";
 
 const Sequelize = require('sequelize');
 const Enumerable = require('linq');
@@ -229,6 +231,13 @@ export class InvestTableService {
                         })
                         .toArray();
 
+                    //时间格式化 余额格式化
+                    Enumerable.from(periodGroup.investInfoList).forEach(function (p) {
+                        p.currentAccountBalance = parseInt(p.currentAccountBalance);
+                        p.originAccountBalance = parseInt(p.originAccountBalance);
+                        p.investTime = moment(p.investTime).format(ConstVars.momentDateTimeFormatter);
+                    });
+
                     investInfoArray.push(periodGroup);
                 });
 
@@ -247,7 +256,8 @@ export class InvestTableService {
         }
 
         let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM invest R WHERE R.planType=:planType " + whereCondition + ") A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
-        return sequelize.query(sql,
+
+        let profits: BlueBirdPromise<Array<any>> = sequelize.query(sql,
             {
                 replacements: {
                     planType: profitQuery.planType,
@@ -258,6 +268,19 @@ export class InvestTableService {
                 },
                 type: sequelize.QueryTypes.SELECT
             });
+
+        return profits
+            .then((profitsGroup: Array<any>) => {
+                //余额格式化
+                Enumerable.from(profitsGroup)
+                    .forEach(function (profit) {
+                        profit.minprofit = parseInt(profit.minprofit);
+                        profit.maxprofit = parseInt(profit.maxprofit);
+                    });
+                return profitsGroup;
+            });
+
+
     }
 
     /**
