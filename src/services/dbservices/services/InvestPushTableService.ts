@@ -49,8 +49,8 @@ export class InvestPushTableService {
      *
      * 获取特定数量历史记录
      * @param {number} historyCount
-     * @param pushPlatform push厂商平台 参见枚举类EnumPushPlatformType
-     * @param pushVendorType push厂商枚举 参见枚举类EnumPushVendorType
+     * @param pushPlatform push厂商平台 参见枚举类 {@link EnumPushPlatformType}
+     * @param pushVendorType push厂商枚举 参见枚举类 {@link EnumPushVendorType}
      */
     static getInvestPushInfoHistory(historyCount: number, pushPlatform: number, pushVendorType: string): Promise<Array<any>> {
         return InvestPush.findAll({

@@ -189,7 +189,7 @@ export class InvestTableService {
             order: [
                 ['period', 'DESC']
             ],
-            raw: true
+            raw: false
         });
     }
 
