@@ -34,8 +34,8 @@ export class SettingsController {
      */
     async updateSettingsByKey(req: Request, res: Response): BlueBirdPromise<any> {
         let settings: UpdateSettingsInfo = new UpdateSettingsInfo();
-        settings.key = req.body.key;
-        settings.value = req.body.value;
+        settings.key = req.query.key;
+        settings.value = req.query.value;
 
         let jsonRes: ResponseJson = new ResponseJson();
 
