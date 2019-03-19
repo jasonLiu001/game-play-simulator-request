@@ -1,4 +1,4 @@
-import Promise = require('bluebird');
+import BlueBirdPromise = require('bluebird');
 import {CONFIG_CONST} from "../../../config/Config";
 import {InvestTable, InvestTotalTable} from "../tables/InvestTable";
 import {sequelize} from "../../../global/GlobalSequelize";
@@ -8,6 +8,7 @@ import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
 import {ProfitQuery} from "../../../models/query/ProfitQuery";
 
 const Sequelize = require('sequelize');
+const Enumerable = require('linq');
 const Op = Sequelize.Op;
 
 export class InvestTableService {
@@ -15,7 +16,7 @@ export class InvestTableService {
      *
      * 获取某一时期内的最大利润和最小利润值
      */
-    static getMaxAndMinProfitByTableName(tableName: string, dateArray: Array<string>, planType: number): Promise<any> {
+    static getMaxAndMinProfitByTableName(tableName: string, dateArray: Array<string>, planType: number): BlueBirdPromise<any> {
         let dateSql = '';//时间Sql
         dateArray.forEach((item, index) => {
             if (index < dateArray.length && dateArray.length > 1) {
@@ -40,7 +41,7 @@ export class InvestTableService {
      * 根据状态获取投注信息
      * SELECT i.*, a.openNumber FROM invest_total AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = 1 AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120
      */
-    static getInvestInfoListStatusByTableName(tableName: string, status: number): Promise<Array<any>> {
+    static getInvestInfoListStatusByTableName(tableName: string, status: number): BlueBirdPromise<Array<any>> {
         let sql = "SELECT i.*, a.openNumber FROM " + tableName + " AS i LEFT JOIN award AS a ON i.period = a.period WHERE i.status = :status AND a.`openNumber`<>'' order by a.period desc LIMIT 0,120";
         return sequelize.query(sql, {replacements: {status: status}, type: sequelize.QueryTypes.SELECT});
     }
@@ -49,7 +50,7 @@ export class InvestTableService {
      *
      * 获取特定数量的最新投注记录
      */
-    static getInvestInfoHistoryByTableName(tableName: string, planType: number, historyCount: number, afterTime: string = ""): Promise<Array<any>> {
+    static getInvestInfoHistoryByTableName(tableName: string, planType: number, historyCount: number, afterTime: string = ""): BlueBirdPromise<Array<any>> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         if (afterTime == "") {
             return tableInstance.findAll({
@@ -81,19 +82,19 @@ export class InvestTableService {
      *
      * 保存或者更新投注信息
      */
-    static saveOrUpdateInvestInfoListByTableName(tableName: string, investInfoList: Array<InvestInfoBase>): Promise<Array<InvestInfoBase>> {
-        let promiseArray: Array<Promise<any>> = [];
+    static saveOrUpdateInvestInfoListByTableName(tableName: string, investInfoList: Array<InvestInfoBase>): BlueBirdPromise<Array<InvestInfoBase>> {
+        let promiseArray: Array<BlueBirdPromise<any>> = [];
         for (let investInfo of investInfoList) {
             promiseArray.push(InvestTableService.saveOrUpdateInvestInfoByTableName(tableName, investInfo));
         }
-        return Promise.all(promiseArray);
+        return BlueBirdPromise.all(promiseArray);
     }
 
     /**
      *
      * 保存或者更新投注信息
      */
-    static saveOrUpdateInvestInfoByTableName(tableName: string, investInfo: InvestInfoBase): Promise<InvestInfoBase> {
+    static saveOrUpdateInvestInfoByTableName(tableName: string, investInfo: InvestInfoBase): BlueBirdPromise<InvestInfoBase> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         return tableInstance.findOne(
             {
@@ -131,7 +132,7 @@ export class InvestTableService {
      * @param {string} period 期号
      * @param {number} planType 计划类型
      */
-    static getInvestInfoByTableName(tableName: string, period: string, planType: number): Promise<InvestInfoBase> {
+    static getInvestInfoByTableName(tableName: string, period: string, planType: number): BlueBirdPromise<InvestInfoBase> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(tableName);
         return tableInstance.findOne({
             where: {period: period, planType: planType},
@@ -145,12 +146,12 @@ export class InvestTableService {
      * @param {InvestQuery} invest
      * @returns {Bluebird<InvestInfoBase>}
      */
-    static getInvestListByTableName(invest: InvestQuery): Promise<Array<InvestQuery>> {
+    static getInvestListByTableName(invest: InvestQuery): BlueBirdPromise<Array<InvestQuery>> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(invest.tableName);
 
         //动态 where 查询条件
         let whereCondition: any;
-        if (invest.startTime != "" && invest.startTime != undefined) {
+        if (invest.startTime != "" && invest.startTime != undefined && !isNaN(invest.planType)) {
             whereCondition = {
                 planType: invest.planType,
                 investTimestamp: {
@@ -158,7 +159,7 @@ export class InvestTableService {
                     [Op.lte]: invest.endTime
                 }
             };
-        } else if (invest.startDate != "" && invest.startDate != undefined) {
+        } else if (invest.startDate != "" && invest.startDate != undefined && !isNaN(invest.planType)) {
             whereCondition = {
                 planType: invest.planType,
                 investDate: {
@@ -166,7 +167,7 @@ export class InvestTableService {
                     [Op.lte]: invest.endDate
                 }
             };
-        } else if (invest.startDateTime != "" && invest.startDateTime != undefined) {
+        } else if (invest.startDateTime != "" && invest.startDateTime != undefined && !isNaN(invest.planType)) {
             whereCondition = {
                 planType: invest.planType,
                 investTime: {
@@ -181,7 +182,7 @@ export class InvestTableService {
         }
 
         //返回查询结果 指定查询字段
-        return tableInstance.findAll({
+        let investQueryList: BlueBirdPromise<Array<InvestQuery>> = tableInstance.findAll({
             attributes: ['period', 'planType', 'investNumberCount', 'currentAccountBalance', 'originAccountBalance', 'awardMode', 'touZhuBeiShu', 'isUseReverseInvestNumbers', 'winMoney', 'status', 'isWin', 'investTime', 'investDate', 'investTimestamp'],
             offset: (invest.pageIndex - 1) * invest.pageSize,
             limit: invest.pageSize,
@@ -191,13 +192,34 @@ export class InvestTableService {
             ],
             raw: false
         });
+        //没有传递方案类型 返回4中方案汇总数据
+        if (isNaN(invest.planType)) {
+            return InvestTableService.getAllInvestInfoList(investQueryList);
+        }
+
+        return investQueryList;
+    }
+
+    /**
+     *
+     *
+     * 返回全部的方案列表
+     */
+    private static getAllInvestInfoList(investQueryList: BlueBirdPromise<Array<InvestQuery>>): BlueBirdPromise<Array<any>> {
+        return investQueryList
+            .then((investArray: Array<InvestQuery>) => {
+                //取period列表
+
+
+                return investArray;
+            });
     }
 
     /**
      *
      * 查询利润列表
      */
-    static getInvestProfitListByTableName(profitQuery: ProfitQuery): Promise<Array<any>> {
+    static getInvestProfitListByTableName(profitQuery: ProfitQuery): BlueBirdPromise<Array<any>> {
         let whereCondition: string = "";
         if (profitQuery.startTime != undefined && profitQuery.startTime != '') {
             whereCondition = " AND R.`investTimestamp`>=:startTime AND R.`investTimestamp`<=:endTime ";

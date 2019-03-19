@@ -3,7 +3,7 @@ var app = new Vue({
     data: function () {
         return {
             pageIndex: 0,
-            pageSize: 10,
+            pageSize: 40,
             isShowAlert: false,
             alertMessage: '',
             list: []
