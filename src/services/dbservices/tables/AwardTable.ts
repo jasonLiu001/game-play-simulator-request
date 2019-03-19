@@ -22,7 +22,7 @@ export const AwardTable = sequelize.define('award', {
     createdTime: {//日期和时间
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        get: function () {
+        get() {
             const createdTime = this.getDataValue('createdTime');
             return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }

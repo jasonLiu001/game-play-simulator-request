@@ -53,7 +53,7 @@ export const InvestTable = sequelize.define('invest', {
         investTime: {//投注日期和时间
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW,
-            get: function () {
+            get() {
                 const investTime = this.getDataValue('investTime');
                 return moment(investTime).format(ConstVars.momentDateTimeFormatter);
             }
@@ -133,7 +133,7 @@ export const InvestTotalTable = sequelize.define('invest_total', {
         investTime: {//投注日期和时间
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW,
-            get: function () {
+            get() {
                 const investTime = this.getDataValue('investTime');
                 return moment(investTime).format(ConstVars.momentDateTimeFormatter);
             }

@@ -32,7 +32,7 @@ export const VendorTable = sequelize.define('vendor', {
     createdTime: {//创建时间
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        get: function () {
+        get() {
             const createdTime = this.getDataValue('createdTime');
             return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }

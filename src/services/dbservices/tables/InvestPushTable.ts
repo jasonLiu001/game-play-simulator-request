@@ -30,7 +30,7 @@ export const InvestPush = sequelize.define('invest_push', {
     },
     tokenExpireTime: {//token过期时间
         type: Sequelize.DATE,
-        get: function () {
+        get() {
             const createdTime = this.getDataValue('tokenExpireTime');
             return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
@@ -38,7 +38,7 @@ export const InvestPush = sequelize.define('invest_push', {
     createdTime: {//创建时间
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        get: function () {
+        get() {
             const createdTime = this.getDataValue('createdTime');
             return moment(createdTime).format(ConstVars.momentDateTimeFormatter);
         }
