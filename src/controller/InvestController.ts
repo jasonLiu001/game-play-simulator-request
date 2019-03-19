@@ -11,6 +11,7 @@ import {InvestQuery} from "../models/query/InvestQuery";
 import {ProfitQuery} from "../models/query/ProfitQuery";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
+import {InvestInfoBase} from "../models/db/InvestInfoBase";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
@@ -143,6 +144,29 @@ export class InvestController {
             })
             .catch((e) => {
                 let errMsg: string = "获取投注列表失败";
+                jsonRes.fail(errMsg, e.message);
+                return res.status(200).send(jsonRes);
+            });
+    }
+
+    /**
+     *
+     * 获取投注详情
+     */
+    async getInvestInfo(req: Request, res: Response, next: any): BlueBirdPromise<any> {
+        let jsonRes: ResponseJson = new ResponseJson();
+        //构造查询实体
+        let investQuery: InvestQuery = new InvestQuery();
+        investQuery = investQuery.buildQueryEntity(req, investQuery);
+
+        InvestTableService.getInvestInfoByTableName(investQuery.tableName, investQuery.period, investQuery.planType)
+            .then((investInfo: InvestInfoBase) => {
+                let successMsg: string = "详情成功";
+                jsonRes.success(successMsg, investInfo);
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "获取详情失败";
                 jsonRes.fail(errMsg, e.message);
                 return res.status(200).send(jsonRes);
             });

@@ -22,9 +22,9 @@ var app = new Vue({
             window.open(url);
         },
         renderPageData(callback, dropLoader) {
-            let url = apiList.findAllInvestTotalInfoList + "?tableName=invest_total&pageIndex=" + this.pageIndex + "&pageSize=" + this.pageSize;
+            let url = apiList.getInvestList + "?tableName=invest_total&pageIndex=" + this.pageIndex + "&pageSize=" + this.pageSize;
 
-            axios.post(url).then((res) => {
+            axios.get(url).then((res) => {
                 if (!res.data.data) {
                     this.alertMessage = "服务器返回数据格式错误";
                     this.isShowAlert = true;

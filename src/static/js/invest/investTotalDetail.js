@@ -18,7 +18,7 @@ var app = new Vue({
                 this.alertMessage = '正向号码复制成功';
                 this.isShowAlert = true;
             },
-            copyReverseInvestNumbers(investTotalItem, evt){
+            copyReverseInvestNumbers(investTotalItem, evt) {
                 let totalNumbers = this.getTotalNumberArray();
                 let resultsNumbers = [];
                 totalNumbers.forEach((item, index) => {
@@ -32,9 +32,9 @@ var app = new Vue({
                 this.isShowAlert = true;
             },
             renderPageData() {
-                let url = apiList.getInvestTotalInfoByPeriod + "?period=" + this.period + "&planType=" + this.planType;
+                let url = apiList.getInvestInfo + "?tableName=invest_total&period=" + this.period + "&planType=" + this.planType;
 
-                axios.post(url).then((res) => {
+                axios.get(url).then((res) => {
                     if (!res.data.data) {
                         this.alertMessage = "服务器返回数据格式错误";
                         this.isShowAlert = true;

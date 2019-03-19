@@ -13,6 +13,12 @@ export abstract class QueryBase {
 
     /**
      *
+     * 期号
+     */
+    period: string;
+
+    /**
+     *
      * 每页数据量
      */
     pageSize: number;
@@ -81,6 +87,7 @@ export abstract class QueryBase {
         args.endTime = req.query.endTime;
         args.endDate = req.query.endDate;
         args.endDateTime = req.query.endDateTime;
+        args.period = req.query.period;
         return args;
     }
 

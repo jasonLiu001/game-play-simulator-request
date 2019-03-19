@@ -174,7 +174,7 @@ export class InvestTableService {
                     [Op.lte]: invest.endDateTime
                 }
             };
-        } else {
+        } else if (!isNaN(invest.planType)) {
             whereCondition = {
                 planType: invest.planType
             };
