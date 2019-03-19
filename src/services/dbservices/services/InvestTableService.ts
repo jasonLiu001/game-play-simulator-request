@@ -6,6 +6,7 @@ import {EnumDbTableName} from "../../../models/EnumModel";
 import {InvestQuery} from "../../../models/query/InvestQuery";
 import {InvestInfoBase} from "../../../models/db/InvestInfoBase";
 import {ProfitQuery} from "../../../models/query/ProfitQuery";
+import {InvestInfoGroupByPeriodViewModel} from "../../../models/viewmodel/InvestInfoGroupByPeriod";
 
 const Sequelize = require('sequelize');
 const Enumerable = require('linq');
@@ -146,7 +147,7 @@ export class InvestTableService {
      * @param {InvestQuery} invest
      * @returns {Bluebird<InvestInfoBase>}
      */
-    static getInvestListByTableName(invest: InvestQuery): BlueBirdPromise<Array<InvestQuery>> {
+    static getInvestListByTableName(invest: InvestQuery): BlueBirdPromise<Array<InvestInfoBase>> {
         let tableInstance: any = InvestTableService.getQueryTableInstance(invest.tableName);
 
         //动态 where 查询条件
@@ -182,7 +183,7 @@ export class InvestTableService {
         }
 
         //返回查询结果 指定查询字段
-        let investQueryList: BlueBirdPromise<Array<InvestQuery>> = tableInstance.findAll({
+        let investQueryList: BlueBirdPromise<Array<InvestInfoBase>> = tableInstance.findAll({
             attributes: ['period', 'planType', 'investNumberCount', 'currentAccountBalance', 'originAccountBalance', 'awardMode', 'touZhuBeiShu', 'isUseReverseInvestNumbers', 'winMoney', 'status', 'isWin', 'investTime', 'investDate', 'investTimestamp'],
             offset: (invest.pageIndex - 1) * invest.pageSize,
             limit: invest.pageSize,
@@ -205,13 +206,33 @@ export class InvestTableService {
      *
      * 返回全部的方案列表
      */
-    private static getAllInvestInfoList(investQueryList: BlueBirdPromise<Array<InvestQuery>>): BlueBirdPromise<Array<any>> {
+    private static getAllInvestInfoList(investQueryList: BlueBirdPromise<Array<InvestInfoBase>>): BlueBirdPromise<Array<any>> {
         return investQueryList
-            .then((investArray: Array<InvestQuery>) => {
-                //取period列表
+            .then((investArray: Array<InvestInfoBase>) => {
+                //提取period列表
+                let periodList: Array<string> = Enumerable.from(investArray)
+                    .select(function (item) {
+                        return item.period;
+                    })
+                    .distinct()
+                    .toArray();
 
+                //接口返回数据
+                let investInfoArray: Array<InvestInfoGroupByPeriodViewModel> = [];
 
-                return investArray;
+                periodList.forEach(function (period) {
+                    let periodGroup: InvestInfoGroupByPeriodViewModel = new InvestInfoGroupByPeriodViewModel();
+                    periodGroup.period = period;
+                    periodGroup.investInfoList = Enumerable.from(investArray)
+                        .where(function (investInfo) {
+                            return investInfo.period == period;
+                        })
+                        .toArray();
+
+                    investInfoArray.push(periodGroup);
+                });
+
+                return investInfoArray;
             });
     }
 

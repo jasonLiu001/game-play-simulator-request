@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <template v-for="investTotalItem in row.investTotalInfos">
+                <template v-for="investTotalItem in row.investInfoList">
                     <div v-if="investTotalItem.planType!=4" class="col-3"
                          @click="redirectToDetail(row.period,investTotalItem,$event)">
 
