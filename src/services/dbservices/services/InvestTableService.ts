@@ -182,7 +182,7 @@ export class InvestTableService {
 
         //返回查询结果 指定查询字段
         return tableInstance.findAll({
-            attributes: ['period', 'planType', 'investNumberCount', 'currentAccountBalance', 'isUseReverseInvestNumbers', 'status', 'isWin', 'investTime'],
+            attributes: ['period', 'planType', 'investNumberCount', 'currentAccountBalance', 'originAccountBalance', 'awardMode', 'touZhuBeiShu', 'isUseReverseInvestNumbers', 'winMoney', 'status', 'isWin', 'investTime', 'investDate', 'investTimestamp'],
             offset: (invest.pageIndex - 1) * invest.pageSize,
             limit: invest.pageSize,
             where: whereCondition,
