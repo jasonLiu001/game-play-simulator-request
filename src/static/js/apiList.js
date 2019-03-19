@@ -1,8 +1,8 @@
-var servrContextPath = "/service";
+var servrContextPath = "";
 var apiList = {
-    findAllInvestTotalInfoList: "https://www.cnlands.cn/invest/getInvestList",
+    findAllInvestTotalInfoList: "/invest/getInvestList",
     getInvestTotalInfoByPeriod: servrContextPath + "/lottery/getInvestTotalInfoByPeriod",
-    findInvestInfoList: "https://www.cnlands.cn/invest/getInvestList?tableName=invest&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
-    findInvestTotalInfoList: "https://www.cnlands.cn/invest/getInvestList?tableName=invest_total&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
+    findInvestInfoList: "/invest/getInvestList?tableName=invest&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
+    findInvestTotalInfoList: "/invest/getInvestList?tableName=invest_total&pageIndex=1&pageSize={0}&planType={1}&startDateTime={2}&endDateTime={3}",
     getTotalCorrectAndWrongCount: servrContextPath + "/lottery/getTotalCorrectAndWrongCount?startTimeStr={0}&endTimeStr={1}"
 };
