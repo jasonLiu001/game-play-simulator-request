@@ -1,7 +1,9 @@
 import Promise = require('bluebird');
 import moment  = require('moment');
 
-let cheerio = require('cheerio');
+let cheerio = require('cheerio'),
+    log4js = require('log4js'),
+    log = log4js.getLogger('Award500comService');
 
 
 /**
@@ -43,8 +45,15 @@ export class Award500comService {
                         reject(error);
                     }
 
-                    let awardList: Array<AwardInfo> = Award500comService.getHistoryAwards(body);
-                    resolve(awardList);
+                    try {
+                        let awardList: Array<AwardInfo> = Award500comService.getHistoryAwards(body);
+                        resolve(awardList);
+                    }
+                    catch (e) {
+                        log.error(e);
+                        reject(e);
+                    }
+
                 });
         });
     }
