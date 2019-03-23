@@ -1,0 +1,8 @@
+import {NotificationService} from "./services/notification/NotificationService";
+import {AppServices} from "./services/AppServices";
+
+let notificationService = new NotificationService();
+//启动投注程序
+AppServices.start();
+//启动通知程序
+notificationService.start();
