@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 export const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     host: 'localhost',
     port: 3306,
@@ -9,7 +8,8 @@ export const sequelize = new Sequelize('reward', 'root', 'Fkwy+8ah', {
     logging: false,//不输出sql操作日志
     //问题：Deprecation warning for String based operators
     //解决方案：https://github.com/sequelize/sequelize/issues/8417#issuecomment-335124373
-    operatorsAliases: Op, // use Sequelize.Op
+    //v5版本的解决，直接注释掉这个选项 http://docs.sequelizejs.com/manual/querying.html#operators-aliases
+    //operatorsAliases: false, // use Sequelize.Op
 
     pool: {
         max: 5,
