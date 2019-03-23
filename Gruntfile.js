@@ -17,7 +17,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        src: ['package.json'],
+                        src: ['package.json', 'yarn.lock'],
                         dest: 'dist/'
                     }
                 ]
