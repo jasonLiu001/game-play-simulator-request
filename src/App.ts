@@ -21,13 +21,13 @@ ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskLis
         //启动投注程序
         AppServices.start();
     } else {
-        log.error("主程序已启动，无需重复启动！")
+        log.error("主程序已启动，无需重复启动！");
     }
     if (ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
         //启动通知程序
         notificationService.start();
     } else {
-        log.error("通知程序已启动，无需重复启动！")
+        log.error("通知程序已启动，无需重复启动！");
     }
 });
 
