@@ -34,13 +34,17 @@ ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskLis
 //每天固定时间停止 预警及获取奖号计划任务
 ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStopTaskEntity.cronTimeStr, () => {
     log.info('主程序及子任务已终止，当前时间：%s', moment().format(ConstVars.momentDateTimeFormatter));
-    //销毁获取奖号
-    ScheduleTaskList.awardFetchTaskEntity.cronSchedule.destroy();
-    ScheduleTaskList.awardFetchTaskEntity.cronSchedule = null;
+    if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule != null) {
+        //销毁获取奖号
+        ScheduleTaskList.awardFetchTaskEntity.cronSchedule.destroy();
+        ScheduleTaskList.awardFetchTaskEntity.cronSchedule = null;
+    }
     log.info('主程序已停止');
-    //销毁预警通知
-    ScheduleTaskList.notificationTaskEntity.cronSchedule.destroy();
-    ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
+    if (ScheduleTaskList.notificationTaskEntity.cronSchedule != null) {
+        //销毁预警通知
+        ScheduleTaskList.notificationTaskEntity.cronSchedule.destroy();
+        ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
+    }
     log.info('通知程序已停止');
     AppServices.initAppStartConfig();//重置应用运行参数
 });
