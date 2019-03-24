@@ -1,11 +1,10 @@
 import {NotificationService} from "../services/notification/NotificationService";
 import {Request, Response} from "express";
-import {AppServices} from "../services/AppServices";
 import {ScheduleTaskList} from "../config/ScheduleTaskList";
 import {ResponseJson} from "../models/ResponseJson";
+import {ConstVars} from "../global/ConstVars";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
-import {ConstVars} from "../global/ConstVars";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AppController'),
