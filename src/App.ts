@@ -20,7 +20,7 @@ notificationService.start();
 
 //node-cron的格式可能和linux中crontab有区别，设置时请参考文档：https://www.npmjs.com/package/node-cron
 ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStartTaskEntity.cronTimeStr, () => {
-    AppServices.initAppStartConfig();//重置应用运行参数
+    //AppServices.initAppStartConfig();//重置应用运行参数
     log.info('执行启动app任务，当前时间：%s', moment().format(ConstVars.momentDateTimeFormatter));
     if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null) {
         //启动投注程序
@@ -51,5 +51,5 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
         ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
     }
     log.info('通知程序已停止');
-    AppServices.initAppStartConfig();//重置应用运行参数
+    //AppServices.initAppStartConfig();//重置应用运行参数
 });
