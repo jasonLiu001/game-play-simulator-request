@@ -36,12 +36,13 @@ export class AwardService {
             TimeServiceV2.isInvestTime()
                 .then(() => {
                     log.info('获取第三方开奖数据');
-                    return Award500comService.getHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
-                        .then((historyAwards: Array<AwardInfo>) => {
-                            return historyAwards.length > 0 ? historyAwards[0] : null;
-                        });
-                    //暂时不用360的开奖源
-                    //return crawl360Service.getAwardInfo();
+                    //500com开奖源 已无法方案
+                    // return Award500comService.getHistoryAwardByDate(moment().format(ConstVars.momentDateFormatter))
+                    //     .then((historyAwards: Array<AwardInfo>) => {
+                    //         return historyAwards.length > 0 ? historyAwards[0] : null;
+                    //     });
+                    //360的开奖源
+                    return crawl360Service.getAwardInfo();
                 })
                 .then((award: AwardInfo) => {
                     newAwardInfo = award;//保存最新开奖号码
