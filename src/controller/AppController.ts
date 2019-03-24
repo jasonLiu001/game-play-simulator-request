@@ -19,9 +19,9 @@ export class AppController {
     async start(req: Request, res: Response): BlueBirdPromise<any> {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null && ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
             //启动投注程序
-            AppServices.start();
+            //AppServices.start();
             //启动通知程序
-            notificationService.start();
+            //notificationService.start();
             let jsonRes: ResponseJson = new ResponseJson();
             let msg: string = '恭喜！程序已成功启动!赚钱咯！';
             jsonRes.success(msg, msg);
