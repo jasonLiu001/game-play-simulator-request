@@ -12,6 +12,7 @@ import {SMSSender} from "../../notification/sender/SMSSender";
 import {InvestTableService} from "../../dbservices/services/InvestTableService";
 import BlueBirdPromise = require('bluebird');
 import moment  = require('moment');
+import {GameInfo} from "./GameInfo";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
@@ -62,9 +63,9 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
     /**
      *
      *
-     * 产生投注的token  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
+     * 产生投注的token 历史号码等  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      */
-    getInvestToken(request: any): BlueBirdPromise<any> {
+    getGameInfo(request: any): BlueBirdPromise<GameInfo> {
         return new BlueBirdPromise((resolve, reject) => {
             request.post(
                 {
@@ -83,8 +84,13 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
 
                     try {
                         let json: any = JSON.parse(body);
-                        let token = json.data.token_tz;
-                        resolve(token);
+
+                        let gameInfo: GameInfo = {
+                            token_tz: json.data.token_tz,
+                            history: json.data.history
+                        };
+                        resolve(gameInfo);
+
                     } catch (e) {
                         if (e) {
                             log.error(e);
@@ -166,14 +172,17 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 投注准备
      */
-    investPrepare(request: any): BlueBirdPromise<any> {
+    getInvestToken(request: any): BlueBirdPromise<any> {
         return this.gotoLoginSuccessPage(request, '/pchome')
             .then(() => {
                 return this.getLoginUserInfo(request);
             })
             .then((userInfo) => {
+                return this.getGameInfo(request);
+            })
+            .then((gameInfo: GameInfo) => {
                 //获取投注的token
-                return this.getInvestToken(request);
+                return gameInfo.token_tz;
             });
     }
 
@@ -187,7 +196,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param investInfo 数据库记录实体
      */
     invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
-        return this.investPrepare(request)
+        return this.getInvestToken(request)
             .then((token) => {
                 return this.investMock(request, token, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
             })
@@ -233,7 +242,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
         let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
         let currentNextPeriod = TimeServiceV2.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
-        return this.investPrepare(request)
+        return this.getInvestToken(request)
             .then((token) => {
                 requestToken = token;
                 return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST, currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
