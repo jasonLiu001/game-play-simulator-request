@@ -7,9 +7,8 @@ import {AwardCaiBaXianService} from "../crawler/award/AwardCaiBaXianService";
 import {ScheduleTaskList} from "../../config/ScheduleTaskList";
 import {AwardKm28ComService} from "../crawler/award/AwardKm28ComService";
 import {Award500comService} from "../crawler/historyawards/Award500comService";
-import {ConstVars} from "../../global/ConstVars";
 import {AwardTableService} from "../dbservices/services/AwardTableService";
-import moment  = require('moment');
+import {AwardJiangNanPlatfromService} from "../crawler/award/AwardJiangNanPlatfromService";
 import Promise = require('bluebird');
 import cron = require('node-cron');
 
@@ -17,6 +16,7 @@ let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
     awardCaiBaXianService = new AwardCaiBaXianService(),
     crawl360Service = new Award360Service(),
+    awardJiangNanPlatfromService = new AwardJiangNanPlatfromService(),
     awardKm28ComService: AwardKm28ComService = new AwardKm28ComService();
 
 /**
@@ -42,7 +42,9 @@ export class AwardService {
                     //         return historyAwards.length > 0 ? historyAwards[0] : null;
                     //     });
                     //360的开奖源
-                    return crawl360Service.getAwardInfo();
+                    //return crawl360Service.getAwardInfo();
+                    //江南平台官方源
+                    return awardJiangNanPlatfromService.getAwardInfo();
                 })
                 .then((award: AwardInfo) => {
                     newAwardInfo = award;//保存最新开奖号码
