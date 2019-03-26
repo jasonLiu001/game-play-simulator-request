@@ -256,12 +256,17 @@ export class InvestTableService {
      * 查询利润列表
      */
     static getInvestProfitListByTableName(profitQuery: ProfitQuery): BlueBirdPromise<Array<any>> {
+        let tableName: string = EnumDbTableName.INVEST;
+        if (profitQuery.tableName != undefined && profitQuery.tableName != '') {
+            tableName = profitQuery.tableName;
+        }
+
         let whereCondition: string = "";
         if (profitQuery.startTime != undefined && profitQuery.startTime != '') {
             whereCondition = " AND R.`investTimestamp`>=:startTime AND R.`investTimestamp`<=:endTime ";
         }
 
-        let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM invest R WHERE R.planType=:planType " + whereCondition + ") A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
+        let sql = "SELECT A.investDate,MIN(A.currentAccountBalance) minprofit,MAX(A.currentAccountBalance) maxprofit FROM (SELECT * FROM " + tableName + " R WHERE R.planType=:planType " + whereCondition + ") A GROUP BY A.investDate ORDER BY A.investDate DESC LIMIT :pageIndex,:pageSize";
 
         let profits: BlueBirdPromise<Array<any>> = sequelize.query(sql,
             {
