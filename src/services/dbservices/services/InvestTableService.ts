@@ -229,6 +229,9 @@ export class InvestTableService {
                         .where(function (investInfo) {
                             return investInfo.period == period;
                         })
+                        .orderBy(function (investInfo) {
+                            return investInfo.planType;
+                        })
                         .toArray();
 
                     //时间格式化 余额格式化
