@@ -140,6 +140,9 @@ export class InvestTableService {
         return tableInstance.findOne({
             where: {period: period, planType: planType},
             raw: true
+        }).then((investInfo: InvestInfoBase) => {
+            investInfo.investTime = moment(investInfo.investTime).format(ConstVars.momentDateTimeFormatter);
+            return investInfo;
         });
     }
 
