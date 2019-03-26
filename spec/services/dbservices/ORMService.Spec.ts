@@ -48,14 +48,14 @@ describe('ORMService Test', () => {
             });
     }, 60000);
 
-    it('create db test', (done) => {
+    xit('create db test', (done) => {
         sequelize
             .authenticate()
             .then(() => {
                 console.log('Database connection has been established successfully.');
                 //表存在时，执行修改操作，这个操作谨慎使用，如果修改已经存在的列名，会清空数据
                 return sequelize.sync({
-                    force: true//删除所有表并重新创建新表
+                    //force: true//删除所有表并重新创建新表
                 }).then(() => {
                     //初始化测试数据表 数据
                     return User.bulkCreate(
