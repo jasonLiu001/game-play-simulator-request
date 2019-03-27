@@ -5,8 +5,8 @@ var app = new Vue({
             dataUrl: '',//接口数据url
             yAxisDataType: '',//y轴数据类型
             chartType: '',//图表类型
-            startTime: moment().format('YYYY-MM-DD') + ' 09:50',
-            endTime: moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00',
+            startTime: moment().format('YYYY-MM-DD') + ' 00:00:00',
+            endTime: moment().format('YYYY-MM-DD') + ' 23:59:59',
             selectedPlan: "plan_01",//选择的方案 默认选择方案1
             isShowPlan01: true,//显示方案1图表
             isShowPlan02: true,//显示方案2图表
@@ -42,12 +42,12 @@ var app = new Vue({
         btnQueryClickHandler(event) {
             let self = this;
             if (this.startTime === '') {
-                this.startTime = moment().format('YYYY-MM-DD') + ' 09:50'
+                this.startTime = moment().format('YYYY-MM-DD') + ' 00:00:00'
             } else {
                 this.startTime = moment(this.startTime).format('YYYY-MM-DD HH:mm')
             }
             if (this.endTime === '') {
-                this.endTime = moment().add(1, 'days').format('YYYY-MM-DD') + ' 02:00'
+                this.endTime = moment().format('YYYY-MM-DD') + ' 23:59:59'
             } else {
                 this.endTime = moment(this.endTime).format('YYYY-MM-DD HH:mm')
             }
