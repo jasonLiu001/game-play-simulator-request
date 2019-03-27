@@ -48,18 +48,7 @@ app.use('/settings', settingsRoutes);
 ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStartTaskEntity.cronTimeStr, () => {
     AppServices.initAppStartConfig();//重置应用运行参数
     log.info('执行启动app任务，当前时间：%s', moment().format(ConstVars.momentDateTimeFormatter));
-    if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null) {
-        //启动投注程序
-        AppServices.start();
-    } else {
-        log.error("主程序已启动，无需重复启动！");
-    }
-    if (ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
-        //启动通知程序
-        notificationService.start();
-    } else {
-        log.error("通知程序已启动，无需重复启动！");
-    }
+    AppServices.startAppServices();
 });
 
 //每天固定时间停止 预警及获取奖号计划任务
@@ -82,6 +71,7 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
 
 app.listen(PORT, () => {
     log.info('Express server listening on port ' + PORT);
+    AppServices.startAppServices();
 });
 
 process.on('uncaughtException', function (exception) {

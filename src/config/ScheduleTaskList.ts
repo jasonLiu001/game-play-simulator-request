@@ -3,13 +3,13 @@ import {CronScheduleModel} from "../models/CronScheduleModel";
 export class ScheduleTaskList {
     //应用定时启动任务
     static appStartTaskEntity: CronScheduleModel = {
-        cronTimeStr: '20 7 * * 0-6',//周一到周六 每天上午07:20执行
+        cronTimeStr: '2 0 * * 0-6',//周一到周六 每天凌晨00:02执行
         cronSchedule: null
     };
 
     //定时停止应用
     static appStopTaskEntity: CronScheduleModel = {
-        cronTimeStr: '20 3 * * 0-6',//周一到周六 每天上午3:20执行
+        cronTimeStr: '59 23 * * 0-6',//周一到周六 每天深夜23:59执行
         cronSchedule: null
     };
 

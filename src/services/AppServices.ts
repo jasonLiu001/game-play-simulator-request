@@ -8,16 +8,38 @@ import {SettingsInfo} from "../models/db/SettingsInfo";
 import {SettingService} from "./settings/SettingService";
 import {AppSettings} from "../config/AppSettings";
 import {GlobalRequest} from "../global/GlobalRequest";
+import {NotificationService} from "./notification/NotificationService";
+import {ScheduleTaskList} from "../config/ScheduleTaskList";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AppServices'),
-    investService = new InvestService();
+    investService = new InvestService(),
+    notificationService = new NotificationService();
 
 /**
  *
  * App主服务入口
  */
 export class AppServices {
+    /**
+     *
+     * 启动App服务 投注服务 通知服务
+     */
+    static startAppServices() {
+        if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null) {
+            //启动投注程序
+            AppServices.start();
+        } else {
+            log.error("主程序已启动，无需重复启动！");
+        }
+        if (ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
+            //启动通知程序
+            notificationService.start();
+        } else {
+            log.error("通知程序已启动，无需重复启动！");
+        }
+    }
+
     /**
      *
      *
