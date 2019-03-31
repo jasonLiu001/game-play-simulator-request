@@ -141,6 +141,8 @@ export class InvestTableService {
             where: {period: period, planType: planType},
             raw: true
         }).then((investInfo: InvestInfoBase) => {
+            //空则直接返回
+            if (!investInfo) return investInfo;
             investInfo.investTime = moment(investInfo.investTime).format(ConstVars.momentDateTimeFormatter);
             return investInfo;
         });
@@ -214,6 +216,8 @@ export class InvestTableService {
     private static getAllInvestInfoList(investQueryList: BlueBirdPromise<Array<InvestInfoBase>>): BlueBirdPromise<Array<any>> {
         return investQueryList
             .then((investArray: Array<InvestInfoBase>) => {
+                if (investArray.length == 0) return investArray;
+
                 //提取period列表
                 let periodList: Array<string> = Enumerable.from(investArray)
                     .select(function (item) {
@@ -282,6 +286,7 @@ export class InvestTableService {
 
         return profits
             .then((profitsGroup: Array<any>) => {
+                if (profitsGroup.length == 0) return profitsGroup;
                 //余额格式化
                 Enumerable.from(profitsGroup)
                     .forEach(function (profit) {
