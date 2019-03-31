@@ -18,7 +18,7 @@ let request = require('request'),
 
 export class AwardJiangNanPlatfromService {
     getAwardInfo(gameType: JiangNanGameType, updateStatus: number = 1): Promise<AwardInfo> {
-        return jiangNanLotteryService.getGameInfo(gameType, request)
+        return jiangNanLotteryService.getGameInfo(gameType,request)
             .then((gameInfo: GameInfo) => {
                 if (gameInfo.history == null || gameInfo.history.length == 0) {
                     log.info("未查询到历史号码：history.length=%s", 0);

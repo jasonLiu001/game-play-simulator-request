@@ -113,7 +113,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase {
      *
      * 产生投注的token 历史号码等  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      */
-    getGameInfo(request: any, gameType: JiangNanGameType): BlueBirdPromise<GameInfo> {
+    getGameInfo(gameType: JiangNanGameType, request: any): BlueBirdPromise<GameInfo> {
         return new BlueBirdPromise((resolve, reject) => {
             request.post(
                 {
@@ -226,7 +226,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase {
                 return this.getLoginUserInfo(request);
             })
             .then((userInfo) => {
-                return this.getGameInfo(request, JiangNanGameType.TENCENT75);
+                return this.getGameInfo(JiangNanGameType.TENCENT75, request);
             })
             .then((gameInfo: GameInfo) => {
                 //获取投注的token
