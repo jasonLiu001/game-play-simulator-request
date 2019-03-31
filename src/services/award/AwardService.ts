@@ -11,6 +11,7 @@ import {AwardTableService} from "../dbservices/services/AwardTableService";
 import {AwardJiangNanPlatfromService} from "../crawler/award/AwardJiangNanPlatfromService";
 import Promise = require('bluebird');
 import cron = require('node-cron');
+import {JiangNanGameType} from "../platform/jiangnan/JiangNanLotteryService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AwardService'),
@@ -43,8 +44,8 @@ export class AwardService {
                     //     });
                     //360的开奖源
                     //return crawl360Service.getAwardInfo();
-                    //江南平台官方源
-                    return awardJiangNanPlatfromService.getAwardInfo();
+                    //江南平台官方源 腾讯75分彩
+                    return awardJiangNanPlatfromService.getAwardInfo(JiangNanGameType.TENCENT75);
                 })
                 .then((award: AwardInfo) => {
                     newAwardInfo = award;//保存最新开奖号码

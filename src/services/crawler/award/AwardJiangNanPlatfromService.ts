@@ -1,6 +1,9 @@
 import {AwardInfo} from "../../../models/db/AwardInfo";
 import {ConstVars} from "../../../global/ConstVars";
-import {GameHistory, GameInfo, JiangNanLotteryService} from "../../platform/jiangnan/JiangNanLotteryService";
+import {
+    GameHistory, GameInfo, JiangNanGameType,
+    JiangNanLotteryService
+} from "../../platform/jiangnan/JiangNanLotteryService";
 import Promise = require('bluebird');
 import moment  = require('moment');
 
@@ -14,8 +17,8 @@ let request = require('request'),
 
 
 export class AwardJiangNanPlatfromService {
-    getAwardInfo(updateStatus: number = 1): Promise<AwardInfo> {
-        return jiangNanLotteryService.getGameInfo(request)
+    getAwardInfo(gameType: JiangNanGameType, updateStatus: number = 1): Promise<AwardInfo> {
+        return jiangNanLotteryService.getGameInfo(gameType, request)
             .then((gameInfo: GameInfo) => {
                 if (gameInfo.history == null || gameInfo.history.length == 0) {
                     log.info("未查询到历史号码：history.length=%s", 0);

@@ -252,7 +252,7 @@ export class CQSSCTimeServiceV1 {
 
     /**
      *
-     * 是否是停止买卖时间  02:00-10:00 停止购买
+     * 是否是停止买卖时间  02:00-10:00 停止购买 true:停止购买 false:不停止
      */
     static isInStopInvestTime(): boolean {
         let currentTime = new Date();

@@ -15,12 +15,12 @@ export class ScheduleTaskList {
 
     //定期获取奖号计划任务对象
     static awardFetchTaskEntity: CronScheduleModel = {
-        cronTimeStr: '*/25 * * * * *',//25秒执行一次
+        cronTimeStr: '*/15 * * * * *',//25秒执行一次
         cronSchedule: null//cron对象
     };
     //预警通知计划任务
     static notificationTaskEntity: CronScheduleModel = {
-        cronTimeStr: '*/2 * * * *',//每1分钟执行一次
+        cronTimeStr: '*/1 * * * *',//每1分钟执行一次
         cronSchedule: null//cron对象
     };
 

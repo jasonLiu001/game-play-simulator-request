@@ -2,7 +2,7 @@ import {Config, CONFIG_CONST} from "../../config/Config";
 import {InvestInfo} from "../../models/db/InvestInfo";
 import BlueBirdPromise = require('bluebird');
 import {JiangNanLoginService} from "./jiangnan/JiangNanLoginService";
-import {JiangNanLotteryService} from "./jiangnan/JiangNanLotteryService";
+import {JiangNanGameType, JiangNanLotteryService} from "./jiangnan/JiangNanLotteryService";
 import moment  = require('moment');
 import {ConstVars} from "../../global/ConstVars";
 
@@ -33,7 +33,7 @@ export class PlatformService {
                 log.info('正在执行真实投注...');
                 log.info(CONFIG_CONST.isRealInvest ? '真实投注执行中...' : '模拟投注执行中...');
                 log.info('方案%s 投注前账户余额：%s', CONFIG_CONST.currentSelectedInvestPlanType, investInfo.currentAccountBalance);
-                return jiangNanLotteryService.invest(request, investInfo);
+                return jiangNanLotteryService.invest(JiangNanGameType.TENCENT75, request, investInfo);
             })
             .then((investResult) => {
                 log.info('真实投注操作%s', investResult ? '已执行完成' : '失败');

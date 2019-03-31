@@ -16,6 +16,23 @@ import moment  = require('moment');
 let log4js = require('log4js'),
     log = log4js.getLogger('JiangNanLotteryService');
 
+/**
+ *
+ * 江南平台游戏类型
+ */
+export enum JiangNanGameType {
+    /**
+     *
+     * 重庆时时彩
+     */
+    CQSSC = 1,
+    /**
+     *
+     * 腾讯75分彩
+     */
+    TENCENT75 = 61
+}
+
 
 /**
  *
@@ -48,7 +65,7 @@ export class GameHistory {
     nums: string;
 }
 
-export class JiangNanLotteryService extends PlatformAbstractBase implements IPlatformLotteryService {
+export class JiangNanLotteryService extends PlatformAbstractBase {
     /**
      *
      * 产生平台投注模式 元，角，分，厘
@@ -96,13 +113,13 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 产生投注的token 历史号码等  这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      */
-    getGameInfo(request: any): BlueBirdPromise<GameInfo> {
+    getGameInfo(request: any, gameType: JiangNanGameType): BlueBirdPromise<GameInfo> {
         return new BlueBirdPromise((resolve, reject) => {
             request.post(
                 {
                     url: CONFIG_CONST.siteUrl + '/gameType/initGame.mvc',
                     form: {
-                        gameID: 1
+                        gameID: gameType
                     },
                     headers: {
                         'Referer': CONFIG_CONST.siteUrl + '/pchome'
@@ -145,8 +162,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * {4} danZhuJinEDanWei  单注金额单位
      * {5} zhuShu 投注号码一共多少注
      */
-    private getInvestTokenString(token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
-        let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
+    private getInvestTokenString(gameType: JiangNanGameType, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): string {
+        let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'" + gameType + "','tingZhiZhuiHao':'true','zhuiHaoQiHao':[],'touZhuHaoMa':[{'wanFaID':'8','touZhuHaoMa':'{2}','digit':'','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', awardMode);
         let mode: string = this.getInvestMode(awardMode);
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu));
@@ -164,8 +181,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * {5} zhuShu 投注号码一共多少注
      * {6} currentNextPeriod 追号下一期
      */
-    private getMultiInvestTokenString(token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
-        let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'1','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
+    private getMultiInvestTokenString(gameType: JiangNanGameType, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): string {
+        let tokenStr = "{'token':'{0}','issueNo':'{1}','gameId':'" + gameType + "','tingZhiZhuiHao':'true','zhuiHaoQiHao':[{'qiHao':'{1}','beiShu':'1'},{'qiHao':'{6}','beiShu':'2'}],'touZhuHaoMa':[{'wanFaID':'41','touZhuHaoMa':'||||{2}','digit':'4','touZhuBeiShu':'{3}','danZhuJinEDanWei':'{4}','yongHuSuoTiaoFanDian':'0','zhuShu':'{5}','bouse':'7.7'}]}";
         log.info('当前投注单位：%s', awardMode);
         let mode: string = this.getInvestMode(awardMode);
         tokenStr = tokenStr.replace('{0}', token).replace('{1}', currentPeriod).replace('{1}', currentPeriod).replace('{2}', touZhuHaoMa).replace('{3}', touZhuBeiShu).replace('{4}', mode).replace('{5}', String(zhuShu)).replace('{6}', String(currentNextPeriod));
@@ -177,8 +194,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行追号投注操作
      */
-    multiInvestMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
-        let investStr = this.getMultiInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
+    multiInvestMock(gameType: JiangNanGameType, request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number, currentNextPeriod: string): BlueBirdPromise<any> {
+        let investStr = this.getMultiInvestTokenString(gameType, token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu, currentNextPeriod);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         });
@@ -189,8 +206,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 执行投注操作
      */
-    investMock(request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
-        let investStr = this.getInvestTokenString(token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu);
+    investMock(gameType: JiangNanGameType, request: any, token: string, currentPeriod: string, awardMode: number, touZhuHaoMa: string, touZhuBeiShu: string, zhuShu: number): BlueBirdPromise<any> {
+        let investStr = this.getInvestTokenString(gameType, token, currentPeriod, awardMode, touZhuHaoMa, touZhuBeiShu, zhuShu);
         return this.httpFormPost(request, CONFIG_CONST.siteUrl + '/cathectic/cathectic.mvc', {
             json: investStr
         }, {
@@ -209,7 +226,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 return this.getLoginUserInfo(request);
             })
             .then((userInfo) => {
-                return this.getGameInfo(request);
+                return this.getGameInfo(request, JiangNanGameType.TENCENT75);
             })
             .then((gameInfo: GameInfo) => {
                 //获取投注的token
@@ -223,13 +240,14 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      * 返回数据：{"msg":"投注成功！","code":200,"data":{"MESSAGE":"投注成功！","STATUS":100,"token_tz":"3b2f1479-7bec-4369-a2e0-c7e0a4fe8bff","LIMIT":[],"BALANCE":"22.48"}}
      *
+     * @param gameType
      * @param request
      * @param investInfo 数据库记录实体
      */
-    invest(request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
+    invest(gameType: JiangNanGameType, request: any, investInfo: InvestInfo): BlueBirdPromise<any> {
         return this.getInvestToken(request)
             .then((token) => {
-                return this.investMock(request, token, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
+                return this.investMock(gameType, request, token, investInfo.period, investInfo.awardMode, investInfo.investNumbers, String(investInfo.touZhuBeiShu), investInfo.investNumbers.split(',').length);
             })
             .then((result) => {
                 if (result) {
@@ -266,10 +284,11 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      *
      *
      * 追号投注入口
+     * @param gameType
      * @param request
      * @param touZhuBeiShu
      */
-    multiInvest(request: any, touZhuBeiShu: string = '1') {
+    multiInvest(gameType: JiangNanGameType, request: any, touZhuBeiShu: string = '1') {
         let currentPeriod = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
         let currentNextPeriod = CQSSCTimeServiceV2.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
@@ -279,7 +298,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
                 return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST, currentPeriod, CONFIG_CONST.currentSelectedInvestPlanType);
             })
             .then((investInfo: InvestInfo) => {
-                return this.multiInvestMock(request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
+                return this.multiInvestMock(gameType, request, requestToken, currentPeriod, investInfo.awardMode, investInfo.investNumbers, touZhuBeiShu, investInfo.investNumbers.split(',').length, currentNextPeriod);
             });
     }
 
@@ -288,13 +307,13 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * 这里没有调用公共的httpPost，调用的时候有问题，暂时还未找到解决方案
      * 获取投注历史 方法返回数据格式: {betRecordList:[],STATE:[],token_cd:''}
      */
-    private getInvestRecordHistory(request: any): BlueBirdPromise<any> {
+    private getInvestRecordHistory(gameType: JiangNanGameType, request: any): BlueBirdPromise<any> {
         return new BlueBirdPromise((resolve, reject) => {
             request.post(
                 {
                     url: CONFIG_CONST.siteUrl + '/betRecord/getNewestBet.mvc',
                     form: {
-                        gameType: 1
+                        gameType: gameType
                     },
                     headers: {
                         'Referer': CONFIG_CONST.siteUrl + '/pchome'
@@ -369,7 +388,7 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param cancelPeriod 撤单期号
      */
     cancelInvest(request: any, cancelPeriod: string): BlueBirdPromise<any> {
-        return this.getInvestRecordHistory(request)
+        return this.getInvestRecordHistory(JiangNanGameType.TENCENT75, request)
             .then((history: any) => {
                 let betRecordList: Array<any> = history.betRecordList;
                 let token_cd: string = history.token_cd;
