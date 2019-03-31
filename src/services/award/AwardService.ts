@@ -1,5 +1,5 @@
 import {AwardInfo} from "../../models/db/AwardInfo";
-import {TimeServiceV2} from "../time/TimeServiceV2";
+import {CQSSCTimeServiceV2} from "../time/CQSSCTimeServiceV2";
 import {Config} from "../../config/Config";
 import {Award360Service} from "../crawler/award/Award360Service";
 import {RejectionMsg} from "../../models/EnumModel";
@@ -33,7 +33,7 @@ export class AwardService {
     static startGetAwardInfoTask(success?: Function): void {
         ScheduleTaskList.awardFetchTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.awardFetchTaskEntity.cronTimeStr, () => {
             let newAwardInfo: AwardInfo = null;
-            TimeServiceV2.isInvestTime()
+            CQSSCTimeServiceV2.isInvestTime()
                 .then(() => {
                     log.info('获取第三方开奖数据');
                     //500com开奖源 已无法方案
@@ -55,7 +55,7 @@ export class AwardService {
                     if (dbAwardRecord) return Promise.reject(RejectionMsg.isExistRecordInAward);
                 })
                 .then(() => {
-                    let lastPeriodStr: string = TimeServiceV2.getLastPeriodNumber(new Date());
+                    let lastPeriodStr: string = CQSSCTimeServiceV2.getLastPeriodNumber(new Date());
                     //保存奖号前需要进行奖号检查
                     if (lastPeriodStr == newAwardInfo.period) {
                         log.info('从网络获取的期号为：%s，正确的期号应该是：%s，两者一致，该奖号可保存！', newAwardInfo.period, lastPeriodStr);
@@ -87,12 +87,12 @@ export class AwardService {
         //更新全局变量
         Config.globalVariable.last_Period = award.period;
         Config.globalVariable.last_PrizeNumber = award.openNumber;
-        Config.globalVariable.current_Peroid = TimeServiceV2.getCurrentPeriodNumber(new Date());
+        Config.globalVariable.current_Peroid = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
 
         return AwardTableService.saveOrUpdateAwardInfo(award)
             .then((awardInfo: AwardInfo) => {
                 //更新下期开奖时间
-                TimeServiceV2.updateNextPeriodInvestTime();
+                CQSSCTimeServiceV2.updateNextPeriodInvestTime();
                 return awardInfo;
             });
     }

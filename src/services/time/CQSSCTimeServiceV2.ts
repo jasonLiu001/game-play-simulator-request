@@ -6,15 +6,15 @@ import {Config, CONFIG_CONST} from "../../config/Config";
 import moment  = require('moment');
 
 let log4js = require('log4js'),
-    log = log4js.getLogger('TimeServiceV2');
+    log = log4js.getLogger('CQSSCTimeServiceV2');
 
-export class TimeServiceV2 {
+export class CQSSCTimeServiceV2 {
     /**
      *
      * 更新下期可投注时间
      */
     static updateNextPeriodInvestTime(): void {
-        Config.globalVariable.nextPeriodInvestTime = TimeServiceV2.getNextOpenTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);//更新开奖时间
+        Config.globalVariable.nextPeriodInvestTime = CQSSCTimeServiceV2.getNextOpenTime(new Date(), CONFIG_CONST.openTimeDelaySeconds);//更新开奖时间
     }
 
     /**
@@ -28,11 +28,11 @@ export class TimeServiceV2 {
         let currentTime: Date = new Date();//当前时间
         let delaySeconds: number = CONFIG_CONST.openTimeDelaySeconds;//开奖延迟时间
         if (Config.globalVariable.nextPeriodInvestTime == null) {
-            Config.globalVariable.nextPeriodInvestTime = TimeServiceV2.getNextOpenTime(currentTime, delaySeconds);
+            Config.globalVariable.nextPeriodInvestTime = CQSSCTimeServiceV2.getNextOpenTime(currentTime, delaySeconds);
             return Promise.resolve(true);
         }
 
-        let nextOpenTime = TimeServiceV2.getNextOpenTime(currentTime, delaySeconds);
+        let nextOpenTime = CQSSCTimeServiceV2.getNextOpenTime(currentTime, delaySeconds);
         //未到开奖时间
         if (nextOpenTime.getTime() == Config.globalVariable.nextPeriodInvestTime.getTime()) {
             log.info("当前时间: %s,下期可投注时间：%s", moment().format(ConstVars.momentDateTimeFormatter), moment(nextOpenTime).format(ConstVars.momentDateTimeFormatter));
@@ -85,7 +85,7 @@ export class TimeServiceV2 {
      * @param delaySeconds 开奖延迟时间
      */
     private static getNextOpenTime(currentTime: Date, delaySeconds = 0): Date {
-        let openTimeList: Array<Date> = TimeServiceV2.getOpenTimeList(currentTime, delaySeconds);
+        let openTimeList: Array<Date> = CQSSCTimeServiceV2.getOpenTimeList(currentTime, delaySeconds);
         let nextOpenTime = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
         for (let currentOpenTime of openTimeList) {
@@ -213,7 +213,7 @@ export class TimeServiceV2 {
      * @param currentTime
      */
     static getCurrentNextPeriodNumber(currentTime: Date): string {
-        let periodList: Array<PeriodTime> = TimeServiceV2.getPeriodList(currentTime, 0);
+        let periodList: Array<PeriodTime> = CQSSCTimeServiceV2.getPeriodList(currentTime, 0);
         let currentPeriod = null;
         let minDiffTime = Number.POSITIVE_INFINITY;//最小相差时间
         for (let i = 0; i < periodList.length; i++) {

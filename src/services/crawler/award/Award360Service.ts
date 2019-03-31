@@ -1,4 +1,4 @@
-import {TimeServiceV2} from "../../time/TimeServiceV2";
+import {CQSSCTimeServiceV2} from "../../time/CQSSCTimeServiceV2";
 import Promise = require('bluebird');
 import moment  = require('moment');
 import {AwardInfo} from "../../../models/db/AwardInfo";
@@ -45,7 +45,7 @@ export class Award360Service implements IAwardCrawler {
      * 获取奖号信息
      */
     getAwardInfo(updateStatus: number = 1): Promise<AwardInfo> {
-        let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
+        let currentPeriod = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
         let dataUrl = this.getDataUrl(currentPeriod);
         return new Promise((resolve, reject) => {
             request(

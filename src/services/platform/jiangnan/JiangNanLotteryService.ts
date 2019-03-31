@@ -1,5 +1,5 @@
 import {CONFIG_CONST} from "../../../config/Config";
-import {TimeServiceV2} from "../../time/TimeServiceV2";
+import {CQSSCTimeServiceV2} from "../../time/CQSSCTimeServiceV2";
 import {IPlatformLotteryService, PlatformAbstractBase} from "../PlatformAbstractBase";
 import {
     EnumAwardMode, EnumDbTableName, EnumNotificationType, EnumSMSSignType,
@@ -270,8 +270,8 @@ export class JiangNanLotteryService extends PlatformAbstractBase implements IPla
      * @param touZhuBeiShu
      */
     multiInvest(request: any, touZhuBeiShu: string = '1') {
-        let currentPeriod = TimeServiceV2.getCurrentPeriodNumber(new Date());
-        let currentNextPeriod = TimeServiceV2.getCurrentNextPeriodNumber(new Date());
+        let currentPeriod = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
+        let currentNextPeriod = CQSSCTimeServiceV2.getCurrentNextPeriodNumber(new Date());
         let requestToken = null;
         return this.getInvestToken(request)
             .then((token) => {
