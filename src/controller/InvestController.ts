@@ -12,10 +12,12 @@ import {ProfitQuery} from "../models/query/ProfitQuery";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
 import {InvestInfoBase} from "../models/db/InvestInfoBase";
+import {JiangNanLoginService} from "../services/platform/jiangnan/JiangNanLoginService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestController'),
-    investBase = new InvestBase();
+    investBase = new InvestBase(),
+    jiangNanLoginService = new JiangNanLoginService();
 
 class InvestControllerConfig {
     //已经投注的期号
@@ -124,6 +126,28 @@ export class InvestController {
                 log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
                 return res.status(200).send(jsonRes);
             })
+    }
+
+    /**
+     *
+     * 手动登录
+     */
+    async manualLogin(req: Request, res: Response): BlueBirdPromise<any> {
+        let jsonRes: ResponseJson = new ResponseJson();
+        log.info('手动登录请求已收到');
+        jiangNanLoginService.login(GlobalRequest)
+            .then((data) => {
+                let successMsg: string = "手动登录成功";
+                jsonRes.success(successMsg, data);
+                log.info("%s，当前时间：%s", successMsg, moment().format(ConstVars.momentDateTimeFormatter));
+                return res.status(200).send(jsonRes);
+            })
+            .catch((e) => {
+                let errMsg: string = "手动登录失败";
+                jsonRes.fail(errMsg, e.message);
+                log.info("%s，当前时间：%s，异常：%s", errMsg, moment().format(ConstVars.momentDateTimeFormatter), e.message);
+                return res.status(200).send(jsonRes);
+            });
     }
 
     /**

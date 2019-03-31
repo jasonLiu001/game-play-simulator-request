@@ -17,13 +17,15 @@ import {ConstVars} from "../../global/ConstVars";
 import {InvestTableService} from "../dbservices/services/InvestTableService";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
+import {JiangNanGameType, JiangNanLotteryService} from "../platform/jiangnan/JiangNanLotteryService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('InvestService'),
     numberService = new NumberService(),
     extraInvestService = new ExtraInvestService(),
     notificationService = new NotificationService(),
-    doubleInvestService = new DoubleInvestService();
+    doubleInvestService = new DoubleInvestService(),
+    jiangNanLotteryService = new JiangNanLotteryService;
 
 export class InvestService extends InvestBase {
 
@@ -107,7 +109,8 @@ export class InvestService extends InvestBase {
                 //真实投注执行登录操作 确保买号后的金额仍然大于最小利润 这里用买号以后的账号余额和最小盈利比较目的，因为买号后当前账号余额可能为负值，说明余额不足了，所以没必要再执行真实投注了，即使开奖以后金额又够投注了，也算今天输了
                 if (investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
-                        return PlatformService.loginAndInvest(request, investInfo);
+                        //todo: 这里如果是分分彩只登录一次
+                        return jiangNanLotteryService.invest(JiangNanGameType.TENCENT75, request, investInfo);
                     } else if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
                         //在当前账号余额充足的情况下 当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
                         return extraInvestService.executeExtraInvest(request, investInfo);//该方法内部会根据条件 自动切换到真实投注

@@ -13,6 +13,9 @@ router.post('/manualCancelInvest', investController.manualCancelInvest);
 //手动更新盈利
 router.post('/manualCalculateWinMoney', investController.manualCalculateWinMoney);
 
+//手动登录
+router.post('/manualLogin', investController.manualLogin);
+
 //获取invest和invest_total表所有投注记录
 router.get('/getInvestList', investController.getInvestList);
 

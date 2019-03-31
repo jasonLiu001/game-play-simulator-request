@@ -10,11 +10,13 @@ import {AppSettings} from "../config/AppSettings";
 import {GlobalRequest} from "../global/GlobalRequest";
 import {NotificationService} from "./notification/NotificationService";
 import {ScheduleTaskList} from "../config/ScheduleTaskList";
+import {JiangNanLoginService} from "./platform/jiangnan/JiangNanLoginService";
 
 let log4js = require('log4js'),
     log = log4js.getLogger('AppServices'),
     investService = new InvestService(),
-    notificationService = new NotificationService();
+    notificationService = new NotificationService(),
+    jiangNanLoginService = new JiangNanLoginService();
 
 /**
  *
@@ -29,6 +31,8 @@ export class AppServices {
         if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule == null) {
             //启动投注程序
             AppServices.start();
+            //分分彩 启动时登录
+            jiangNanLoginService.login(GlobalRequest);
         } else {
             log.error("主程序已启动，无需重复启动！");
         }
