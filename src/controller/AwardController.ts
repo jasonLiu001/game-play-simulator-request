@@ -4,7 +4,7 @@ import {AwardInfo} from "../models/db/AwardInfo";
 import {ResponseJson} from "../models/ResponseJson";
 import {AwardService} from "../services/award/AwardService";
 import {ConstVars} from "../global/ConstVars";
-import {CQSSCTimeServiceV2} from "../services/time/CQSSCTimeServiceV2";
+import {Tencent75TimeService} from "../services/time/Tencent75TimeService";
 import moment  = require('moment');
 import BlueBirdPromise = require('bluebird');
 
@@ -20,7 +20,7 @@ export class AwardController {
      */
     async getLatestAwardInfo(req: Request, res: Response): BlueBirdPromise<any> {
         let jsonRes: ResponseJson = new ResponseJson();
-        let lastPeriodStr: string = CQSSCTimeServiceV2.getLastPeriodNumber(new Date());
+        let lastPeriodStr: string = Tencent75TimeService.getLastPeriodNumber(new Date());
         awardKm28ComService.getAwardInfo()
             .then((award: AwardInfo) => {
                 let successMsg: string = "获取" + lastPeriodStr + "期奖号成功";
@@ -43,7 +43,7 @@ export class AwardController {
     async updateAward(req: Request, res: Response): BlueBirdPromise<any> {
         let jsonRes: ResponseJson = new ResponseJson();
         let lastAwardInfo: AwardInfo = null;
-        let lastPeriodStr: string = CQSSCTimeServiceV2.getLastPeriodNumber(new Date());
+        let lastPeriodStr: string = Tencent75TimeService.getLastPeriodNumber(new Date());
         awardKm28ComService.getAwardInfo()
             .then((newAward: AwardInfo) => {
                 lastAwardInfo = newAward;

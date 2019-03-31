@@ -8,7 +8,7 @@ import {BrokenGroup} from "../rules/BrokenGroup";
 import {KillNumbersMaxMiss} from "../rules/killnumber/KillNumbersMaxMiss";
 import {KillNumberGeWei} from "../rules/killnumber/KillNumberGeWei";
 import {PlanInfo} from "../../models/db/PlanInfo";
-import {CQSSCTimeServiceV2} from "../time/CQSSCTimeServiceV2";
+import {Tencent75TimeService} from "../time/Tencent75TimeService";
 import {PlanInfoBase} from "../../models/db/PlanInfoBase";
 import {PlanInvestNumbersInfo} from "../../models/db/PlanInvestNumbersInfo";
 import {BrokenGroup224} from "../rules/BrokenGroup224";
@@ -51,7 +51,7 @@ export class NumberService extends AbstractRuleBase {
      */
     private initAllRelatedPlanInfoTables(): Promise<any> {
         //当前期号
-        let period = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
+        let period = Tencent75TimeService.getCurrentPeriodNumber(new Date());
         let planInfoBaseString: PlanInfoBase<string> = {
             period: period,
             jiou_type: '',
@@ -108,7 +108,7 @@ export class NumberService extends AbstractRuleBase {
             })
             .then((results) => {
                 promiseAllResult = results;
-                return PlanTableService.getPlanInfo(CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date()));
+                return PlanTableService.getPlanInfo(Tencent75TimeService.getCurrentPeriodNumber(new Date()));
             })
             .then((planInfo: PlanInfo) => {
                 planInfo.jiou_type = promiseAllResult[0].killNumber;

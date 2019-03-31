@@ -3,7 +3,7 @@ import moment  = require('moment');
 import _ = require('lodash');
 import {InvestInfo} from "../../models/db/InvestInfo";
 import {AppSettings} from "../../config/AppSettings";
-import {CQSSCTimeServiceV2} from "../time/CQSSCTimeServiceV2";
+import {Tencent75TimeService} from "../time/Tencent75TimeService";
 import {PlatformService} from "../platform/PlatformService";
 import {EnumDbTableName, EnumNotificationType} from "../../models/EnumModel";
 import {NotificationSender} from "../notification/NotificationSender";
@@ -62,7 +62,7 @@ export class DoubleInvestService extends InvestBase {
         }
 
         //当前期号
-        let currentPeriod = CQSSCTimeServiceV2.getCurrentPeriodNumber(new Date());
+        let currentPeriod = Tencent75TimeService.getCurrentPeriodNumber(new Date());
         //倍投时选取 invest_total表 投注方案
         return InvestTableService.getInvestInfoByTableName(EnumDbTableName.INVEST_TOTAL, currentPeriod, AppSettings.doubleInvest_CurrentSelectedInvestPlanType)
             .then((investInfo: InvestInfo) => {
