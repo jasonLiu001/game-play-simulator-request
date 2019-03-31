@@ -32,7 +32,7 @@ export class AppServices {
             //启动投注程序
             AppServices.start();
             //分分彩 启动时登录
-            jiangNanLoginService.login(GlobalRequest);
+            jiangNanLoginService.login(GlobalRequest.request);
         } else {
             log.error("主程序已启动，无需重复启动！");
         }

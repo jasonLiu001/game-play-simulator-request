@@ -135,7 +135,7 @@ export class InvestController {
     async manualLogin(req: Request, res: Response): BlueBirdPromise<any> {
         let jsonRes: ResponseJson = new ResponseJson();
         log.info('手动登录请求已收到');
-        jiangNanLoginService.login(GlobalRequest)
+        jiangNanLoginService.login(GlobalRequest.request)
             .then((data) => {
                 let successMsg: string = "手动登录成功";
                 jsonRes.success(successMsg, data);
