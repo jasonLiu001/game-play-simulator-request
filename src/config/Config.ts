@@ -32,8 +32,8 @@ export const CONFIG_CONST = {
     siteUrl: 'https://123.jn716.com',
     //需要获取的历史号码数量
     historyCount: 3,
-    //开奖延迟时间，单位为秒
-    openTimeDelaySeconds: 60,
+    //开奖延迟时间，单位为秒 如果是重庆时时彩，这里延迟设置为60秒，腾讯分分彩，延迟10秒
+    openTimeDelaySeconds: 10,
     //自动检查定时器 时间间隔 单位为毫秒ms
     autoCheckTimerInterval: 25000,
     //三星奖金
