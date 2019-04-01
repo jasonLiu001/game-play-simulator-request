@@ -7,4 +7,7 @@ let router: express.Router = express.Router(),
 //启动app
 router.get('/start', appController.start);
 
+//停止app
+router.get('/stop', appController.stop);
+
 module.exports = router;

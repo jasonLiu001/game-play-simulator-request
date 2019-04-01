@@ -31,6 +31,28 @@ export class AppController {
             log.info('%s 当前时间：%s', errMsg, moment().format(ConstVars.momentDateTimeFormatter));
             return res.status(200).send(jsonRes);
         }
+    }
 
+    /**
+     *
+     * 停止app
+     */
+    async stop(req: Request, res: Response): BlueBirdPromise<any> {
+        log.info('接收到停止app请求，当前时间：%s', moment().format(ConstVars.momentDateTimeFormatter));
+        if (ScheduleTaskList.awardFetchTaskEntity.cronSchedule != null) {
+            //销毁获取奖号
+            ScheduleTaskList.awardFetchTaskEntity.cronSchedule.destroy();
+            ScheduleTaskList.awardFetchTaskEntity.cronSchedule = null;
+        }
+        if (ScheduleTaskList.notificationTaskEntity.cronSchedule != null) {
+            //销毁预警通知
+            ScheduleTaskList.notificationTaskEntity.cronSchedule.destroy();
+            ScheduleTaskList.notificationTaskEntity.cronSchedule = null;
+        }
+        AppServices.initAppStartConfig();//重置应用运行参数
+        let jsonRes: ResponseJson = new ResponseJson();
+        let msg: string = 'app停止命令已成功执行!';
+        jsonRes.success(msg, msg);
+        return res.status(200).send(jsonRes);
     }
 }
