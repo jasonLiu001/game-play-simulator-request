@@ -24,43 +24,44 @@ export class SMSSender {
      * @param templateId 短信模板ID，需要在短信应用中申请  NOTE: 这里的模板ID`7839`只是一个示例，真实的模板ID需要在短信控制台中申请
      */
     static async send(templateVar1: string, templateVar2: string, templateVar3: string, smsSign: string, templateId: EnumSMSTemplateType): BlueBirdPromise<any> {
-        //数组具体的元素个数和模板中变量个数必须一致，例如事例中templateId:5678对应一个变量，参数数组中元素个数也必须是一个
-        let params = [templateVar1, templateVar2, templateVar3];
-
-        let promiseArray: Array<BlueBirdPromise<VendorInfo>> = [];
-        promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.TencentSMS));
-        promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.UserPhone));
-        return BlueBirdPromise.all(promiseArray)
-            .then((vendorList: Array<VendorInfo>) => {
-                let tencentSMSVendor: VendorInfo = vendorList[0];
-                let userPhone: VendorInfo = vendorList[1];
-                // 需要发送短信的手机号码
-                let phoneNumbers = [userPhone.key];
-                // 短信应用SDK AppID
-                let appid = tencentSMSVendor.key;  // SDK AppID是1400开头
-                // 短信应用SDK AppKey
-                let appkey = tencentSMSVendor.value;
-                // 实例化QcloudSms
-                let qcloudsms = QcloudSms(appid, appkey);
-                let ssender = qcloudsms.SmsSingleSender();
-                return new BlueBirdPromise<any>((resolve, reject) => {
-                    ssender.sendWithParam(86, phoneNumbers[0], templateId,
-                        params, smsSign, "", "", (err, res, resData) => {
-                            if (err) {
-                                log.error(err);
-                                reject(err);
-                            } else {
-                                resolve(resData);
-                                log.info(resData);
-                            }
-                        });  // 签名参数未提供或者为空时，会使用默认签名发送短信
-                })
-            })
-            .catch((e) => {
-                if (e) {
-                    log.error("发送短信失败，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
-                    log.error(e);
-                }
-            });
+        return BlueBirdPromise.resolve(true);
+        // //数组具体的元素个数和模板中变量个数必须一致，例如事例中templateId:5678对应一个变量，参数数组中元素个数也必须是一个
+        // let params = [templateVar1, templateVar2, templateVar3];
+        //
+        // let promiseArray: Array<BlueBirdPromise<VendorInfo>> = [];
+        // promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.TencentSMS));
+        // promiseArray.push(VendorTableService.getVendorInfo(EnumVendorType.UserPhone));
+        // return BlueBirdPromise.all(promiseArray)
+        //     .then((vendorList: Array<VendorInfo>) => {
+        //         let tencentSMSVendor: VendorInfo = vendorList[0];
+        //         let userPhone: VendorInfo = vendorList[1];
+        //         // 需要发送短信的手机号码
+        //         let phoneNumbers = [userPhone.key];
+        //         // 短信应用SDK AppID
+        //         let appid = tencentSMSVendor.key;  // SDK AppID是1400开头
+        //         // 短信应用SDK AppKey
+        //         let appkey = tencentSMSVendor.value;
+        //         // 实例化QcloudSms
+        //         let qcloudsms = QcloudSms(appid, appkey);
+        //         let ssender = qcloudsms.SmsSingleSender();
+        //         return new BlueBirdPromise<any>((resolve, reject) => {
+        //             ssender.sendWithParam(86, phoneNumbers[0], templateId,
+        //                 params, smsSign, "", "", (err, res, resData) => {
+        //                     if (err) {
+        //                         log.error(err);
+        //                         reject(err);
+        //                     } else {
+        //                         resolve(resData);
+        //                         log.info(resData);
+        //                     }
+        //                 });  // 签名参数未提供或者为空时，会使用默认签名发送短信
+        //         })
+        //     })
+        //     .catch((e) => {
+        //         if (e) {
+        //             log.error("发送短信失败，当前时间：%s", moment().format(ConstVars.momentDateTimeFormatter));
+        //             log.error(e);
+        //         }
+        //     });
     }
 }
