@@ -8,6 +8,6 @@ let router: express.Router = express.Router(),
 router.get('/start', appController.start);
 
 //停止app
-router.get('/stop', appController.stop);
+router.post('/stop', appController.stop);
 
 module.exports = router;
