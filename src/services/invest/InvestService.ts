@@ -109,10 +109,13 @@ export class InvestService extends InvestBase {
                 //真实投注执行登录操作 确保买号后的金额仍然大于最小利润 这里用买号以后的账号余额和最小盈利比较目的，因为买号后当前账号余额可能为负值，说明余额不足了，所以没必要再执行真实投注了，即使开奖以后金额又够投注了，也算今天输了
                 if (investInfo.currentAccountBalance > CONFIG_CONST.minAccountBalance) {
                     if (CONFIG_CONST.isRealInvest) {
-                        //分分彩 如果每期都投注的话 可以直接投注
-                        //return jiangNanLotteryService.invest(JiangNanGameType.TENCENT75, request, investInfo);
-                        //时时彩 每次投注前需要先登录
-                        return PlatformService.loginAndInvest(request, investInfo);
+                        if (AppSettings.isStopCheckLastPrizeNumber) {
+                            //分分彩 如果每期都投注的话 可以直接投注
+                            return jiangNanLotteryService.invest(JiangNanGameType.TENCENT75, request, investInfo);
+                        } else {
+                            //时时彩 每次投注前需要先登录
+                            return PlatformService.loginAndInvest(request, investInfo);
+                        }
                     } else if (!CONFIG_CONST.isRealInvest && !AppSettings.isUseReverseInvestNumbers && AppSettings.isEnableInvestInMock) {
                         //在当前账号余额充足的情况下 当前是模拟投注并且是非取反投注时 才进行此操作 达到投注条件 是否可以不考虑设置中真实投注选项，自行投注
                         return extraInvestService.executeExtraInvest(request, investInfo);//该方法内部会根据条件 自动切换到真实投注
