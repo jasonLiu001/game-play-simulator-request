@@ -6,6 +6,8 @@ import {AppServices} from "./services/AppServices";
 import {NotificationService} from "./services/notification/NotificationService";
 import cron = require('node-cron');
 import moment  = require('moment');
+import {GlobalRequest} from "./global/GlobalRequest";
+import {JiangNanLoginService} from "./services/platform/jiangnan/JiangNanLoginService";
 
 let app: express.Application = express();
 const PORT = 6080;
@@ -17,7 +19,8 @@ log4js.configure(path.resolve(__dirname, '.', 'config/log4js.json'));
 
 //日志文件
 let log = log4js.getLogger('Server'),
-    notificationService = new NotificationService();
+    notificationService = new NotificationService(),
+    jiangNanLoginService = new JiangNanLoginService();
 
 //api 路由配置
 let appRoutes = require("./routes/AppRoutes"),
@@ -51,6 +54,13 @@ ScheduleTaskList.appStartTaskEntity.cronSchedule = cron.schedule(ScheduleTaskLis
     AppServices.startAppServices();
 });
 
+//自动登录任务
+ScheduleTaskList.loginTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.loginTaskEntity.cronTimeStr, () => {
+    log.info('自动登录任务已执行，当前时间:%s', moment().format(ConstVars.momentDateTimeFormatter));
+    //分分彩 启动时登录
+    jiangNanLoginService.login(GlobalRequest.request);
+});
+
 //每天固定时间停止 预警及获取奖号计划任务
 ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList.appStopTaskEntity.cronTimeStr, () => {
     log.info('主程序及子任务已终止，当前时间：%s', moment().format(ConstVars.momentDateTimeFormatter));
@@ -67,6 +77,12 @@ ScheduleTaskList.appStopTaskEntity.cronSchedule = cron.schedule(ScheduleTaskList
     }
     log.info('通知程序已停止');
     AppServices.initAppStartConfig();//重置应用运行参数
+    if (ScheduleTaskList.loginTaskEntity.cronSchedule != null) {
+        //销毁自动登录程序
+        ScheduleTaskList.loginTaskEntity.cronSchedule.destroy();
+        ScheduleTaskList.loginTaskEntity.cronSchedule = null;
+    }
+    log.info('自动登录程序已停止');
 });
 
 app.listen(PORT, () => {

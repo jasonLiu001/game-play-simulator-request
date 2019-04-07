@@ -24,4 +24,10 @@ export class ScheduleTaskList {
         cronSchedule: null//cron对象
     };
 
+    //定时登录计划任务
+    static loginTaskEntity: CronScheduleModel = {
+        cronTimeStr: '*/10 * * * *',//每10分钟执行一次
+        cronSchedule: null//cron对象
+    };
+
 }
