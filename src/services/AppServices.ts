@@ -37,8 +37,8 @@ export class AppServices {
             log.error("主程序已启动，无需重复启动！");
         }
         if (ScheduleTaskList.notificationTaskEntity.cronSchedule == null) {
-            //启动通知程序
-            notificationService.start();
+            //启动通知程序 停用通知程序
+            //notificationService.start();
         } else {
             log.error("通知程序已启动，无需重复启动！");
         }
