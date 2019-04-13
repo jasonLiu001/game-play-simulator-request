@@ -54,19 +54,29 @@ export class KillNumbersFollowPlay extends AbstractRuleBase implements IRules<Fi
      * 需要杀掉的号码
      */
     private getKillNumberObject(): Promise<KillNumberInfo> {
-        return Promise.all(
-            [
-                analysis360Service.getKillNumber(EnumKillNumberPosition.baiWei),//杀百位
-                analysis360Service.getKillNumber(EnumKillNumberPosition.shiWei),//杀十位
-                analysis360Service.getKillNumber(EnumKillNumberPosition.geWei)//杀个位
-            ])
-            .then((results) => {
-                let killObj = new KillNumberInfo();
-                killObj.dropBaiWeiNumberArray = results[0];
-                killObj.dropShiWeiNumberArray = results[1];
-                killObj.dropGeWeiNumberArray = results[2];
-                return killObj
-            });
+        //杀百、十、个位 固定号码
+        let killObj = new KillNumberInfo();
+        killObj.dropBaiWeiNumberArray = ["9"];
+        killObj.dropShiWeiNumberArray = ["9"];
+        killObj.dropGeWeiNumberArray = ["0"];
+        log.info('杀百十个固定号码，百位杀%s,十位杀%s,个位杀%s', 9, 9, 0);
+        return Promise.resolve(killObj);
+
+
+        //从网络获取百、十、个杀号 号码
+        // return Promise.all(
+        //     [
+        //         analysis360Service.getKillNumber(EnumKillNumberPosition.baiWei),//杀百位
+        //         analysis360Service.getKillNumber(EnumKillNumberPosition.shiWei),//杀十位
+        //         analysis360Service.getKillNumber(EnumKillNumberPosition.geWei)//杀个位
+        //     ])
+        //     .then((results) => {
+        //         let killObj = new KillNumberInfo();
+        //         killObj.dropBaiWeiNumberArray = results[0];
+        //         killObj.dropShiWeiNumberArray = results[1];
+        //         killObj.dropGeWeiNumberArray = results[2];
+        //         return killObj
+        //     });
     }
 }
 

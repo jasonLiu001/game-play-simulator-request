@@ -25,19 +25,28 @@ export class KillNumbersMaxMiss extends AbstractRuleBase implements IRules<Fixed
      * 获取最大遗漏号码
      */
     private getMaxMissNumberObject(): Promise<KillNumberInfo> {
-        return Promise.all(
-            [
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.baiWei),//杀百位遗漏最大的号码
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.shiWei),//杀十位遗漏最大的号码
-                analysis360Service.getMaxMissNumber(EnumKillNumberPosition.geWei),//杀个位遗漏最大的号码
-            ])
-            .then((results) => {
-                let killObj = new KillNumberInfo();
-                killObj.dropBaiWeiNumberArray = results[0];
-                killObj.dropShiWeiNumberArray = results[1];
-                killObj.dropGeWeiNumberArray = results[2];
-                return killObj
-            });
+        //遗漏修改为杀固定号码
+        let killObj = new KillNumberInfo();
+        killObj.dropBaiWeiNumberArray = ['8'];
+        killObj.dropShiWeiNumberArray = ['4', '6'];
+        killObj.dropGeWeiNumberArray = ['9'];
+        log.info('杀固定遗漏号码，百位杀%s,十位杀%s,个位杀%s', 8, "4,6", 9);
+        return Promise.resolve(killObj);
+
+        //从网络获取杀遗漏号码
+        // return Promise.all(
+        //     [
+        //         analysis360Service.getMaxMissNumber(EnumKillNumberPosition.baiWei),//杀百位遗漏最大的号码
+        //         analysis360Service.getMaxMissNumber(EnumKillNumberPosition.shiWei),//杀十位遗漏最大的号码
+        //         analysis360Service.getMaxMissNumber(EnumKillNumberPosition.geWei),//杀个位遗漏最大的号码
+        //     ])
+        //     .then((results) => {
+        //         let killObj = new KillNumberInfo();
+        //         killObj.dropBaiWeiNumberArray = results[0];
+        //         killObj.dropShiWeiNumberArray = results[1];
+        //         killObj.dropGeWeiNumberArray = results[2];
+        //         return killObj
+        //     });
     }
 
     filterNumbers(): Promise<FixedPositionKillNumberResult> {
